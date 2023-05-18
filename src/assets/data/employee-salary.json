@@ -1,0 +1,177 @@
+[{
+    "id": "001",
+    "img": "assets/images/user/user1.jpg",
+    "role": "Developer",
+    "email": "test@email.com",
+    "payslip": "download",
+    "department": "Java",
+    "empID": "EMP-5287",
+    "name": "John Doe",
+    "salary": "$2,574"
+  },
+  {
+    "id": "002",
+    "img": "assets/images/user/user2.jpg",
+    "role": "Leader ",
+    "email": "test@email.com",
+    "payslip": "download",
+    "department": "Designing",
+    "empID": "EMP-5288",
+    "name": "Sarah Smith",
+    "salary": "$3,587"
+  },
+  {
+    "id": "003",
+    "img": "assets/images/user/user3.jpg",
+    "role": "Manager",
+    "email": "test@email.com",
+    "payslip": "download",
+    "department": "Marketing",
+    "empID": "EMP-4587",
+    "name": "Rajesh",
+    "salary": "$7,897"
+  },
+  {
+    "id": "004",
+    "img": "assets/images/user/user4.jpg",
+    "role": "Designer",
+    "email": "test@email.com",
+    "payslip": "download",
+    "department": "Java",
+    "empID": "EMP-7852",
+    "name": "Jay Soni",
+    "salary": "$2,697"
+  },
+  {
+    "id": "005",
+    "img": "assets/images/user/user5.jpg",
+    "role": "Developer",
+    "email": "test@email.com",
+    "payslip": "download",
+    "department": "Accounting",
+    "empID": "EMP-1478",
+    "name": "Rajesh",
+    "salary": "$6,587"
+  },
+  {
+    "id": "006",
+    "img": "assets/images/user/user6.jpg",
+    "role": "Developer",
+    "email": "test@email.com",
+    "payslip": "download",
+    "department": "Developing",
+    "empID": "EMP-5847",
+    "name": "John Doe",
+    "salary": "$8,256"
+  },
+  {
+    "id": "007",
+    "img": "assets/images/user/user7.jpg",
+    "role": "Developer",
+    "email": "test@email.com",
+    "payslip": "download",
+    "department": "Tesing",
+    "empID": "EMP-3658",
+    "name": "Cara Stevens",
+    "salary": "$7,112"
+  },
+  {
+    "id": "008",
+    "img": "assets/images/user/user8.jpg",
+    "role": "Tester",
+    "email": "test@email.com",
+    "payslip": "download",
+    "department": "Tesing",
+    "empID": "EMP-2598",
+    "name": "Jay Soni",
+    "salary": "$8,256"
+  },
+  {
+    "id": "009",
+    "img": "assets/images/user/user9.jpg",
+    "role": "Tester",
+    "email": "test@email.com",
+    "payslip": "download",
+    "department": "Java",
+    "empID": "EMP-1254",
+    "name": "Angelica Ramos",
+    "salary": "$7,758"
+  },
+  {
+    "id": "010",
+    "img": "assets/images/user/user10.jpg",
+    "role": "Tester",
+    "email": "test@email.com",
+    "payslip": "download",
+    "department": "Designing",
+    "empID": "EMP-5896",
+    "name": "Airi Satou",
+    "salary": "$6,665"
+  },
+  {
+    "id": "011",
+    "img": "assets/images/user/user1.jpg",
+    "role": "Designer",
+    "email": "test@email.com",
+    "payslip": "download",
+    "department": "Marketing",
+    "empID": "EMP-9658",
+    "name": "Jay Soni",
+    "salary": "$1,289"
+  },
+  {
+    "id": "012",
+    "img": "assets/images/user/user1.jpg",
+    "role": "Developer",
+    "email": "test@email.com",
+    "payslip": "download",
+    "department": "Java",
+    "empID": "EMP-8965",
+    "name": "Cara Stevens",
+    "salary": "$8,969"
+  },
+  {
+    "id": "013",
+    "img": "assets/images/user/user2.jpg",
+    "role": "Leader ",
+    "email": "test@email.com",
+    "payslip": "download",
+    "department": "Java",
+    "empID": "EMP-7852",
+    "name": "Sarah Smith",
+    "salary": "$7,525"
+  },
+  {
+    "id": "014",
+    "img": "assets/images/user/user3.jpg",
+    "role": "Manager",
+    "email": "test@email.com",
+    "payslip": "download",
+    "department": "Accounting",
+    "empID": "EMP-1298",
+    "name": "Ashton Cox",
+    "salary": "$4,669"
+  },
+  {
+    "id": "015",
+    "img": "assets/images/user/user4.jpg",
+    "role": "Designer",
+    "email": "test@email.com",
+    "payslip": "download",
+    "department": "Tesing",
+    "empID": "EMP-3325",
+    "name": "Jay Soni",
+    "salary": "$2,658"
+  },
+  {
+    "id": "016",
+    "img": "assets/images/user/user5.jpg",
+    "role": "Developer",
+    "email": "test@email.com",
+    "payslip": "download",
+    "department": "Marketing",
+    "empID": "EMP-4896",
+    "name": "Angelica Ramos",
+    "salary": "$4,897"
+  }
+]

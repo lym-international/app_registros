@@ -1,0 +1,144 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          {{dialogTitle}}
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="projectForm">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Project Title</mat-label>
+            <input matInput formControlName="name" placeholder="Project Title" required>
+            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>title</mat-icon>
+            <mat-error *ngIf="projectForm.get('name')?.hasError('required')">
+              Project Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width " appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status" id="status" required>
+              <mat-option [value]="statusChoices.NEWPROJECTS">New Projects</mat-option>
+              <mat-option [value]="statusChoices.RUNNING">Running</mat-option>
+              <mat-option [value]="statusChoices.ONHOLD">On Hold</mat-option>
+              <mat-option [value]="statusChoices.FINISHED">Finished</mat-option>
+            </mat-select>
+            <mat-error *ngIf="projectForm.get('status')?.hasError('required')">
+              Status is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Team Leader</mat-label>
+            <input matInput formControlName="team_leader" placeholder="Team Leader">
+            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>person_outline</mat-icon>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Deadline Of Project</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="deadline" required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="projectForm.get('deadline')?.hasError('required')">
+              Please select date
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width " appearance="outline">
+            <mat-label>Priority</mat-label>
+            <mat-select formControlName="priority" id="priority" required>
+              <mat-option [value]="priorityChoices.LOW">Low</mat-option>
+              <mat-option [value]="priorityChoices.MEDIUM">Medium</mat-option>
+              <mat-option [value]="priorityChoices.HIGH">High</mat-option>
+            </mat-select>
+            <mat-error *ngIf="projectForm.get('priority')?.hasError('required')">
+              Priority is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Open Task</mat-label>
+            <input matInput formControlName="open_task" type="number" placeholder="Open Task">
+            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>task_alt</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width " appearance="outline">
+            <mat-label>Type</mat-label>
+            <mat-select formControlName="type" id="type" required>
+              <mat-option [value]="projectType.WEB">Website</mat-option>
+              <mat-option [value]="projectType.ANDROID">Android</mat-option>
+              <mat-option [value]="projectType.IPHONE">IPhone</mat-option>
+              <mat-option [value]="projectType.TESTING">Testing</mat-option>
+            </mat-select>
+            <mat-error *ngIf="projectForm.get('type')?.hasError('required')">
+              Project Type is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Created Date</mat-label>
+            <input matInput [matDatepicker]="picker1" formControlName="created" required>
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+            <mat-error *ngIf="projectForm.get('created')?.hasError('required')">
+              Please select date
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Project Progress</mat-label>
+            <input matInput formControlName="progress" type="number" placeholder="Project Progress">
+            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>percent</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Descriptions Of The Project</mat-label>
+            <textarea matInput formControlName="description" class="description-area" required>
+            </textarea>
+            <mat-error *ngIf="projectForm.get('description')?.hasError('required')">
+              Descriptions is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row" align="end">
+            <button mat-raised-button color="primary" [disabled]="!projectForm.valid" [mat-dialog-close]="1"
+              (click)="save()">Save</button>
+            <button mat-raised-button color="warn" (click)="onNoClick()" tabindex="-1">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

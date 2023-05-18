@@ -1,0 +1,176 @@
+<div class="addContainer">
+  <div *ngIf="!isDetails" class="contact-form">
+    <div class="modalHeader">
+      <div class="editRowModal">
+        <div class="modalHeader clearfix">
+          <img [src]='leaves.img' alt="avatar">
+          <div class="modal-about">
+            {{dialogTitle}}
+          </div>
+        </div>
+      </div>
+      <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div mat-dialog-content>
+      <form class="register-form m-4" [formGroup]="leavesForm" (ngSubmit)="submit">
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width mb-3" appearance="outline">
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="name" required>
+              <i class="material-icons-two-tone color-icon p-3" matSuffix>face</i>
+              <mat-error *ngIf="leavesForm.get('name')?.hasError('required')">
+                Name is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width mb-3" appearance="outline">
+              <mat-label>Leave Type</mat-label>
+              <input matInput formControlName="type" required>
+              <i class="material-icons-two-tone color-icon p-3" matSuffix>spoke</i>
+              <mat-error *ngIf="leavesForm.get('type')?.hasError('required') || leavesForm.get('type')?.touched">
+                Please enter a valid type reason
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width mb-3" appearance="outline">
+              <mat-label>Leave From</mat-label>
+              <input matInput [matDatepicker]="picker2" formControlName="from">
+              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+              <mat-error *ngIf="leavesForm.get('from')?.hasError('required')">
+                Please select date
+              </mat-error>
+            </mat-form-field>
+
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width mb-3" appearance="outline">
+              <mat-label>Leave To</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="leaveTo">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="leavesForm.get('leaveTo')?.hasError('required')">
+                Please select date
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width mb-3" appearance="outline">
+              <mat-label>No Of Days</mat-label>
+              <input matInput formControlName="noOfDays" required>
+            </mat-form-field>
+          </div>
+          <div class=" col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width " appearance="outline">
+              <mat-label>Status</mat-label>
+              <mat-select formControlName="status" required>
+                <mat-option [value]="'Approved'">
+                  Approved
+                </mat-option>
+                <mat-option [value]="'Rejected'">
+                  Rejected
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="leavesForm.get('status')?.hasError('required')">
+                Employee Name is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width mb-3" appearance="outline">
+              <mat-label>Reason</mat-label>
+              <textarea matInput formControlName="reason"></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width mb-3" appearance="outline">
+              <mat-label>Note</mat-label>
+              <textarea matInput formControlName="note"></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+            <div class="example-button-row" align="end">
+              <button mat-raised-button color="primary" [disabled]="!leavesForm.valid" [mat-dialog-close]="1"
+                (click)="confirmAdd()">Save</button>
+              <button mat-raised-button color="warn" (click)="onNoClick()" tabindex="-1">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div *ngIf="isDetails" class="contact-details">
+    <div class="modalHeader">
+      <div class="editRowModal">
+        <div class="modalHeader clearfix">
+          <div class="modal-about contact-header">
+            <div class="contact-details-img">
+              <img [src]='leaves.img' alt="avatar">
+            </div>
+            <div class="contact-details-heading">
+              <div class="contact-details-name mb-2">{{leaves.name}}</div>
+              <div class="badge col-green ms-2">Manager</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div mat-dialog-content>
+      <mat-card-content>
+        <div class="contact-details-field">
+          <i class="material-icons-two-tone color-icon p-3">receipt</i>
+          <div class="contact-detail-info"> {{leaves.type}}
+          </div>
+        </div>
+        <div class="contact-details-field">
+          <i class="material-icons-two-tone color-icon p-3">today</i>
+          <div class="contact-detail-info"> {{leaves.from | date: 'MMMM d, yyyy'}}
+          </div>
+        </div>
+        <div class="contact-details-field">
+          <i class="material-icons-two-tone color-icon p-3">fact_check</i>
+          <div class="contact-detail-info"> {{leaves.leaveTo | date: 'MMMM d, yyyy'}}
+          </div>
+        </div>
+        <div class="contact-details-field">
+          <i class="material-icons-two-tone color-icon p-3">tag</i>
+          <div class="contact-detail-info"> {{leaves.noOfDays}}
+          </div>
+        </div>
+        <div class="contact-details-field">
+          <i class="material-icons-two-tone color-icon p-3">info</i>
+          <div class="contact-detail-info"> {{leaves.status}}
+          </div>
+        </div>
+        <div class="contact-details-field">
+          <i class="material-icons-two-tone color-icon p-3">description</i>
+          <div class="contact-detail-info"> {{leaves.reason}}
+          </div>
+        </div>
+        <div class="contact-details-field">
+          <i class="material-icons-two-tone color-icon p-3">note</i>
+          <div class="contact-detail-info"> {{leaves.note}}
+          </div>
+        </div>
+      </mat-card-content>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,119 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          {{dialogTitle}}
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="myProjectsForm" (ngSubmit)="submit">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Project Name</mat-label>
+            <input matInput formControlName="pName" required>
+            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>work_outline</mat-icon>
+            <mat-error *ngIf="myProjectsForm.get('pName')?.hasError('required')">
+              Project Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Project Type</mat-label>
+            <input matInput formControlName="type" required>
+            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>turned_in_not</mat-icon>
+            <mat-error *ngIf="myProjectsForm.get('type')?.hasError('required')">
+              Project Type is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Open task</mat-label>
+            <input matInput formControlName="open_task" required>
+            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>task_alt</mat-icon>
+            <mat-error *ngIf="myProjectsForm.get('open_task')?.hasError('required')">
+              Open Task is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Lead name</mat-label>
+            <input matInput formControlName="lead_name" required>
+            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>person_outline</mat-icon>
+            <mat-error *ngIf="myProjectsForm.get('lead_name')?.hasError('required')">
+              Lead name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width " appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status" required>
+              <mat-option [value]="'New'">
+                New
+              </mat-option>
+              <mat-option [value]="'Active'">
+                Active
+              </mat-option>
+              <mat-option [value]="'Hold'">
+                Hold
+              </mat-option>
+              <mat-option [value]="'Closed'">
+                Closed
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="myProjectsForm.get('status')?.hasError('required')">
+              Status Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Last modify date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="last_modify">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="myProjectsForm.get('last_modify')?.hasError('required')">
+              Please select date
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Create date</mat-label>
+            <input matInput [matDatepicker]="picker2" formControlName="create_date">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+            <mat-error *ngIf="myProjectsForm.get('create_date')?.hasError('required')">
+              Please select date
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row" align="end">
+            <button mat-raised-button color="primary" [disabled]="!myProjectsForm.valid" [mat-dialog-close]="1"
+              (click)="confirmAdd()">Save</button>
+            <button mat-raised-button color="warn" (click)="onNoClick()" tabindex="-1">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

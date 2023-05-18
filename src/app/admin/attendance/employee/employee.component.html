@@ -1,0 +1,315 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="'Employee Attendance'" [items]="['Attendance']" [active_item]="'Employee Attendance'">
+      </app-breadcrumb>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="card">
+          <div class="header">
+            <h2>Employee Attendance</h2>
+          </div>
+          <div class="body">
+            <mat-tab-group>
+              <mat-tab>
+                <ng-template mat-tab-label>
+                  <mat-icon class="example-tab-icon msr-2">article</mat-icon>
+                  Details
+                </ng-template>
+                <div class="tab-pane mt-5">
+                  <div class="row clearfix">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                      <div class="card">
+                        <div class="chat">
+                          <div class="chat-header clearfix">
+                            <img src="../../../../assets/images/user/user3.jpg" alt="avatar">
+                            <div class="row">
+                              <div class="col-lg-3 col-sm-6">
+                                <div class="chat-about">
+                                  <div class="chat-with">Maria Smith</div>
+                                  <div class="chat-num-messages">Software Developer
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-lg-3 col-sm-6">
+                                <div class="chat-about">
+                                  <div class="chat-with">Employee ID</div>
+                                  <div class="chat-num-messages">IM062587UT</div>
+                                </div>
+                              </div>
+                              <div class="col-lg-3 col-sm-6">
+                                <div class="chat-about">
+                                  <div class="chat-with">Joining Date</div>
+                                  <div class="chat-num-messages">12 January 2015</div>
+                                </div>
+                              </div>
+                              <div class="col-lg-3 col-sm-6">
+                                <div class="chat-about">
+                                  <div class="chat-with">Department</div>
+                                  <div class="chat-num-messages">Account</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                      <div class="card project_widget">
+                        <div class="header">
+                        </div>
+                        <div class="body">
+                          <div class="row">
+                            <div class="col-lg-3 col-sm-6">
+                              <div class="text-center m-b-20">
+                                <h3 class="m-b-10 col-green">08:00</h3>
+                                <div class="text font-15 m-b-5">Average Working Hours
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6">
+                              <div class="text-center m-b-20">
+                                <h3 class="m-b-10 col-green">10:30 AM</h3>
+                                <div class="text font-15 m-b-5">Average In Time</div>
+                              </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6">
+                              <div class="text-center m-b-20">
+                                <h3 class="m-b-10 col-green">07:30 PM</h3>
+                                <div class="text font-15 m-b-5">Average Out Time</div>
+                              </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-6">
+                              <div class="text-center m-b-20">
+                                <h3 class="m-b-10 col-green">01:00</h3>
+                                <div class="text font-15 m-b-5">Average Break Time</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="responsive_table">
+                            <table class="table table-hover js-basic-example contact_list">
+                              <thead>
+                                <tr>
+                                  <th class="center"> Date </th>
+                                  <th class="center"> Check In </th>
+                                  <th class="center"> Check Out </th>
+                                  <th class="center"> Working Hours </th>
+                                  <th class="center"> Shift </th>
+                                  <th class="center"> Status </th>
+                                  <th class="center"> Action </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr class="odd gradeX">
+                                  <td class="center">10-02-2018</td>
+                                  <td class="center col-green">10:28</td>
+                                  <td class="center col-green">19:32</td>
+                                  <td class="center col-green">08:04</td>
+                                  <td class="center">Shift 1</td>
+                                  <td class="center">
+                                    <div class="badge col-green">Present</div>
+                                  </td>
+                                  <td class="center">
+                                    <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Edit">
+                                      <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
+                                      </app-feather-icons>
+                                    </button>
+                                    <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Delete">
+                                      <app-feather-icons [icon]="'trash-2'" [class]="'tbl-fav-delete'">
+                                      </app-feather-icons>
+                                    </button>
+                                  </td>
+                                </tr>
+                                <tr class="odd gradeX">
+                                  <td class="center">11-02-2018</td>
+                                  <td class="center col-red">10:32</td>
+                                  <td class="center col-green">19:32</td>
+                                  <td class="center col-green">08:00</td>
+                                  <td class="center">Shift 1</td>
+                                  <td class="center">
+                                    <div class="badge col-green">Present</div>
+                                  </td>
+                                  <td class="center">
+                                    <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Edit">
+                                      <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
+                                      </app-feather-icons>
+                                    </button>
+                                    <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Delete">
+                                      <app-feather-icons [icon]="'trash-2'" [class]="'tbl-fav-delete'">
+                                      </app-feather-icons>
+                                    </button>
+                                  </td>
+                                </tr>
+                                <tr class="odd gradeX">
+                                  <td class="center">12-02-2018</td>
+                                  <td class="center">-</td>
+                                  <td class="center">-</td>
+                                  <td class="center">-</td>
+                                  <td class="center">Shift 1</td>
+                                  <td class="center">
+                                    <div class="badge col-red">Leave</div>
+                                  </td>
+                                  <td class="center">
+                                    <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Edit">
+                                      <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
+                                      </app-feather-icons>
+                                    </button>
+                                    <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Delete">
+                                      <app-feather-icons [icon]="'trash-2'" [class]="'tbl-fav-delete'">
+                                      </app-feather-icons>
+                                    </button>
+                                  </td>
+                                </tr>
+                                <tr class="odd gradeX">
+                                  <td class="center">13-02-2018</td>
+                                  <td class="center col-red">10:35</td>
+                                  <td class="center col-green">19:31</td>
+                                  <td class="center col-red">07:56</td>
+                                  <td class="center">Shift 1</td>
+                                  <td class="center">
+                                    <div class="badge col-green">Present</div>
+                                  </td>
+                                  <td class="center">
+                                    <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Edit">
+                                      <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
+                                      </app-feather-icons>
+                                    </button>
+                                    <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Delete">
+                                      <app-feather-icons [icon]="'trash-2'" [class]="'tbl-fav-delete'">
+                                      </app-feather-icons>
+                                    </button>
+                                  </td>
+                                </tr>
+                                <tr class="odd gradeX">
+                                  <td class="center">14-02-2018</td>
+                                  <td class="center col-green">10:25</td>
+                                  <td class="center col-red">19:29</td>
+                                  <td class="center col-green">08:04</td>
+                                  <td class="center">Shift 1</td>
+                                  <td class="center">
+                                    <div class="badge col-green">Present</div>
+                                  </td>
+                                  <td class="center">
+                                    <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Edit">
+                                      <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
+                                      </app-feather-icons>
+                                    </button>
+                                    <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Delete">
+                                      <app-feather-icons [icon]="'trash-2'" [class]="'tbl-fav-delete'">
+                                      </app-feather-icons>
+                                    </button>
+                                  </td>
+                                </tr>
+                                <tr class="odd gradeX">
+                                  <td class="center">15-02-2018</td>
+                                  <td class="center">-</td>
+                                  <td class="center">-</td>
+                                  <td class="center">-</td>
+                                  <td class="center">Shift 1</td>
+                                  <td class="center">
+                                    <div class="badge col-cyan">Weekend</div>
+                                  </td>
+                                  <td class="center">
+                                    <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Edit">
+                                      <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
+                                      </app-feather-icons>
+                                    </button>
+                                    <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Delete">
+                                      <app-feather-icons [icon]="'trash-2'" [class]="'tbl-fav-delete'">
+                                      </app-feather-icons>
+                                    </button>
+                                  </td>
+                                </tr>
+                                <tr class="odd gradeX">
+                                  <td class="center">16-02-2018</td>
+                                  <td class="center">-</td>
+                                  <td class="center">-</td>
+                                  <td class="center">-</td>
+                                  <td class="center">Shift 1</td>
+                                  <td class="center">
+                                    <div class="badge col-cyan">Weekend</div>
+                                  </td>
+                                  <td class="center">
+                                    <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Edit">
+                                      <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
+                                      </app-feather-icons>
+                                    </button>
+                                    <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Delete">
+                                      <app-feather-icons [icon]="'trash-2'" [class]="'tbl-fav-delete'">
+                                      </app-feather-icons>
+                                    </button>
+                                  </td>
+                                </tr>
+                                <tr class="odd gradeX">
+                                  <td class="center">17-02-2018</td>
+                                  <td class="center col-green">10:28</td>
+                                  <td class="center col-green">19:35</td>
+                                  <td class="center col-green">08:07</td>
+                                  <td class="center">Shift 1</td>
+                                  <td class="center">
+                                    <div class="badge col-green">Present</div>
+                                  </td>
+                                  <td class="center">
+                                    <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Edit">
+                                      <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'">
+                                      </app-feather-icons>
+                                    </button>
+                                    <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Delete">
+                                      <app-feather-icons [icon]="'trash-2'" [class]="'tbl-fav-delete'">
+                                      </app-feather-icons>
+                                    </button>
+                                  </td>
+                                </tr>
+                              </tbody>
+                              <tfoot>
+                                <tr>
+                                  <th class="center"> Date </th>
+                                  <th class="center"> Check In </th>
+                                  <th class="center"> Check Out </th>
+                                  <th class="center"> Working Hours </th>
+                                  <th class="center"> Shift </th>
+                                  <th class="center"> Status </th>
+                                  <th class="center"> Action </th>
+                                </tr>
+                              </tfoot>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-tab>
+              <mat-tab>
+                <ng-template mat-tab-label>
+                  <mat-icon class="example-tab-icon msr-2">pie_chart</mat-icon>
+                  Chart
+                </ng-template>
+                <br>
+                <b>Attendance Report</b>
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                    <div style="height: 400px">
+                      <ngx-charts-pie-chart [scheme]="colorScheme" [results]="single" [legend]="showLegend"
+                        [labels]="showLabels" [gradient]="gradient">
+                      </ngx-charts-pie-chart>
+                    </div>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                    <div style="height: 400px">
+                      <ngx-charts-pie-grid [scheme]="colorScheme" [results]="single">
+                      </ngx-charts-pie-grid>
+                    </div>
+                  </div>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

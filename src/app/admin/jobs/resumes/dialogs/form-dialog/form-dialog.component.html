@@ -1,0 +1,115 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <img [src]='resumes.img' alt="avatar">
+        <div class="modal-about">
+          {{dialogTitle}}
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="resumesForm" (ngSubmit)="submit">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" required>
+            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>description</mat-icon>
+            <mat-error *ngIf="resumesForm.get('name')?.hasError('required')">
+              Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Job Title</mat-label>
+            <input matInput formControlName="title" required>
+            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>description</mat-icon>
+            <mat-error *ngIf="resumesForm.get('title')?.hasError('required')">
+              Job Title is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>department</mat-label>
+            <input matInput formControlName="department" required>
+            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>business_center</mat-icon>
+            <mat-error *ngIf="resumesForm.get('department')?.hasError('required')">
+              Department is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>role</mat-label>
+            <input matInput formControlName="role" required>
+            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>flag</mat-icon>
+            <mat-error *ngIf="resumesForm.get('role')?.hasError('required')">
+              role is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width " appearance="outline">
+            <mat-label>Job Type</mat-label>
+            <mat-select formControlName="jobType" required>
+              <mat-option [value]="'Full Time'">
+                Full Time
+              </mat-option>
+              <mat-option [value]="'Part Time'">
+                Part Time
+              </mat-option>
+              <mat-option [value]="'Internship'">
+                Internship
+              </mat-option>
+              <mat-option [value]="'Other'">
+                Other
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="resumesForm.get('jobType')?.hasError('required')">
+              Job Type is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width " appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status" required>
+              <mat-option [value]="'Open'">
+                Open
+              </mat-option>
+              <mat-option [value]="'Closed'">
+                Closed
+              </mat-option>
+              <mat-option [value]="'Cancelled'">
+                Cancelled
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="resumesForm.get('status')?.hasError('required')">
+              Status is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row" align="end">
+            <button mat-raised-button color="primary" [disabled]="!resumesForm.valid" [mat-dialog-close]="1"
+              (click)="confirmAdd()">Save</button>
+            <button mat-raised-button color="warn" (click)="onNoClick()" tabindex="-1">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<div class="addContainer">
+  <div *ngIf="isDetails" class="contact-details">
+    <div class="modalHeader">
+      <div class="editRowModal">
+        <div class="modalHeader clearfix">
+          <div class="modal-about contact-header">
+            <div class="contact-details-heading">
+              <div class="contact-details-name mb-2">Attendance Details</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div mat-dialog-content>
+      <mat-card-content>
+        <div class="contact-details-field" matTooltip="Attendance Date" [matTooltipPosition]="'above'">
+          <i class="material-icons-two-tone color-icon p-3">event_note</i>
+          <div class="contact-detail-info"> {{attendances.date | date: 'MMMM d, yyyy'}}
+          </div>
+        </div>
+        <div class="contact-details-field" matTooltip="Check-in" [matTooltipPosition]="'above'">
+          <i class="material-icons-two-tone color-icon p-3">schedule</i>
+          <div class="contact-detail-info"> {{attendances.check_in}}
+          </div>
+        </div>
+        <div class="contact-details-field" matTooltip="Break" [matTooltipPosition]="'above'">
+          <i class="material-icons-two-tone color-icon p-3">free_breakfast</i>
+          <div class="contact-detail-info"> {{attendances.break}}
+          </div>
+        </div>
+        <div class="contact-details-field" matTooltip="Check-out" [matTooltipPosition]="'above'">
+          <i class="material-icons-two-tone color-icon p-3">schedule</i>
+          <div class="contact-detail-info"> {{attendances.check_out}}
+          </div>
+        </div>
+        <div class="contact-details-field" matTooltip="Status" [matTooltipPosition]="'above'">
+          <i class="material-icons-two-tone color-icon p-3">verified</i>
+          <div class="contact-detail-info"> {{attendances.status}}
+          </div>
+        </div>
+        <div class="contact-details-field" matTooltip="Details" [matTooltipPosition]="'above'">
+          <i class="material-icons-two-tone color-icon p-3">article</i>
+          <div class="contact-detail-info">{{attendances.details}}
+          </div>
+        </div>
+      </mat-card-content>
+    </div>
+  </div>
+</div>

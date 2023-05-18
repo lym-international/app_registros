@@ -1,0 +1,90 @@
+﻿/*
+ *  Document   : _progressbars.scss
+ *  Author     : RedStar Template
+ *  Description: This scss file for progress bars style classes
+ */
+.progress {
+  height: 16px;
+
+  &.progress-xs {
+    height: 4px;
+  }
+  &.progress-s {
+    height: 5px;
+  }
+  &.progress-m {
+    height: 10px;
+  }
+
+  &.progress-round {
+    border-radius: 7px;
+  }
+
+  .progress-bar {
+    line-height: 16px;
+    background-color: #1f91f3;
+  }
+
+  .progress-bar-success {
+    background-color: #2b982b;
+  }
+
+  .progress-bar-info {
+    background-color: #00b0e4;
+  }
+
+  .progress-bar-warning {
+    background-color: #ff9600;
+  }
+
+  .progress-bar-danger {
+    background-color: #fb483a;
+  }
+}
+.progress-list {
+  position: relative;
+
+  .status {
+    display: inline-block;
+    font-size: 12px;
+    padding: 6px;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}
+
+.mat-mdc-progress-bar {
+  &.progress-xs {
+    height: 4px;
+  }
+  &.progress-s {
+    height: 5px;
+  }
+  &.progress-m {
+    height: 10px;
+    .mdc-linear-progress__bar-inner {
+      border-top-width: var(--mdc-linear-progress-track-height, 10px);
+    }
+  }
+
+  &.progress-round {
+    border-radius: 7px;
+  }
+
+  &.green-progress .mdc-linear-progress__bar-inner {
+    border-color: #0af30a !important;
+  }
+  &.sky-progress .mdc-linear-progress__bar-inner {
+    border-color: #248afd !important;
+  }
+  &.orange-progress .mdc-linear-progress__bar-inner {
+    border-color: #ffc100 !important;
+  }
+  &.red-progress .mdc-linear-progress__bar-inner {
+    border-color: #ff4747 !important;
+  }
+  &.progress-shadow {
+    box-shadow: 0.4rem 0.4rem 0.8rem rgb(0 0 0 / 10%);
+  }
+}
