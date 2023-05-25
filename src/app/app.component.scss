@@ -1,0 +1,8 @@
+//DARM - Personalización de tema de material.
+@use '@angular/material' as mat;
+@include mat.core();
+$my-primary: mat.define-palette(mat.$indigo-palette, 900);
+$my-accent: mat.define-palette(mat.$cyan-palette, 200);
+// The "warn" palette is optional and defaults to red if not specified.
+$my-warn: mat.define-palette(mat.$red-palette, 900);
+$my-theme: mat.define-light-theme(( color: ( primary: $my-primary, accent: $my-accent, warn: $my-warn, ), typography: mat.define-typography-config(), density: 0, ));

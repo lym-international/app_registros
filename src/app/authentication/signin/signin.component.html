@@ -7,7 +7,7 @@
         <div class="col-sm-6 auth-form-section">
             <div class="form-section">
                 <div class="auth-wrapper">
-                    <h2 class="welcome-msg"> Welcome to High Key Staff - Register App</h2>
+                    <h2 class="welcome-msg" style="color:#001c25"> Welcome to High Key Staff - <span style="color:#004676">Employee Register</span></h2>
                     <hr style="color:#61B4E4; width: 50%; height: 20px; padding-top: 35px">
                     <!--DARM-->
                     <!--<p class="auth-signup-text text-muted">Need an account?<a routerLink="/authentication/signup"
@@ -24,7 +24,7 @@
               <button mat-raised-button color="warn" type="button" (click)="clientSet();">Client</button>
             </div>
           </div>-->
-                    <h2 class="login-title">Sign in</h2>
+                    <h2 style="color:#001c25" class="login-title">Sign in</h2>
                     <form class="validate-form" [formGroup]="authForm" (ngSubmit)="onSubmit()">
                         <div class="row">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
@@ -32,7 +32,7 @@
                                     <mat-label>Username</mat-label>
                                     <input matInput formControlName="username" />
                                     <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>face</mat-icon>
-                                    <mat-error *ngIf="authForm.get('username')?.hasError('required')">
+                                    <mat-error *ngIf="authForm.get('username')?.hasError('required')" style="color: #ff4352">
                                         Username is required
                                     </mat-error>
                                 </mat-form-field>
@@ -47,7 +47,7 @@
                                         <mat-icon class="material-icons-two-tone color-icon m-3" matSuffix>
                                             {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                                     </a>
-                                    <mat-error *ngIf="authForm.get('password')?.hasError('required')">
+                                    <mat-error *ngIf="authForm.get('password')?.hasError('required')" style="color: #ff4352">
                                         Password is required
                                     </mat-error>
                                 </mat-form-field>
@@ -62,7 +62,7 @@
                   </span>
                 </label>
                             </div>
-                            <a class="txt1" routerLink="/authentication/forgot-password">Forgot Password?</a>
+                            <a class="txt1" style="color:#ff4352" routerLink="/authentication/forgot-password">Forgot Password?</a>
                         </div>
                         <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
                         <div class="container-auth-form-btn">
