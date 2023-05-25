@@ -53,8 +53,8 @@ export class HeaderComponent
   }
   listLang = [
     { text: 'English', flag: 'assets/images/flags/us.jpg', lang: 'en' },
-    { text: 'Spanish', flag: 'assets/images/flags/spain.jpg', lang: 'es' },
-    { text: 'German', flag: 'assets/images/flags/germany.jpg', lang: 'de' },
+    //{ text: 'Spanish', flag: 'assets/images/flags/spain.jpg', lang: 'es' }, // DARM
+    //{ text: 'German', flag: 'assets/images/flags/germany.jpg', lang: 'de' }, // DARM
   ];
   notifications: Notifications[] = [
     {
