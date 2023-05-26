@@ -5,7 +5,7 @@
             <a href="#" onClick="return false;" class="bars" (click)="mobileMenuSidebarOpen($event,'overlay-open')"></a>
             <a class="navbar-brand" routerLink={{homePage}}>
                 <img src="assets/images/LogoPequeñoLM-fondoBlanco.png" alt="" />
-                <span class="logo-name">L&M</span>
+                <span class="logo-name">L & M</span>
             </a>
         </div>
         <div class="collapse navbar-collapse" [ngClass]="isNavbarCollapsed ? '' : 'show'">
@@ -90,18 +90,19 @@
                         <div class="noti-list">
                             <div class="menu ">
                                 <div class="user_dw_menu">
+                                    <!--DARM-->
+                                    <!--<button mat-menu-item>
+                                        <app-feather-icons [icon]="'user'" [class]="'user-menu-icons'"></app-feather-icons>Account
+                                    </button>
                                     <button mat-menu-item>
-                    <app-feather-icons [icon]="'user'" [class]="'user-menu-icons'"></app-feather-icons>Account
-                  </button>
+                                        <app-feather-icons [icon]="'mail'" [class]="'user-menu-icons'"></app-feather-icons>Inbox
+                                    </button>
                                     <button mat-menu-item>
-                    <app-feather-icons [icon]="'mail'" [class]="'user-menu-icons'"></app-feather-icons>Inbox
-                  </button>
-                                    <button mat-menu-item>
-                    <app-feather-icons [icon]="'settings'" [class]="'user-menu-icons'"></app-feather-icons>Settings
-                  </button>
-                                    <button mat-menu-item (click)="logout()">
-                    <app-feather-icons [icon]="'log-out'" [class]="'user-menu-icons'"></app-feather-icons>Logout
-                  </button>
+                                        <app-feather-icons [icon]="'settings'" [class]="'user-menu-icons'"></app-feather-icons>Settings
+                                    </button> -->
+                                    <button mat-menu-item (click)="logout()"> 
+                                        <app-feather-icons [icon]="'log-out'" [class]="'user-menu-icons'"></app-feather-icons>Logout
+                                    </button>
                                 </div>
                             </div>
                         </div>

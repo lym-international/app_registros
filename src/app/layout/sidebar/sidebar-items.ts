@@ -1,11 +1,84 @@
 import { RouteInfo } from './sidebar.metadata';
 export const ROUTES: RouteInfo[] = [
   
-  
-  
-  
+  {
+    path: '/admin/employees/allEmployees',
+    title: 'Employees',
+    iconType: 'feather',
+    icon: 'users',
+    class: '',
+    groupTitle: false,
+    badge: '',
+    badgeClass: '',
+    role: ['Admin'],
+    submenu: [],
+  },
   
   {
+    path: '',
+    title: 'Add emergency employee',
+    iconType: 'feather',
+    icon: 'users',
+    class: 'menu-toggle',
+    groupTitle: false,
+    badge: '',
+    badgeClass: '',
+    role: ['Admin'],
+    submenu: [
+      {
+        path: '/admin/employees/allEmployees',
+        title: 'Search employee',
+        iconType: '',
+        icon: '',
+        class: '',
+        groupTitle: false,
+        badge: '',
+        badgeClass: '',
+        role: ['Admin'],
+        submenu: []
+      },
+      {
+        path: '/admin/employees/allEmployees',
+        title: 'Register employee',
+        iconType: '',
+        icon: '',
+        class: '',
+        groupTitle: false,
+        badge: '',
+        badgeClass: '',
+        role: ['Admin'],
+        submenu: []
+      }
+    ]
+  },
+    {
+      path: '/admin/employees/allEmployees',
+      title: 'Close event',
+      iconType: 'feather',
+      icon: 'users',
+      class: '',
+      groupTitle: false,
+      badge: '',
+      badgeClass: '',
+      role: ['Admin'],
+      submenu: [],
+    },
+    
+    {
+      path: '/admin/employees/allEmployees',
+      title: 'Timesheet',
+      iconType: 'feather',
+      icon: 'users',
+      class: '',
+      groupTitle: false,
+      badge: '',
+      badgeClass: '',
+      role: ['Admin'],
+      submenu: [],
+    },
+  
+  //Inicio menú plantilla
+  /*  {
     path: '',
     title: 'MENUITEMS.MAIN.TEXT',
     iconType: '',
@@ -1770,5 +1843,5 @@ export const ROUTES: RouteInfo[] = [
         submenu: [],
       },
     ],
-  },
-];
+  }, */
+]; 

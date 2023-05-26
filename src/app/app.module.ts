@@ -26,6 +26,7 @@ import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { CoreModule } from '@core';
 import { SharedModule } from '@shared';
+import { SearhOrderComponent } from './searh-order/searh-order.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -40,6 +41,7 @@ export function createTranslateLoader(http: HttpClient) {
     RightSidebarComponent,
     AuthLayoutComponent,
     MainLayoutComponent,
+    SearhOrderComponent,
   ],
   imports: [
     BrowserModule,
