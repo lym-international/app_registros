@@ -9,7 +9,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: true,
     badge: '',
     badgeClass: '',
-    role: ['All'],
+    role: [''],
     submenu: [],
   },
 
@@ -800,7 +800,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: true,
     badge: '',
     badgeClass: '',
-    role: ['Admin', 'Employee'],
+    role: [''],
     submenu: [],
   },
   {
@@ -812,7 +812,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: 'New',
     badgeClass: 'badge bg-blue sidebar-badge float-end',
-    role: ['Admin', 'Employee'],
+    role: [''],
     submenu: [],
   },
   {
@@ -824,7 +824,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Admin'],
+    role: [''],
     submenu: [],
   },
   {
@@ -836,7 +836,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Admin', 'Employee'],
+    role: [''],
     submenu: [],
   },
   {
@@ -848,7 +848,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Admin', 'Employee'],
+    role: [''],
     submenu: [
       {
         path: '/email/inbox',
@@ -897,7 +897,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '4',
     badgeClass: 'badge bg-orange sidebar-badge float-end',
-    role: ['Admin'],
+    role: [''],
     submenu: [
       {
         path: '/apps/chat',
@@ -958,7 +958,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Admin'],
+    role: [''],
     submenu: [
       {
         path: '/widget/chart-widget',
@@ -995,7 +995,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: true,
     badge: '',
     badgeClass: '',
-    role: ['Admin'],
+    role: [''],
     submenu: [],
   },
   {
@@ -1007,7 +1007,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Admin'],
+    role: [''],
     submenu: [
       {
         path: '/ui/alerts',
@@ -1224,7 +1224,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Admin'],
+    role: [''],
     submenu: [
       {
         path: '/forms/form-controls',
@@ -1309,7 +1309,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Admin'],
+    role: [''],
     submenu: [
       {
         path: '/tables/basic-tables',
@@ -1358,7 +1358,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '7',
     badgeClass: 'badge bg-green sidebar-badge float-end',
-    role: ['Admin'],
+    role: [''],
     submenu: [
       {
         path: '/charts/echart',
@@ -1431,7 +1431,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Admin'],
+    role: [''],
     submenu: [
       {
         path: '/timeline/timeline1',
@@ -1468,7 +1468,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Admin'],
+    role: [''],
     submenu: [
       {
         path: '/icons/material',
@@ -1505,7 +1505,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Admin'],
+    role: [''],
     submenu: [
       {
         path: '/authentication/signin',
@@ -1590,7 +1590,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Admin'],
+    role: [''],
     submenu: [
       {
         path: '/extra-pages/profile',
@@ -1663,7 +1663,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Admin'],
+    role: [''],
     submenu: [
       {
         path: '/maps/google',
@@ -1688,7 +1688,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Admin'],
+    role: [''],
     submenu: [
       {
         path: '/multilevel/first1',
