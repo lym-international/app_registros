@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ComponentsModule } from '@shared/components/components.module';
 import { SharedModule } from '@shared';
+
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PayrollRoutingModule } from './payroll-routing.module';
 import { EmployeeSalaryComponent } from './employee-salary/employee-salary.component';
 import { PayslipComponent } from './payslip/payslip.component';

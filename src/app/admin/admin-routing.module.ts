@@ -2,6 +2,12 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
+  
+  {
+    path: 'search-order',
+    loadChildren: () =>
+      import('./search-order/search-order.module').then((m) => m.SearchOrderModule),
+  },
   {
     path: 'dashboard',
     loadChildren: () =>
