@@ -8,8 +8,6 @@ import { SearchOrderRoutingModule } from './search-order-routing.module';
 import { SearchOrderComponent } from './search-order.component';
 
 
-
-
 @NgModule({
   declarations: [ SearchOrderComponent],
   imports: [
