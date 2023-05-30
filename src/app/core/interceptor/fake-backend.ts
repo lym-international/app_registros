@@ -15,7 +15,7 @@ import { Role } from '../models/role';
 const users: User[] = [
   {
     id: 1,
-    img: 'assets/images/user/admin.jpg',
+    img: 'assets/images/user/AvatarMujerAdmin.jpg',
     username: 'admin@software.com',
     password: 'admin@123',
     firstName: 'Sarah',

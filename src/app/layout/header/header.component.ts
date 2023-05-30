@@ -113,7 +113,7 @@ export class HeaderComponent
     this.userImg = this.authService.currentUserValue.img;
 
     if (userRole === 'Admin') {
-      this.homePage = 'admin/dashboard/main';
+      this.homePage = 'admin/search-order';
     } else if (userRole === 'Client') {
       this.homePage = 'client/dashboard';
     } else if (userRole === 'Employee') {
