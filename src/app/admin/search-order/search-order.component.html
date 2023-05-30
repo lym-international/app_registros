@@ -1,12 +1,38 @@
-<section class="content">
-    <div class="content-block">
-        <div class="block-header">
-            <!-- breadcrumb -->
-            <app-breadcrumb [title]="'Search order'" [items]="['Home']" [active_item]="'Search order'">
-            </app-breadcrumb>
-        </div>
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"></div>
-        </div>
+<div class="container">
+    <div class="block-header" style="margin-top: 70px;">
+        <!-- breadcrumb -->
+        <app-breadcrumb [title]="'Search Order'" [active_item]="'Search order'">
+        </app-breadcrumb>
     </div>
-</section>
+
+    <div class="row" style="margin-top: 130px;">
+        <div class="col col-sm-6">
+            <div>
+                <label class="form-label">List of orders</label>
+            </div>
+            <mat-form-field style="display: inline;">
+                <mat-label>Select</mat-label>
+                <mat-select>
+                    <mat-option value="one">First option</mat-option>
+                    <mat-option value="two">Second option</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div class="row">
+                <div>
+                    <label class="form-label">Order number</label>
+                </div>
+                <mat-form-field style="display: inline-flex; width: 30%;">
+                    <mat-label>Input</mat-label>
+                    <input matInput>
+                </mat-form-field>
+            </div>
+            <div>
+                <button mat-raised-button color="primary">Search</button>
+            </div>
+        </div>
+        <div class="col col-sm-6" style="text-align: center;">
+            <img src="assets/images/search-order.png" style="height: 300px;" alt="">
+        </div>
+        <p style="color:#414244;">You will only be able to view the open orders in which you are a supervisor.</p>
+    </div>
+</div>
