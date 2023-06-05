@@ -30,7 +30,7 @@
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                                 <mat-form-field class="example-full-width" appearance="outline">
                                     <mat-label>Username</mat-label>
-                                    <input matInput formControlName="username" />
+                                    <input matInput type="text" formControlName="username" />
                                     <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>face</mat-icon>
                                     <mat-error *ngIf="authForm.get('username')?.hasError('required')" style="color: #ff4352">
                                         Username is required
