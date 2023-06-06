@@ -4,6 +4,12 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
   
   {
+    path: 'dashboard-lm',
+    loadChildren: () =>
+      import('./dashboard-lm/dashboard-lm.module').then((m) => m.DashboardLmModule),
+  },
+
+  {
     path: 'search-order',
     loadChildren: () =>
       import('./search-order/search-order.module').then((m) => m.SearchOrderModule),
