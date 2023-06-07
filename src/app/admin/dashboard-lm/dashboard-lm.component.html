@@ -4,71 +4,132 @@
             <!-- breadcrumb -->
             <app-breadcrumb [title]="'Dashboard'" [items]="['Home']" [active_item]="'Dashboard'"></app-breadcrumb>
         </div>
-        <div class="row ">
-            <div class="col-xl-3 col-lg-6">
-                <div class="card l-bg-green-dark">
-                    <div class="card-statistic-3">
-                        <div class="card-icon card-icon-large"><i class="fa fa-briefcase"></i></div>
-                        <div class="card-content">
-                            <h4 class="card-title">New Projects</h4>
-                            <span class="data-1">102</span>
-                            <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow orange-progress mt-2 mb-2" value="40">
-                            </mat-progress-bar>
-                            <p class="mb-0 text-sm">
-                                <span class="mr-2"><i class="fa fa-arrow-up"></i> 10%</span>
-                                <span class="text-nowrap"> Since last month</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-6">
-                <div class="card l-bg-cyan-dark">
-                    <div class="card-statistic-3">
-                        <div class="card-icon card-icon-large"><i class="fas fa-users"></i></div>
-                        <div class="card-content">
-                            <h4 class="card-title">New Customers</h4>
-                            <span class="data-1">154</span>
-                            <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow purple-progress mt-2 mb-2" value="40">
-                            </mat-progress-bar>
-                            <p class="mb-0 text-sm">
-                                <span class="mr-2"><i class="fa fa-arrow-up"></i> 04%</span>
-                                <span class="text-nowrap"> Since last month</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-6">
-                <div class="card l-bg-purple-dark">
+        <!--<div style="margin-left: 150px;">
+            <mat-card class="tarjeta">
+                <mat-card-content>
+                    Hilton baltimore kitchen
+                    <br/> <br/> 401 West Pratt NW
+                    <br/> <br/> Baltimore MD 21201
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="tarjeta-pequena">
+                <mat-card-content>
+                    <mat-card-title>Order number</mat-card-title>
+                    2023 - 2364
+                </mat-card-content>
+            </mat-card>
+            <mat-card class="tarjeta-pequena">
+                <mat-card-content>
+                    <mat-card-title>Event date</mat-card-title>
+                    04-25-2023
+                </mat-card-content>
+            </mat-card>
+        </div> -->
+
+        <div class="container">
+            <div class="column" style="padding-top: 40px;">
+                <div class="card">
                     <div class="card-statistic-3">
                         <div class="card-icon card-icon-large"><i class="fa fa-globe"></i></div>
-                        <div class="card-content">
-                            <h4 class="card-title">Inquiry</h4>
-                            <span class="data-1">524</span>
-                            <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow green-progress mt-2 mb-2" value="40">
-                            </mat-progress-bar>
-                            <p class="mb-0 text-sm">
-                                <span class="mr-2"><i class="fa fa-arrow-up"></i> 23%</span>
-                                <span class="text-nowrap"> Since last month</span>
-                            </p>
+                        <div class="tarjeta">
+                            Hilton baltimore kitchen
+                            <br/> <br/> 401 West Pratt NW
+                            <br/> <br/> Baltimore MD 21201
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-6">
+
+            <div class="column tarjeta-indicadores">
+                <div class="sub-column">
+                    <div class="sub-sub-column">
+                        <mat-card class="tarjeta-pequena">
+                            <mat-card-content>
+                                <mat-card-title>Order number</mat-card-title>
+                                2023 - 2364
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    <div class="sub-sub-column">
+                        <mat-card class="tarjeta-pequena">
+                            <mat-card-content>
+                                <mat-card-title>Event date</mat-card-title>
+                                04-25-2023
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr style="color: #004676; width: 50%; margin: 70px auto 70px auto; " />
+
+        <div class="row ">
+            <div class="col-xl-3 col-lg-6 tarjeta-indicadores">
+                <div class="card l-bg-green-dark">
+                    <div class="card-statistic-3" style="padding-bottom: 70px">
+                        <div class="card-icon card-icon-large"><i class="fa fa-briefcase"></i></div>
+                        <div class="card-content">
+                            <h4 class="card-title">Requested</h4>
+                            <span class="data-1" style="padding-bottom: 50px;">100</span>
+
+                            <!--<mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow orange-progress mt-2 mb-2" value="40">
+                            </mat-progress-bar> -->
+                            <!--<p class="mb-0 text-sm">
+                                <span class="mr-2"><i class="fa fa-arrow-up"></i> 10%</span>
+                                <span class="text-nowrap"> Since last month</span>
+                            </p> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 tarjeta-indicadores">
+                <div class="card l-bg-cyan-dark">
+                    <div class="card-statistic-3">
+                        <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
+                        <div class="card-content">
+                            <h4 class="card-title">Confirmed</h4>
+                            <span class="data-1">105</span>
+                            <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow purple-progress mt-2 mb-2" value="40">
+                            </mat-progress-bar>
+                            <!-- <p class="mb-0 text-sm">
+                                <span class="mr-2"><i class="fa fa-arrow-up"></i> 04%</span>
+                                <span class="text-nowrap"> Since last month</span>
+                            </p> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 tarjeta-indicadores">
+                <div class="card l-bg-purple-dark">
+                    <div class="card-statistic-3">
+                        <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
+                        <div class="card-content">
+                            <h4 class="card-title">CheckIn</h4>
+                            <span class="data-1">99</span>
+                            <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow green-progress mt-2 mb-2" value="40">
+                            </mat-progress-bar>
+                            <!--<p class="mb-0 text-sm">
+                                <span class="mr-2"><i class="fa fa-arrow-up"></i> 23%</span>
+                                <span class="text-nowrap"> Since last month</span>
+                            </p>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 tarjeta-indicadores">
                 <div class="card l-bg-orange-dark">
                     <div class="card-statistic-3">
-                        <div class="card-icon card-icon-large"><i class="fa fa-money-bill-alt"></i></div>
+                        <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
                         <div class="card-content">
-                            <h4 class="card-title">Earning</h4>
-                            <span class="data-1">$2,453</span>
+                            <h4 class="card-title">CheckOut</h4>
+                            <span class="data-1">95</span>
                             <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow sky-progress mt-2 mb-2" value="40">
                             </mat-progress-bar>
-                            <p class="mb-0 text-sm">
+                            <!--<p class="mb-0 text-sm">
                                 <span class="mr-2"><i class="fa fa-arrow-down"></i> 06%</span>
                                 <span class="text-nowrap"> Since last month</span>
-                            </p>
+                            </p>-->
                         </div>
                     </div>
                 </div>
