@@ -135,8 +135,8 @@
                 </div>
             </div>
         </div>
-        <div class="row clearfix">
-            <!-- Bar chart with line -->
+        <!-- <div class="row clearfix">
+            
             <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12">
                 <div class="card">
                     <div class="header">
@@ -190,10 +190,10 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="row clearfix">
-            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                <div class="card">
+            <!--<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                 <div class="card">
                     <div class="header">
                         <h2>Notice Board</h2>
                         <button mat-icon-button [matMenuTriggerFor]="menu" class="header-dropdown">
@@ -280,12 +280,12 @@
                             </div>
                         </ng-scrollbar>
                     </div>
-                </div>
-            </div>
+                </div> 
+            </div> -->
             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
                 <div class="card">
                     <div class="header">
-                        <h2>Project Status</h2>
+                        <h2>Check-In</h2>
                     </div>
                     <ng-scrollbar style="height: 410px" visibility="hover">
                         <div class="tableBody">
@@ -293,24 +293,46 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th>Project Name</th>
-                                            <th>Progress</th>
-                                            <th>Duration</th>
+                                            <th class="column-check">Position</th>
+                                            <th class="column-check">Confirmed employees</th>
+                                            <th class="column-check">Employees</th>
+                                            <th class="column-check">Compliance</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Project A</td>
-                                            <td>30%
-                                                <mat-progress-bar mode="determinate" value="30" color="warn" class="progress-round">
+                                            <td> Server</td>
+                                            <td class="column-check">40</td>
+                                            <td class="column-check">38</td>
+                                            <td>95%
+                                                <mat-progress-bar mode="determinate" class="progress-round green-progress" value="95">
                                                 </mat-progress-bar>
                                             </td>
-                                            <td>2 Months</td>
                                         </tr>
                                         <tr>
-                                            <td>Project B</td>
+                                            <td>Bartender</td>
+                                            <td class="column-check">6</td>
+                                            <td class="column-check">2</td>
+                                            <td>33%
+                                                <mat-progress-bar mode="determinate" class="progress-round red-progress" value="33">
+                                                </mat-progress-bar>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Captain</td>
+                                            <td class="column-check">3</td>
+                                            <td class="column-check">2</td>
+                                            <td>66%
+                                                <mat-progress-bar mode="determinate" class="progress-round orange-progress" value="66">
+                                                </mat-progress-bar>
+                                            </td>
+                                        </tr>
+
+
+                                        <!--<tr>
+                                            <td>Project b</td>
                                             <td>55%
-                                                <mat-progress-bar mode="determinate" class="progress-round" value="55">
+                                                <mat-progress-bar mode="determinate" class="progress-round orange-progress" value="55">
                                                 </mat-progress-bar>
                                             </td>
                                             <td>3 Months</td>
@@ -318,7 +340,7 @@
                                         <tr>
                                             <td>Project C</td>
                                             <td>67%
-                                                <mat-progress-bar mode="determinate" class="progress-round orange-progress" value="67">
+                                                <mat-progress-bar mode="determinate" class="progress-round red-progress" value="67">
                                                 </mat-progress-bar>
                                             </td>
                                             <td>1 Months</td>
@@ -362,6 +384,58 @@
                                                 </mat-progress-bar>
                                             </td>
                                             <td>2 Months</td>
+                                        </tr> -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </ng-scrollbar>
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>Check-Out</h2>
+                    </div>
+                    <ng-scrollbar style="height: 410px" visibility="hover">
+                        <div class="tableBody">
+                            <div class="responsive_table">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="column-check">Position</th>
+                                            <th class="column-check">Confirmed employees</th>
+                                            <th class="column-check">Employees</th>
+                                            <th class="column-check">Compliance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td> Server</td>
+                                            <td class="column-check">40</td>
+                                            <td class="column-check">38</td>
+                                            <td>95%
+                                                <mat-progress-bar mode="determinate" class="progress-round green-progress" value="95">
+                                                </mat-progress-bar>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Bartender</td>
+                                            <td class="column-check">6</td>
+                                            <td class="column-check">2</td>
+                                            <td>33%
+                                                <mat-progress-bar mode="determinate" class="progress-round red-progress" value="33">
+                                                </mat-progress-bar>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Captain</td>
+                                            <td class="column-check">3</td>
+                                            <td class="column-check">2</td>
+                                            <td>66%
+                                                <mat-progress-bar mode="determinate" class="progress-round orange-progress" value="66">
+                                                </mat-progress-bar>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -370,7 +444,7 @@
                     </ng-scrollbar>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <!-- <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                 <div class="card">
                     <div class="header">
                         <h2>Earning Source</h2>
@@ -430,9 +504,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
-        <div class="row clearfix">
+        <!--<div class="row clearfix">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="card">
                     <div class="header">
@@ -589,6 +663,6 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </section>
