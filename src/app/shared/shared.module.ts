@@ -10,7 +10,7 @@ import { FeatherIconsModule } from "./components/feather-icons/feather-icons.mod
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
   exports: [
     CommonModule,
-    FormsModule,
+    FormsModule,  
     ReactiveFormsModule,
     RouterModule,
     MaterialModule,

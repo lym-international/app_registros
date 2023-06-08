@@ -25,8 +25,7 @@ import {
 import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { CoreModule } from '@core';
-import { SharedModule } from '@shared';
-
+import { SharedModule } from '@shared'
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -40,7 +39,7 @@ export function createTranslateLoader(http: HttpClient) {
     SidebarComponent,
     RightSidebarComponent,
     AuthLayoutComponent,
-    MainLayoutComponent
+    MainLayoutComponent,
   ],
   imports: [
     BrowserModule,
