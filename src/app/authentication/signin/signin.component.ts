@@ -12,6 +12,8 @@ import { UnsubscribeOnDestroyAdapter } from '@shared';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http'; //Diego
 
+import { AuthenticationService } from 'app/_services/authentication.service'; //Jairo
+
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
@@ -28,6 +30,7 @@ export class SigninComponent
   hide = true;
   constructor(
     private formBuilder: FormBuilder, //private formBuilder: UntypedFormBuilder,
+    private authenticationService: AuthenticationService, //Jairo
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
@@ -83,7 +86,25 @@ export class SigninComponent
       console.log('Username:', username);
       console.log('Password:', password);
 
-      
+      this.authenticationService.login(username, password); //jairo
+      // console.log("response", response)
+      /*this.authenticationService.login(username, password)
+      .then((response) => {
+        if(response){
+          this.router.navigate(['/admin/dashboard/main']);
+          alert("exito!")
+          this.loading = false;
+        }
+        // console.log("respuesta:", response);
+        // Realiza las acciones correspondientes cuando el inicio de sesión sea exitoso
+      })
+      .catch((error) => {
+        console.log("error:", error);
+        this.loading = false;
+        // Realiza las acciones correspondientes cuando haya un error en el inicio de sesión
+      });*/
+
+      /*
       let formData = {
         username: "", //username: "jairo@gmail.com",
         password: "" // password: "jairo123"
@@ -102,7 +123,8 @@ export class SigninComponent
         })
         .catch(error => console.error(error));
 
-       this.subs.sink = this.authService //
+        */
+       /*this.subs.sink = this.authService //
 
         .login(this.authForm.get('username')?.value, this.authForm.get('password')?.value)
         .subscribe(
@@ -132,7 +154,7 @@ export class SigninComponent
           }
         );   
         
-        
+        */
       /* this.subs.sink = this.authService
         .login(this.f['username'].value, this.f['password'].value)
         .subscribe(

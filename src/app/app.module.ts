@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+import { AngularFireModule } from '@angular/fire/compat'; //Jairo
+// import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -25,7 +27,14 @@ import {
 import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { CoreModule } from '@core';
+<<<<<<< HEAD
 import { SharedModule } from '@shared'
+=======
+import { SharedModule } from '@shared';
+
+import { environment } from '../environments/environment'; //Jairo
+import { AuthenticationService } from './_services/authentication.service'; //Jairo
+>>>>>>> b6eddb57fd1079fe91a9300e547557031292cc45
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -43,6 +52,7 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   imports: [
     BrowserModule,
+    AngularFireModule.initializeApp(environment.firebase), //Jairo
     BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
@@ -60,6 +70,7 @@ export function createTranslateLoader(http: HttpClient) {
     SharedModule,
   ],
   providers: [
+    AuthenticationService, //Jairo
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
