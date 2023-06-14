@@ -33,14 +33,21 @@ export class AllemployeesComponent
 {
   displayedColumns = [
     'select',
-    'img',
+    //'img',
     'name',
-    'department',
-    'role',
-    'degree',
-    'mobile',
-    'email',
-    'date',
+    'highKeyID',
+    'position',
+    'totalHours',
+    'payRollID',
+    'in',
+    'out',
+    'break',
+    //'department',
+    //'role',
+    //'degree',
+    //'mobile',
+    //'email',
+    //'date',
     'actions',
   ];
   exampleDatabase?: EmployeesService;
@@ -231,12 +238,19 @@ export class AllemployeesComponent
     const exportData: Partial<TableElement>[] =
       this.dataSource.filteredData.map((x) => ({
         Name: x.name,
-        Department: x.department,
-        Role: x.role,
-        'Joining Date': formatDate(new Date(x.date), 'yyyy-MM-dd', 'en') || '',
-        Degree: x.degree,
-        Mobile: x.mobile,
-        Email: x.email,
+        Position: x.position,
+        HighKeyID: x.highKeyID,
+        PayRollID: x.payRollID,
+        'CheckIn': formatDate(new Date(x.in), 'yyyy-MM-dd', 'en') || '',
+        Out: x.out,
+        Break: x.break,
+        TotalHours: x.totalHours,
+        //Department: x.department,
+        //Role: x.role,
+        //'Joining Date': formatDate(new Date(x.date), 'yyyy-MM-dd', 'en') || '',
+        //Degree: x.degree,
+        //Mobile: x.mobile,
+        //Email: x.email,
       }));
 
     TableExportUtil.exportToExcel(exportData, 'excel');
@@ -303,11 +317,17 @@ export class ExampleDataSource extends DataSource<Employees> {
           .filter((employees: Employees) => {
             const searchStr = (
               employees.name +
-              employees.department +
-              employees.role +
-              employees.degree +
-              employees.email +
-              employees.mobile
+              employees.position +
+              employees.totalHours +
+              employees.payRollID +
+              employees.in +
+              employees.out +
+              employees.break 
+              //employees.department +
+              //employees.role +
+              //employees.degree +
+              //employees.email +
+              //employees.mobile
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
@@ -341,6 +361,24 @@ export class ExampleDataSource extends DataSource<Employees> {
         case 'name':
           [propertyA, propertyB] = [a.name, b.name];
           break;
+        case 'highKeyID':
+          [propertyA, propertyB] = [a.highKeyID, b.highKeyID]; //Diego
+          break;
+        case 'position':
+          [propertyA, propertyB] = [a.position, b.position]; //Diego
+          break;  
+        case 'totalHours':
+          [propertyA, propertyB] = [a.totalHours, b.totalHours]; //Diego
+          break;  
+        case 'payRollID':
+          [propertyA, propertyB] = [a.payRollID, b.payRollID]; //Diego
+          break;  
+        case 'in':
+          [propertyA, propertyB] = [a.in, b.in]; //Diego
+          break;  
+        case 'out':
+          [propertyA, propertyB] = [a.out, b.out]; //Diego
+          break;  
         case 'email':
           [propertyA, propertyB] = [a.email, b.email];
           break;

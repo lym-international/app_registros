@@ -6,13 +6,14 @@ import { SharedModule } from '@shared';
 
 import { DashboardLmRoutingModule } from './dashboard-lm-routing.module';
 import { DashboardLmComponent } from './dashboard-lm.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { NgScrollbarModule } from 'ngx-scrollbar';
+
 
 //material
 import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import { NgApexchartsModule } from 'ng-apexcharts';
-import { NgScrollbarModule } from 'ngx-scrollbar';
 
 
 @NgModule({

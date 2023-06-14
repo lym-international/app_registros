@@ -14,7 +14,7 @@ export const ROUTES: RouteInfo[] = [
     submenu: [],
   },
   
-  {
+  /*{
     path: '',
     title: 'Add emergency employee',
     iconType: 'feather',
@@ -50,12 +50,12 @@ export const ROUTES: RouteInfo[] = [
         submenu: []
       }
     ]
-  },
+  },*/
     {
-      path: '/admin/employees/allEmployees',
+      path: '/close-event',
       title: 'Close event',
       iconType: 'feather',
-      icon: 'users',
+      icon: 'x-circle',
       class: '',
       groupTitle: false,
       badge: '',
@@ -65,10 +65,10 @@ export const ROUTES: RouteInfo[] = [
     },
     
     {
-      path: '/admin/employees/allEmployees',
+      path: 'src/app/timesheet',
       title: 'Timesheet',
       iconType: 'feather',
-      icon: 'users',
+      icon: 'file-text',
       class: '',
       groupTitle: false,
       badge: '',

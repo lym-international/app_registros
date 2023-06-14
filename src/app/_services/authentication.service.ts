@@ -9,6 +9,10 @@ import { User } from 'app/_models/user';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 
+import { catchError } from 'rxjs/operators'; //Diego
+import { throwError } from 'rxjs'; //Diego
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -53,8 +57,8 @@ export class AuthenticationService {
       });      
       
     }
-
-    login(username: string, password: string )  {
+    // Diego: adiciono Observable <any>
+    login(username: string, password: string ): Observable<any>  {
       this.auth.signInWithEmailAndPassword(username, password).then((user) => {
             console.log("usuario autenticado con exito!", user.user?.email)
             this.db.collection('Users',ref => ref.where('email', '==', username)).get().subscribe((usersInfo) => {
@@ -62,8 +66,8 @@ export class AuthenticationService {
                       const data = item.data();
                       sessionStorage.setItem('currentUser', JSON.stringify(data));
                       this.currentUserSubject.next(data);
-                      console.log("nombre", data.firstname, data.lastname)
-                      console.log("role", data.role)
+                      console.log("nombre: ", data.firstname, data.lastname)
+                      console.log("role: ", data.role)
                       // this.auxCurrentUser = user;
                       // const auxDate = new Date();
                       // const date = new Date(auxDate.getTime() - (auxDate.getTimezoneOffset() * 60000));
@@ -89,8 +93,8 @@ export class AuthenticationService {
                       }
                       else if (data.role=="Administrator")
                       {
-                        // console.log("si es admin")
-                        this.router.navigate(['/admin/dashboard/main']);
+                         //console.log("si es admin")
+                        this.router.navigate(['/admin/search-order']); // '/admin/dashboard/main'
                           // this.router.navigate(['/dashboard']);
                       }
                       else
@@ -119,6 +123,7 @@ export class AuthenticationService {
             });
            
         // });
+        return of({ success: true, message: 'Autenticación exitosa' });
 
   }
 
@@ -142,4 +147,4 @@ export class AuthenticationService {
         this.router.navigate(['pages/login']);
     })
 }
-}
+} 

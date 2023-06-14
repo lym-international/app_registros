@@ -13,6 +13,8 @@ import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { HttpClient, HttpHeaders } from '@angular/common/http'; //Diego
 
 import { AuthenticationService } from 'app/_services/authentication.service'; //Jairo
+//import { throwError } from 'rxjs'; //Diego
+//import { catchError } from 'rxjs'; //Diego
 
 @Component({
   selector: 'app-signin',
@@ -30,10 +32,10 @@ export class SigninComponent
   hide = true;
   constructor(
     private formBuilder: FormBuilder, //private formBuilder: UntypedFormBuilder,
-    private authenticationService: AuthenticationService, //Jairo
+   private authenticationService: AuthenticationService, //Jairo
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService,
+    private authService: AuthService, //Diego
     private http: HttpClient          /*Diego*/
 
   ) {
@@ -43,8 +45,8 @@ export class SigninComponent
   ngOnInit() {
     
     this.authForm = this.formBuilder.group({
-      username: ['', Validators.required], //['admin@software.com', Validators.required],
-      password: ['', Validators.required], //['admin@123', Validators.required],
+      username: ['admin@software.com', Validators.required], //['admin@software.com', Validators.required],
+      password: ['admin@123', Validators.required], //['admin@123', Validators.required],
     });
   }
 
@@ -60,7 +62,7 @@ export class SigninComponent
 
   
 
-/* adminSet() {
+  /*adminSet() {
     this.authForm.get('username')?.setValue('admin@software.com');
     this.authForm.get('password')?.setValue('admin@123');
   }
@@ -72,11 +74,13 @@ export class SigninComponent
     this.authForm.get('username')?.setValue('client@software.com');
     this.authForm.get('password')?.setValue('client@123');
   } */
+  
+  
   onSubmit() {
     this.submitted = true;
     this.loading = true;
     this.error = '';
-    if (this.authForm.invalid) {
+    /*if (this.authForm.invalid) {
       this.error = 'Username or Password not valid !';
       return;
     } else {
@@ -84,9 +88,24 @@ export class SigninComponent
       const username = this.authForm.get('username')?.value;
       const password = this.authForm.get('password')?.value;
       console.log('Username:', username);
-      console.log('Password:', password);
-
-      this.authenticationService.login(username, password); //jairo
+      console.log('Password:', password); 
+    */ 
+      //this.authenticationService.login(username, password); //jairo
+      
+      //Diego inicio
+      /*this.authenticationService.login(username, password)
+      .pipe(
+        catchError((error) => {
+        this.error = error.message;
+        this.loading = false;
+        return throwError(error);
+        })
+      )
+      .subscribe(() => {
+        this.loading = false;
+      });*/
+      //Diego final
+      
       // console.log("response", response)
       /*this.authenticationService.login(username, password)
       .then((response) => {
@@ -124,7 +143,7 @@ export class SigninComponent
         .catch(error => console.error(error));
 
         */
-       /*this.subs.sink = this.authService //
+       this.subs.sink = this.authService //
 
         .login(this.authForm.get('username')?.value, this.authForm.get('password')?.value)
         .subscribe(
@@ -133,7 +152,7 @@ export class SigninComponent
               setTimeout(() => {
                 const role = this.authService.currentUserValue.role;
                 if (role === Role.All || role === Role.Admin) {
-                  this.router.navigate(['/admin/dashboard/main']);
+                  this.router.navigate(['/admin/search-order']);
                 } else if (role === Role.Employee) {
                   this.router.navigate(['/employee/dashboard']);
                 } else if (role === Role.Client) {
@@ -154,7 +173,7 @@ export class SigninComponent
           }
         );   
         
-        */
+      //Este código es de la plantilla
       /* this.subs.sink = this.authService
         .login(this.f['username'].value, this.f['password'].value)
         .subscribe(
@@ -185,5 +204,5 @@ export class SigninComponent
         );*/
     } 
   }
-}
+//}
 
