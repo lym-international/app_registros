@@ -10,7 +10,7 @@ import {
 import { Role, AuthService } from '@core';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http'; //Diego
+//import { HttpClient, HttpHeaders } from '@angular/common/http'; //Diego
 
 import { AuthenticationService } from 'app/_services/authentication.service'; //Jairo
 //import { throwError } from 'rxjs'; //Diego
@@ -36,7 +36,7 @@ export class SigninComponent
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService, //Diego
-    private http: HttpClient          /*Diego*/
+    //private http: HttpClient          /*Diego*/
 
   ) {
     super();
@@ -80,17 +80,17 @@ export class SigninComponent
     this.submitted = true;
     this.loading = true;
     this.error = '';
-    /*if (this.authForm.invalid) {
+    if (this.authForm.invalid) {
       this.error = 'Username or Password not valid !';
       return;
     } else {
         
       const username = this.authForm.get('username')?.value;
       const password = this.authForm.get('password')?.value;
-      console.log('Username:', username);
+      console.log('Usernameee:', username);
       console.log('Password:', password); 
-    */ 
-      //this.authenticationService.login(username, password); //jairo
+    
+      this.authenticationService.login(username, password); //jairo
       
       //Diego inicio
       /*this.authenticationService.login(username, password)
@@ -143,9 +143,9 @@ export class SigninComponent
         .catch(error => console.error(error));
 
         */
-       this.subs.sink = this.authService //
+       //this.subs.sink = this.authService //
 
-        .login(this.authForm.get('username')?.value, this.authForm.get('password')?.value)
+       /* .login(this.authForm.get('username')?.value, this.authForm.get('password')?.value)
         .subscribe(
           (res) => {
             if (res) {
@@ -171,7 +171,7 @@ export class SigninComponent
             this.submitted = false;
             this.loading = false;
           }
-        );   
+        ); */
         
       //Este código es de la plantilla
       /* this.subs.sink = this.authService
@@ -204,5 +204,5 @@ export class SigninComponent
         );*/
     } 
   }
-//}
+}
 

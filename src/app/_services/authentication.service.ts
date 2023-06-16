@@ -58,7 +58,7 @@ export class AuthenticationService {
       
     }
     // Diego: adiciono Observable <any>
-    login(username: string, password: string ): Observable<any>  {
+    login(username: string, password: string ) {
       this.auth.signInWithEmailAndPassword(username, password).then((user) => {
             console.log("usuario autenticado con exito!", user.user?.email)
             this.db.collection('Users',ref => ref.where('email', '==', username)).get().subscribe((usersInfo) => {
@@ -93,14 +93,14 @@ export class AuthenticationService {
                       }
                       else if (data.role=="Administrator")
                       {
-                         //console.log("si es admin")
-                        this.router.navigate(['/admin/search-order']); // '/admin/dashboard/main'
+                        console.log("si es admin")
+                        this.router.navigate(['/admin/dashboard/main']); // '/admin/dashboard/main'  /admin/search-order/
                           // this.router.navigate(['/dashboard']);
                       }
                       else
                       {
                           // this.router.navigate([this.returnUrl]);
-                          this.router.navigate(['/authentication/signin']);
+                          this.router.navigate(['/authentication/signin']); // /authentication/signin
                       }
                   });
               });
@@ -123,7 +123,7 @@ export class AuthenticationService {
             });
            
         // });
-        return of({ success: true, message: 'Autenticación exitosa' });
+        
 
   }
 

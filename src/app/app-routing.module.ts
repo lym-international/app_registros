@@ -23,13 +23,13 @@ const routes: Routes = [
           import('./admin/admin.module').then((m) => m.AdminModule),
       },
       {
-        path: 'admin',
+        path: 'search-order',
         canActivate: [AuthGuard],
         data: {
           role: Role.Admin,
         },
         loadChildren: () =>
-          import('./admin/admin.module').then((m) => m.AdminModule),
+          import('./admin/search-order/search-order.module').then((m) => m.SearchOrderModule),
       },
       {
         path: 'employee',
