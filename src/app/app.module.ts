@@ -27,14 +27,10 @@ import {
 import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { CoreModule } from '@core';
-<<<<<<< HEAD
 import { SharedModule } from '@shared'
-=======
-import { SharedModule } from '@shared';
 
 import { environment } from '../environments/environment'; //Jairo
 import { AuthenticationService } from './_services/authentication.service'; //Jairo
->>>>>>> b6eddb57fd1079fe91a9300e547557031292cc45
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
