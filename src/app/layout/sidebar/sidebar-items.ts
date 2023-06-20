@@ -1,6 +1,19 @@
 import { RouteInfo } from './sidebar.metadata';
 export const ROUTES: RouteInfo[] = [
   
+  
+  {
+    path: '/admin/search-order',
+    title: 'Search order',
+    iconType: 'feather',
+    icon: 'users',
+    class: '',
+    groupTitle: false,
+    badge: '',
+    badgeClass: '',
+    role: ['Admin'],
+    submenu: [],
+  },
   {
     path: '/admin/employees/allEmployees',
     title: 'Employees',
@@ -13,6 +26,7 @@ export const ROUTES: RouteInfo[] = [
     role: ['Admin'],
     submenu: [],
   },
+
   
   /*{
     path: '',

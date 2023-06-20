@@ -25,13 +25,13 @@ export class SigninComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit
 {
-  authForm!: FormGroup; //authForm!: UntypedFormGroup;
+  authForm!: UntypedFormGroup; //authForm!: UntypedFormGroup;
   submitted = false;
   loading = false;
   error = '';
   hide = true;
   constructor(
-    private formBuilder: FormBuilder, //private formBuilder: UntypedFormBuilder,
+    private formBuilder: UntypedFormBuilder, //private formBuilder: UntypedFormBuilder,
    private authenticationService: AuthenticationService, //Jairo
     private route: ActivatedRoute,
     private router: Router,
@@ -47,13 +47,7 @@ export class SigninComponent
     this.authForm = this.formBuilder.group({
       username: ['admin@software.com', Validators.required], //['admin@software.com', Validators.required],
       password: ['admin@123', Validators.required], //['admin@123', Validators.required],
-    });
-  }
-
-  //Diego
-  login() {
-    const username = this.authForm.get('username')?.value;
-    const password = this.authForm.get('password')?.value;
+    }); 
   } 
 
   /*get f() {
@@ -77,8 +71,8 @@ export class SigninComponent
   
   
   onSubmit() {
-    this.submitted = true;
-    this.loading = true;
+    //this.submitted = true;
+    //this.loading = true;
     this.error = '';
     if (this.authForm.invalid) {
       this.error = 'Username or Password not valid !';

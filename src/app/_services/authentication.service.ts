@@ -57,7 +57,7 @@ export class AuthenticationService {
       });      
       
     }
-    // Diego: adiciono Observable <any>
+    
     login(username: string, password: string ) {
       this.auth.signInWithEmailAndPassword(username, password).then((user) => {
             console.log("usuario autenticado con exito!", user.user?.email)
@@ -94,7 +94,7 @@ export class AuthenticationService {
                       else if (data.role=="Administrator")
                       {
                         console.log("si es admin")
-                        this.router.navigate(['/admin/dashboard/main']); // '/admin/dashboard/main'  /admin/search-order/
+                        this.router.navigate(['/admin/search-order/']); // '/admin/dashboard/main'  /admin/search-order/
                           // this.router.navigate(['/dashboard']);
                       }
                       else
@@ -122,10 +122,8 @@ export class AuthenticationService {
               }
             });
            
-        // });
-        
-
-  }
+         //});
+    }
 
   changePassword(email: string) {
     this.auth.sendPasswordResetEmail(email).then((user) => {

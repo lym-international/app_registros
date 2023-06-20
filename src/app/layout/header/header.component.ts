@@ -112,7 +112,7 @@ export class HeaderComponent
     const userRole = this.authService.currentUserValue.role;
     this.userImg = this.authService.currentUserValue.img;
 
-    if (userRole === 'Admin') {
+    if (userRole === 'Admin') { //Diego: antes Admin
       this.homePage = 'admin/search-order';
     } else if (userRole === 'Client') {
       this.homePage = 'client/dashboard';
