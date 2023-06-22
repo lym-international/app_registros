@@ -4,13 +4,15 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class OrderDataService {
-  private selectedOrder: any;
+  private storageKey = 'selectedOrder';
 
   setSelectedOrder(order: any) {
-    this.selectedOrder = order;
+    localStorage.setItem(this.storageKey, JSON.stringify(order));
+    //console.log("llamando al servicio", order);
   }
 
   getSelectedOrder() {
-    return this.selectedOrder;
+    const order = localStorage.getItem(this.storageKey);
+    return order ? JSON.parse(order) : null;
   }
 }

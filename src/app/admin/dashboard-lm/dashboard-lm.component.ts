@@ -48,19 +48,20 @@ export class DashboardLmComponent implements OnInit {
   public lineChartOptions!: Partial<ChartOptions>;
   public pieChartOptions!: Partial<ChartOptions>;
   public orderSelected!: any;
+  public dataOrder!: any;
   //  color: ["#3FA7DC", "#F6A025", "#9BC311"],
   constructor(private orderDataService: OrderDataService) {
     // controller code
   }
   ngOnInit() {
-    const selectedOrder = this.orderDataService.getSelectedOrder();
+    this.dataOrder = this.orderDataService.getSelectedOrder();
     this.chart1(); //Plantilla
     this.chart2(); //Plantilla
-    console.log(this.orderSelected)
+    console.log('Data: ', this.dataOrder) 
   }
   //this.orderSelected = this.selectedOrder;
   
-
+  
 
 
   //Plantilla

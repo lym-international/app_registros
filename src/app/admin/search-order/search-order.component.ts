@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthenticationService } from 'app/_services/authentication.service';
 import { OrderDataService } from 'app/_services/orderData.service';
+import { Router } from '@angular/router';
 //import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 @Component({
@@ -23,7 +24,8 @@ export class SearchOrderComponent{
 
   constructor(private http: HttpClient, 
               private authenticationService: AuthenticationService,
-              private orderDataService: OrderDataService) {}
+              private orderDataService: OrderDataService,
+              private router:Router) {}
   
   ngOnInit() {
 
@@ -84,6 +86,14 @@ export class SearchOrderComponent{
     this.orderDataService.setSelectedOrder(order);
     
     console.log(this.selectedOrder)
+  }
+
+  onOrderSelection(selectedOption: any) {
+    this.selectedOrder = selectedOption;
+  }
+
+  navegar(){
+    this.router.navigate(['/admin/dashboard-lm/']);
   }
   
 }

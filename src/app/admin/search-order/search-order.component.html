@@ -12,12 +12,12 @@
             </div>
             <mat-form-field style="display: inline;">
                 <mat-label>Select</mat-label>
-                <mat-select (selectionChange)="selectedOrder = $event.value">
-                    <mat-option (click)="orderOption(order)" *ngFor="let order of orders">{{ order.data.orderId}} / {{ order.data.clientName ? order.data.clientName : order.data.company }} / {{order.data.startDate}} / {{order.data.place}}</mat-option>
+                <mat-select [(value)]="selectedOrder" (selectionChange)="onOrderSelection($event.value)">
+                    <mat-option (click)="orderOption(order)" *ngFor="let order of orders" [value]="order">{{ order.data.orderId}} / {{ order.data.clientName ? order.data.clientName : order.data.company }} / {{order.data.startDate}} / {{order.data.place}}</mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <!-- <button (click)="getOrders()">cualquier cosa</button> -->
+            <!-- <button (click)="navegar()">cualquier cosa</button> -->
 
             <div class="row">
                 <div>
@@ -29,7 +29,7 @@
                 </mat-form-field>
             </div>
             <div>
-                <button mat-raised-button color="primary">Search</button>
+                <button mat-raised-button color="primary" (click)="navegar()">Search</button>
             </div>
         </div>
         <div class="col col-sm-5" style="text-align: center;">

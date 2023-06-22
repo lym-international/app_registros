@@ -33,9 +33,9 @@
                     <div class="card-statistic-3">
                         <div class="card-icon card-icon-large"><i class="fa fa-globe"></i></div>
                         <div class="tarjeta">
-                            Hilton baltimore kitchen
-                            <br/> <br/> 401 West Pratt NW
-                            <br/> <br/> Baltimore MD 21201
+                            {{dataOrder.data.place}}
+                            <br/> <br/> {{dataOrder.data.address}}
+                            <br/> <br/> {{dataOrder.data.city}} {{dataOrder.data.state}} {{dataOrder.data.zipcode}}
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                         <mat-card class="tarjeta-pequena">
                             <mat-card-content>
                                 <mat-card-title>Order number</mat-card-title>
-                                2023 - 2364
+                                {{dataOrder.data.orderId}}
                             </mat-card-content>
                         </mat-card>
                     </div>
@@ -55,7 +55,7 @@
                         <mat-card class="tarjeta-pequena">
                             <mat-card-content>
                                 <mat-card-title>Event date</mat-card-title>
-                                04-25-2023
+                                {{dataOrder.data.startDate}}
                             </mat-card-content>
                         </mat-card>
                     </div>
