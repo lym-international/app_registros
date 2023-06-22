@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { OrderDataService } from 'app/_services/orderData.service';
 
 
 import {
@@ -46,15 +47,23 @@ export type ChartOptions = {
 export class DashboardLmComponent implements OnInit {
   public lineChartOptions!: Partial<ChartOptions>;
   public pieChartOptions!: Partial<ChartOptions>;
+  public orderSelected!: any;
   //  color: ["#3FA7DC", "#F6A025", "#9BC311"],
-  constructor() {
+  constructor(private orderDataService: OrderDataService) {
     // controller code
   }
   ngOnInit() {
-    this.chart1();
-    this.chart2();
+    const selectedOrder = this.orderDataService.getSelectedOrder();
+    this.chart1(); //Plantilla
+    this.chart2(); //Plantilla
+    console.log(this.orderSelected)
   }
+  //this.orderSelected = this.selectedOrder;
+  
 
+
+
+  //Plantilla
   private chart1() {
     this.lineChartOptions = {
       series: [

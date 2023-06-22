@@ -6,11 +6,13 @@ import { SharedModule } from '@shared';
 
 import { SearchOrderRoutingModule } from './search-order-routing.module';
 import { SearchOrderComponent } from './search-order.component';
+import { OrderDataService } from 'app/_services/orderData.service'; //Diego
 
 //material
 import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+
 
 
 @NgModule({
@@ -27,6 +29,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     MatSelectModule,
   ],
   
-  providers: [],
+  providers: [OrderDataService],
 })
 export class SearchOrderModule {}
