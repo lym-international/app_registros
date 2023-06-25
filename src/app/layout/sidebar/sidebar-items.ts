@@ -11,7 +11,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Admin'],
+    role: ['Administrator'],
     submenu: [],
   },
   {
@@ -23,7 +23,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Admin'],
+    role: ['Administrator'],
     submenu: [],
   },
 
@@ -74,7 +74,7 @@ export const ROUTES: RouteInfo[] = [
       groupTitle: false,
       badge: '',
       badgeClass: '',
-      role: ['Admin'],
+      role: ['Administrator'],
       submenu: [],
     },
     
@@ -87,7 +87,7 @@ export const ROUTES: RouteInfo[] = [
       groupTitle: false,
       badge: '',
       badgeClass: '',
-      role: ['Admin'],
+      role: ['Administrator'],
       submenu: [],
     },
   

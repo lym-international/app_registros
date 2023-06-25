@@ -8,12 +8,12 @@
                     <li class="sidebar-user-panel">
                         <div class="user-panel">
                             <div class="image">
-                                <img src="{{ userImg }}" class="img-circle user-img-circle" alt="User Image" />
+                                <img src="{{ dataUser.img }}" class="img-circle user-img-circle" alt="User Image" />
                             </div>
                         </div>
                         <div class="profile-usertitle">
-                            <div class="sidebar-userpic-name">{{ userFullName }}</div>
-                            <div class="profile-usertitle-job">{{ userType }}</div>
+                            <div class="sidebar-userpic-name">{{ dataUser.firstname }} {{ dataUser.lastname }}</div>
+                            <div class="profile-usertitle-job">{{ dataUser.role }}</div>
                         </div>
                     </li>
                     <br/>

@@ -13,6 +13,7 @@ import {
 import { ROUTES } from './sidebar-items';
 import { AuthService, Role } from '@core';
 import { RouteInfo } from './sidebar.metadata';
+import { AuthenticationService } from 'app/_services/authentication.service';
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -22,6 +23,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   public sidebarItems!: RouteInfo[];
   public innerHeight?: number;
   public bodyTag!: HTMLElement;
+  public dataUser!: any;
   listMaxHeight?: string;
   listMaxWidth?: string;
   userFullName?: string;
@@ -35,7 +37,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private renderer: Renderer2,
     public elementRef: ElementRef,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    public authenticationService: AuthenticationService
+
   ) {
     this.elementRef.nativeElement.closest('body');
     this.routerObj = this.router.events.subscribe((event) => {
@@ -69,19 +73,16 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
   }
   ngOnInit() {
-    if (this.authService.currentUserValue) {
-      const userRole = this.authService.currentUserValue.role;
-      this.userFullName =
-        this.authService.currentUserValue.firstName +
-        ' ' +
-        this.authService.currentUserValue.lastName;
-      this.userImg = this.authService.currentUserValue.img;
+    this.dataUser = this.authenticationService.getData();
 
+    if (this.dataUser) {
+      const userRole = this.dataUser.role;
+      
       this.sidebarItems = ROUTES.filter(
         (x) => x.role.indexOf(userRole) !== -1 || x.role.indexOf('All') !== -1
       );
-      if (userRole === Role.Admin) {
-        this.userType = Role.Admin;
+      if (userRole === "Administrator") {
+        this.userType = "Administrator";
       } else if (userRole === Role.Client) {
         this.userType = Role.Client;
       } else if (userRole === Role.Employee) {
@@ -95,6 +96,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.initLeftSidebar();
     this.bodyTag = this.document.body;
   }
+
+  
+
+
   ngOnDestroy() {
     this.routerObj.unsubscribe();
   }
@@ -143,3 +148,32 @@ export class SidebarComponent implements OnInit, OnDestroy {
     });
   }
 }
+
+
+//Diego: código de plantilla
+/*if (this.authService.currentUserValue) {
+  const userRole = this.authService.currentUserValue.role;
+  this.userFullName =
+    this.authService.currentUserValue.firstName +
+    ' ' +
+    this.authService.currentUserValue.lastName;
+  this.userImg = this.authService.currentUserValue.img;
+
+  this.sidebarItems = ROUTES.filter(
+    (x) => x.role.indexOf(userRole) !== -1 || x.role.indexOf('All') !== -1
+  );
+  if (userRole === Role.Admin) {
+    this.userType = Role.Admin;
+  } else if (userRole === Role.Client) {
+    this.userType = Role.Client;
+  } else if (userRole === Role.Employee) {
+    this.userType = Role.Employee;
+  } else {
+    this.userType = Role.Admin;
+  }
+}
+
+// this.sidebarItems = ROUTES.filter((sidebarItem) => sidebarItem);
+this.initLeftSidebar();
+this.bodyTag = this.document.body;
+}*/
