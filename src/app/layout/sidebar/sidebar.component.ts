@@ -14,6 +14,9 @@ import { ROUTES } from './sidebar-items';
 import { AuthService, Role } from '@core';
 import { RouteInfo } from './sidebar.metadata';
 import { AuthenticationService } from 'app/_services/authentication.service';
+import { OcultarSidebarService } from '../../_services/ocultar-sidebar.service';
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -32,13 +35,17 @@ export class SidebarComponent implements OnInit, OnDestroy {
   headerHeight = 60;
   currentRoute?: string;
   routerObj;
+  mostrarSidebar: boolean = true;
+  ocultarSidebarSuscription: Subscription;
+
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
     public elementRef: ElementRef,
     private authService: AuthService,
     private router: Router,
-    public authenticationService: AuthenticationService
+    public authenticationService: AuthenticationService,
+    public ocultarSidebarService: OcultarSidebarService,
 
   ) {
     this.elementRef.nativeElement.closest('body');
@@ -73,6 +80,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
   }
   ngOnInit() {
+    
+    this.ocultarSidebarSuscription = this.ocultarSidebarService.mostrarSidebar$.subscribe((mostrar) => {
+      this.mostrarSidebar = mostrar;
+      
+    });
+    console.log('Ocultar Sidebar2: ', this.mostrarSidebar)
+
     this.dataUser = this.authenticationService.getData();
 
     if (this.dataUser) {
@@ -92,7 +106,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
       }
     }
 
-    // this.sidebarItems = ROUTES.filter((sidebarItem) => sidebarItem);
+    this.sidebarItems = ROUTES.filter((sidebarItem) => sidebarItem);
     this.initLeftSidebar();
     this.bodyTag = this.document.body;
   }
@@ -102,6 +116,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.routerObj.unsubscribe();
+    if (this.ocultarSidebarSuscription) {
+      this.ocultarSidebarSuscription.unsubscribe();
+    }
   }
   initLeftSidebar() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias

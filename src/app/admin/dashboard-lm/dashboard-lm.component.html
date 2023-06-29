@@ -5,27 +5,6 @@
             <app-breadcrumb [title]="'Dashboard'" [active_item]="'Dashboard'"></app-breadcrumb>
             <!--<app-breadcrumb [title]="'Dashboard'" [items]="['Search order']" [active_item]="'Dashboard'"></app-breadcrumb>-->
         </div>
-        <!--<div style="margin-left: 150px;">
-            <mat-card class="tarjeta">
-                <mat-card-content>
-                    Hilton baltimore kitchen
-                    <br/> <br/> 401 West Pratt NW
-                    <br/> <br/> Baltimore MD 21201
-                </mat-card-content>
-            </mat-card>
-            <mat-card class="tarjeta-pequena">
-                <mat-card-content>
-                    <mat-card-title>Order number</mat-card-title>
-                    2023 - 2364
-                </mat-card-content>
-            </mat-card>
-            <mat-card class="tarjeta-pequena">
-                <mat-card-content>
-                    <mat-card-title>Event date</mat-card-title>
-                    04-25-2023
-                </mat-card-content>
-            </mat-card>
-        </div> -->
 
         <div class="container">
             <div class="column" style="padding-top: 40px;">
@@ -41,7 +20,7 @@
                 </div>
             </div>
 
-            <div class="column tarjeta-indicadores">
+            <div class="column" style="margin: auto;">
                 <div class="sub-column">
                     <div class="sub-sub-column">
                         <mat-card class="tarjeta-pequena">
@@ -72,7 +51,7 @@
                         <div class="card-icon card-icon-large"><i class="fa fa-briefcase"></i></div>
                         <div class="card-content">
                             <h4 class="card-title">Requested</h4>
-                            <span class="data-1" style="padding-bottom: 50px;">100</span>
+                            <span class="data-1" style="padding-bottom: 50px;">{{totalRequest}}</span>
 
                             <!--<mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow orange-progress mt-2 mb-2" value="40">
                             </mat-progress-bar> -->
@@ -90,8 +69,8 @@
                         <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
                         <div class="card-content">
                             <h4 class="card-title">Confirmed</h4>
-                            <span class="data-1">105</span>
-                            <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow purple-progress mt-2 mb-2" value="40">
+                            <span class="data-1">{{totalConfirmed}}</span>
+                            <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow orange-progress mt-2 mb-2" value="40">
                             </mat-progress-bar>
                             <!-- <p class="mb-0 text-sm">
                                 <span class="mr-2"><i class="fa fa-arrow-up"></i> 04%</span>
@@ -107,7 +86,7 @@
                         <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
                         <div class="card-content">
                             <h4 class="card-title">CheckIn</h4>
-                            <span class="data-1">99</span>
+                            <span class="data-1">{{checkIn}}</span>
                             <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow green-progress mt-2 mb-2" value="40">
                             </mat-progress-bar>
                             <!--<p class="mb-0 text-sm">
@@ -124,8 +103,25 @@
                         <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
                         <div class="card-content">
                             <h4 class="card-title">CheckOut</h4>
-                            <span class="data-1">95</span>
+                            <span class="data-1">{{checkOut}}</span>
                             <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow sky-progress mt-2 mb-2" value="40">
+                            </mat-progress-bar>
+                            <!--<p class="mb-0 text-sm">
+                                <span class="mr-2"><i class="fa fa-arrow-down"></i> 06%</span>
+                                <span class="text-nowrap"> Since last month</span>
+                            </p>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 tarjeta-indicadores">
+                <div class="card l-bg-cyan-dark">
+                    <div class="card-statistic-3">
+                        <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
+                        <div class="card-content">
+                            <h4 class="card-title">Noshow</h4>
+                            <span class="data-1">{{noShow}}</span>
+                            <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow purple-progress mt-2 mb-2" value="40">
                             </mat-progress-bar>
                             <!--<p class="mb-0 text-sm">
                                 <span class="mr-2"><i class="fa fa-arrow-down"></i> 06%</span>
@@ -196,11 +192,11 @@
         <hr style="color: #004676; width: 50%; margin: 50px auto 70px auto; " />
 
         <div class="row clearfix">
-            <div class="col-xl-3 col-lg-6">
+            <div class="col-xl-2 col-lg-3">
                 <mat-card class="" style="background-color: #004676; color: white; font-size: medium;">
                     <mat-card-content>
                         <mat-card-title>Required positions</mat-card-title>
-                        3
+                        {{totalRequeridos}}
                     </mat-card-content>
                 </mat-card>
             </div>
@@ -306,10 +302,10 @@
                     </div>
                 </div> 
             </div> -->
-            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+            <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12">
                 <div class="card">
                     <div class="header">
-                        <h2>Check-In</h2>
+                        <h2>Complience by position</h2>
                     </div>
                     <ng-scrollbar style="height: 410px" visibility="hover">
                         <div class="tableBody">
@@ -319,8 +315,11 @@
                                         <tr>
                                             <th class="column-check">Position</th>
                                             <th class="column-check">Confirmed employees</th>
-                                            <th class="column-check">Employees</th>
-                                            <th class="column-check">Compliance</th>
+                                            <th class="column-check">CheckIn</th>
+                                            <th class="column-check">CheckIn Compliance</th>
+                                            <th class="column-check">CheckOut</th>
+                                            <th class="column-check">CheckOut Compliance</th>
+                                            <th class="column-check">Noshow</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -332,6 +331,12 @@
                                                 <mat-progress-bar mode="determinate" class="progress-round green-progress" value="95">
                                                 </mat-progress-bar>
                                             </td>
+                                            <td class="column-check">37</td>
+                                            <td>97%
+                                                <mat-progress-bar mode="determinate" class="progress-round green-progress" value="97">
+                                                </mat-progress-bar>
+                                            </td>
+                                            <td class="column-check">2</td>
                                         </tr>
                                         <tr>
                                             <td>Bartender</td>
@@ -341,6 +346,12 @@
                                                 <mat-progress-bar mode="determinate" class="progress-round red-progress" value="33">
                                                 </mat-progress-bar>
                                             </td>
+                                            <td class="column-check">2</td>
+                                            <td>100%
+                                                <mat-progress-bar mode="determinate" class="progress-round green-progress" value="100">
+                                                </mat-progress-bar>
+                                            </td>
+                                            <td class="column-check">4</td>
                                         </tr>
                                         <tr>
                                             <td>Captain</td>
@@ -350,116 +361,12 @@
                                                 <mat-progress-bar mode="determinate" class="progress-round orange-progress" value="66">
                                                 </mat-progress-bar>
                                             </td>
-                                        </tr>
-
-
-                                        <!--<tr>
-                                            <td>Project b</td>
-                                            <td>55%
-                                                <mat-progress-bar mode="determinate" class="progress-round orange-progress" value="55">
-                                                </mat-progress-bar>
-                                            </td>
-                                            <td>3 Months</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Project C</td>
-                                            <td>67%
-                                                <mat-progress-bar mode="determinate" class="progress-round red-progress" value="67">
-                                                </mat-progress-bar>
-                                            </td>
-                                            <td>1 Months</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Project D</td>
-                                            <td>70%
-                                                <mat-progress-bar mode="determinate" class="progress-round green-progress" value="70">
-                                                </mat-progress-bar>
-                                            </td>
-                                            <td>2 Months</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Project E</td>
-                                            <td>24%
-                                                <mat-progress-bar mode="determinate" value="24" class="progress-round red-progress">
-                                                </mat-progress-bar>
-                                            </td>
-                                            <td>3 Months</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Project F</td>
-                                            <td>77%
-                                                <mat-progress-bar mode="determinate" class="progress-round green-progress" value="77">
-                                                </mat-progress-bar>
-                                            </td>
-                                            <td>4 Months</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Project G</td>
-                                            <td>41%
-                                                <mat-progress-bar mode="determinate" value="41" class="progress-round cyan-progress">
-                                                </mat-progress-bar>
-                                            </td>
-                                            <td>2 Months</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Project H</td>
-                                            <td>41%
-                                                <mat-progress-bar mode="determinate" value="41" class="progress-round orange-progress">
-                                                </mat-progress-bar>
-                                            </td>
-                                            <td>2 Months</td>
-                                        </tr> -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </ng-scrollbar>
-                </div>
-            </div>
-            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12" style="">
-                <div class="card">
-                    <div class="header">
-                        <h2>Check-Out</h2>
-                    </div>
-                    <ng-scrollbar style="height: 410px" visibility="hover">
-                        <div class="tableBody">
-                            <div class="responsive_table">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th class="column-check">Position</th>
-                                            <th class="column-check">Confirmed employees</th>
-                                            <th class="column-check">Employees</th>
-                                            <th class="column-check">Compliance</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td> Server</td>
-                                            <td class="column-check">40</td>
-                                            <td class="column-check">38</td>
-                                            <td>95%
-                                                <mat-progress-bar mode="determinate" class="progress-round green-progress" value="95">
-                                                </mat-progress-bar>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Bartender</td>
-                                            <td class="column-check">6</td>
                                             <td class="column-check">2</td>
-                                            <td>33%
-                                                <mat-progress-bar mode="determinate" class="progress-round red-progress" value="33">
+                                            <td>100%
+                                                <mat-progress-bar mode="determinate" class="progress-round green-progress" value="100">
                                                 </mat-progress-bar>
                                             </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Captain</td>
-                                            <td class="column-check">3</td>
-                                            <td class="column-check">2</td>
-                                            <td>66%
-                                                <mat-progress-bar mode="determinate" class="progress-round orange-progress" value="66">
-                                                </mat-progress-bar>
-                                            </td>
+                                            <td class="column-check">1</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -468,6 +375,7 @@
                     </ng-scrollbar>
                 </div>
             </div>
+
             <!-- <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                 <div class="card">
                     <div class="header">

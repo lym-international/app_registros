@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderDataService } from 'app/_services/orderData.service';
+import { Employees } from '../employees/allEmployees/employees.model';
 
 
 import {
@@ -49,23 +50,94 @@ export class DashboardLmComponent implements OnInit {
   public pieChartOptions!: Partial<ChartOptions>;
   public orderSelected!: any;
   public dataOrder!: any;
+  public orderId!: string;
+  public totalConfirmed!: number;
+  public noShow: number;
+  public checkIn: number;
+  public checkOut: number;
+  totalRequest: number = 0;
+  porcentajeCheckIn: number = 0;
+  porcentajeCheckOut: number = 0;
+  porcentajeNoshow: number = 0;
+  totalRequeridos: number = 0;
+  
+
   //  color: ["#3FA7DC", "#F6A025", "#9BC311"],
   constructor(private orderDataService: OrderDataService) {
     // controller code
   }
   ngOnInit() {
     this.dataOrder = this.orderDataService.getSelectedOrder();
-    this.chart1(); //Plantilla
-    this.chart2(); //Plantilla
-    console.log('Data: ', this.dataOrder) 
+    //this.chart1(); //Plantilla
+    //this.chart2(); //Plantilla
+    console.log('Data: ', this.dataOrder)
+    this.orderId = this.dataOrder.id;
+    this.getRegistByOrder();
+    this.getTotalRequest();
+    //this.porcentajes();
+    
   }
   //this.orderSelected = this.selectedOrder;
   
+  getTotalRequest(){
+    
+    if(this.dataOrder.data.items){
+        this.dataOrder.data.items.forEach(request => {
+        this.totalRequest += request.quantity;
+        });
+        
+    }
+    else {
+    }
+    console.log('Requested: ', this.dataOrder.data.items)  
+
+    this.totalRequeridos = this.dataOrder.data.items.length;
+
+    this.dataOrder.data.items.forEach(item => {console.log('Po: ',item)}) 
+
+  }
+  
   
 
+  getRegistByOrder(){
+    fetch(
+      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
+      
+      )
+    .then((response) => response.json())
+    .then((data) => {
+    console.log('Id Data: ', data.employees)
+    this.checkIn = data.employees.filter((employee) => employee.checkin === true).length;
+    
+    this.checkOut = data.employees.filter((employee) => employee.checkout === true).length;
+        
+    this.noShow = data.employees.filter((employee) => employee.status === "No show").length;
+      
+    this.totalConfirmed = data.employees.filter((employee) => employee.employee.status === "Confirmed").length;
+    
+    this.porcentajes(this.checkIn, this.checkOut, this.noShow, this.totalConfirmed)
+    
+    })
+    .catch((error)=> {
+      console.log(error)
+    }
+    )   
+  }
+
+  porcentajes(checkIn,checkOut,noShow,totalConfirmed){
+    if (this.totalConfirmed !== 0) {
+      this.porcentajeCheckIn = Math.round((checkIn/totalConfirmed) * 100);
+      this.porcentajeCheckOut = Math.round((checkOut/totalConfirmed) * 100);
+      this.porcentajeNoshow = Math.round((noShow/totalConfirmed) * 100);
+      
+    } else {
+      // Manejo del caso cuando this.totalConfirmed es igual a cero
+      console.log('No es posible calcular los porcentajes. totalConfirmed es cero.');
+    } 
+  }
 
   //Plantilla
-  private chart1() {
+  /*private chart1() {
     this.lineChartOptions = {
       series: [
         {
@@ -161,5 +233,5 @@ export class DashboardLmComponent implements OnInit {
         },
       ],
     };
-  }
-}
+  }*/
+} 

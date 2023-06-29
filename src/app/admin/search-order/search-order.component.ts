@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthenticationService } from 'app/_services/authentication.service';
 import { OrderDataService } from 'app/_services/orderData.service';
 import { Router } from '@angular/router';
+import { OcultarSidebarService } from 'app/_services/ocultar-sidebar.service';
 //import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 @Component({
@@ -18,6 +19,7 @@ export class SearchOrderComponent{
   
   data: any;
   selectedOrder: any; //Diego
+  ocultar:any;
 
   private orderFunctionsURL = "https://us-central1-highkeystaff.cloudfunctions.net/orders";
   public orders : any[] = [];
@@ -25,9 +27,12 @@ export class SearchOrderComponent{
   constructor(private http: HttpClient, 
               private authenticationService: AuthenticationService,
               private orderDataService: OrderDataService,
-              private router:Router) {}
+              private router:Router,
+              private ocultarSidebarService: OcultarSidebarService,) {}
   
   ngOnInit() {
+    
+    this.ocultarSidebarService.ocultarSidebar();
 
     this.data = this.authenticationService.getData();
 
@@ -61,9 +66,11 @@ export class SearchOrderComponent{
       //console.log(data)
       this.orders = data;
     })
+    .catch((error)=> {
+      console.log(error)
+    }
+    )
   }
-  
-
 
   getOrderByIdUser(user){
     
@@ -75,10 +82,10 @@ export class SearchOrderComponent{
       //console.log(data)
       this.orders = data;
     })
-    
-
-
-    //return this.http.get(`${this.orderFunctionsURL}/order/getOrdersByUser/user?user=${user}`); // proporcionado por Jairo
+    .catch((error)=> {
+      console.log(error)
+    }
+    )   
   }
   
   orderOption(order: any){
@@ -95,6 +102,8 @@ export class SearchOrderComponent{
   navegar(){
     this.router.navigate(['/admin/dashboard-lm/']);
   }
+  //Diego
+
   
 }
   

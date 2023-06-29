@@ -119,7 +119,7 @@ export class HeaderComponent
     this.dataUser = this.authenticationService.getData();
     
 
-    if (userRole === 'Admin') { //Diego: antes Admin
+    if (userRole === 'Admin') { 
       this.homePage = 'admin/search-order';
     } else if (userRole === 'Client') {
       this.homePage = 'client/dashboard';

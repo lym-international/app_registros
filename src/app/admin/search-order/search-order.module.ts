@@ -12,6 +12,7 @@ import { OrderDataService } from 'app/_services/orderData.service'; //Diego
 import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { OcultarSidebarService } from 'app/_services/ocultar-sidebar.service';
 
 
 
@@ -29,6 +30,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     MatSelectModule,
   ],
   
-  providers: [OrderDataService],
+  providers: [OrderDataService, OcultarSidebarService],
 })
 export class SearchOrderModule {}

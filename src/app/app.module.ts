@@ -31,12 +31,14 @@ import { CoreModule } from '@core';
 /*import { SharedModule } from '@shared'
 import { environment } from 'environments/environment';*/
 //import { AuthenticationService } from './_services/authentication.service';
+
 //=======
 import { SharedModule } from '@shared';
 import { environment } from '../environments/environment';
 import { CloseEventComponent } from './close-event/close-event.component';
 import { TimesheetComponent } from './timesheet/timesheet.component'; //Jairo
 import { AuthenticationService } from './_services/authentication.service'; //Jairo
+import { OcultarSidebarService } from './_services/ocultar-sidebar.service'; // Diego
 //>>>>>>> b6eddb57fd1079fe91a9300e547557031292cc45
 
 export function createTranslateLoader(http: HttpClient) {
@@ -76,10 +78,12 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   providers: [
     AuthenticationService, //Jairo
+    OcultarSidebarService, //Diego
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     fakeBackendProvider,
+
   ],
   bootstrap: [AppComponent],
 })
