@@ -21,6 +21,7 @@ import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { Direction } from '@angular/cdk/bidi';
 import { TableExportUtil, TableElement } from '@shared';
 import { formatDate } from '@angular/common';
+import { OrderDataService } from 'app/_services/orderData.service';
 
 @Component({
   selector: 'app-allemployees',
@@ -56,11 +57,17 @@ export class AllemployeesComponent
   index?: number;
   id?: number;
   employees?: Employees;
+  public dataEmployees!: any;
+  employeesData: any[] = [];
+  public orderId!: string;
+  
+
   constructor(
     public httpClient: HttpClient,
     public dialog: MatDialog,
     public employeesService: EmployeesService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private orderDataService: OrderDataService
   ) {
     super();
   }
@@ -72,7 +79,32 @@ export class AllemployeesComponent
   contextMenuPosition = { x: '0px', y: '0px' };
   ngOnInit() {
     this.loadData();
+    this.dataEmployees = this.orderDataService.getSelectedOrder();
+    console.log('Data: ', this.dataEmployees)
+    this.orderId = this.dataEmployees.id;
+    this.getEmployees()
+    
   }
+  
+
+  
+  getEmployees(){
+    fetch(
+      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
+      
+      )
+    .then((response) => response.json())
+    .then((data) => {
+      data.employees.forEach((employee)=>{
+        console.log('RR: ', employee.employee.data)  
+        const positionName = employee.position;
+        const hourFrom = employee.hourFrom;
+      }
+      )    
+    }
+    )
+  }
+
   refresh() {
     this.loadData();
   }

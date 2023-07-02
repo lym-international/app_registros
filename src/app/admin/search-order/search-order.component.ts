@@ -23,6 +23,9 @@ export class SearchOrderComponent{
 
   private orderFunctionsURL = "https://us-central1-highkeystaff.cloudfunctions.net/orders";
   public orders : any[] = [];
+  public orderNumber: string;
+  public foundOrder: any | null = null;
+  
 
   constructor(private http: HttpClient, 
               private authenticationService: AuthenticationService,
@@ -34,7 +37,9 @@ export class SearchOrderComponent{
     
     this.ocultarSidebarService.ocultarSidebar();
 
-    this.data = this.authenticationService.getData();
+    this.data = this.authenticationService.getData(); // en data obtiene los datos guardados en el servicio authenticationService.
+    
+    //Inicio validación de rol para la visualización de las órdenes.
 
       if (this.data.role == "Client") {
       // this.router.navigate(['orders']);
@@ -44,6 +49,7 @@ export class SearchOrderComponent{
       this.data.role == "Executive"
     ) {
       this.getOrders();
+      this.getSearchOrders();
       //this.loadParameters();
     } else if (this.data.role == "Supervisor") {
       //this.loadSupervisorOrders();
@@ -51,12 +57,15 @@ export class SearchOrderComponent{
       this.getOrderByIdUser(this.data.email)
 
     }
-    console.log(this.data);
+
+    //Fin validación de rol para la visualización de las órdenes.
+    console.log('Datos usuario: ',this.data);
+
   }
 
   public ordenes:any[];
   
-
+  //Trae las órdenes en general desde la url de la API, más arriba se usa solo para los administradores y executives.
   getOrders(){
     fetch(
       `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
@@ -65,13 +74,14 @@ export class SearchOrderComponent{
     .then((data) => {
       //console.log(data)
       this.orders = data;
+      //console.log('Ordenes desde el método getOrders: ', this.orders)
     })
     .catch((error)=> {
       console.log(error)
     }
     )
   }
-
+//Trae las órdenes por usuario desde la url de la API, más arriba se usa solo para los Supervisor.
   getOrderByIdUser(user){
     
     fetch(
@@ -91,8 +101,6 @@ export class SearchOrderComponent{
   orderOption(order: any){
     this.selectedOrder = order;
     this.orderDataService.setSelectedOrder(order);
-    
-    console.log(this.selectedOrder)
   }
 
   onOrderSelection(selectedOption: any) {
@@ -102,8 +110,55 @@ export class SearchOrderComponent{
   navegar(){
     this.router.navigate(['/admin/dashboard-lm/']);
   }
-  //Diego
+  
+  //Diego: Inicio búsqueda de órdenes por el input
+  
+  getSearchOrders(): void {
+    const apiUrl = 'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders';
 
+    this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
+      this.ordenes = ordenes;
+
+      //console.log('Ordenes desde el getSearchOrders: ', this.ordenes )
+    });
+  }
+  
+  searchOrder(): void {
+    //console.log('Ordenes desde el getSearchOrders2: ', this.ordenes )
+    
+
+    for (const order of this.ordenes) {
+      if (order.data.orderId === this.orderNumber) {
+        this.foundOrder = order;
+        break;
+      }
+    }
+    
+    // Verificar si se encontró un objeto con el orderId especificado
+    if (this.foundOrder) {
+      //console.log("Se encontró el objeto:");
+      this.orderDataService.setSelectedOrder(this.foundOrder);
+      //console.log(this.foundOrder);
+    } else {
+      console.log("No se encontró ningún objeto con el orderId especificado.");
+    }
+        
+    
+    //console.log('órdenes filtradas en searchOrder: ', filteredOrders)
+    /*if (filteredOrders.length > 0) {
+      const order = filteredOrders[0];
+
+      // Lógica para obtener las propiedades necesarias del objeto order
+
+      this.orderDataService.setSelectedOrder(order); // Guarda el pedido seleccionado en el servicio OrderDataService
+
+      console.log('Orden desde el search: ', this.orderDataService)
+    } else {
+      console.log('No se encontró el número de orden ingresado.');
+    }*/
+  }
+  //Diego: Fin búsqueda de órdenes por el input
+  
   
 }
   

@@ -19,17 +19,22 @@
 
             <!-- <button (click)="navegar()">cualquier cosa</button> -->
 
+            <!-- Inicio filtro órdenes -->
             <div class="row">
                 <div>
                     <label class="form-label">Order number</label>
                 </div>
                 <mat-form-field style="display: inline-flex; width: 30%;">
                     <mat-label>Input</mat-label>
-                    <input matInput>
+                    <input matInput [(ngModel)]="orderNumber" (ngModelChange)="searchOrder()">
+                    <!--(keyup.enter)="searchOrder()"-->
+                    <!--(ngModelChange)="searchOrder()"-->
                 </mat-form-field>
             </div>
+            <!--Final filtro órdenes-->
+
             <div>
-                <button mat-raised-button color="primary" (click)="navegar()" [disabled]="!selectedOrder">Search</button>
+                <button mat-raised-button color="primary" (click)="navegar()" [disabled]="!(selectedOrder || foundOrder)">Search</button>
             </div>
         </div>
         <div class="col col-sm-5" style="text-align: center;">
