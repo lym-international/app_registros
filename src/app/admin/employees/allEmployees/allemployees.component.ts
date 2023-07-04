@@ -60,6 +60,10 @@ export class AllemployeesComponent
   public dataEmployees!: any;
   employeesData: any[] = [];
   public orderId!: string;
+  public empleados: string;
+  public employeesDatos: any[];
+  employeesArray: any[] = [];
+  
   
 
   constructor(
@@ -86,8 +90,7 @@ export class AllemployeesComponent
     
   }
   
-
-  
+  // saca la data que se necesita por empleado según la orden.
   getEmployees(){
     fetch(
       `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
@@ -95,14 +98,52 @@ export class AllemployeesComponent
       )
     .then((response) => response.json())
     .then((data) => {
+      
+      //const employeesArray = []; // Diego: Array para guardar los datos
+      //this.employeesDatos = employeesArray;
+      
+      //console.log('employeesDatos: ', this.employeesDatos)
+
       data.employees.forEach((employee)=>{
         console.log('RR: ', employee.employee.data)  
-        const positionName = employee.position;
-        const hourFrom = employee.hourFrom;
-      }
-      )    
-    }
-    )
+        //const positionName = employee.position;
+        //const hourFrom = employee.hourFrom || "No data";
+        const firstName = employee.employee.data.firstname || "No data"; //Diego: si no tiene valor (undefined) imrime "No data".
+        const highKeyId = employee.employee.data.employeeId || "No data";
+        /*const positions = employee.employee.data.positions; //Diego: toma todas las posiciones que ha tenido el empleado
+        const lastPosition = (Object.values(positions) as { name: string }[])[Object.values(positions).length - 1].name || "No data"; // Diego: toma la última posición que ha tenido el empleado, si no tiene valor (undefined) imrime "No data". */
+        const position = employee.position || "No data";
+        const totalHours = employee.hours || "No data";
+        const payrollId = employee.employee.data.payrollid || "No data";
+        const checkIn = employee.realCheckin || "No data";
+        const checkOut = employee.dateCheckoutRounded || "No data";
+        const brake = employee.brake || "No data";
+        console.log('data empleados: ', employee)
+
+        // Diego: Agregar los datos al array
+        this.employeesArray.push({
+          firstName: firstName,
+          highKeyId: highKeyId,
+          //position: lastPosition,
+          position: position,
+          totalHours: totalHours,
+          payRollId: payrollId,
+          in: checkIn,
+          out: checkOut,
+          brake: brake,
+          //hourFrom: hourFrom,
+        });
+      });
+
+  
+        //console.log('Datass: ', this.employeesDatas)
+      // Diego: ejecución con el array de datos
+      console.log('---------------------------');
+      console.log('Array empleados: ');
+     console.log(this.employeesArray);
+     console.log('---------------------------');
+
+    })  
   }
 
   refresh() {
