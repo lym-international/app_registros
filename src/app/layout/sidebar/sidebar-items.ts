@@ -1,6 +1,19 @@
 import { RouteInfo } from './sidebar.metadata';
 export const ROUTES: RouteInfo[] = [
   
+  
+  {
+    path: '/admin/search-order',
+    title: 'Search order',
+    iconType: 'feather',
+    icon: 'users',
+    class: '',
+    groupTitle: false,
+    badge: '',
+    badgeClass: '',
+    role: ['Administrator'],
+    submenu: [],
+  },
   {
     path: '/admin/employees/allEmployees',
     title: 'Employees',
@@ -10,11 +23,12 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Admin'],
+    role: ['Administrator'],
     submenu: [],
   },
+
   
-  {
+  /*{
     path: '',
     title: 'Add emergency employee',
     iconType: 'feather',
@@ -50,30 +64,30 @@ export const ROUTES: RouteInfo[] = [
         submenu: []
       }
     ]
-  },
+  },*/
     {
-      path: '/admin/employees/allEmployees',
+      path: '/close-event',
       title: 'Close event',
       iconType: 'feather',
-      icon: 'users',
+      icon: 'x-circle',
       class: '',
       groupTitle: false,
       badge: '',
       badgeClass: '',
-      role: ['Admin'],
+      role: ['Administrator'],
       submenu: [],
     },
     
     {
-      path: '/admin/employees/allEmployees',
+      path: 'src/app/timesheet',
       title: 'Timesheet',
       iconType: 'feather',
-      icon: 'users',
+      icon: 'file-text',
       class: '',
       groupTitle: false,
       badge: '',
       badgeClass: '',
-      role: ['Admin'],
+      role: ['Administrator'],
       submenu: [],
     },
   

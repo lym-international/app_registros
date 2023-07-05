@@ -21,6 +21,7 @@ import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { Direction } from '@angular/cdk/bidi';
 import { TableExportUtil, TableElement } from '@shared';
 import { formatDate } from '@angular/common';
+import { OrderDataService } from 'app/_services/orderData.service';
 
 @Component({
   selector: 'app-allemployees',
@@ -33,14 +34,21 @@ export class AllemployeesComponent
 {
   displayedColumns = [
     'select',
-    'img',
+    //'img',
     'name',
-    'department',
-    'role',
-    'degree',
-    'mobile',
-    'email',
-    'date',
+    'highKeyID',
+    'position',
+    'totalHours',
+    'payRollID',
+    'in',
+    'out',
+    'break',
+    //'department',
+    //'role',
+    //'degree',
+    //'mobile',
+    //'email',
+    //'date',
     'actions',
   ];
   exampleDatabase?: EmployeesService;
@@ -49,11 +57,21 @@ export class AllemployeesComponent
   index?: number;
   id?: number;
   employees?: Employees;
+  public dataEmployees!: any;
+  employeesData: any[] = [];
+  public orderId!: string;
+  public empleados: string;
+  public employeesDatos: any[];
+  employeesArray: any[] = [];
+  
+  
+
   constructor(
     public httpClient: HttpClient,
     public dialog: MatDialog,
     public employeesService: EmployeesService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private orderDataService: OrderDataService
   ) {
     super();
   }
@@ -65,7 +83,69 @@ export class AllemployeesComponent
   contextMenuPosition = { x: '0px', y: '0px' };
   ngOnInit() {
     this.loadData();
+    this.dataEmployees = this.orderDataService.getSelectedOrder();
+    console.log('Data: ', this.dataEmployees)
+    this.orderId = this.dataEmployees.id;
+    this.getEmployees()
+    
   }
+  
+  // saca la data que se necesita por empleado según la orden.
+  getEmployees(){
+    fetch(
+      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
+      
+      )
+    .then((response) => response.json())
+    .then((data) => {
+      
+      //const employeesArray = []; // Diego: Array para guardar los datos
+      //this.employeesDatos = employeesArray;
+      
+      //console.log('employeesDatos: ', this.employeesDatos)
+
+      data.employees.forEach((employee)=>{
+        console.log('RR: ', employee.employee.data)  
+        //const positionName = employee.position;
+        //const hourFrom = employee.hourFrom || "No data";
+        const firstName = employee.employee.data.firstname || "No data"; //Diego: si no tiene valor (undefined) imrime "No data".
+        const highKeyId = employee.employee.data.employeeId || "No data";
+        /*const positions = employee.employee.data.positions; //Diego: toma todas las posiciones que ha tenido el empleado
+        const lastPosition = (Object.values(positions) as { name: string }[])[Object.values(positions).length - 1].name || "No data"; // Diego: toma la última posición que ha tenido el empleado, si no tiene valor (undefined) imrime "No data". */
+        const position = employee.position || "No data";
+        const totalHours = employee.hours || "No data";
+        const payrollId = employee.employee.data.payrollid || "No data";
+        const checkIn = employee.realCheckin || "No data";
+        const checkOut = employee.dateCheckoutRounded || "No data";
+        const brake = employee.brake || "No data";
+        console.log('data empleados: ', employee)
+
+        // Diego: Agregar los datos al array
+        this.employeesArray.push({
+          firstName: firstName,
+          highKeyId: highKeyId,
+          //position: lastPosition,
+          position: position,
+          totalHours: totalHours,
+          payRollId: payrollId,
+          in: checkIn,
+          out: checkOut,
+          brake: brake,
+          //hourFrom: hourFrom,
+        });
+      });
+
+  
+        //console.log('Datass: ', this.employeesDatas)
+      // Diego: ejecución con el array de datos
+      console.log('---------------------------');
+      console.log('Array empleados: ');
+     console.log(this.employeesArray);
+     console.log('---------------------------');
+
+    })  
+  }
+
   refresh() {
     this.loadData();
   }
@@ -231,12 +311,19 @@ export class AllemployeesComponent
     const exportData: Partial<TableElement>[] =
       this.dataSource.filteredData.map((x) => ({
         Name: x.name,
-        Department: x.department,
-        Role: x.role,
-        'Joining Date': formatDate(new Date(x.date), 'yyyy-MM-dd', 'en') || '',
-        Degree: x.degree,
-        Mobile: x.mobile,
-        Email: x.email,
+        Position: x.position,
+        HighKeyID: x.highKeyID,
+        PayRollID: x.payRollID,
+        'CheckIn': formatDate(new Date(x.in), 'yyyy-MM-dd', 'en') || '',
+        Out: x.out,
+        Break: x.break,
+        TotalHours: x.totalHours,
+        //Department: x.department,
+        //Role: x.role,
+        //'Joining Date': formatDate(new Date(x.date), 'yyyy-MM-dd', 'en') || '',
+        //Degree: x.degree,
+        //Mobile: x.mobile,
+        //Email: x.email,
       }));
 
     TableExportUtil.exportToExcel(exportData, 'excel');
@@ -303,11 +390,17 @@ export class ExampleDataSource extends DataSource<Employees> {
           .filter((employees: Employees) => {
             const searchStr = (
               employees.name +
-              employees.department +
-              employees.role +
-              employees.degree +
-              employees.email +
-              employees.mobile
+              employees.position +
+              employees.totalHours +
+              employees.payRollID +
+              employees.in +
+              employees.out +
+              employees.break 
+              //employees.department +
+              //employees.role +
+              //employees.degree +
+              //employees.email +
+              //employees.mobile
             ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
@@ -341,6 +434,24 @@ export class ExampleDataSource extends DataSource<Employees> {
         case 'name':
           [propertyA, propertyB] = [a.name, b.name];
           break;
+        case 'highKeyID':
+          [propertyA, propertyB] = [a.highKeyID, b.highKeyID]; //Diego
+          break;
+        case 'position':
+          [propertyA, propertyB] = [a.position, b.position]; //Diego
+          break;  
+        case 'totalHours':
+          [propertyA, propertyB] = [a.totalHours, b.totalHours]; //Diego
+          break;  
+        case 'payRollID':
+          [propertyA, propertyB] = [a.payRollID, b.payRollID]; //Diego
+          break;  
+        case 'in':
+          [propertyA, propertyB] = [a.in, b.in]; //Diego
+          break;  
+        case 'out':
+          [propertyA, propertyB] = [a.out, b.out]; //Diego
+          break;  
         case 'email':
           [propertyA, propertyB] = [a.email, b.email];
           break;

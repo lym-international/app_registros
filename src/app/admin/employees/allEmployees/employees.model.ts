@@ -1,19 +1,33 @@
 import { formatDate } from '@angular/common';
 export class Employees {
-  id: number;
-  img: string;
-  name: string;
-  email: string;
-  date: string;
-  role: string;
-  mobile: string;
-  department: string;
-  degree: string;
+  id: number;  //Plantilla
+  img: string;  //Plantilla
+  highKeyID: string; //Diego
+  name: string; //Plantilla
+  position: string;  //Diego
+  totalHours: string;  //Diego
+  payRollID: string;  //Diego
+  in: string;   //Diego
+  out: string;  //Diego
+  break: string; //Diego
+  email: string; //Plantilla
+  date: string;  //Plantilla
+  role: string;   //Plantilla
+  mobile: string; //Plantilla
+  department: string;   //Plantilla
+  degree: string;  //Plantilla
   constructor(employees: Employees) {
     {
       this.id = employees.id || this.getRandomID();
       this.img = employees.img || 'assets/images/user/user1.jpg';
+      this.highKeyID = employees.highKeyID || '';
       this.name = employees.name || '';
+      this.position = employees.position || '';
+      this.totalHours = employees.totalHours || '';
+      this.payRollID = employees.payRollID || '"test"';
+      this.in = employees.in || '';
+      this.out = employees.out || '';
+      this.break = employees.break || '';
       this.email = employees.email || '';
       this.date = formatDate(new Date(), 'yyyy-MM-dd', 'en') || '';
       this.role = employees.role || '';

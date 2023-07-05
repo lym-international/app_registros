@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { ConfigService } from '@config';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { LanguageService, InConfiguration, AuthService } from '@core';
+import { AuthenticationService } from 'app/_services/authentication.service';
+
 
 interface Notifications {
   message: string;
@@ -39,6 +41,7 @@ export class HeaderComponent
   isOpenSidebar?: boolean;
   docElement: HTMLElement | undefined;
   isFullScreen = false;
+  public dataUser!: any;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -47,7 +50,9 @@ export class HeaderComponent
     private configService: ConfigService,
     private authService: AuthService,
     private router: Router,
-    public languageService: LanguageService
+    public languageService: LanguageService,
+    public authenticationService: AuthenticationService
+    
   ) {
     super();
   }
@@ -111,8 +116,10 @@ export class HeaderComponent
     this.config = this.configService.configData;
     const userRole = this.authService.currentUserValue.role;
     this.userImg = this.authService.currentUserValue.img;
+    this.dataUser = this.authenticationService.getData();
+    
 
-    if (userRole === 'Admin') {
+    if (userRole === 'Admin') { 
       this.homePage = 'admin/search-order';
     } else if (userRole === 'Client') {
       this.homePage = 'client/dashboard';

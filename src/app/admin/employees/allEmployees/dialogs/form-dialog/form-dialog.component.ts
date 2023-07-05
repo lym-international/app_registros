@@ -36,7 +36,7 @@ export class FormDialogComponent {
       this.dialogTitle = data.employees.name;
       this.employees = data.employees;
     } else {
-      this.dialogTitle = 'New Employees';
+      this.dialogTitle = 'New emergency employee';
       const blankObject = {} as Employees;
       this.employees = new Employees(blankObject);
     }
@@ -57,6 +57,9 @@ export class FormDialogComponent {
     return this.fb.group({
       id: [this.employees.id],
       img: [this.employees.img],
+      highKeyID: [this.employees.highKeyID],
+      position: [this.employees.position],
+      in: [this.employees.highKeyID],
       name: [this.employees.name],
       email: [this.employees.email],
       date: [

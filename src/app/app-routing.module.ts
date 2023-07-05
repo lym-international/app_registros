@@ -12,14 +12,23 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: '/authentication/signin', pathMatch: 'full' },
+      
       {
         path: 'admin',
-        canActivate: [AuthGuard],
+        //canActivate: [AuthGuard],
         data: {
-          role: Role.Admin,
+          role: Role.Admin, 
         },
         loadChildren: () =>
           import('./admin/admin.module').then((m) => m.AdminModule),
+      },
+      {
+        path: 'search-order',
+        data: {
+          role: Role.Admin, 
+        },
+        loadChildren: () =>
+          import('./admin/search-order/search-order.module').then((m) => m.SearchOrderModule),
       },
       {
         path: 'employee',

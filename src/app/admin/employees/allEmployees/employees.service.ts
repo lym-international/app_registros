@@ -47,7 +47,9 @@ export class EmployeesService extends UnsubscribeOnDestroyAdapter {
     //     },
     //   });
   }
-  updateEmployees(employees: Employees): void {
+  
+  //Actualizar empleados (no aplica en LyM)
+  /*updateEmployees(employees: Employees): void {
     this.dialogData = employees;
 
     // this.httpClient.put(this.API_URL + employees.id, employees)
@@ -59,7 +61,7 @@ export class EmployeesService extends UnsubscribeOnDestroyAdapter {
     //          // error code here
     //       },
     //     });
-  }
+  }*/
   deleteEmployees(id: number): void {
     console.log(id);
 

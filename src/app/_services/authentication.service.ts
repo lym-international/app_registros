@@ -9,6 +9,10 @@ import { User } from 'app/_models/user';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 
+import { catchError } from 'rxjs/operators'; //Diego
+import { throwError } from 'rxjs'; //Diego
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +33,10 @@ export class AuthenticationService {
     loading = false;
     // user$: Observable<any>;
     user$: Observable<any> = new Observable<any>();
+    messageService: any; //Diego
+    
+    private data: any;
+
 
 
     constructor(
@@ -37,7 +45,7 @@ export class AuthenticationService {
       private db: AngularFirestore,
       // private db:
       private router: Router,
-      // private messageService:MessageService,
+      //private messageService: MessageService,
       private route: ActivatedRoute,
       // private notifSvc: NotificationsService,
       ) {
@@ -53,8 +61,8 @@ export class AuthenticationService {
       });      
       
     }
-
-    login(username: string, password: string )  {
+    
+    login(username: string, password: string ) {
       this.auth.signInWithEmailAndPassword(username, password).then((user) => {
             console.log("usuario autenticado con exito!", user.user?.email)
             this.db.collection('Users',ref => ref.where('email', '==', username)).get().subscribe((usersInfo) => {
@@ -62,8 +70,10 @@ export class AuthenticationService {
                       const data = item.data();
                       sessionStorage.setItem('currentUser', JSON.stringify(data));
                       this.currentUserSubject.next(data);
-                      console.log("nombre", data.firstname, data.lastname)
-                      console.log("role", data.role)
+                      console.log("nombre: ", data.firstname, data.lastname)
+                      console.log("role: ", data.role)
+                      
+                      this.setData(data)
                       // this.auxCurrentUser = user;
                       // const auxDate = new Date();
                       // const date = new Date(auxDate.getTime() - (auxDate.getTimezoneOffset() * 60000));
@@ -89,14 +99,14 @@ export class AuthenticationService {
                       }
                       else if (data.role=="Administrator")
                       {
-                        // console.log("si es admin")
-                        this.router.navigate(['/admin/dashboard/main']);
+                        console.log("si es admin")
+                        this.router.navigate(['/admin/search-order/']); // '/admin/dashboard/main'  /admin/search-order/
                           // this.router.navigate(['/dashboard']);
                       }
                       else
                       {
                           // this.router.navigate([this.returnUrl]);
-                          this.router.navigate(['/authentication/signin']);
+                          this.router.navigate(['/authentication/signin']); // /authentication/signin
                       }
                   });
               });
@@ -105,22 +115,29 @@ export class AuthenticationService {
               switch (error.code) {
                 case "auth/wrong-password":
                   console.log("error1", error.message);
-                  // this.messageService.messageWarning("Warning","The password is invalid or the user does not have a password.");
+                  this.messageService.messageWarning("Warning","The password is invalid or the user does not have a password.");
                   break;
                 case "auth/too-many-requests":
                   console.log("error2", error.message);
-                  // this.messageService.messageWarning("Warning","Too many unsuccessful login attempts. Please try again later.");
+                  this.messageService.messageWarning("Warning","Too many unsuccessful login attempts. Please try again later.");
                   break;
                 default:
                   console.log("error3", error.message);
-                  // this.messageService.messageWarning("Warning", error.message);
+                  this.messageService.messageWarning("Warning", error.message);
                   break;
               }
             });
            
-        // });
+         //});
+    }
 
-  }
+    setData(data: any) {
+      this.data = data;
+    }
+  
+    getData() {
+      return this.data;
+    }
 
   changePassword(email: string) {
     this.auth.sendPasswordResetEmail(email).then((user) => {
@@ -142,4 +159,4 @@ export class AuthenticationService {
         this.router.navigate(['pages/login']);
     })
 }
-}
+} 
