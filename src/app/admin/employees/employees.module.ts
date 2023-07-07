@@ -11,6 +11,7 @@ import { EmployeeProfileComponent } from './employee-profile/employee-profile.co
 import { EmployeesService } from './allEmployees/employees.service';
 import { ComponentsModule } from '@shared/components/components.module';
 import { SharedModule } from '@shared';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,6 @@ import { SharedModule } from '@shared';
     ComponentsModule,
     SharedModule,
   ],
-  providers: [EmployeesService],
+  providers: [EmployeesService, DatePipe],
 })
 export class EmployeesModule {}

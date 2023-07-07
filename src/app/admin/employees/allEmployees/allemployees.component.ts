@@ -20,7 +20,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { Direction } from '@angular/cdk/bidi';
 import { TableExportUtil, TableElement } from '@shared';
-import { formatDate } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
 import { OrderDataService } from 'app/_services/orderData.service';
 import { delay } from 'rxjs/operators'; //Jairo
 
@@ -28,6 +28,7 @@ import { delay } from 'rxjs/operators'; //Jairo
   selector: 'app-allemployees',
   templateUrl: './allemployees.component.html',
   styleUrls: ['./allemployees.component.scss'],
+  providers: [DatePipe]
 })
 export class AllemployeesComponent
   extends UnsubscribeOnDestroyAdapter
@@ -52,6 +53,7 @@ export class AllemployeesComponent
     //'date',
     'actions',
   ];
+
   exampleDatabase?: EmployeesService;
   selection = new SelectionModel<Employees>(true, []);
   index?: number;
@@ -74,6 +76,7 @@ export class AllemployeesComponent
   dataSource!: ExampleDataSource;
 
   constructor(
+    private datePipe: DatePipe,
     public httpClient: HttpClient,
     public dialog: MatDialog,
     public employeesService: EmployeesService,
@@ -93,6 +96,9 @@ export class AllemployeesComponent
     // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
   }
   // saca la data que se necesita por empleado según la orden.
+  
+  
+
   getEmployees(){
     fetch(
       `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
@@ -118,12 +124,21 @@ export class AllemployeesComponent
         const position = employee.position || "No data";
         const totalHours = employee.hours || "No data";
         const payrollId = employee.employee.data.payrollid || "No data";
-        const checkIn = employee.realCheckin || "No data";
-        const checkOut = employee.dateCheckoutRounded || "No data";
+        //const checkIn = employee.realCheckin || "No data";
+        //const checkOut = employee.dateCheckoutRounded || "No data";
         const brake = employee.break || "No data";
-        // console.log('data empleados: ', employee)
-
-        // Diego: Agregar los datos al array
+        
+        const checkInTimestamp = employee.realCheckin?._seconds || 0; // Obtener el timestamp de entrada en segundos
+        const checkInDate = new Date(checkInTimestamp * 1000); // Multiplicar por 1000 para convertir segundos a milisegundos
+        const checkInTime = this.datePipe.transform(checkInDate, 'hh:mm a');
+        
+        const checkOutTimestamp = employee.dateCheckoutRounded?._seconds || 0; // Obtener el timestamp de entrada en segundos
+        const checkOutDate = new Date(checkOutTimestamp * 1000); // Multiplicar por 1000 para convertir segundos a milisegundos
+        const checkOutTime = this.datePipe.transform(checkOutDate, 'hh:mm a');
+        console.log('data empleados: ', employee)
+        
+        // Diego: this.employeesArray.push agrega los datos al array employeesArray
+        
         this.employeesArray.push({
           firstName: firstName,
           lastName: lastName,
@@ -132,8 +147,8 @@ export class AllemployeesComponent
           position: position,
           totalHours: totalHours,
           payRollId: payrollId,
-          in: checkIn,
-          out: checkOut,
+          in: checkInTime,
+          out: checkOutTime,
           break: brake,
           //hourFrom: hourFrom,
         });
@@ -150,8 +165,10 @@ export class AllemployeesComponent
 
      this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
     })  
+    
   }
 
+  
   refresh() {
     // this.loadData();
   }
@@ -295,12 +312,36 @@ export class AllemployeesComponent
       'center'
     );
   }
+  
+  
+  /*public filtrarTabla() {
+    this.employeesArray = new EmployeesService(this.httpClient);
+    this.dataSource = new ExampleDataSource(
+      this.exampleDatabase,
+      this.paginator,
+      this.sort
+    );
+    //buscador
+    this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
+      () => {
+        if (!this.dataSource) {
+          return;
+        }
+        this.dataSource.filter = this.filter.nativeElement.value;
+      }
+    );
+  }*/
+  
+  
+  
+  
+  
   public loadData() {
     this.exampleDatabase = new EmployeesService(this.httpClient);
 
-    // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
+     //this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
     
-    // console.log("exapmleDatabase",this.exampleDatabase)
+     console.log("exapmleDatabase",this.exampleDatabase)
     
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
@@ -308,10 +349,14 @@ export class AllemployeesComponent
           return;
         }
         
-        // this.dataSource.filter = this.filter.nativeElement.value;
+        //this.dataSource.filter = this.filter.nativeElement.value;
+          console.log('INPUT ==> ', this.dataSource.filter)
       }
+      
     );
   }
+
+
   // export table data in excel file
   exportExcel() {
     
@@ -364,6 +409,7 @@ export class AllemployeesComponent
   }
 }
 export class ExampleDataSource extends DataSource<Employees> {
+  data: any[];
   filterChange = new BehaviorSubject('');
   get filter(): string {
     return this.filterChange.value;

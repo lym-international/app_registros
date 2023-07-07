@@ -5,6 +5,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 @Injectable()
 export class EmployeesService extends UnsubscribeOnDestroyAdapter {
+  public url: any[] = []; 
   private readonly API_URL = 'assets/data/employees.json';
   isTblLoading = true;
   dataChange: BehaviorSubject<Employees[]> = new BehaviorSubject<Employees[]>(
@@ -18,6 +19,7 @@ export class EmployeesService extends UnsubscribeOnDestroyAdapter {
     super();
   }
   get data(): Employees[] {
+    
     return this.dataChange.value;
   }
   getDialogData() {
@@ -36,6 +38,7 @@ export class EmployeesService extends UnsubscribeOnDestroyAdapter {
       next: (data) => {
         this.isTblLoading = false;
         this.dataChange.next(data);
+        console.log('DATA ->',data)
       },
       error: (error: HttpErrorResponse) => {
         this.isTblLoading = false;
@@ -43,6 +46,7 @@ export class EmployeesService extends UnsubscribeOnDestroyAdapter {
       },
     });
   }
+
   addEmployees(employees: Employees): void {
     this.dialogData = employees;
 
