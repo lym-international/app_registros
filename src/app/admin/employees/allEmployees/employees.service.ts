@@ -5,6 +5,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 @Injectable()
 export class EmployeesService extends UnsubscribeOnDestroyAdapter {
+  public url: any[] = []; 
   private readonly API_URL = 'assets/data/employees.json';
   isTblLoading = true;
   dataChange: BehaviorSubject<Employees[]> = new BehaviorSubject<Employees[]>(
@@ -16,17 +17,37 @@ export class EmployeesService extends UnsubscribeOnDestroyAdapter {
     super();
   }
   get data(): Employees[] {
+    
     return this.dataChange.value;
   }
   getDialogData() {
     return this.dialogData;
   }
+  
+  setApiURL(apiEmpleados: any) {
+    //this.url = apiEmpleados;
+    //localStorage.setItem(this.storageKey, JSON.stringify(order));
+    apiEmpleados.forEach((emp) => {
+      this.url.push(emp)
+    })
+    console.log("llamando al servicio", apiEmpleados);
+  }
+  
+
+  getApiURL() {
+
+    //const order = localStorage.getItem(this.storageKey);
+    //return order ? JSON.parse(order) : null;
+    //console.log("llamando al servicio", apiEmpleados);
+  }
+
   /** CRUD METHODS */
   getAllEmployeess(): void {
     this.subs.sink = this.httpClient.get<Employees[]>(this.API_URL).subscribe({
       next: (data) => {
         this.isTblLoading = false;
         this.dataChange.next(data);
+        console.log('DATA ->',data)
       },
       error: (error: HttpErrorResponse) => {
         this.isTblLoading = false;
@@ -34,6 +55,7 @@ export class EmployeesService extends UnsubscribeOnDestroyAdapter {
       },
     });
   }
+
   addEmployees(employees: Employees): void {
     this.dialogData = employees;
 
