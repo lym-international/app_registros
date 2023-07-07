@@ -124,11 +124,17 @@ export class AllemployeesComponent
         const position = employee.position || "No data";
         const totalHours = employee.hours || "No data";
         const payrollId = employee.employee.data.payrollid || "No data";
-        const checkIn = employee.realCheckin || "No data";
-        const checkOut = employee.dateCheckoutRounded || "No data";
+        //const checkIn = employee.realCheckin || "No data";
+        //const checkOut = employee.dateCheckoutRounded || "No data";
         const brake = employee.break || "No data";
-        // console.log('data empleados: ', employee)
-
+        
+        const checkInTimestamp = employee.realCheckin?._seconds || 0; // Obtener el timestamp de entrada en segundos
+        const checkInDate = new Date(checkInTimestamp * 1000); // Multiplicar por 1000 para convertir segundos a milisegundos
+        const checkInTime = this.datePipe.transform(checkInDate, 'hh:mm a');
+        
+        const checkOutTimestamp = employee.dateCheckoutRounded?._seconds || 0; // Obtener el timestamp de entrada en segundos
+        const checkOutDate = new Date(checkOutTimestamp * 1000); // Multiplicar por 1000 para convertir segundos a milisegundos
+        const checkOutTime = this.datePipe.transform(checkOutDate, 'hh:mm a');
         console.log('data empleados: ', employee)
         
         // Diego: this.employeesArray.push agrega los datos al array employeesArray
@@ -141,8 +147,8 @@ export class AllemployeesComponent
           position: position,
           totalHours: totalHours,
           payRollId: payrollId,
-          in: checkIn,
-          out: checkOut,
+          in: checkInTime,
+          out: checkOutTime,
           break: brake,
           //hourFrom: hourFrom,
         });
@@ -333,9 +339,9 @@ export class AllemployeesComponent
   public loadData() {
     this.exampleDatabase = new EmployeesService(this.httpClient);
 
-    // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
+     //this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
     
-    // console.log("exapmleDatabase",this.exampleDatabase)
+     console.log("exapmleDatabase",this.exampleDatabase)
     
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
@@ -343,7 +349,8 @@ export class AllemployeesComponent
           return;
         }
         
-        // this.dataSource.filter = this.filter.nativeElement.value;
+        //this.dataSource.filter = this.filter.nativeElement.value;
+          console.log('INPUT ==> ', this.dataSource.filter)
       }
       
     );
