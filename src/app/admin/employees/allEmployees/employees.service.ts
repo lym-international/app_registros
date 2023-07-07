@@ -10,6 +10,8 @@ export class EmployeesService extends UnsubscribeOnDestroyAdapter {
   dataChange: BehaviorSubject<Employees[]> = new BehaviorSubject<Employees[]>(
     []
   );
+
+  private employeesApi: any // Jairo
   // Temporarily stores data from dialogs
   dialogData!: Employees;
   constructor(private httpClient: HttpClient) {
@@ -21,8 +23,15 @@ export class EmployeesService extends UnsubscribeOnDestroyAdapter {
   getDialogData() {
     return this.dialogData;
   }
+  setEmployeesApi(apiEmployees: any){
+    this.employeesApi = apiEmployees; 
+    // console.log("llamado al servicio", this.employeesApi);
+  }
   /** CRUD METHODS */
+  
   getAllEmployeess(): void {
+
+    // console.log("this.employeesApi", this.employeesApi);    
     this.subs.sink = this.httpClient.get<Employees[]>(this.API_URL).subscribe({
       next: (data) => {
         this.isTblLoading = false;
