@@ -429,7 +429,7 @@ export class ExampleDataSource extends DataSource<Employees> {
         // console.log("startIndex", startIndex)
         // console.log("this.paginator.pageSize", this.paginator.pageSize)
         // console.log("antesdel renderr", this.employeesArray)
-        //  this.renderedData = this.employeesArray.slice(startIndex, this.paginator.pageSize);
+        // this.renderedData = this.employeesArray.slice(startIndex, this.paginator.pageSize);
         // console.log("this.renderedData", this.renderedData)
 
 
