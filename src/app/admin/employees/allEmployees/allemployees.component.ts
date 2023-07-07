@@ -22,6 +22,7 @@ import { Direction } from '@angular/cdk/bidi';
 import { TableExportUtil, TableElement } from '@shared';
 import { DatePipe, formatDate } from '@angular/common';
 import { OrderDataService } from 'app/_services/orderData.service';
+import { delay } from 'rxjs/operators'; //Jairo
 
 @Component({
   selector: 'app-allemployees',
@@ -35,8 +36,8 @@ export class AllemployeesComponent
 {
   displayedColumns = [
     'select',
-    //'img',
-    'name',
+    'firstName',
+    'lastName',
     'highKeyID',
     'position',
     'totalHours',
@@ -54,7 +55,6 @@ export class AllemployeesComponent
   ];
 
   exampleDatabase?: EmployeesService;
-  dataSource!: ExampleDataSource;
   selection = new SelectionModel<Employees>(true, []);
   index?: number;
   id?: number;
@@ -66,7 +66,14 @@ export class AllemployeesComponent
   public employeesDatos: any[];
   employeesArray: any[] = [];
   
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
+  @ViewChild('filter', { static: true }) filter!: ElementRef;
+  @ViewChild(MatMenuTrigger)
+  contextMenu?: MatMenuTrigger;
+  contextMenuPosition = { x: '0px', y: '0px' };
   
+  dataSource!: ExampleDataSource;
 
   constructor(
     private datePipe: DatePipe,
@@ -77,26 +84,17 @@ export class AllemployeesComponent
     private orderDataService: OrderDataService
   ) {
     super();
+    // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
   }
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort!: MatSort;
-  @ViewChild('filter', { static: true }) filter!: ElementRef;
-  @ViewChild(MatMenuTrigger)
-  contextMenu?: MatMenuTrigger;
-  contextMenuPosition = { x: '0px', y: '0px' };
+
   ngOnInit() {
-    this.loadData();
     this.dataEmployees = this.orderDataService.getSelectedOrder();
-    console.log('Data: ', this.dataEmployees)
+    // console.log('Data: ', this.dataEmployees)
     this.orderId = this.dataEmployees.id;
     this.getEmployees();
-    
-
-    /*this.dataSource = new ExampleDataSource(this.employeesArray, this.paginator, this.sort);
-    this.dataSource.data = this.employeesArray;
-    console.log('DATA_SOURCE: ',this.dataSource)*/
+    this.loadData();
+    // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
   }
-  
   // saca la data que se necesita por empleado según la orden.
   
   
@@ -115,28 +113,21 @@ export class AllemployeesComponent
       //console.log('employeesDatos: ', this.employeesDatos)
 
       data.employees.forEach((employee)=>{
-        console.log('RR: ', employee.employee.data)  
+        // console.log('RR: ', employee.employee.data)  
         //const positionName = employee.position;
         //const hourFrom = employee.hourFrom || "No data";
         const firstName = employee.employee.data.firstname || "No data"; //Diego: si no tiene valor (undefined) imrime "No data".
+         const lastName = employee.employee.data.lastname || "No data";
         const highKeyId = employee.employee.data.employeeId || "No data";
         /*const positions = employee.employee.data.positions; //Diego: toma todas las posiciones que ha tenido el empleado
         const lastPosition = (Object.values(positions) as { name: string }[])[Object.values(positions).length - 1].name || "No data"; // Diego: toma la última posición que ha tenido el empleado, si no tiene valor (undefined) imrime "No data". */
         const position = employee.position || "No data";
         const totalHours = employee.hours || "No data";
         const payrollId = employee.employee.data.payrollid || "No data";
-        //const checkIn = employee.realCheckin || "No data";
-        //const checkOut = employee.dateCheckoutRounded || "No data";
-        const brake = employee.brake || "No data";
-        
-
-        const checkInTimestamp = employee.realCheckin?._seconds || 0; // Obtener el timestamp de entrada en segundos
-        const checkInDate = new Date(checkInTimestamp * 1000); // Multiplicar por 1000 para convertir segundos a milisegundos
-        const checkInTime = this.datePipe.transform(checkInDate, 'hh:mm a');
-        
-        const checkOutTimestamp = employee.dateCheckoutRounded?._seconds || 0; // Obtener el timestamp de entrada en segundos
-        const checkOutDate = new Date(checkOutTimestamp * 1000); // Multiplicar por 1000 para convertir segundos a milisegundos
-        const checkOutTime = this.datePipe.transform(checkOutDate, 'hh:mm a');
+        const checkIn = employee.realCheckin || "No data";
+        const checkOut = employee.dateCheckoutRounded || "No data";
+        const brake = employee.break || "No data";
+        // console.log('data empleados: ', employee)
 
         console.log('data empleados: ', employee)
         
@@ -144,35 +135,36 @@ export class AllemployeesComponent
         
         this.employeesArray.push({
           firstName: firstName,
+          lastName: lastName,
           highKeyId: highKeyId,
           //position: lastPosition,
           position: position,
           totalHours: totalHours,
           payRollId: payrollId,
-          in: checkInTime,
-          out:checkOutTime,
-          //in: checkIn,
-          //out: checkOut,
-          brake: brake,
+          in: checkIn,
+          out: checkOut,
+          break: brake,
           //hourFrom: hourFrom,
         });
       });
-      
-      //this.orderDataService.setSelectedOrder(order);
-      //this.employeesService.setApiURL(this.employeesArray)
+
+      this.employeesService.setEmployeesApi(this.employeesArray)
+  
         //console.log('Datass: ', this.employeesDatas)
       // Diego: ejecución con el array de datos
       console.log('---------------------------');
       console.log('Array empleados: ');
      console.log(this.employeesArray);
      console.log('---------------------------');
+
+     this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
     })  
     
   }
 
   
   refresh() {
-    this.loadData();
+    // this.loadData();
   }
   addNew() {
     let tempDirection: Direction;
@@ -243,7 +235,7 @@ export class AllemployeesComponent
     });
   }
   deleteItem(i: number, row: Employees) {
-    this.index = i;
+   /*  this.index = i;
     this.id = row.id;
     let tempDirection: Direction;
     if (localStorage.getItem('isRtl') === 'true') {
@@ -275,7 +267,7 @@ export class AllemployeesComponent
           );
         }
       }
-    });
+    }); */
   }
   private refreshTable() {
     this.paginator._changePageSize(this.paginator.pageSize);
@@ -340,19 +332,18 @@ export class AllemployeesComponent
   
   public loadData() {
     this.exampleDatabase = new EmployeesService(this.httpClient);
-    this.dataSource = new ExampleDataSource(
-      this.exampleDatabase,
-      this.paginator,
-      this.sort
-    );
-    //buscador
+
+    // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
+    
+    // console.log("exapmleDatabase",this.exampleDatabase)
+    
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
         if (!this.dataSource) {
           return;
         }
-        this.dataSource.filter = this.filter.nativeElement.value;
-        console.log('FILTRO =>', this.dataSource.filter)
+        
+        // this.dataSource.filter = this.filter.nativeElement.value;
       }
       
     );
@@ -361,7 +352,8 @@ export class AllemployeesComponent
 
   // export table data in excel file
   exportExcel() {
-    // key name with space add in brackets
+    
+    /* // key name with space add in brackets
     const exportData: Partial<TableElement>[] =
       this.dataSource.filteredData.map((x) => ({
         Name: x.name,
@@ -381,6 +373,8 @@ export class AllemployeesComponent
       }));
 
     TableExportUtil.exportToExcel(exportData, 'excel');
+   */
+  
   }
   showNotification(
     colorName: string,
@@ -419,9 +413,13 @@ export class ExampleDataSource extends DataSource<Employees> {
   filteredData: Employees[] = [];
   renderedData: Employees[] = [];
   constructor(
+    
     public exampleDatabase: EmployeesService,
     public paginator: MatPaginator,
-    public _sort: MatSort
+    public _sort: MatSort,
+
+    public employeesArray: any[]
+
   ) {
     super();
     // Reset to the first page when the user changes the filter.
@@ -436,18 +434,20 @@ export class ExampleDataSource extends DataSource<Employees> {
       this.filterChange,
       this.paginator.page,
     ];
+   
     this.exampleDatabase.getAllEmployeess();
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.exampleDatabase.data
+        this.filteredData = this.employeesArray
           .slice()
           .filter((employees: Employees) => {
             const searchStr = (
-              employees.name +
+              employees.firstName +
+              employees.lastName +
               employees.position +
               employees.totalHours +
-              employees.payRollID +
+              employees.payRollId +
               employees.in +
               employees.out +
               employees.break 
@@ -462,11 +462,16 @@ export class ExampleDataSource extends DataSource<Employees> {
         // Sort filtered data
         const sortedData = this.sortData(this.filteredData.slice());
         // Grab the page's slice of the filtered sorted data.
+        
         const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
-        this.renderedData = sortedData.splice(
-          startIndex,
-          this.paginator.pageSize
-        );
+        this.renderedData = sortedData.splice(startIndex, this.paginator.pageSize);
+        // console.log("startIndex", startIndex)
+        // console.log("this.paginator.pageSize", this.paginator.pageSize)
+        // console.log("antesdel renderr", this.employeesArray)
+        //  this.renderedData = this.employeesArray.slice(startIndex, this.paginator.pageSize);
+        // console.log("this.renderedData", this.renderedData)
+
+
         return this.renderedData;
       })
     );
@@ -478,19 +483,24 @@ export class ExampleDataSource extends DataSource<Employees> {
   sortData(data: Employees[]): Employees[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
+
+
+
+
+
     }
     return data.sort((a, b) => {
       let propertyA: number | string = '';
       let propertyB: number | string = '';
       switch (this._sort.active) {
-        case 'id':
-          [propertyA, propertyB] = [a.id, b.id];
+        case 'firstName':
+          [propertyA, propertyB] = [a.firstName, b.firstName];
           break;
-        case 'name':
-          [propertyA, propertyB] = [a.name, b.name];
+        case 'lastName':
+          [propertyA, propertyB] = [a.lastName, b.lastName];
           break;
         case 'highKeyID':
-          [propertyA, propertyB] = [a.highKeyID, b.highKeyID]; //Diego
+          [propertyA, propertyB] = [a.highKeyId, b.highKeyId]; //Diego
           break;
         case 'position':
           [propertyA, propertyB] = [a.position, b.position]; //Diego
@@ -499,7 +509,7 @@ export class ExampleDataSource extends DataSource<Employees> {
           [propertyA, propertyB] = [a.totalHours, b.totalHours]; //Diego
           break;  
         case 'payRollID':
-          [propertyA, propertyB] = [a.payRollID, b.payRollID]; //Diego
+          [propertyA, propertyB] = [a.payRollId, b.payRollId]; //Diego
           break;  
         case 'in':
           [propertyA, propertyB] = [a.in, b.in]; //Diego
@@ -507,18 +517,7 @@ export class ExampleDataSource extends DataSource<Employees> {
         case 'out':
           [propertyA, propertyB] = [a.out, b.out]; //Diego
           break;  
-        case 'email':
-          [propertyA, propertyB] = [a.email, b.email];
-          break;
-        case 'date':
-          [propertyA, propertyB] = [a.date, b.date];
-          break;
-        case 'time':
-          [propertyA, propertyB] = [a.department, b.department];
-          break;
-        case 'mobile':
-          [propertyA, propertyB] = [a.mobile, b.mobile];
-          break;
+        
       }
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
       const valueB = isNaN(+propertyB) ? propertyB : +propertyB;

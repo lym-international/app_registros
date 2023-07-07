@@ -33,7 +33,7 @@ export class FormDialogComponent {
     // Set the defaults
     this.action = data.action;
     if (this.action === 'edit') {
-      this.dialogTitle = data.employees.name;
+      this.dialogTitle = data.employees.firstName;
       this.employees = data.employees;
     } else {
       this.dialogTitle = 'New emergency employee';
@@ -56,20 +56,17 @@ export class FormDialogComponent {
   createContactForm(): UntypedFormGroup {
     return this.fb.group({
       id: [this.employees.id],
-      img: [this.employees.img],
-      highKeyID: [this.employees.highKeyID],
+      // img: [this.employees.img],
+      highKeyID: [this.employees.highKeyId],
       position: [this.employees.position],
-      in: [this.employees.highKeyID],
-      name: [this.employees.name],
-      email: [this.employees.email],
-      date: [
-        formatDate(this.employees.date, 'yyyy-MM-dd', 'en'),
-        [Validators.required],
-      ],
-      role: [this.employees.role],
-      mobile: [this.employees.mobile],
-      department: [this.employees.department],
-      degree: [this.employees.degree],
+      in: [this.employees.highKeyId],
+      firstName: [this.employees.firstName],
+      lastName: [this.employees.lastName],
+      
+      // role: [this.employees.role],
+      // mobile: [this.employees.mobile],
+      // department: [this.employees.department],
+      // degree: [this.employees.degree],
     });
   }
   submit() {

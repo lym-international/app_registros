@@ -1,24 +1,47 @@
 import { formatDate } from '@angular/common';
 export class Employees {
   id: number;  //Plantilla
-  img: string;  //Plantilla
-  highKeyID: string; //Diego
-  name: string; //Plantilla
-  position: string;  //Diego
-  totalHours: string;  //Diego
-  payRollID: string;  //Diego
-  in: string;   //Diego
-  out: string;  //Diego
-  break: string; //Diego
-  email: string; //Plantilla
-  date: string;  //Plantilla
-  role: string;   //Plantilla
-  mobile: string; //Plantilla
-  department: string;   //Plantilla
-  degree: string;  //Plantilla
+  firstName: string;
+  lastName:string;
+  highKeyId:string;
+  position:string;
+  totalHours:string;
+  payRollId:string;
+  in:string;
+  out:string;
+  break:string; 
+  // id: number;  //Plantilla
+  // img: string;  //Plantilla
+  // highKeyID: string; //Diego
+  // name: string; //Plantilla
+  // position: string;  //Diego
+  // totalHours: string;  //Diego
+  // payRollID: string;  //Diego
+  // in: string;   //Diego
+  // out: string;  //Diego
+  // break: string; //Diego
+  // email: string; //Plantilla
+  // date: string;  //Plantilla
+  // role: string;   //Plantilla
+  // mobile: string; //Plantilla
+  // department: string;   //Plantilla
+  // degree: string;  //Plantilla
   constructor(employees: Employees) {
     {
+
+     
       this.id = employees.id || this.getRandomID();
+      this.firstName = employees.firstName || '';
+      this.lastName = employees.lastName || '',
+      this.highKeyId = employees.highKeyId || '',
+      this.position = employees.position || '',
+      this.totalHours = employees.totalHours || '',
+      this.payRollId = employees.payRollId || '',
+      this.in = employees.in || '';
+      this.out = employees.out || '';
+      this.break = employees.break || '';
+
+     /*  this.id = employees.id || this.getRandomID();
       this.img = employees.img || 'assets/images/user/user1.jpg';
       this.highKeyID = employees.highKeyID || '';
       this.name = employees.name || '';
@@ -33,7 +56,7 @@ export class Employees {
       this.role = employees.role || '';
       this.mobile = employees.mobile || '';
       this.department = employees.department || '';
-      this.degree = employees.degree || '';
+      this.degree = employees.degree || ''; */
     }
   }
   public getRandomID(): number {

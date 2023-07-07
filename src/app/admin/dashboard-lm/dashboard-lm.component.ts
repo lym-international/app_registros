@@ -56,11 +56,11 @@ export class DashboardLmComponent implements OnInit {
   public noShow: number;
   public checkIn: number;
   public checkOut: number;
-  public totalRequest: number = 0; //
-  public porcentajeCheckIn: number = 0;
-  public porcentajeCheckOut: number = 0;
-  public porcentajeNoshow: number = 0;
-  public totalRequeridos: number = 0;
+  public totalRequest = 0; //
+  public porcentajeCheckIn = 0;
+  public porcentajeCheckOut = 0;
+  public porcentajeNoshow = 0;
+  public totalRequeridos = 0;
   public dataItems = [];
   public checkinPosicion: string;
   porcentajeConfirmed: number;
@@ -98,13 +98,12 @@ export class DashboardLmComponent implements OnInit {
         });
         
     }
-    else {
-    }
+    
     console.log('Requested: ', this.dataOrder.data.items)  
     this.dataItems = this.dataOrder.data.items;
     //this.totalRequeridos = this.dataOrder.data.items.length;
 
-    let positions = {};
+    const positions = {};
 
     this.dataOrder.data.items.forEach(item => {
       if (item.m !== 0 && !positions[item.position]) {
