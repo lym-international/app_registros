@@ -85,9 +85,20 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.mostrarSidebar = mostrar;
       
     });
-    console.log('Ocultar Sidebar2: ', this.mostrarSidebar)
 
     this.dataUser = this.authenticationService.getData();
+    
+    const storedUserData = localStorage.getItem('currentUserData');
+    if (storedUserData) {
+      this.dataUser = JSON.parse(storedUserData);
+    } else {
+      // Si no se encuentran los datos en el localStorage, obtenerlos del servicio
+      this.dataUser = this.authenticationService.getData();
+      // Almacenar los datos en el localStorage
+      localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
+    }
+    // Aquí tienes acceso a los datos del usuario en la variable dataUser
+    console.log('Datos en storedUserData desde el sideBar: ', storedUserData);
 
     if (this.dataUser) {
       const userRole = this.dataUser.role;
@@ -110,9 +121,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.initLeftSidebar();
     this.bodyTag = this.document.body;
   }
-
-  
-
 
   ngOnDestroy() {
     this.routerObj.unsubscribe();

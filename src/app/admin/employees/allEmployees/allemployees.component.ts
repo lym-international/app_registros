@@ -65,6 +65,7 @@ export class AllemployeesComponent
   public empleados: string;
   public employeesDatos: any[];
   employeesArray: any[] = [];
+  isTblLoading = true;
   
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -106,7 +107,7 @@ export class AllemployeesComponent
       )
     .then((response) => response.json())
     .then((data) => {
-      
+    this.isTblLoading = false;
       //const employeesArray = []; // Diego: Array para guardar los datos
       //this.employeesDatos = employeesArray;
       
@@ -164,6 +165,10 @@ export class AllemployeesComponent
      console.log('---------------------------');
 
      this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
+    })
+    .catch((error) => {
+      console.log(error)
+      this.isTblLoading = false;
     })  
     
   }
@@ -313,46 +318,16 @@ export class AllemployeesComponent
     );
   }
   
-  
-  /*public filtrarTabla() {
-    this.employeesArray = new EmployeesService(this.httpClient);
-    this.dataSource = new ExampleDataSource(
-      this.exampleDatabase,
-      this.paginator,
-      this.sort
-    );
-    //buscador
-    this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
-      () => {
-        if (!this.dataSource) {
-          return;
-        }
-        this.dataSource.filter = this.filter.nativeElement.value;
-      }
-    );
-  }*/
-  
-  
-  
-  
-  
   public loadData() {
     this.exampleDatabase = new EmployeesService(this.httpClient);
-
-     //this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
-    
-     console.log("exapmleDatabase",this.exampleDatabase)
-    
+    //this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
         if (!this.dataSource) {
           return;
-        }
-        
-        //this.dataSource.filter = this.filter.nativeElement.value;
-          console.log('INPUT ==> ', this.dataSource.filter)
+        }    
+        this.dataSource.filter = this.filter.nativeElement.value;
       }
-      
     );
   }
 

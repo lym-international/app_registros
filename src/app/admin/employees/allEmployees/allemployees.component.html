@@ -181,10 +181,10 @@
                                 </mat-row>
                             </table>
                             <!-- Loading spinner -->
-                            <!--  <div *ngIf="exampleDatabase?.isTblLoading" class="tbl-spinner">
+                            <div *ngIf="isTblLoading" class="tbl-spinner">
                                 <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
                                 </mat-progress-spinner>
-                            </div> -->
+                            </div>
                             <!-- context menu start -->
                             <div style="visibility: hidden; position: fixed" [style.left]="contextMenuPosition.x" [style.top]="contextMenuPosition.y" [matMenuTriggerFor]="contextMenu">
                             </div>

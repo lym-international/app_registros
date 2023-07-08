@@ -25,6 +25,7 @@ export class SearchOrderComponent{
   public orders : any[] = [];
   public orderNumber: string;
   public foundOrder: any | null = null;
+  public dataUser!: any;
   
 
   constructor(private http: HttpClient, 
@@ -39,6 +40,18 @@ export class SearchOrderComponent{
 
     this.data = this.authenticationService.getData(); // en data obtiene los datos guardados en el servicio authenticationService.
     
+    const storedUserData = localStorage.getItem('currentUserData');
+    if (storedUserData) {
+      this.data = JSON.parse(storedUserData);
+    } else {
+      // Si no se encuentran los datos en el localStorage, obtenerlos del servicio
+      this.data = this.authenticationService.getData();
+      // Almacenar los datos en el localStorage
+      localStorage.setItem('currentUserData', JSON.stringify(this.data));
+    }
+    // Aquí tienes acceso a los datos del usuario en la variable data
+    console.log('Datos en storedUserData desde el SearchOrder: ', storedUserData);
+
     //Inicio validación de rol para la visualización de las órdenes.
 
       if (this.data.role == "Client") {
