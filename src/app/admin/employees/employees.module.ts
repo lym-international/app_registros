@@ -12,6 +12,7 @@ import { EmployeesService } from './allEmployees/employees.service';
 import { ComponentsModule } from '@shared/components/components.module';
 import { SharedModule } from '@shared';
 import { DatePipe } from '@angular/common';
+import { CheckInComponent } from './allEmployees/dialogs/check-in/check-in.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { DatePipe } from '@angular/common';
     AddEmployeeComponent,
     EditEmployeeComponent,
     EmployeeProfileComponent,
+    CheckInComponent,
   ],
   imports: [
     CommonModule,

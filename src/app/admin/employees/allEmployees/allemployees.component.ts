@@ -23,6 +23,7 @@ import { TableExportUtil, TableElement } from '@shared';
 import { DatePipe, formatDate } from '@angular/common';
 import { OrderDataService } from 'app/_services/orderData.service';
 import { delay } from 'rxjs/operators'; //Jairo
+import { CheckInComponent } from './dialogs/check-in/check-in.component';
 
 @Component({
   selector: 'app-allemployees',
@@ -176,6 +177,37 @@ export class AllemployeesComponent
   
   refresh() {
     // this.loadData();
+  }
+  checkInModal() {
+    let tempDirection: Direction;
+    if (localStorage.getItem('isRtl') === 'true') {
+      tempDirection = 'rtl';
+    } else {
+      tempDirection = 'ltr';
+    }
+    const dialogRef = this.dialog.open(CheckInComponent, {
+      data: {
+        employees: this.employees,
+        action: 'add',
+      },
+      direction: tempDirection,
+    });
+    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
+      if (result === 1) {
+        // After dialog is closed we're doing frontend updates
+        // For add we're just pushing a new row inside DataServicex
+        this.exampleDatabase?.dataChange.value.unshift(
+          this.employeesService.getDialogData()
+        );
+        this.refreshTable();
+        this.showNotification(
+          'snackbar-success',
+          'Add Record Successfully...!!!',
+          'bottom',
+          'center'
+        );
+      }
+    });
   }
   addNew() {
     let tempDirection: Direction;
