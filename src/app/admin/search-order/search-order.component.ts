@@ -4,7 +4,9 @@ import { AuthenticationService } from 'app/_services/authentication.service';
 import { OrderDataService } from 'app/_services/orderData.service';
 import { Router } from '@angular/router';
 import { OcultarSidebarService } from 'app/_services/ocultar-sidebar.service';
+
 //import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+
 
 @Component({
   selector: 'app-search-order',
@@ -32,7 +34,8 @@ export class SearchOrderComponent{
               private authenticationService: AuthenticationService,
               private orderDataService: OrderDataService,
               private router:Router,
-              private ocultarSidebarService: OcultarSidebarService,) {}
+              private ocultarSidebarService: OcultarSidebarService,
+              ) {}
   
   ngOnInit() {
     

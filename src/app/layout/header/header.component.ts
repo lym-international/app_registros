@@ -83,7 +83,7 @@ export class HeaderComponent
     //this.userImg = this.authService.currentUserValue.img;
     this.config = this.configService.configData;
     this.dataUser = this.authenticationService.getData();
-    console.log('dataUser ==> ', this.dataUser)
+    
     this.setHeaderProperties();
 
     // Intentar recuperar los datos del usuario del localStorage
@@ -97,8 +97,8 @@ export class HeaderComponent
       localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
     }
     // Aquí tienes acceso a los datos del usuario en la variable dataUser
-    console.log('Datos en storedUserData: ', storedUserData);
-    
+    console.log('Datos en storedUserData desde el header: ', storedUserData);
+    console.log('dataUser ==> ', this.dataUser)
     
     /*if (userRole === 'Admin') { 
       this.homePage = 'admin/search-order';
@@ -124,7 +124,7 @@ export class HeaderComponent
   
   setHeaderProperties() {
     // Restaurar propiedades del encabezado aquí
-    // Ejemplo: Restaurar el color de fondo
+    // Restaurar el color de fondo (al cargar la página se perdía el color de fondo).
     const headerElement = this.elementRef.nativeElement as HTMLElement;
     headerElement.style.backgroundColor = '#004674 !important';
   }

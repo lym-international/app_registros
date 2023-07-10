@@ -8,13 +8,11 @@ import {
   OnInit,
   Renderer2,
   HostListener,
-  OnDestroy,
 } from '@angular/core';
 import { ROUTES } from './sidebar-items';
 import { AuthService, Role } from '@core';
 import { RouteInfo } from './sidebar.metadata';
 import { AuthenticationService } from 'app/_services/authentication.service';
-import { OcultarSidebarService } from '../../_services/ocultar-sidebar.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -22,7 +20,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent implements OnInit, OnDestroy {
+export class SidebarComponent implements OnInit { 
   public sidebarItems!: RouteInfo[];
   public innerHeight?: number;
   public bodyTag!: HTMLElement;
@@ -35,8 +33,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
   headerHeight = 60;
   currentRoute?: string;
   routerObj;
-  mostrarSidebar: boolean = true;
-  ocultarSidebarSuscription: Subscription;
+  mostrarMenu: boolean = true;
+
+  
+  
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -45,12 +45,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     public authenticationService: AuthenticationService,
-    public ocultarSidebarService: OcultarSidebarService,
+    
 
   ) {
     this.elementRef.nativeElement.closest('body');
     this.routerObj = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
+        this.currentRoute = event.url;
+        this.mostrarMenu = !this.currentRoute.startsWith('/admin/search-order');
         // close sidebar on mobile screen after menu select
         this.renderer.removeClass(this.document.body, 'overlay-open');
       }
@@ -79,13 +81,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+
+
   ngOnInit() {
     
-    this.ocultarSidebarSuscription = this.ocultarSidebarService.mostrarSidebar$.subscribe((mostrar) => {
-      this.mostrarSidebar = mostrar;
-      
-    });
-
     this.dataUser = this.authenticationService.getData();
     
     const storedUserData = localStorage.getItem('currentUserData');
@@ -103,31 +103,23 @@ export class SidebarComponent implements OnInit, OnDestroy {
     if (this.dataUser) {
       const userRole = this.dataUser.role;
       
-      this.sidebarItems = ROUTES.filter(
-        (x) => x.role.indexOf(userRole) !== -1 || x.role.indexOf('All') !== -1
-      );
-      if (userRole === "Administrator") {
-        this.userType = "Administrator";
-      } else if (userRole === Role.Client) {
-        this.userType = Role.Client;
-      } else if (userRole === Role.Employee) {
-        this.userType = Role.Employee;
-      } else {
-        this.userType = Role.Admin;
-      }
     }
 
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        // Check if the current route is 'search-order'
+        this.currentRoute = event.url;
+        this.mostrarMenu = !this.currentRoute.startsWith('/admin/search-order');
+        this.renderer.removeClass(this.document.body, 'overlay-open');
+      }
+    console.log('MOSTRAR MENU =>', this.mostrarMenu)
+    });
+    
     this.sidebarItems = ROUTES.filter((sidebarItem) => sidebarItem);
     this.initLeftSidebar();
     this.bodyTag = this.document.body;
   }
-
-  ngOnDestroy() {
-    this.routerObj.unsubscribe();
-    if (this.ocultarSidebarSuscription) {
-      this.ocultarSidebarSuscription.unsubscribe();
-    }
-  }
+  
   initLeftSidebar() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const _this = this;
