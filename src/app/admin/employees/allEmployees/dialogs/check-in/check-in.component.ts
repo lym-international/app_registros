@@ -1,5 +1,26 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Component, Inject } from '@angular/core';
+//import { CalendarService } from '../../calendar.service';
+import {
+  UntypedFormControl,
+  Validators,
+  UntypedFormGroup,
+  UntypedFormBuilder,
+} from '@angular/forms';
+import { Employees } from '../../employees.model';
+import { CheckInModel } from './check-in.model';
+//import { Calendar } from '../../calendar.model';
+
+export interface DialogData {
+  id: number;
+  action: string;
+  //calendar: Calendar;
+}
+
+
+//Anterior:
+/*import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
 import { EmployeesService } from '../../employees.service';
 import {
   UntypedFormControl,
@@ -9,19 +30,92 @@ import {
 } from '@angular/forms';
 import { Employees } from '../../employees.model';
 import { formatDate } from '@angular/common';
+*/
 
-export interface DialogData {
+//Anterior
+/*export interface DialogData {
   id: number;
   action: string;
   employees: Employees;
 }
-
+*/
 
 @Component({
   selector: 'app-check-in',
   templateUrl: './check-in.component.html',
   styleUrls: ['./check-in.component.scss']
 })
+
+export class CheckInComponent {
+
+  action: string;
+  dialogTitle: string;
+  checkInForm: UntypedFormGroup;
+  checkIn: CheckInModel;
+  employees: Employees;
+  showDeleteBtn = false;
+  
+  constructor(
+    public dialogRef: MatDialogRef<CheckInComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    //public calendarService: CalendarService,
+    private fb: UntypedFormBuilder
+  ) {
+    // Set the defaults
+    this.action = data.action;
+    if (this.action === 'edit') {
+      //this.dialogTitle = data.checkIn.title;
+      //this.calendar = data.calendar;
+      this.showDeleteBtn = true;
+    } else {
+      this.dialogTitle = 'CheckIn date:';
+      const blankObject = {} as CheckInModel;
+      this.checkIn = new CheckInModel(blankObject);
+      this.showDeleteBtn = false;
+    }
+
+    this.checkInForm = this.createContactForm();
+  }
+  formControl = new UntypedFormControl('', [
+    Validators.required,
+    // Validators.email,
+  ]);
+  getErrorMessage() {
+    return this.formControl.hasError('required')
+      ? 'Required field'
+      : this.formControl.hasError('email')
+      ? 'Not a valid email'
+      : '';
+  }
+  createContactForm(): UntypedFormGroup {
+    return this.fb.group({
+      id: [this.checkIn.id],
+      title: [this.checkIn.title, [Validators.required]],
+      category: [this.checkIn.category],
+      startDate: [this.checkIn.startDate, [Validators.required]],
+      endDate: [this.checkIn.endDate, [Validators.required]],
+      details: [this.checkIn.details],
+    });
+  }
+  submit() {
+    // emppty stuff
+  }
+  deleteEvent() {
+    //this.calendarService.deleteCalendar(this.calendarForm.getRawValue());
+    this.dialogRef.close('delete');
+  }
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+  public confirmAdd(): void {
+    //this.calendarService.addUpdateCalendar(this.calendarForm.getRawValue());
+    this.dialogRef.close('submit');
+  }
+  
+}
+
+//Anterior:
+/*
 export class CheckInComponent {
   action: string;
   dialogTitle: string;
@@ -82,4 +176,5 @@ export class CheckInComponent {
   public confirmAdd(): void {
     this.employeesService.addEmployees(this.employeesForm.getRawValue());
   }
-}
+} 
+*/
