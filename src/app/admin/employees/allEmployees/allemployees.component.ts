@@ -25,6 +25,7 @@ import { OrderDataService } from 'app/_services/orderData.service';
 import { delay } from 'rxjs/operators'; //Jairo
 import { CheckInComponent } from './dialogs/check-in/check-in.component';
 
+
 @Component({
   selector: 'app-allemployees',
   templateUrl: './allemployees.component.html',
@@ -43,6 +44,7 @@ export class AllemployeesComponent
     'position',
     'totalHours',
     'payRollID',
+    'horaAcordada',
     'in',
     'out',
     'break',
@@ -68,6 +70,8 @@ export class AllemployeesComponent
   employeesArray: any[] = [];
   isTblLoading = true;
   
+  
+  
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
@@ -83,7 +87,7 @@ export class AllemployeesComponent
     public dialog: MatDialog,
     public employeesService: EmployeesService,
     private snackBar: MatSnackBar,
-    private orderDataService: OrderDataService
+    private orderDataService: OrderDataService,
   ) {
     super();
     // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
@@ -99,8 +103,6 @@ export class AllemployeesComponent
   }
   // saca la data que se necesita por empleado según la orden.
   
-  
-
   getEmployees(){
     fetch(
       `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
@@ -119,17 +121,19 @@ export class AllemployeesComponent
         //const positionName = employee.position;
         //const hourFrom = employee.hourFrom || "No data";
         const firstName = employee.employee.data.firstname || "No data"; //Diego: si no tiene valor (undefined) imrime "No data".
-         const lastName = employee.employee.data.lastname || "No data";
+        const lastName = employee.employee.data.lastname || "No data";
         const highKeyId = employee.employee.data.employeeId || "No data";
-        /*const positions = employee.employee.data.positions; //Diego: toma todas las posiciones que ha tenido el empleado
-        const lastPosition = (Object.values(positions) as { name: string }[])[Object.values(positions).length - 1].name || "No data"; // Diego: toma la última posición que ha tenido el empleado, si no tiene valor (undefined) imrime "No data". */
         const position = employee.position || "No data";
         const totalHours = employee.hours || "No data";
         const payrollId = employee.employee.data.payrollid || "No data";
-        //const checkIn = employee.realCheckin || "No data";
-        //const checkOut = employee.dateCheckoutRounded || "No data";
         const brake = employee.break || "No data";
+        const horaAcordada = employee.hourFrom || "No data";
         
+        /*const horaAcordadaTimestamp = employee.realCheckin?._seconds || 0; // Obtener el timestamp de entrada en segundos
+        const horaAcordadaDate = new Date(horaAcordadaTimestamp * 1000); // Multiplicar por 1000 para convertir segundos a milisegundos
+        const horaAcordadaInTime = this.datePipe.transform(horaAcordadaDate, 'hh:mm a');
+        */
+
         const checkInTimestamp = employee.realCheckin?._seconds || 0; // Obtener el timestamp de entrada en segundos
         const checkInDate = new Date(checkInTimestamp * 1000); // Multiplicar por 1000 para convertir segundos a milisegundos
         const checkInTime = this.datePipe.transform(checkInDate, 'hh:mm a');
@@ -149,6 +153,7 @@ export class AllemployeesComponent
           position: position,
           totalHours: totalHours,
           payRollId: payrollId,
+          horaAcordada: horaAcordada,
           in: checkInTime,
           out: checkOutTime,
           break: brake,
@@ -158,7 +163,7 @@ export class AllemployeesComponent
 
       this.employeesService.setEmployeesApi(this.employeesArray)
   
-        //console.log('Datass: ', this.employeesDatas)
+        //console.log('Datass: ', this.employeesArray)
       // Diego: ejecución con el array de datos
       console.log('---------------------------');
       console.log('Array empleados: ');
@@ -202,7 +207,7 @@ export class AllemployeesComponent
         this.refreshTable();
         this.showNotification(
           'snackbar-success',
-          'Add Record Successfully...!!!',
+          'Successful Check-in...!!!',
           'bottom',
           'center'
         );
@@ -462,6 +467,7 @@ export class ExampleDataSource extends DataSource<Employees> {
               employees.position +
               employees.totalHours +
               employees.payRollId +
+              employees.horaAcordada +
               employees.in +
               employees.out +
               employees.break 
@@ -524,7 +530,10 @@ export class ExampleDataSource extends DataSource<Employees> {
           break;  
         case 'payRollID':
           [propertyA, propertyB] = [a.payRollId, b.payRollId]; //Diego
-          break;  
+          break;
+          case 'horaAcordada':
+            [propertyA, propertyB] = [a.horaAcordada, b.horaAcordada]; //Diego
+            break;  
         case 'in':
           [propertyA, propertyB] = [a.in, b.in]; //Diego
           break;  

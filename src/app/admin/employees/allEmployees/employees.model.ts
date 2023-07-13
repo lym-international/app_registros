@@ -7,6 +7,7 @@ export class Employees {
   position:string;
   totalHours:string;
   payRollId:string;
+  horaAcordada:string;
   in:string;
   out:string;
   break:string; 
@@ -37,6 +38,7 @@ export class Employees {
       this.position = employees.position || '',
       this.totalHours = employees.totalHours || '',
       this.payRollId = employees.payRollId || '',
+      this.horaAcordada = employees.horaAcordada || '',
       this.in = employees.in || '';
       this.out = employees.out || '';
       this.break = employees.break || '';
