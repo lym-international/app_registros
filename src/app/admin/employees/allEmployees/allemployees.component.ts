@@ -24,6 +24,7 @@ import { DatePipe, formatDate } from '@angular/common';
 import { OrderDataService } from 'app/_services/orderData.service';
 import { delay } from 'rxjs/operators'; //Jairo
 import { CheckInComponent } from './dialogs/check-in/check-in.component';
+import { CheckOutComponent } from './dialogs/check-out/check-out.component';
 
 
 @Component({
@@ -214,6 +215,39 @@ export class AllemployeesComponent
       }
     });
   }
+
+  checkOutModal() {
+    let tempDirection: Direction;
+    if (localStorage.getItem('isRtl') === 'true') {
+      tempDirection = 'rtl';
+    } else {
+      tempDirection = 'ltr';
+    }
+    const dialogRef = this.dialog.open(CheckOutComponent, {
+      data: {
+        employees: this.employees,
+        action: 'add',
+      },
+      direction: tempDirection,
+    });
+    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
+      if (result === 1) {
+        // After dialog is closed we're doing frontend updates
+        // For add we're just pushing a new row inside DataServicex
+        this.exampleDatabase?.dataChange.value.unshift(
+          this.employeesService.getDialogData()
+        );
+        this.refreshTable();
+        this.showNotification(
+          'snackbar-success',
+          'Successful Check-out...!!!',
+          'bottom',
+          'center'
+        );
+      }
+    });
+  }
+
   addNew() {
     let tempDirection: Direction;
     if (localStorage.getItem('isRtl') === 'true') {

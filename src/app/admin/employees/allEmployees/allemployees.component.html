@@ -47,7 +47,7 @@
 
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="CHECKIN">
-                                        <button mat-mini-fab color="primary" (click)="checkInModal()"> <!--Ingresar función (click)=""-->
+                                        <button mat-mini-fab color="primary" (click)="checkInModal()"> 
                                       <mat-icon class="col-white">how_to_reg</mat-icon>
                                     </button>
                                     </div>
@@ -55,7 +55,7 @@
 
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="CHECKOUT">
-                                        <button mat-mini-fab color="primary"> <!--Ingresar función (click)=""-->
+                                        <button mat-mini-fab color="primary" (click)="checkOutModal()"> 
                                   <mat-icon class="col-white">logout</mat-icon>
                                 </button>
                                     </div>
@@ -166,7 +166,7 @@
                                 </ng-container>
                                 <ng-container matColumnDef="break">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Break</mat-header-cell>
-                                    <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Break:</span>{{row.break}}</mat-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Break:</span>{{row.break}} minutes</mat-cell>
                                 </ng-container>
                                 <!--<ng-container matColumnDef="department">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Department</mat-header-cell>

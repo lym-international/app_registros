@@ -1,5 +1,5 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 //import { CalendarService } from '../../calendar.service';
 import {
   UntypedFormControl,
@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { Employees } from '../../employees.model';
 import { CheckInModel } from './check-in.model';
+import { formatDate } from '@angular/common';
 //import { Calendar } from '../../calendar.model';
 
 export interface DialogData {
@@ -46,7 +47,7 @@ import { formatDate } from '@angular/common';
   styleUrls: ['./check-in.component.scss']
 })
 
-export class CheckInComponent {
+export class CheckInComponent implements OnInit{
 
   action: string;
   dialogTitle: string;
@@ -55,6 +56,12 @@ export class CheckInComponent {
   employees: Employees;
   showDeleteBtn = false;
   
+  ngOnInit(): void {
+    this.checkInForm.patchValue({
+      startDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
+    });
+  }
+
   constructor(
     public dialogRef: MatDialogRef<CheckInComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -73,9 +80,10 @@ export class CheckInComponent {
       this.checkIn = new CheckInModel(blankObject);
       this.showDeleteBtn = false;
     }
-
     this.checkInForm = this.createContactForm();
+    console.log('Hora CheckIn ==>',this.checkInForm.controls)
   }
+  
   formControl = new UntypedFormControl('', [
     Validators.required,
     // Validators.email,
@@ -94,9 +102,11 @@ export class CheckInComponent {
       category: [this.checkIn.category],
       startDate: [this.checkIn.startDate, [Validators.required]],
       endDate: [this.checkIn.endDate, [Validators.required]],
-      details: [this.checkIn.details],
+      details: [this.checkIn.details],  
     });
   }
+  
+  
   submit() {
     // emppty stuff
   }

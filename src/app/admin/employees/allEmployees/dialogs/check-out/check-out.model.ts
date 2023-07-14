@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-export class CheckInModel {
+export class CheckOutModel {
   id: string;
   title: string;
   category: string;
@@ -7,14 +7,14 @@ export class CheckInModel {
   endDate: string;
   details: string;
 
-  constructor(checkIn: CheckInModel) {
+  constructor(checkOut: CheckOutModel) {
     {
-      this.id = checkIn.id || '';
-      this.title = checkIn.title || '';
-      this.category = checkIn.category || '';
+      this.id = checkOut.id || '';
+      this.title = checkOut.title || '';
+      this.category = checkOut.category || '';
       //this.startDate = formatDate(new Date(), 'yyyy-MM-dd', 'en') || '';
       this.endDate = formatDate(new Date(), 'yyyy-MM-dd', 'en') || '';
-      this.details = checkIn.details || '';
+      this.details = checkOut.details || '';
     }
   }
   public getRandomID(): number {

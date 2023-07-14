@@ -14,6 +14,7 @@ import { SharedModule } from '@shared';
 import { DatePipe } from '@angular/common';
 import { CheckInComponent } from './allEmployees/dialogs/check-in/check-in.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { CheckOutComponent } from './allEmployees/dialogs/check-out/check-out.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
     EditEmployeeComponent,
     EmployeeProfileComponent,
     CheckInComponent,
+    CheckOutComponent,
   ],
   imports: [
     CommonModule,
