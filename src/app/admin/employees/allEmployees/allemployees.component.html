@@ -20,7 +20,7 @@
                         <mat-card class="tarjeta-pequena">
                             <mat-card-content>
                                 <mat-card-title>Client</mat-card-title>
-                                {{dataEmployees.data.place}}
+                                {{dataEmployees.data.clientName}}
                             </mat-card-content>
                         </mat-card>
                     </div>
@@ -62,6 +62,14 @@
                                 </li>
 
                                 <li class="tbl-header-btn">
+                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="BREAK">
+                                        <button mat-mini-fab color="primary" (click)="checkOutModal()"> 
+                                  <mat-icon class="col-white">coffee</mat-icon>
+                                </button>
+                                    </div>
+                                </li>
+
+                                <li class="tbl-header-btn">
                                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="NOSHOW">
                                         <button mat-mini-fab color="warn"> <!--Ingresar función (click)=""-->
                                   <mat-icon class="col-white">visibility_off</mat-icon>
@@ -84,6 +92,15 @@
                                       </button>
                                     </div>
                                 </li>
+
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="DOWNLOAD">
+                                        <button mat-mini-fab color="primary" (click)="exportExcel()">
+                                        <mat-icon class="col-white">download</mat-icon>
+                                      </button>
+                                    </div>
+                                </li>
+
                                 <!--<li class="tbl-header-btn">
                                     <div class="m-l-10" matTooltip="REFRESH">
                                         <button mat-mini-fab color="primary" (click)="refresh()">
@@ -92,11 +109,13 @@
                                     </div>
                                 </li>-->
 
-                                <li>
+
+
+                                <!--<li>
                                     <div class="export-button m-l-10" matTooltip="XLSX">
                                         <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
                                     </div>
-                                </li>
+                                </li> -->
                             </ul>
                         </div>
                     </div>
@@ -126,31 +145,25 @@
                                     <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-7"> <span class="mobile-label">Image:</span><img [src]="row.img" />
                                     </mat-cell>
                                 </ng-container>-->
-                                <ng-container matColumnDef="firstName">
-                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>FirstName</mat-header-cell>
-                                    <mat-cell class="celda" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">FirstName:</span>{{row.firstName}}</mat-cell>
-                                </ng-container>
                                 <ng-container matColumnDef="lastName">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>LastName</mat-header-cell>
                                     <mat-cell class="celda" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">LastName:</span>{{row.lastName}}</mat-cell>
                                 </ng-container>
-
-                                <!--Diego-->
+                                <ng-container matColumnDef="firstName">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>FirstName</mat-header-cell>
+                                    <mat-cell class="celda" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">FirstName:</span>{{row.firstName}}</mat-cell>
+                                </ng-container>
                                 <ng-container matColumnDef="highKeyID">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>HighKey ID</mat-header-cell>
                                     <mat-cell class="celda" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">HighKeyId:</span>{{row.highKeyId}}</mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="position">
-                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Position</mat-header-cell>
-                                    <mat-cell class="celda" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Position:</span>{{row.position}}</mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="totalHours">
-                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Total hours</mat-header-cell>
-                                    <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Total hours:</span>{{row.totalHours}}</mat-cell>
-                                </ng-container>
                                 <ng-container matColumnDef="payRollID">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>PayRoll ID</mat-header-cell>
                                     <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">PayRoll ID:</span>{{row.payRollId}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="position">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Position</mat-header-cell>
+                                    <mat-cell class="celda" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Position:</span>{{row.position}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="horaAcordada">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Scheduled time</mat-header-cell>
@@ -168,6 +181,13 @@
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Break</mat-header-cell>
                                     <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Break:</span>{{row.break}} minutes</mat-cell>
                                 </ng-container>
+                                <ng-container matColumnDef="totalHours">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Total hours</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Total hours:</span>{{row.totalHours}}</mat-cell>
+                                </ng-container>
+
+
+
                                 <!--<ng-container matColumnDef="department">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Department</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Department:</span>{{row.department}}

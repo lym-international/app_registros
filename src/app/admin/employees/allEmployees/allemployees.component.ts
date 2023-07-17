@@ -39,16 +39,16 @@ export class AllemployeesComponent
 {
   displayedColumns = [
     'select',
-    'firstName',
     'lastName',
+    'firstName',
     'highKeyID',
-    'position',
-    'totalHours',
     'payRollID',
+    'position',
     'horaAcordada',
     'in',
     'out',
     'break',
+    'totalHours',
     //'department',
     //'role',
     //'degree',
@@ -96,7 +96,7 @@ export class AllemployeesComponent
 
   ngOnInit() {
     this.dataEmployees = this.orderDataService.getSelectedOrder();
-    // console.log('Data: ', this.dataEmployees)
+    console.log('Data Order: ', this.dataEmployees)
     this.orderId = this.dataEmployees.id;
     this.getEmployees();
     this.loadData();

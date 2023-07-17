@@ -38,7 +38,7 @@ export class EmployeesService extends UnsubscribeOnDestroyAdapter {
       next: (data) => {
         this.isTblLoading = false;
         this.dataChange.next(data);
-        console.log('DATA ->',data)
+        //console.log('DATA ->',data)
       },
       error: (error: HttpErrorResponse) => {
         this.isTblLoading = false;
