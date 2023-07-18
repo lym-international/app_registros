@@ -12,6 +12,10 @@ import { EmployeesService } from './allEmployees/employees.service';
 import { ComponentsModule } from '@shared/components/components.module';
 import { SharedModule } from '@shared';
 import { DatePipe } from '@angular/common';
+import { CheckInComponent } from './allEmployees/dialogs/check-in/check-in.component';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { CheckOutComponent } from './allEmployees/dialogs/check-out/check-out.component';
+import { BreakComponent } from './allEmployees/dialogs/break/break.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +25,9 @@ import { DatePipe } from '@angular/common';
     AddEmployeeComponent,
     EditEmployeeComponent,
     EmployeeProfileComponent,
+    CheckInComponent,
+    CheckOutComponent,
+    BreakComponent,
   ],
   imports: [
     CommonModule,
@@ -29,6 +36,8 @@ import { DatePipe } from '@angular/common';
     EmployeesRoutingModule,
     ComponentsModule,
     SharedModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
   ],
   providers: [EmployeesService, DatePipe],
 })

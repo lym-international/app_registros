@@ -12,7 +12,8 @@
                     <div class="card-statistic-3">
                         <div class="card-icon card-icon-large"><i class="fa fa-globe"></i></div>
                         <div class="tarjeta">
-                            {{dataOrder.data.place}}
+                            <span style="font-size: large; color: #1A202E; font-weight: 700;">{{dataOrder.data.clientName}}</span>
+                            <br/> <br/> {{dataOrder.data.place}}
                             <br/> <br/> {{dataOrder.data.address}}
                             <br/> <br/> {{dataOrder.data.city}} {{dataOrder.data.state}} {{dataOrder.data.zipcode}}
                         </div>
@@ -44,6 +45,14 @@
 
         <hr style="color: #004676; width: 50%; margin: 70px auto 70px auto; " />
 
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" style="text-align: center;">
+            <mat-card class="" style="background-color: #1A202E; color: white; font-size: large; border-radius: 8px;">
+                <mat-card-content>
+                    <mat-card-title>E M P L O Y E E S</mat-card-title>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <br/>
         <div class="row ">
             <div class="col-xl-3 col-lg-6 tarjeta-indicadores">
                 <div class="card l-bg-green-dark">
@@ -191,15 +200,24 @@
 
         <hr style="color: #004676; width: 50%; margin: 50px auto 70px auto; " />
 
-        <div class="row clearfix" style="margin-right: 20px; margin-left: -20px">
-            <div class="col-xl-2 col-lg-3" style="padding-right: 30px;">
-                <mat-card class="" style="background-color: #004676; color: white; font-size: medium; border-radius: 8px;">
-                    <mat-card-content>
-                        <mat-card-title>Required positions</mat-card-title>
-                        {{totalRequeridos}}
-                    </mat-card-content>
-                </mat-card>
-            </div>
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" style="padding-right: 0px; text-align: center;">
+            <mat-card class="" style="background-color: #1A202E; color: white; font-size: large; border-radius: 8px;">
+                <mat-card-content>
+                    <mat-card-title>P O S I T I O N S</mat-card-title>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <br/>
+        <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12" style="padding-right: 0px; text-align: center;">
+            <mat-card class="" style="background: linear-gradient(135deg, #051e2f 60%, rgb(30, 168, 255) 100%); color: white; font-size: medium; border-radius: 8px;">
+                <mat-card-content>
+                    <mat-card-title>Required: {{totalRequeridos}}</mat-card-title>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <br/>
+        <div class="row clearfix" style="margin-right: 0px; margin-left: 0px">
+
             <!--<div class="col-xl-3 col-lg-6">
                 <div class="card l-bg-orange-dark" >
                     <div class="card-statistic-3">
@@ -302,10 +320,10 @@
                     </div>
                 </div> 
             </div> -->
-            <div class="col-xl-10 col-lg-10 col-md-12 col-sm-12">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                 <div class="card">
                     <div class="header">
-                        <h2>Complience by position</h2>
+                        <h2 style="color: #1A202E;">Complience by position and employees</h2>
                     </div>
                     <ng-scrollbar style="height: 410px" visibility="hover">
                         <div class="tableBody">
@@ -315,12 +333,13 @@
                                         <tr>
                                             <th class="column-check">Position</th>
                                             <th class="column-check">CheckIn Hour</th>
-                                            <th class="column-check">Required employees</th>
-                                            <th class="column-check">Confirmed employees</th>
+                                            <th class="column-check">Required</th>
+                                            <th class="column-check">Confirmed</th>
+                                            <th class="column-check">Confirmed %</th>
                                             <th class="column-check">CheckIn</th>
-                                            <th class="column-check">CheckIn Compliance</th>
+                                            <th class="column-check">CheckIn %</th>
                                             <th class="column-check">CheckOut</th>
-                                            <th class="column-check">CheckOut Compliance</th>
+                                            <th class="column-check">CheckOut %</th>
                                             <th class="column-check">Noshow</th>
                                         </tr>
                                     </thead>
@@ -331,11 +350,9 @@
                                                 <td class="column-check">{{ item.hourFrom }}</td>
                                                 <td class="column-check">{{ item.quantity }}</td>
                                                 <td class="column-check">{{ item.m }}</td>
-                                                <!-- <td class="column-check">{{item.position}}</td> -->
-                                                <!-- <td class="column-check">{{item.hourFrom}}</td> -->
                                                 <td class="column-check">{{ checkinValues[item.position][item.hourFrom] }}</td>
-                                                <td> {{(checkinValues[item.position][item.hourFrom]/item.quantity) * 100}} %
-                                                    <mat-progress-bar mode="determinate" class="progress-round green-progress" value="{{(checkinValues[item.position][item.hourFrom]/item.quantity) * 100}}">
+                                                <td> {{(checkinValues[item.position][item.hourFrom]/item.m) * 100}} %
+                                                    <mat-progress-bar mode="determinate" class="progress-round green-progress" value="{{(checkinValues[item.position][item.hourFrom]/item.m) * 100}}">
                                                     </mat-progress-bar>
                                                 </td>
                                                 <td class="column-check">{{ checkOutValues[item.position][item.hourFrom] }}</td>

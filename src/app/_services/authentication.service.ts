@@ -20,26 +20,22 @@ import { throwError } from 'rxjs'; //Diego
 export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
-
-    public auxCurrentUser = null;
-
-    // public userinfo:User;
-    public userinfo: User = new User();
-
-    public returnUrl: string;
-    // fb: firebase.app.App;
-    // fb: firebase.app.App | null = null;
-
-    loading = false;
-    // user$: Observable<any>;
-    user$: Observable<any> = new Observable<any>();
-    messageService: any; //Diego
-    
-    private data: any;
+  public auxCurrentUser = null;
+  // public userinfo:User;
+  public userinfo: User = new User();
+  public returnUrl: string;
+  // fb: firebase.app.App;
+  // fb: firebase.app.App | null = null;
+  loading = false;
+  // user$: Observable<any>;
+  user$: Observable<any> = new Observable<any>();
+  messageService: any; //Diego
+  private data: any;
+  public currentUserData: any; // Nueva variable para almacenar los datos del usuario
 
 
 
-    constructor(
+  constructor(
       private http: HttpClient,
       public auth: AngularFireAuth,
       private db: AngularFirestore,
@@ -58,59 +54,46 @@ export class AuthenticationService {
         if (!user) {
           sessionStorage.setItem('currentUser', '');
         }
-      });      
-      
+      });
     }
     
     login(username: string, password: string ) {
       this.auth.signInWithEmailAndPassword(username, password).then((user) => {
-            console.log("usuario autenticado con exito!", user.user?.email)
-            this.db.collection('Users',ref => ref.where('email', '==', username)).get().subscribe((usersInfo) => {
-                  usersInfo.docs.forEach((item:any) => {
-                      const data = item.data();
-                      sessionStorage.setItem('currentUser', JSON.stringify(data));
-                      this.currentUserSubject.next(data);
-                      console.log("nombre: ", data.firstname, data.lastname)
-                      console.log("role: ", data.role)
-                      
-                      this.setData(data)
-                      // this.auxCurrentUser = user;
-                      // const auxDate = new Date();
-                      // const date = new Date(auxDate.getTime() - (auxDate.getTimezoneOffset() * 60000));
-                      if(data.role=="Employee")
-                      {
-                          // this.router.navigate(['/profile']);
-                          this.router.navigate(['/employee/dashboard']);
-                      }
-                      else if (data.role=="Client")
-                      {
-                          // this.router.navigate(['/orders']);
-                          this.router.navigate(['/client/dashboard']);
-                      }
-                      else if (data.role=='Executive')
-                      {
-                        // this.router.navigate(['/orders'])
-                        console.log("Executive")
-                      }
-                      else if (data.role == "Supervisor")
-                      {
-                          // this.router.navigate(['/register'])
-                          console.log("Supervisor")
-                      }
-                      else if (data.role=="Administrator")
-                      {
-                        console.log("si es admin")
-                        this.router.navigate(['/admin/search-order/']); // '/admin/dashboard/main'  /admin/search-order/
-                          // this.router.navigate(['/dashboard']);
-                      }
-                      else
-                      {
-                          // this.router.navigate([this.returnUrl]);
-                          this.router.navigate(['/authentication/signin']); // /authentication/signin
-                      }
-                  });
-              });
-            })
+        console.log("usuario autenticado con exito!", user.user?.email)
+        this.db.collection('Users',ref => ref.where('email', '==', username)).get().subscribe((usersInfo) => {
+          usersInfo.docs.forEach((item:any) => {
+            const data = item.data();
+            sessionStorage.setItem('currentUser', JSON.stringify(data));
+            this.currentUserSubject.next(data);
+            this.currentUserData = data; // diego 8-7 : Almacenar los datos del usuario en currentUserData
+            localStorage.setItem('currentUserData', JSON.stringify(data));
+            console.log('Datos del usuario almacenados en localStorage:', data);
+            console.log('currentUserData: ', this.currentUserData.firstname)
+            console.log("nombre: ", data.firstname, data.lastname)
+            console.log("role: ", data.role)
+            
+            this.setData(data)
+            // this.auxCurrentUser = user;
+            // const auxDate = new Date();
+            // const date = new Date(auxDate.getTime() - (auxDate.getTimezoneOffset() * 60000));
+            
+            if(this.currentUserData.role=="Employee"){
+                this.router.navigate(['/employee/dashboard']);
+            } else if (this.currentUserData.role=="Client"){
+                this.router.navigate(['/client/dashboard']);
+            } else if (this.currentUserData.role=='Executive'){
+              console.log("Executive")
+            } else if (this.currentUserData.role == "Supervisor"){
+                console.log("Supervisor")
+            } else if (this.currentUserData.role=="Administrator"){
+              console.log("si es admin")
+              this.router.navigate(['/admin/search-order/']);
+            } else {
+              this.router.navigate(['/authentication/signin']); // /authentication/signin
+            }
+          });
+        });
+      })
             .catch((error) => {
               switch (error.code) {
                 case "auth/wrong-password":
@@ -127,8 +110,6 @@ export class AuthenticationService {
                   break;
               }
             });
-           
-         //});
     }
 
     setData(data: any) {
@@ -136,7 +117,8 @@ export class AuthenticationService {
     }
   
     getData() {
-      return this.data;
+      //return this.data;
+      return this.currentUserData;
     }
 
   changePassword(email: string) {
@@ -156,6 +138,7 @@ export class AuthenticationService {
         sessionStorage.removeItem('currentUser');
         this.currentUserSubject.next(null);
         this.auxCurrentUser = null;
+        this.currentUserData = null; // Restablecer currentUserData a null
         this.router.navigate(['pages/login']);
     })
 }

@@ -23,6 +23,10 @@ import { TableExportUtil, TableElement } from '@shared';
 import { DatePipe, formatDate } from '@angular/common';
 import { OrderDataService } from 'app/_services/orderData.service';
 import { delay } from 'rxjs/operators'; //Jairo
+import { CheckInComponent } from './dialogs/check-in/check-in.component';
+import { CheckOutComponent } from './dialogs/check-out/check-out.component';
+import { BreakComponent } from './dialogs/break/break.component';
+
 
 @Component({
   selector: 'app-allemployees',
@@ -36,15 +40,16 @@ export class AllemployeesComponent
 {
   displayedColumns = [
     'select',
-    'firstName',
     'lastName',
+    'firstName',
     'highKeyID',
-    'position',
-    'totalHours',
     'payRollID',
+    'position',
+    'horaAcordada',
     'in',
     'out',
     'break',
+    'totalHours',
     //'department',
     //'role',
     //'degree',
@@ -65,6 +70,9 @@ export class AllemployeesComponent
   public empleados: string;
   public employeesDatos: any[];
   employeesArray: any[] = [];
+  isTblLoading = true;
+  
+  
   
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -81,7 +89,7 @@ export class AllemployeesComponent
     public dialog: MatDialog,
     public employeesService: EmployeesService,
     private snackBar: MatSnackBar,
-    private orderDataService: OrderDataService
+    private orderDataService: OrderDataService,
   ) {
     super();
     // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
@@ -89,7 +97,7 @@ export class AllemployeesComponent
 
   ngOnInit() {
     this.dataEmployees = this.orderDataService.getSelectedOrder();
-    // console.log('Data: ', this.dataEmployees)
+    console.log('Data Order: ', this.dataEmployees)
     this.orderId = this.dataEmployees.id;
     this.getEmployees();
     this.loadData();
@@ -97,8 +105,6 @@ export class AllemployeesComponent
   }
   // saca la data que se necesita por empleado según la orden.
   
-  
-
   getEmployees(){
     fetch(
       `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
@@ -106,7 +112,7 @@ export class AllemployeesComponent
       )
     .then((response) => response.json())
     .then((data) => {
-      
+    this.isTblLoading = false;
       //const employeesArray = []; // Diego: Array para guardar los datos
       //this.employeesDatos = employeesArray;
       
@@ -117,17 +123,19 @@ export class AllemployeesComponent
         //const positionName = employee.position;
         //const hourFrom = employee.hourFrom || "No data";
         const firstName = employee.employee.data.firstname || "No data"; //Diego: si no tiene valor (undefined) imrime "No data".
-         const lastName = employee.employee.data.lastname || "No data";
+        const lastName = employee.employee.data.lastname || "No data";
         const highKeyId = employee.employee.data.employeeId || "No data";
-        /*const positions = employee.employee.data.positions; //Diego: toma todas las posiciones que ha tenido el empleado
-        const lastPosition = (Object.values(positions) as { name: string }[])[Object.values(positions).length - 1].name || "No data"; // Diego: toma la última posición que ha tenido el empleado, si no tiene valor (undefined) imrime "No data". */
         const position = employee.position || "No data";
         const totalHours = employee.hours || "No data";
         const payrollId = employee.employee.data.payrollid || "No data";
-        //const checkIn = employee.realCheckin || "No data";
-        //const checkOut = employee.dateCheckoutRounded || "No data";
         const brake = employee.break || "No data";
+        const horaAcordada = employee.hourFrom || "No data";
         
+        /*const horaAcordadaTimestamp = employee.realCheckin?._seconds || 0; // Obtener el timestamp de entrada en segundos
+        const horaAcordadaDate = new Date(horaAcordadaTimestamp * 1000); // Multiplicar por 1000 para convertir segundos a milisegundos
+        const horaAcordadaInTime = this.datePipe.transform(horaAcordadaDate, 'hh:mm a');
+        */
+
         const checkInTimestamp = employee.realCheckin?._seconds || 0; // Obtener el timestamp de entrada en segundos
         const checkInDate = new Date(checkInTimestamp * 1000); // Multiplicar por 1000 para convertir segundos a milisegundos
         const checkInTime = this.datePipe.transform(checkInDate, 'hh:mm a');
@@ -147,6 +155,7 @@ export class AllemployeesComponent
           position: position,
           totalHours: totalHours,
           payRollId: payrollId,
+          horaAcordada: horaAcordada,
           in: checkInTime,
           out: checkOutTime,
           break: brake,
@@ -156,7 +165,7 @@ export class AllemployeesComponent
 
       this.employeesService.setEmployeesApi(this.employeesArray)
   
-        //console.log('Datass: ', this.employeesDatas)
+        //console.log('Datass: ', this.employeesArray)
       // Diego: ejecución con el array de datos
       console.log('---------------------------');
       console.log('Array empleados: ');
@@ -164,6 +173,10 @@ export class AllemployeesComponent
      console.log('---------------------------');
 
      this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
+    })
+    .catch((error) => {
+      console.log(error)
+      this.isTblLoading = false;
     })  
     
   }
@@ -172,6 +185,101 @@ export class AllemployeesComponent
   refresh() {
     // this.loadData();
   }
+  checkInModal() {
+    let tempDirection: Direction;
+    if (localStorage.getItem('isRtl') === 'true') {
+      tempDirection = 'rtl';
+    } else {
+      tempDirection = 'ltr';
+    }
+    const dialogRef = this.dialog.open(CheckInComponent, {
+      data: {
+        employees: this.employees,
+        action: 'add',
+      },
+      direction: tempDirection,
+    });
+    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
+      if (result === 1) {
+        // After dialog is closed we're doing frontend updates
+        // For add we're just pushing a new row inside DataServicex
+        this.exampleDatabase?.dataChange.value.unshift(
+          this.employeesService.getDialogData()
+        );
+        this.refreshTable();
+        this.showNotification(
+          'snackbar-success',
+          'Successful Check-in...!!!',
+          'bottom',
+          'center'
+        );
+      }
+    });
+  }
+
+  checkOutModal() {
+    let tempDirection: Direction;
+    if (localStorage.getItem('isRtl') === 'true') {
+      tempDirection = 'rtl';
+    } else {
+      tempDirection = 'ltr';
+    }
+    const dialogRef = this.dialog.open(CheckOutComponent, {
+      data: {
+        employees: this.employees,
+        action: 'add',
+      },
+      direction: tempDirection,
+    });
+    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
+      if (result === 1) {
+        // After dialog is closed we're doing frontend updates
+        // For add we're just pushing a new row inside DataServicex
+        this.exampleDatabase?.dataChange.value.unshift(
+          this.employeesService.getDialogData()
+        );
+        this.refreshTable();
+        this.showNotification(
+          'snackbar-success',
+          'Successful Check-out...!!!',
+          'bottom',
+          'center'
+        );
+      }
+    });
+  }
+  breakModal() {
+    let tempDirection: Direction;
+    if (localStorage.getItem('isRtl') === 'true') {
+      tempDirection = 'rtl';
+    } else {
+      tempDirection = 'ltr';
+    }
+    const dialogRef = this.dialog.open(BreakComponent, {
+      data: {
+        employees: this.employees,
+        action: 'add',
+      },
+      direction: tempDirection,
+    });
+    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
+      if (result === 1) {
+        // After dialog is closed we're doing frontend updates
+        // For add we're just pushing a new row inside DataServicex
+        this.exampleDatabase?.dataChange.value.unshift(
+          this.employeesService.getDialogData()
+        );
+        this.refreshTable();
+        this.showNotification(
+          'snackbar-success',
+          'Successful Check-out...!!!',
+          'bottom',
+          'center'
+        );
+      }
+    });
+  }
+
   addNew() {
     let tempDirection: Direction;
     if (localStorage.getItem('isRtl') === 'true') {
@@ -313,44 +421,16 @@ export class AllemployeesComponent
     );
   }
   
-  
-  /*public filtrarTabla() {
-    this.employeesArray = new EmployeesService(this.httpClient);
-    this.dataSource = new ExampleDataSource(
-      this.exampleDatabase,
-      this.paginator,
-      this.sort
-    );
-    //buscador
-    this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
-      () => {
-        if (!this.dataSource) {
-          return;
-        }
-        this.dataSource.filter = this.filter.nativeElement.value;
-      }
-    );
-  }*/
-  
-  
-  
-  
-  
   public loadData() {
     this.exampleDatabase = new EmployeesService(this.httpClient);
-
-     //this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
-    
-    
+    //this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
         if (!this.dataSource) {
           return;
-        }
-        
+        }    
         this.dataSource.filter = this.filter.nativeElement.value;
       }
-      
     );
   }
 
@@ -453,6 +533,7 @@ export class ExampleDataSource extends DataSource<Employees> {
               employees.position +
               employees.totalHours +
               employees.payRollId +
+              employees.horaAcordada +
               employees.in +
               employees.out +
               employees.break 
@@ -515,7 +596,10 @@ export class ExampleDataSource extends DataSource<Employees> {
           break;  
         case 'payRollID':
           [propertyA, propertyB] = [a.payRollId, b.payRollId]; //Diego
-          break;  
+          break;
+          case 'horaAcordada':
+            [propertyA, propertyB] = [a.horaAcordada, b.horaAcordada]; //Diego
+            break;  
         case 'in':
           [propertyA, propertyB] = [a.in, b.in]; //Diego
           break;  

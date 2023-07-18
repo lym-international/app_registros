@@ -1,6 +1,64 @@
 .borde-izq {
     border-left: thick solid #004676;
-    height: 60%;
     margin-left: 20px;
-    margin-right: 10px;
+}
+
+.tarjeta {
+    margin: 20px 0 20px 0;
+    width: 80%;
+    color: #5B626B;
+    font-weight: 500;
+    font-size: medium;
+}
+
+.tarjeta-pequena {
+    margin: 20px 0 20px 0;
+    //width: 50%;
+    color: white;
+    font-weight: 500;
+    background: linear-gradient(135deg, #1A202D 60%, rgb(202, 234, 253) 100%);
+}
+
+.tarjeta-indicadores {
+    margin: auto;
+    width: 20%;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    //padding-left: 100px;
+    //padding-right: 100px;
+}
+
+.column {
+    padding: 10px;
+    vertical-align: super;
+}
+
+.sub-column {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    //grid-template-columns: 1fr;
+    gap: 10px;
+    //padding: 10px;
+}
+
+.sub-sub-column {
+    display: grid;
+    padding: 20px;
+}
+
+@media screen and (min-width: 600px) {
+    .container {
+        grid-template-columns: 1fr 1fr;
+    }
+    .sub-columns {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.column-check {
+    text-align: center;
 }

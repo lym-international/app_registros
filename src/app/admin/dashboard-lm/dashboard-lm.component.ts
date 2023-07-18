@@ -69,10 +69,6 @@ export class DashboardLmComponent implements OnInit {
   noShowValues: { [position: string]: { [hourFrom: string]: number } } = {};
   filteredCheckinValues: number[];
   
-  
-  
-  
-
   //  color: ["#3FA7DC", "#F6A025", "#9BC311"],
   constructor(private orderDataService: OrderDataService) {
     // controller code
@@ -83,6 +79,7 @@ export class DashboardLmComponent implements OnInit {
     //this.chart2(); //Plantilla
     console.log('Data: ', this.dataOrder)
     this.orderId = this.dataOrder.id;
+    console.log('OrderID ===>', this.orderId)
     this.getRegistByOrder();
     this.getTotalRequest();
     //this.porcentajes();
@@ -142,11 +139,9 @@ export class DashboardLmComponent implements OnInit {
     this.porcentajes(this.checkIn, this.checkOut, this.noShow, this.totalConfirmed, this.totalRequest)
   
     const positions: { [name: string]: Position } = {};
-    
+
     data.employees.forEach((employee)=>{
-      // console.log("employeee", employee)
-      // console.log("JRB position", employee.position )
-      // console.log('RR: ', employee.employee.data)  
+      console.log('RR: ', employee.employee.data)  
       const positionName = employee.position;
       const hourFrom = employee.hourFrom;
     
@@ -241,7 +236,6 @@ export class DashboardLmComponent implements OnInit {
             console.log(`Total de check-in: 0`);
           }
           
-      
           if (hourTotals.totalCheckout !== undefined) {
             this.checkOutValues[positionName][hourFrom] = hourTotals.totalCheckout;
             console.log(`Total de check-out: ${hourTotals.totalCheckout}`);
@@ -267,7 +261,7 @@ export class DashboardLmComponent implements OnInit {
     }
     )   
   }
-
+  //Tarjetas superiores
   porcentajes(checkIn,checkOut,noShow,totalConfirmed, totalRequest){
     if (this.totalConfirmed !== 0) {
       this.porcentajeCheckIn = Math.round((checkIn/totalConfirmed) * 100);
@@ -282,7 +276,7 @@ export class DashboardLmComponent implements OnInit {
       // Manejo del caso cuando this.totalConfirmed es igual a cero
       console.log('No es posible calcular los porcentajes. totalConfirmed es cero.');
     } 
-  }
+  } 
 
   //Plantilla
   /*private chart1() {

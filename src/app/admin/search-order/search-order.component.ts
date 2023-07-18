@@ -4,7 +4,9 @@ import { AuthenticationService } from 'app/_services/authentication.service';
 import { OrderDataService } from 'app/_services/orderData.service';
 import { Router } from '@angular/router';
 import { OcultarSidebarService } from 'app/_services/ocultar-sidebar.service';
+
 //import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+
 
 @Component({
   selector: 'app-search-order',
@@ -25,13 +27,15 @@ export class SearchOrderComponent{
   public orders : any[] = [];
   public orderNumber: string;
   public foundOrder: any | null = null;
+  public dataUser!: any;
   
 
   constructor(private http: HttpClient, 
               private authenticationService: AuthenticationService,
               private orderDataService: OrderDataService,
               private router:Router,
-              private ocultarSidebarService: OcultarSidebarService,) {}
+              private ocultarSidebarService: OcultarSidebarService,
+              ) {}
   
   ngOnInit() {
     
@@ -39,6 +43,18 @@ export class SearchOrderComponent{
 
     this.data = this.authenticationService.getData(); // en data obtiene los datos guardados en el servicio authenticationService.
     
+    const storedUserData = localStorage.getItem('currentUserData');
+    if (storedUserData) {
+      this.data = JSON.parse(storedUserData);
+    } else {
+      // Si no se encuentran los datos en el localStorage, obtenerlos del servicio
+      this.data = this.authenticationService.getData();
+      // Almacenar los datos en el localStorage
+      localStorage.setItem('currentUserData', JSON.stringify(this.data));
+    }
+    // Aquí tienes acceso a los datos del usuario en la variable data
+    console.log('Datos en storedUserData desde el SearchOrder: ', storedUserData);
+
     //Inicio validación de rol para la visualización de las órdenes.
 
       if (this.data.role == "Client") {

@@ -527,11 +527,13 @@ tr.group:hover {
 .materialTableHeader {
     -webkit-box-align: center;
     align-items: center;
-    border-color: #dae1f3;
-    background-color: #dae1f3;
+    border-color: #1A202D;
+    background-color: #1A202D;
     display: flex;
     flex-wrap: wrap;
     text-align: center;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     // min-width: 800px;
     .left {
         flex: 35%;
@@ -794,7 +796,7 @@ tr.group:hover {
 }
 
 .primary-rgba {
-    background-color: rgba(110, 129, 220, 0.1);
+    background-color: rgb(1, 204, 255);
 }
 
 .success-rgba {

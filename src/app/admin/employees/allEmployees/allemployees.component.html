@@ -2,8 +2,30 @@
     <div class="content-block">
         <div class="block-header">
             <!-- breadcrumb -->
-            <app-breadcrumb [title]="'Employees'" [items]="['Dashboard']" [active_item]="'All Employees'">
+            <app-breadcrumb [title]="'Workers'" [items]="['Dashboard']" [active_item]="'Workers'">
             </app-breadcrumb>
+        </div>
+        <div class="container">
+            <div class="column">
+                <div class="sub-column">
+                    <div class="sub-sub-column">
+                        <mat-card class="tarjeta-pequena">
+                            <mat-card-content>
+                                <mat-card-title>Order number</mat-card-title>
+                                {{dataEmployees.data.orderId}}
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    <div class="sub-sub-column">
+                        <mat-card class="tarjeta-pequena">
+                            <mat-card-content>
+                                <mat-card-title>Client</mat-card-title>
+                                {{dataEmployees.data.clientName}}
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -25,7 +47,7 @@
 
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="CHECKIN">
-                                        <button mat-mini-fab color="primary"> <!--Ingresar función (click)=""-->
+                                        <button mat-mini-fab color="primary" (click)="checkInModal()"> 
                                       <mat-icon class="col-white">how_to_reg</mat-icon>
                                     </button>
                                     </div>
@@ -33,8 +55,16 @@
 
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="CHECKOUT">
-                                        <button mat-mini-fab color="primary"> <!--Ingresar función (click)=""-->
+                                        <button mat-mini-fab color="primary" (click)="checkOutModal()"> 
                                   <mat-icon class="col-white">logout</mat-icon>
+                                </button>
+                                    </div>
+                                </li>
+
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="BREAK">
+                                        <button mat-mini-fab color="primary" (click)="breakModal()"> 
+                                  <mat-icon class="col-white">coffee</mat-icon>
                                 </button>
                                     </div>
                                 </li>
@@ -48,9 +78,9 @@
                                 </li>
 
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="DELETE">
-                                        <button mat-mini-fab color="warn" (click)="removeSelectedRows()">
-                                        <mat-icon class="col-white">delete</mat-icon>
+                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="DELETE: IN, OUT, BREAK">
+                                        <button mat-mini-fab color="warn"><!--Ingresar función (click)=""-->
+                                        <mat-icon class="col-white">refresh</mat-icon>
                                       </button>
                                     </div>
                                 </li>
@@ -62,6 +92,15 @@
                                       </button>
                                     </div>
                                 </li>
+
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="DOWNLOAD">
+                                        <button mat-mini-fab color="primary" (click)="exportExcel()">
+                                        <mat-icon class="col-white">download</mat-icon>
+                                      </button>
+                                    </div>
+                                </li>
+
                                 <!--<li class="tbl-header-btn">
                                     <div class="m-l-10" matTooltip="REFRESH">
                                         <button mat-mini-fab color="primary" (click)="refresh()">
@@ -70,11 +109,13 @@
                                     </div>
                                 </li>-->
 
-                                <li>
+
+
+                                <!--<li>
                                     <div class="export-button m-l-10" matTooltip="XLSX">
                                         <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
                                     </div>
-                                </li>
+                                </li> -->
                             </ul>
                         </div>
                     </div>
@@ -104,45 +145,50 @@
                                     <mat-cell mat-cell *matCellDef="let row" class="table-img tbl-col-width-per-7"> <span class="mobile-label">Image:</span><img [src]="row.img" />
                                     </mat-cell>
                                 </ng-container>-->
-                                <ng-container matColumnDef="firstName">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>firstName</mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">firstName:</span>{{row.firstName}}</mat-cell>
-                                </ng-container>
                                 <ng-container matColumnDef="lastName">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>lastName</mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">lastName:</span>{{row.lastName}}</mat-cell>
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>LastName</mat-header-cell>
+                                    <mat-cell class="celda" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">LastName:</span>{{row.lastName}}</mat-cell>
                                 </ng-container>
-
-                                <!--Diego-->
+                                <ng-container matColumnDef="firstName">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>FirstName</mat-header-cell>
+                                    <mat-cell class="celda" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">FirstName:</span>{{row.firstName}}</mat-cell>
+                                </ng-container>
                                 <ng-container matColumnDef="highKeyID">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>HighKey ID</mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">HighKeyId:</span>{{row.highKeyId}}</mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="position">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Position</mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Position:</span>{{row.position}}</mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="totalHours">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Total hours</mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Total hours:</span>{{row.totalHours}}</mat-cell>
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>HighKey ID</mat-header-cell>
+                                    <mat-cell class="celda" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">HighKeyId:</span>{{row.highKeyId}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="payRollID">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>PayRoll ID</mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">PayRoll ID:</span>{{row.payRollId}}</mat-cell>
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>PayRoll ID</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">PayRoll ID:</span>{{row.payRollId}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="position">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Position</mat-header-cell>
+                                    <mat-cell class="celda" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Position:</span>{{row.position}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="horaAcordada">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Scheduled time</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Scheduled time:</span>{{row.horaAcordada}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="in">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>In</mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">In:</span>{{row.in}}</mat-cell>
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>In</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">In:</span>{{row.in}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="out">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Out</mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Out:</span>{{row.out}}</mat-cell>
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Out</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Out:</span>{{row.out}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="break">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Break</mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Break:</span>{{row.break}}</mat-cell>
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Break</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Break:</span>{{row.break}} minutes</mat-cell>
                                 </ng-container>
-                                <ng-container matColumnDef="department">
+                                <ng-container matColumnDef="totalHours">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Total hours</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Total hours:</span>{{row.totalHours}}</mat-cell>
+                                </ng-container>
+
+
+
+                                <!--<ng-container matColumnDef="department">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Department</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Department:</span>{{row.department}}
                                     </mat-cell>
@@ -168,11 +214,12 @@
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
                                         <span class="mobile-label">Joining Date:</span> {{row.date | date: 'MM/dd/yyyy'}}</mat-cell>
                                 </ng-container>
+                            -->
                                 <ng-container matColumnDef="actions">
                                     <mat-header-cell class="pr-0" *matHeaderCellDef></mat-header-cell>
-                                    <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
-                                        <button mat-icon-button color="accent" (click)="$event.stopPropagation()" (click)="deleteItem(i, row)" class="tbl-action-btn" matTooltip="Delete">
-                                            <app-feather-icons [icon]="'trash-2'" [class]="'tbl-fav-delete'"></app-feather-icons>
+                                    <mat-cell class="celda" *matCellDef="let row; let i=index;" class="pr-0">
+                                        <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Delete In,Out,Break"> <!--Adicionar los siguientes eventos para que elimine la fila: (click)="$event.stopPropagation()" (click)="deleteItem(i, row)"-->
+                                <app-feather-icons [icon]="'refresh-ccw'" [class]="'tbl-fav-delete'"></app-feather-icons>
                                         </button>
                                     </mat-cell>
                                 </ng-container>
@@ -181,16 +228,13 @@
                                 </mat-row>
                             </table>
                             <!-- Loading spinner -->
-                            <!--  <div *ngIf="exampleDatabase?.isTblLoading" class="tbl-spinner">
+                            <div *ngIf="isTblLoading" class="tbl-spinner">
                                 <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
                                 </mat-progress-spinner>
-                            </div> -->
+                            </div>
                             <!-- context menu start -->
                             <div style="visibility: hidden; position: fixed" [style.left]="contextMenuPosition.x" [style.top]="contextMenuPosition.y" [matMenuTriggerFor]="contextMenu">
                             </div>
-
-
-
                             <mat-menu #contextMenu="matMenu">
                                 <ng-template matMenuContent let-item="item">
                                     <button mat-menu-item (click)="addNew()">

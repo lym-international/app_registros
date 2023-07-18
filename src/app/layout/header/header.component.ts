@@ -61,7 +61,7 @@ export class HeaderComponent
     //{ text: 'Spanish', flag: 'assets/images/flags/spain.jpg', lang: 'es' }, // DARM
     //{ text: 'German', flag: 'assets/images/flags/germany.jpg', lang: 'de' }, // DARM
   ];
-  notifications: Notifications[] = [
+  /*notifications: Notifications[] = [
     {
       message: 'Please check your mail',
       time: '14 mins ago',
@@ -76,50 +76,31 @@ export class HeaderComponent
       color: 'nfc-blue',
       status: 'msg-read',
     },
-    {
-      message: 'Your leave is approved!! ',
-      time: '3 hours ago',
-      icon: 'event_available',
-      color: 'nfc-orange',
-      status: 'msg-read',
-    },
-    {
-      message: 'Lets break for lunch...',
-      time: '5 hours ago',
-      icon: 'lunch_dining',
-      color: 'nfc-blue',
-      status: 'msg-read',
-    },
-    {
-      message: 'Employee report generated',
-      time: '14 mins ago',
-      icon: 'description',
-      color: 'nfc-green',
-      status: 'msg-read',
-    },
-    {
-      message: 'Please check your mail',
-      time: '22 mins ago',
-      icon: 'mail',
-      color: 'nfc-red',
-      status: 'msg-read',
-    },
-    {
-      message: 'Salary credited...',
-      time: '3 hours ago',
-      icon: 'paid',
-      color: 'nfc-purple',
-      status: 'msg-read',
-    },
-  ];
+  ]*/
+  
   ngOnInit() {
+    //const userRole = this.authService.currentUserValue.role;
+    //this.userImg = this.authService.currentUserValue.img;
     this.config = this.configService.configData;
-    const userRole = this.authService.currentUserValue.role;
-    this.userImg = this.authService.currentUserValue.img;
     this.dataUser = this.authenticationService.getData();
     
+    this.setHeaderProperties();
 
-    if (userRole === 'Admin') { 
+    // Intentar recuperar los datos del usuario del localStorage
+    const storedUserData = localStorage.getItem('currentUserData');
+    if (storedUserData) {
+      this.dataUser = JSON.parse(storedUserData);
+    } else {
+      // Si no se encuentran los datos en el localStorage, obtenerlos del servicio
+      this.dataUser = this.authenticationService.getData();
+      // Almacenar los datos en el localStorage
+      localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
+    }
+    // Aquí tienes acceso a los datos del usuario en la variable dataUser
+    console.log('Datos en storedUserData desde el header: ', storedUserData);
+    console.log('dataUser ==> ', this.dataUser)
+    
+    /*if (userRole === 'Admin') { 
       this.homePage = 'admin/search-order';
     } else if (userRole === 'Client') {
       this.homePage = 'client/dashboard';
@@ -127,7 +108,7 @@ export class HeaderComponent
       this.homePage = 'employee/dashboard';
     } else {
       this.homePage = 'admin/dashboard/main';
-    }
+    }*/
 
     this.langStoreValue = localStorage.getItem('lang') as string;
     const val = this.listLang.filter((x) => x.lang === this.langStoreValue);
@@ -139,6 +120,13 @@ export class HeaderComponent
     } else {
       this.flagvalue = val.map((element) => element.flag);
     }
+  }
+  
+  setHeaderProperties() {
+    // Restaurar propiedades del encabezado aquí
+    // Restaurar el color de fondo (al cargar la página se perdía el color de fondo).
+    const headerElement = this.elementRef.nativeElement as HTMLElement;
+    headerElement.style.backgroundColor = '#004674 !important';
   }
 
   callFullscreen() {
