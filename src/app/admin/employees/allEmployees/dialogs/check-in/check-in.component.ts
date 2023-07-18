@@ -98,10 +98,10 @@ export class CheckInComponent implements OnInit{
   createContactForm(): UntypedFormGroup {
     return this.fb.group({
       id: [this.checkIn.id],
-      title: [this.checkIn.title, [Validators.required]],
+      title: [this.checkIn.title],
       category: [this.checkIn.category],
       startDate: [this.checkIn.startDate, [Validators.required]],
-      endDate: [this.checkIn.endDate, [Validators.required]],
+      endDate: [this.checkIn.endDate],
       details: [this.checkIn.details],  
     });
   }

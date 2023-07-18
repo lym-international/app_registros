@@ -52,6 +52,9 @@
                         <mat-label>Date</mat-label>
                         <input matInput formControlName="startDate" [owlDateTimeTrigger]="startDate" [owlDateTime]="startDate" placeholder="Choose a date" required>
                         <mat-icon matSuffix [owlDateTimeTrigger]="startDate" class="date-icon">today</mat-icon>
+                        <mat-error *ngIf="checkInForm.get('startDate')?.hasError('required')">
+                            CheckIn is required!
+                        </mat-error>
                         <owl-date-time #startDate></owl-date-time>
                     </mat-form-field>
                 </div>

@@ -33,7 +33,7 @@ export class CheckOutComponent implements OnInit{
   
   ngOnInit(): void {
     this.checkOutForm.patchValue({
-      startDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
+      endDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
     });
   }
 
@@ -73,9 +73,9 @@ export class CheckOutComponent implements OnInit{
   createContactForm(): UntypedFormGroup {
     return this.fb.group({
       id: [this.checkOut.id],
-      title: [this.checkOut.title, [Validators.required]],
+      title: [this.checkOut.title],
       category: [this.checkOut.category],
-      startDate: [this.checkOut.startDate, [Validators.required]],
+      startDate: [this.checkOut.startDate],
       endDate: [this.checkOut.endDate, [Validators.required]],
       details: [this.checkOut.details],  
     });

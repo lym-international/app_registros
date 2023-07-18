@@ -12,8 +12,8 @@ export class CheckOutModel {
       this.id = checkOut.id || '';
       this.title = checkOut.title || '';
       this.category = checkOut.category || '';
-      //this.startDate = formatDate(new Date(), 'yyyy-MM-dd', 'en') || '';
-      this.endDate = formatDate(new Date(), 'yyyy-MM-dd', 'en') || '';
+      this.startDate = formatDate(new Date(), 'yyyy-MM-dd', 'en') || '';
+      //this.endDate = formatDate(new Date(), 'yyyy-MM-dd', 'en') || '';
       this.details = checkOut.details || '';
     }
   }
