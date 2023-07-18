@@ -341,7 +341,6 @@ export class AllemployeesComponent
 
      //this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
     
-     console.log("exapmleDatabase",this.exampleDatabase)
     
     this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
       () => {
@@ -349,8 +348,7 @@ export class AllemployeesComponent
           return;
         }
         
-        //this.dataSource.filter = this.filter.nativeElement.value;
-          console.log('INPUT ==> ', this.dataSource.filter)
+        this.dataSource.filter = this.filter.nativeElement.value;
       }
       
     );

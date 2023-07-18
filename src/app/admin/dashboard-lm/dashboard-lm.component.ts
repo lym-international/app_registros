@@ -102,12 +102,13 @@ export class DashboardLmComponent implements OnInit {
     console.log('Requested: ', this.dataOrder.data.items)  
     this.dataItems = this.dataOrder.data.items;
     //this.totalRequeridos = this.dataOrder.data.items.length;
-
+// console.log("this.dataItems", this.dataItems)
     const positions = {};
 
     this.dataOrder.data.items.forEach(item => {
       if (item.m !== 0 && !positions[item.position]) {
         positions[item.position] = true;
+        console.log("primera position", item.position)
       }
     });
     
@@ -143,7 +144,9 @@ export class DashboardLmComponent implements OnInit {
     const positions: { [name: string]: Position } = {};
     
     data.employees.forEach((employee)=>{
-      //console.log('RR: ', employee.employee.data)  
+      // console.log("employeee", employee)
+      // console.log("JRB position", employee.position )
+      // console.log('RR: ', employee.employee.data)  
       const positionName = employee.position;
       const hourFrom = employee.hourFrom;
     
