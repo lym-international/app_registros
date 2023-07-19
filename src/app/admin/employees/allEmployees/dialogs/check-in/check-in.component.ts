@@ -6,10 +6,13 @@ import {
   Validators,
   UntypedFormGroup,
   UntypedFormBuilder,
+  FormControl,
+  FormGroup,
 } from '@angular/forms';
 import { Employees } from '../../employees.model';
 import { CheckInModel } from './check-in.model';
 import { formatDate } from '@angular/common';
+import { Calendar } from 'app/calendar/calendar.model';
 //import { Calendar } from '../../calendar.model';
 
 export interface DialogData {
@@ -55,11 +58,16 @@ export class CheckInComponent implements OnInit{
   checkIn: CheckInModel;
   employees: Employees;
   showDeleteBtn = false;
+  fechaInicio: FormControl;
   
   ngOnInit(): void {
     this.checkInForm.patchValue({
       startDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
     });
+    this.fechaInicio = new FormControl(new Date());
+    this.checkInForm = new FormGroup({
+    startDate: this.fechaInicio
+  });
   }
 
   constructor(
@@ -117,9 +125,14 @@ export class CheckInComponent implements OnInit{
   onNoClick(): void {
     this.dialogRef.close();
   }
+
   public confirmAdd(): void {
-    //this.calendarService.addUpdateCalendar(this.calendarForm.getRawValue());
-    this.dialogRef.close('submit');
+    /*this.calendarService.addUpdateCalendar(this.calendarForm.getRawValue());
+    this.dialogRef.close('submit'); */
+    const startDate = this.fechaInicio.value;
+    console.log('La fecha seleccionada es:', startDate);
+    //const calendarioRecibido = calendar;
+    //console.log('Calendario: ', calendarioRecibido)
   }
   
 }
