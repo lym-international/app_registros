@@ -582,15 +582,16 @@ export class ExampleDataSource extends DataSource<Employees> {
           .slice()
           .filter((employees: Employees) => {
             const searchStr = (
-              employees.firstName +
               employees.lastName +
-              employees.position +
-              employees.totalHours +
+              employees.firstName +
+              employees.highKeyId +
               employees.payRollId +
+              employees.position +
               employees.horaAcordada +
               employees.in +
               employees.out +
-              employees.break 
+              employees.break +
+              employees.totalHours 
               //employees.department +
               //employees.role +
               //employees.degree +
