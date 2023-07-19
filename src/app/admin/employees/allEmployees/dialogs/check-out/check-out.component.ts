@@ -1,6 +1,5 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Component, Inject, OnInit } from '@angular/core';
-//import { CalendarService } from '../../calendar.service';
 import {
   UntypedFormControl,
   Validators,
@@ -12,8 +11,6 @@ import {
 import { Employees } from '../../employees.model';
 import { formatDate } from '@angular/common';
 import { CheckOutModel } from './check-out.model';
-//import { Calendar } from '../../calendar.model';
-
 export interface DialogData {
   id: number;
   action: string;
@@ -101,8 +98,6 @@ export class CheckOutComponent implements OnInit{
   }
   public confirmAdd(): void {
     const endDate = this.fechaSalida.value;
-    console.log('La fecha de salida seleccionada es:', endDate);
-    this.dialogRef.close('submit');
+    this.dialogRef.close(endDate);
   }
-  
 }

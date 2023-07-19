@@ -12,8 +12,8 @@ import {
 import { Employees } from '../../employees.model';
 import { CheckInModel } from './check-in.model';
 import { formatDate } from '@angular/common';
-import { Calendar } from 'app/calendar/calendar.model';
-//import moment = require('moment');
+
+
 
 
 export interface DialogData {
@@ -60,6 +60,7 @@ export class CheckInComponent implements OnInit{
   employees: Employees;
   showDeleteBtn = false;
   fechaInicio: FormControl;
+  public dataCheckIn!: any;
   
   ngOnInit(): void {
     this.checkInForm.patchValue({
@@ -68,8 +69,16 @@ export class CheckInComponent implements OnInit{
     this.fechaInicio = new FormControl(new Date());
     this.checkInForm = new FormGroup({
     startDate: this.fechaInicio
-  });
+    });
+    //this.dataCheckIn = this.checkInService.setCheckIn();
+    
   }
+
+  /*constructor(private orderDataService: OrderDataService) {
+    // controller code
+  }
+  ngOnInit() {
+    this.dataOrder = this.orderDataService.getSelectedOrder(); */
 
   constructor(
     public dialogRef: MatDialogRef<CheckInComponent>,
@@ -90,7 +99,7 @@ export class CheckInComponent implements OnInit{
       this.showDeleteBtn = false;
     }
     this.checkInForm = this.createContactForm();
-    console.log('Hora CheckIn ==>',this.checkInForm.controls)
+    //console.log('Propiedades modalCheckIn ==>',this.checkInForm.controls)
   }
   
   formControl = new UntypedFormControl('', [
@@ -129,9 +138,7 @@ export class CheckInComponent implements OnInit{
 
   public confirmAdd(): void {
     const startDate = this.fechaInicio.value;
-    //const timestamp = moment(startDate).format('YYYY-MM-DDTHH:mm:ss');
-    console.log('La fecha seleccionada es:', startDate); //, ' En timestamp:', timestamp
-    this.dialogRef.close('submit');
+    this.dialogRef.close(startDate);
   }
   
 }

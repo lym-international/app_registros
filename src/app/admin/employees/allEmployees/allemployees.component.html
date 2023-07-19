@@ -47,33 +47,33 @@
 
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="CHECKIN">
-                                        <button mat-mini-fab color="primary" (click)="checkInModal()"> 
-                                      <mat-icon class="col-white">how_to_reg</mat-icon>
-                                    </button>
+                                        <button mat-mini-fab color="primary" (click)="checkInModal(getSelectedRows())"> 
+                                            <mat-icon class="col-white">how_to_reg</mat-icon>
+                                        </button>
                                     </div>
                                 </li>
 
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="CHECKOUT">
-                                        <button mat-mini-fab color="primary" (click)="checkOutModal()"> 
-                                  <mat-icon class="col-white">logout</mat-icon>
-                                </button>
+                                        <button mat-mini-fab color="primary" (click)="checkOutModal(getSelectedRows())"> 
+                                            <mat-icon class="col-white">logout</mat-icon>
+                                        </button>
                                     </div>
                                 </li>
 
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="BREAK">
-                                        <button mat-mini-fab color="primary" (click)="breakModal()"> 
-                                  <mat-icon class="col-white">coffee</mat-icon>
-                                </button>
+                                        <button mat-mini-fab color="primary" (click)="breakModal(getSelectedRows())"> 
+                                            <mat-icon class="col-white">coffee</mat-icon>
+                                        </button>
                                     </div>
                                 </li>
 
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="NOSHOW">
                                         <button mat-mini-fab color="warn"> <!--Ingresar función (click)=""-->
-                                  <mat-icon class="col-white">visibility_off</mat-icon>
-                                </button>
+                                            <mat-icon class="col-white">visibility_off</mat-icon>
+                                        </button>
                                     </div>
                                 </li>
 
@@ -179,7 +179,7 @@
                                 </ng-container>
                                 <ng-container matColumnDef="break">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Break</mat-header-cell>
-                                    <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Break:</span>{{row.break}} minutes</mat-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Break:</span>{{row.break}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="totalHours">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Total hours</mat-header-cell>

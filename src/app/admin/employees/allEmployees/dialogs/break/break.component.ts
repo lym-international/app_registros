@@ -36,14 +36,7 @@ export class BreakComponent implements OnInit{
   employees: Employees;
   showDeleteBtn = false;
   breakTime : FormControl;
-  public _break: any;
-  //public saveButton: MatButton
-
-  /*ngOnInit(): void {
-    this.checkInForm.patchValue({
-      startDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
-    });
-  }*/
+  
   ngOnInit(): void {
     
     //this.breakTime = new FormControl(new Date());
@@ -105,7 +98,7 @@ export class BreakComponent implements OnInit{
       if (isNaN(value) || value === null || value === '') {
         return { 'invalidNumber': true };
       } 
-      if (value < 30 || value > 45) {
+      if (value < 20 || value > 45) {
         return { 'outOfRange': true };
       }
       return null;
@@ -123,8 +116,9 @@ export class BreakComponent implements OnInit{
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    this._break = this.breakForm.get('break')?.value;
-    console.log('El Break es:', this._break);
-    this.dialogRef.close('submit');
+    const _break = this.breakForm.value;
+    //this._break = this.breakForm.get('break')?.value;
+    console.log('El Break es:', _break);
+    this.dialogRef.close(_break);
   }
 }
