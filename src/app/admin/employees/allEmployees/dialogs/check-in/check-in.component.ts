@@ -13,7 +13,8 @@ import { Employees } from '../../employees.model';
 import { CheckInModel } from './check-in.model';
 import { formatDate } from '@angular/common';
 import { Calendar } from 'app/calendar/calendar.model';
-//import { Calendar } from '../../calendar.model';
+//import moment = require('moment');
+
 
 export interface DialogData {
   id: number;
@@ -127,12 +128,10 @@ export class CheckInComponent implements OnInit{
   }
 
   public confirmAdd(): void {
-    /*this.calendarService.addUpdateCalendar(this.calendarForm.getRawValue());
-    this.dialogRef.close('submit'); */
     const startDate = this.fechaInicio.value;
-    console.log('La fecha seleccionada es:', startDate);
-    //const calendarioRecibido = calendar;
-    //console.log('Calendario: ', calendarioRecibido)
+    //const timestamp = moment(startDate).format('YYYY-MM-DDTHH:mm:ss');
+    console.log('La fecha seleccionada es:', startDate); //, ' En timestamp:', timestamp
+    this.dialogRef.close('submit');
   }
   
 }
