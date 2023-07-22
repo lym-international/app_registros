@@ -1,17 +1,16 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Component, Inject, OnInit } from '@angular/core';
-//import { CalendarService } from '../../calendar.service';
 import {
   UntypedFormControl,
   Validators,
   UntypedFormGroup,
   UntypedFormBuilder,
+  FormControl,
+  FormGroup,
 } from '@angular/forms';
 import { Employees } from '../../employees.model';
 import { formatDate } from '@angular/common';
 import { CheckOutModel } from './check-out.model';
-//import { Calendar } from '../../calendar.model';
-
 export interface DialogData {
   id: number;
   action: string;
@@ -30,11 +29,16 @@ export class CheckOutComponent implements OnInit{
   checkOut: CheckOutModel;
   employees: Employees;
   showDeleteBtn = false;
+  fechaSalida: FormControl;
   
   ngOnInit(): void {
     this.checkOutForm.patchValue({
       endDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
     });
+    this.fechaSalida = new FormControl(new Date());
+    this.checkOutForm = new FormGroup({
+    endDate: this.fechaSalida
+  });
   }
 
   constructor(
@@ -93,8 +97,7 @@ export class CheckOutComponent implements OnInit{
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    //this.calendarService.addUpdateCalendar(this.calendarForm.getRawValue());
-    this.dialogRef.close('submit');
+    const endDate = this.fechaSalida.value;
+    this.dialogRef.close(endDate);
   }
-  
 }

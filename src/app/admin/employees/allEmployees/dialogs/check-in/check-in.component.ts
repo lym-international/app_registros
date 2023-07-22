@@ -5,11 +5,15 @@ import {
   Validators,
   UntypedFormGroup,
   UntypedFormBuilder,
+  FormControl,
+  FormGroup,
 } from '@angular/forms';
 import { CheckInModel } from './check-in.model';
 
 import { formatDate } from '@angular/common';
-import { Timestamp } from 'firebase/firestore';
+
+
+
 
 export interface DialogData {
   id: number;
@@ -27,12 +31,26 @@ export class CheckInComponent implements OnInit {
   checkInForm: UntypedFormGroup;
   checkIn: CheckInModel;
   showDeleteBtn = false;
-
+  fechaInicio: FormControl;
+  public dataCheckIn!: any;
+  
   ngOnInit(): void {
     this.checkInForm.patchValue({
       startDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
     });
+    this.fechaInicio = new FormControl(new Date());
+    this.checkInForm = new FormGroup({
+    startDate: this.fechaInicio
+    });
+    //this.dataCheckIn = this.checkInService.setCheckIn();
+    
   }
+
+  /*constructor(private orderDataService: OrderDataService) {
+    // controller code
+  }
+  ngOnInit() {
+    this.dataOrder = this.orderDataService.getSelectedOrder(); */
 
   constructor(
     public dialogRef: MatDialogRef<CheckInComponent>,
@@ -49,7 +67,19 @@ export class CheckInComponent implements OnInit {
       this.showDeleteBtn = false;
     }
     this.checkInForm = this.createContactForm();
-    console.log('Hora CheckIn ==>', this.checkInForm.controls);
+    //console.log('Propiedades modalCheckIn ==>',this.checkInForm.controls)
+  }
+  
+  formControl = new UntypedFormControl('', [
+    Validators.required,
+    // Validators.email,
+  ]);
+  getErrorMessage() {
+    return this.formControl.hasError('required')
+      ? 'Required field'
+      : this.formControl.hasError('email')
+      ? 'Not a valid email'
+      : '';
   }
 
   // ... (Other methods in the component)
@@ -78,25 +108,7 @@ export class CheckInComponent implements OnInit {
   }
 
   public confirmAdd(): void {
-    const selectedDate = this.checkInForm.get('startDate').value;
-
-  // Crear un objeto Timestamp desde la cadena de fecha directamente
-  const timestamp = Timestamp.fromDate(new Date(selectedDate));
-
-  const date = timestamp.toDate();
-
-  // Obtener la fecha formateada en la zona horaria local de Estados Unidos
-  const formattedDate = date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  });
-
-  console.log('timestamp', timestamp);
-  console.log('date', date);
-  console.log('Formatted Date:', formattedDate);
-  
-    // You can add further logic or save the date in your desired way.
-    this.dialogRef.close('submit');
+    const startDate = this.fechaInicio.value;
+    this.dialogRef.close(startDate);
   }
 }

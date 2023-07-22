@@ -1,16 +1,16 @@
 import { formatDate } from '@angular/common';
 export class Employees {
   id: number;  //Plantilla
-  firstName: string;
   lastName:string;
+  firstName: string;
   highKeyId:string;
-  position:string;
-  totalHours:string;
   payRollId:string;
+  position:string;
   horaAcordada:string;
   in:string;
   out:string;
   break:string; 
+  totalHours:string;
   // id: number;  //Plantilla
   // img: string;  //Plantilla
   // highKeyID: string; //Diego

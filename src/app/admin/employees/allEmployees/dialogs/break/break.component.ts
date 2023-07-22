@@ -9,10 +9,13 @@ import {
   AsyncValidatorFn,
   AbstractControl,
   ValidatorFn,
+  FormControl,
+  FormGroup,
 } from '@angular/forms';
 import { Employees } from '../../employees.model';
 //import { formatDate } from '@angular/common';
 import { BreakModel } from './break.model';
+import { MatButton } from '@angular/material/button';
 //import { Calendar } from '../../calendar.model';
 
 /*export interface DialogData {
@@ -25,25 +28,27 @@ import { BreakModel } from './break.model';
   templateUrl: './break.component.html',
   styleUrls: ['./break.component.scss']
 })
-export class BreakComponent { //implements OnInit
+export class BreakComponent implements OnInit{ 
   //action: string;
   dialogTitle: string;
   breakForm: UntypedFormGroup;
   break: BreakModel;
   employees: Employees;
   showDeleteBtn = false;
+  breakTime : FormControl;
   
-  /*ngOnInit(): void {
-    this.checkInForm.patchValue({
-      startDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
-    });
-  }*/
+  ngOnInit(): void {
+    
+    //this.breakTime = new FormControl(new Date());
+    //this.breakForm = new FormGroup({
+    //break: this.breakTime
+  //});
+  }
 
   constructor(
     public dialogRef: MatDialogRef<BreakComponent>,
-    //@Inject(MAT_DIALOG_DATA) public data: DialogData,
-    //public calendarService: CalendarService,
-    private fb: UntypedFormBuilder
+    private fb: UntypedFormBuilder,
+    
   ) {
     // Set the defaults
     //this.action = data.action;
@@ -75,14 +80,6 @@ export class BreakComponent { //implements OnInit
       : '';
   } */
 
-  getErrorMessage() {
-    return this.breakForm.get('break')?.hasError('required')
-      ? 'Break is required! '
-      : this.breakForm.get('break')?.hasError('pattern')
-      ? 'Please type only numbers!'
-      : '';
-  }
-
   createContactForm(): UntypedFormGroup {
     return this.fb.group({
       //id: [this.break.id],
@@ -100,24 +97,28 @@ export class BreakComponent { //implements OnInit
       const value = control.value;
       if (isNaN(value) || value === null || value === '') {
         return { 'invalidNumber': true };
-      } else {
-        return null;
+      } 
+      if (value < 20 || value > 45) {
+        return { 'outOfRange': true };
       }
+      return null;
     };
   }
   
   submit() {
-    // emppty stuff
+    // empty stuff
   }
+
   deleteEvent() {
-    //this.calendarService.deleteCalendar(this.calendarForm.getRawValue());
     this.dialogRef.close('delete');
   }
   onNoClick(): void {
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    //this.calendarService.addUpdateCalendar(this.calendarForm.getRawValue());
-    this.dialogRef.close('submit');
+    const _break = this.breakForm.value;
+    //this._break = this.breakForm.get('break')?.value;
+    console.log('El Break es:', _break);
+    this.dialogRef.close(_break);
   }
 }

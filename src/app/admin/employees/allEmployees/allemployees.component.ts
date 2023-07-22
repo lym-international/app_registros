@@ -26,6 +26,8 @@ import { delay } from 'rxjs/operators'; //Jairo
 import { CheckInComponent } from './dialogs/check-in/check-in.component';
 import { CheckOutComponent } from './dialogs/check-out/check-out.component';
 import { BreakComponent } from './dialogs/break/break.component';
+import { Timestamp } from "firebase/firestore";
+
 
 
 @Component({
@@ -71,7 +73,7 @@ export class AllemployeesComponent
   public employeesDatos: any[];
   employeesArray: any[] = [];
   isTblLoading = true;
-  
+  public checkIn!: any;
   
   
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -90,6 +92,8 @@ export class AllemployeesComponent
     public employeesService: EmployeesService,
     private snackBar: MatSnackBar,
     private orderDataService: OrderDataService,
+    //private checkInService: CheckInService,
+    
   ) {
     super();
     // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
@@ -101,7 +105,7 @@ export class AllemployeesComponent
     this.orderId = this.dataEmployees.id;
     this.getEmployees();
     this.loadData();
-    // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
+    
   }
   // saca la data que se necesita por empleado según la orden.
   
@@ -113,6 +117,7 @@ export class AllemployeesComponent
     .then((response) => response.json())
     .then((data) => {
     this.isTblLoading = false;
+    console.log("datadelRegistroJR", data)
       //const employeesArray = []; // Diego: Array para guardar los datos
       //this.employeesDatos = employeesArray;
       
@@ -185,76 +190,122 @@ export class AllemployeesComponent
   refresh() {
     // this.loadData();
   }
-  checkInModal() {
-    let tempDirection: Direction;
-    if (localStorage.getItem('isRtl') === 'true') {
-      tempDirection = 'rtl';
-    } else {
-      tempDirection = 'ltr';
+
+  getSelectedRow(): Employees | null {
+    const selectedRows = this.selection.selected;
+    if (selectedRows.length === 1) {
+      return selectedRows[0];
     }
-    const dialogRef = this.dialog.open(CheckInComponent, {
-      data: {
-        employees: this.employees,
-        action: 'add',
-      },
-      direction: tempDirection,
-    });
-    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-      if (result === 1) {
-        // After dialog is closed we're doing frontend updates
-        // For add we're just pushing a new row inside DataServicex
-        this.exampleDatabase?.dataChange.value.unshift(
-          this.employeesService.getDialogData()
-        );
-        this.refreshTable();
-        this.showNotification(
-          'snackbar-success',
-          'Successful Check-in...!!!',
-          'bottom',
-          'center'
-        );
-      }
-    });
+    return null;
+  }
+  onActionButtonClick() {
+    const selectedRows = this.getSelectedRows();
+  if (selectedRows.length > 0) {
+    // Realiza la acción con los objetos seleccionados, por ejemplo:
+    console.log('Objetos seleccionados:', selectedRows);
+  } else {
+    console.log('Ningún objeto seleccionado.');
+  }
+  }
+  getSelectedRows(): Employees[] {
+    return this.selection.selected;
+  }
+  
+  formatTwoDigits(value: number): string {
+    return String(value).padStart(2, '0');
   }
 
-  checkOutModal() {
-    let tempDirection: Direction;
-    if (localStorage.getItem('isRtl') === 'true') {
-      tempDirection = 'rtl';
+  async checkInModal(selectedRows: Employees[]) {
+    if (selectedRows.length > 0) {
+      console.log('Objetos seleccionados para check-in:', selectedRows);
+      const dialogRef = this.dialog.open(CheckInComponent, {
+        data: {
+          employees: this.employees,
+          action: 'add',
+        },
+      });
+      
+      const result = await dialogRef.afterClosed().toPromise();
+      //console.log('Result:', result);
+      this.showNotification(
+        'snackbar-success',
+        'Successful CheckIn...!!!',
+        'bottom',
+        'center'
+      );
+      const timestamp = Timestamp.fromDate(new Date(result));
+      console.log('TimeStamp: ', timestamp)
+      const checkInTimestamp = timestamp?.seconds || 0; // Obtener el timestamp de entrada en segundos
+      const checkInDate = new Date(checkInTimestamp * 1000); // Multiplicar por 1000 para convertir segundos a milisegundos
+      const checkInTime = this.datePipe.transform(checkInDate, 'hh:mm a');
+      console.log('TIME CHECKIN: ',checkInTime)
+      
+      selectedRows.forEach((row) => {
+        row.in = checkInTime;
+      });
+
+      this.doCheckIn(selectedRows); // Llama a la función doCheckIn() para realizar cualquier otra acción necesaria
     } else {
-      tempDirection = 'ltr';
+      console.log('Ningún objeto seleccionado para check-in.');
     }
-    const dialogRef = this.dialog.open(CheckOutComponent, {
-      data: {
-        employees: this.employees,
-        action: 'add',
-      },
-      direction: tempDirection,
-    });
-    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-      if (result === 1) {
-        // After dialog is closed we're doing frontend updates
-        // For add we're just pushing a new row inside DataServicex
-        this.exampleDatabase?.dataChange.value.unshift(
-          this.employeesService.getDialogData()
-        );
-        this.refreshTable();
-        this.showNotification(
-          'snackbar-success',
-          'Successful Check-out...!!!',
-          'bottom',
-          'center'
-        );
-      }
-    });
   }
-  breakModal() {
-    let tempDirection: Direction;
-    if (localStorage.getItem('isRtl') === 'true') {
-      tempDirection = 'rtl';
+  
+  doCheckIn(selectedRows: Employees[]) {
+    // Lógica para realizar cualquier otra acción necesaria después del check-in con los objetos seleccionados
+    // ...
+  
+    // Luego de realizar las acciones necesarias, actualiza los datos en el dataSource
+    console.log('Objetos seleccionados después de actualizar:', selectedRows);
+    this.dataSource.data = this.employeesArray.slice();
+  }
+
+  async checkOutModal(selectedRows: Employees[]) {
+    if (selectedRows.length > 0) {
+      console.log('Objetos seleccionados para check-out:', selectedRows);
+      const dialogRef = this.dialog.open(CheckOutComponent, {
+        data: {
+          employees: this.employees,
+          action: 'add',
+        },
+      });
+      
+      const result = await dialogRef.afterClosed().toPromise();
+      
+      this.showNotification(
+        'snackbar-success',
+        'Successful CheckOut...!!!',
+        'bottom',
+        'center'
+      );
+      //console.log('Result:', result);
+      const timestamp = Timestamp.fromDate(new Date(result));
+      console.log('TimeStamp: ', timestamp)
+      const checkOutTimestamp = timestamp?.seconds || 0; // Obtener el timestamp de entrada en segundos
+      const checkOutDate = new Date(checkOutTimestamp * 1000); // Multiplicar por 1000 para convertir segundos a milisegundos
+      const checkOutTime = this.datePipe.transform(checkOutDate, 'hh:mm a');
+      console.log('TIME CHECKOUT: ',checkOutTime)
+      
+      selectedRows.forEach((row) => {
+        row.out = checkOutTime;
+      });
+
+      this.doCheckOut(selectedRows); // Llama a la función doCheckIn() para realizar cualquier otra acción necesaria
     } else {
-      tempDirection = 'ltr';
+      console.log('Ningún objeto seleccionado para check-in.');
     }
+  }
+  
+  doCheckOut(selectedRows: Employees[]) {
+    // Lógica para realizar cualquier otra acción necesaria después del check-in con los objetos seleccionados
+    // ...
+  
+    // Luego de realizar las acciones necesarias, actualiza los datos en el dataSource
+    console.log('Objetos seleccionados después de actualizar:', selectedRows);
+    this.dataSource.data = this.employeesArray.slice();
+  }
+
+  async breakModal(selectedRows: Employees[]) {
+    let tempDirection: Direction;
     const dialogRef = this.dialog.open(BreakComponent, {
       data: {
         employees: this.employees,
@@ -262,22 +313,26 @@ export class AllemployeesComponent
       },
       direction: tempDirection,
     });
-    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-      if (result === 1) {
-        // After dialog is closed we're doing frontend updates
-        // For add we're just pushing a new row inside DataServicex
-        this.exampleDatabase?.dataChange.value.unshift(
-          this.employeesService.getDialogData()
-        );
-        this.refreshTable();
-        this.showNotification(
-          'snackbar-success',
-          'Successful Check-out...!!!',
-          'bottom',
-          'center'
-        );
-      }
+    const result = await dialogRef.afterClosed().toPromise();
+    console.log('Result break: ', result)
+    this.showNotification(
+      'snackbar-success',
+      'Successful break...!!!',
+      'bottom',
+      'center'
+    );
+    selectedRows.forEach((row) => {
+      row.break = result.break;
     });
+    this.doBreak(selectedRows);
+  }
+  doBreak(selectedRows: Employees[]) {
+    // Lógica para realizar cualquier otra acción necesaria después del check-in con los objetos seleccionados
+    // ...
+  
+    // Luego de realizar las acciones necesarias, actualiza los datos en el dataSource
+    console.log('Objetos seleccionados después de actualizar:', selectedRows);
+    this.dataSource.data = this.employeesArray.slice();
   }
 
   addNew() {
@@ -528,15 +583,16 @@ export class ExampleDataSource extends DataSource<Employees> {
           .slice()
           .filter((employees: Employees) => {
             const searchStr = (
-              employees.firstName +
               employees.lastName +
-              employees.position +
-              employees.totalHours +
+              employees.firstName +
+              employees.highKeyId +
               employees.payRollId +
+              employees.position +
               employees.horaAcordada +
               employees.in +
               employees.out +
-              employees.break 
+              employees.break +
+              employees.totalHours 
               //employees.department +
               //employees.role +
               //employees.degree +
