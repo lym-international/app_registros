@@ -323,7 +323,7 @@
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                 <div class="card">
                     <div class="header">
-                        <h2 style="color: #1A202E;">Complience by position and employees</h2>
+                        <h2 style="color: #1A202E;">Complience by position, hours and employees</h2>
                     </div>
                     <ng-scrollbar style="height: 410px" visibility="hover">
                         <div class="tableBody">
@@ -332,14 +332,14 @@
                                     <thead>
                                         <tr>
                                             <th class="column-check">Position</th>
-                                            <th class="column-check">CheckIn Hour</th>
+                                            <th class="column-check" matTooltip="CheckIn time">Time</th>
                                             <th class="column-check">Required</th>
                                             <th class="column-check">Confirmed</th>
-                                            <th class="column-check">Confirmed %</th>
+                                            <th class="column-check" matTooltip="(Confirmed/Required)*100">Confirmed %</th>
                                             <th class="column-check">CheckIn</th>
-                                            <th class="column-check">CheckIn %</th>
+                                            <th class="column-check" matTooltip="(CheckIn/Confirmed)*100">CheckIn %</th>
                                             <th class="column-check">CheckOut</th>
-                                            <th class="column-check">CheckOut %</th>
+                                            <th class="column-check" matTooltip="(CheckOut/CheckIn)*100">CheckOut %</th>
                                             <th class="column-check">Noshow</th>
                                         </tr>
                                     </thead>

@@ -19,7 +19,7 @@
                     <div class="sub-sub-column">
                         <mat-card class="tarjeta-pequena">
                             <mat-card-content>
-                                <mat-card-title>Client</mat-card-title>
+                                <mat-card-title>Customer</mat-card-title>
                                 {{dataEmployees.data.clientName}}
                             </mat-card-content>
                         </mat-card>
@@ -215,14 +215,17 @@
                                         <span class="mobile-label">Joining Date:</span> {{row.date | date: 'MM/dd/yyyy'}}</mat-cell>
                                 </ng-container>
                             -->
-                                <ng-container matColumnDef="actions">
+                                <!--<ng-container matColumnDef="actions">
                                     <mat-header-cell class="pr-0" *matHeaderCellDef></mat-header-cell>
                                     <mat-cell class="celda" *matCellDef="let row; let i=index;" class="pr-0">
-                                        <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Delete In,Out,Break"> <!--Adicionar los siguientes eventos para que elimine la fila: (click)="$event.stopPropagation()" (click)="deleteItem(i, row)"-->
-                                <app-feather-icons [icon]="'refresh-ccw'" [class]="'tbl-fav-delete'"></app-feather-icons>
+                                        <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Delete In,Out,Break"> -->
+                                <!--Adicionar los siguientes eventos para que elimine la fila: (click)="$event.stopPropagation()" (click)="deleteItem(i, row)"-->
+                                <!--<app-feather-icons [icon]="'refresh-ccw'" [class]="'tbl-fav-delete'"></app-feather-icons>
                                         </button>
                                     </mat-cell>
-                                </ng-container>
+                                </ng-container> -->
+
+
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                 <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="editCall(row)" [style.cursor]="'pointer'" matRipple>
                                 </mat-row>

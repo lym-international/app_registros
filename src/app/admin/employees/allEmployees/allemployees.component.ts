@@ -58,7 +58,7 @@ export class AllemployeesComponent
     //'mobile',
     //'email',
     //'date',
-    'actions',
+    //'actions',
   ];
 
   exampleDatabase?: EmployeesService;
