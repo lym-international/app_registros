@@ -141,15 +141,13 @@ export class SearchOrderComponent{
   
   searchOrder(): void {
     //console.log('Ordenes desde el getSearchOrders2: ', this.ordenes )
-    
-
+    this.foundOrder = null;
     for (const order of this.ordenes) {
       if (order.data.orderId === this.orderNumber) {
         this.foundOrder = order;
         break;
       }
     }
-    
     // Verificar si se encontró un objeto con el orderId especificado
     if (this.foundOrder) {
       //console.log("Se encontró el objeto:");

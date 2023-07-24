@@ -96,8 +96,8 @@ export class HeaderComponent
       // Almacenar los datos en el localStorage
       localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
     }
-    // Aquí tienes acceso a los datos del usuario en la variable dataUser
-    console.log('Datos en storedUserData desde el header: ', storedUserData);
+    // Acceso a los datos del usuario en la variable dataUser
+    console.log('Datos en storedUserData desde el HEADER: ', storedUserData);
     console.log('dataUser ==> ', this.dataUser)
     
     /*if (userRole === 'Admin') { 
