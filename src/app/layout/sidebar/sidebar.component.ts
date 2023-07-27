@@ -112,7 +112,7 @@ export class SidebarComponent implements OnInit {
         this.mostrarMenu = !this.currentRoute.startsWith('/admin/search-order');
         this.renderer.removeClass(this.document.body, 'overlay-open');
       }
-    console.log('MOSTRAR MENU =>', this.mostrarMenu)
+    // console.log('MOSTRAR MENU =>', this.mostrarMenu)
     });
     
     this.sidebarItems = ROUTES.filter((sidebarItem) => sidebarItem);

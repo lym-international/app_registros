@@ -99,12 +99,13 @@ export class DashboardLmComponent implements OnInit {
     console.log('Requested: ', this.dataOrder.data.items)  
     this.dataItems = this.dataOrder.data.items;
     //this.totalRequeridos = this.dataOrder.data.items.length;
-
+// console.log("this.dataItems", this.dataItems)
     const positions = {};
 
     this.dataOrder.data.items.forEach(item => {
       if (item.m !== 0 && !positions[item.position]) {
         positions[item.position] = true;
+        console.log("primera position", item.position)
       }
     });
     
@@ -121,6 +122,7 @@ export class DashboardLmComponent implements OnInit {
 
   getRegistByOrder(){
     fetch(
+      //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`
       `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
       
       )
@@ -140,7 +142,7 @@ export class DashboardLmComponent implements OnInit {
     const positions: { [name: string]: Position } = {};
 
     data.employees.forEach((employee)=>{
-      console.log('RR: ', employee.employee.data)  
+      // console.log('RR: ', employee.employee.data)  
       const positionName = employee.position;
       const hourFrom = employee.hourFrom;
     
