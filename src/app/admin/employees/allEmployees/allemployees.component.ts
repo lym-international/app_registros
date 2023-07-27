@@ -47,7 +47,7 @@ export class AllemployeesComponent
     'highKeyID',
     'payRollID',
     'position',
-    'horaAcordada',
+    'hourFrom',
     'in',
     'out',
     'break',
@@ -74,6 +74,8 @@ export class AllemployeesComponent
   employeesArray: any[] = [];
   isTblLoading = true;
   public checkIn!: any;
+  public checkInTime!:any;
+  public checkOutTime!:any
   
   
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -107,85 +109,98 @@ export class AllemployeesComponent
     this.loadData();
     
   }
-  // saca la data que se necesita por empleado según la orden.
+ 
+
+
+  getEmployees() {
+    fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        this.isTblLoading = false;
+        console.log("datadelRegistroJR", data);
   
-  getEmployees(){
-    fetch(
-      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
-      
-      )
-    .then((response) => response.json())
-    .then((data) => {
-    this.isTblLoading = false;
-    console.log("datadelRegistroJR", data)
-      //const employeesArray = []; // Diego: Array para guardar los datos
-      //this.employeesDatos = employeesArray;
-      
-      //console.log('employeesDatos: ', this.employeesDatos)
-
-      data.employees.forEach((employee)=>{
-        // console.log('RR: ', employee.employee.data)  
-        //const positionName = employee.position;
-        //const hourFrom = employee.hourFrom || "No data";
-        const firstName = employee.employee.data.firstname || "No data"; //Diego: si no tiene valor (undefined) imrime "No data".
-        const lastName = employee.employee.data.lastname || "No data";
-        const highKeyId = employee.employee.data.employeeId || "No data";
-        const position = employee.position || "No data";
-        const totalHours = employee.hours || "No data";
-        const payrollId = employee.employee.data.payrollid || "No data";
-        const brake = employee.break || "No data";
-        const horaAcordada = employee.hourFrom || "No data";
-        
-        /*const horaAcordadaTimestamp = employee.realCheckin?._seconds || 0; // Obtener el timestamp de entrada en segundos
-        const horaAcordadaDate = new Date(horaAcordadaTimestamp * 1000); // Multiplicar por 1000 para convertir segundos a milisegundos
-        const horaAcordadaInTime = this.datePipe.transform(horaAcordadaDate, 'hh:mm a');
-        */
-
-        const checkInTimestamp = employee.realCheckin?._seconds || 0; // Obtener el timestamp de entrada en segundos
-        const checkInDate = new Date(checkInTimestamp * 1000); // Multiplicar por 1000 para convertir segundos a milisegundos
-        const checkInTime = this.datePipe.transform(checkInDate, 'hh:mm a');
-        
-        const checkOutTimestamp = employee.dateCheckoutRounded?._seconds || 0; // Obtener el timestamp de entrada en segundos
-        const checkOutDate = new Date(checkOutTimestamp * 1000); // Multiplicar por 1000 para convertir segundos a milisegundos
-        const checkOutTime = this.datePipe.transform(checkOutDate, 'hh:mm a');
-        console.log('data empleados: ', employee)
-        
-        // Diego: this.employeesArray.push agrega los datos al array employeesArray
-        
-        this.employeesArray.push({
-          firstName: firstName,
-          lastName: lastName,
-          highKeyId: highKeyId,
-          //position: lastPosition,
-          position: position,
-          totalHours: totalHours,
-          payRollId: payrollId,
-          horaAcordada: horaAcordada,
-          in: checkInTime,
-          out: checkOutTime,
-          break: brake,
-          //hourFrom: hourFrom,
+        this.employeesArray = data.employees.map((employee) => {
+          const employeeData = { ...employee.employee.data };
+  
+          const firstName = employeeData.firstname || "No data";
+          const lastName = employeeData.lastname || "No data";
+          const highKeyId = employeeData.employeeId || "No data";
+          const position = employee.position || "No data";
+          const totalHours = employee.hours || "No data";
+          const payrollId = employeeData.payrollid || "No data";
+          const brake = employee.break || "No data";
+          const hourFrom = employee.hourFrom || "No data";
+  
+          let checkInTime = "No Data";
+          if (employee.dateCheckin && employee.dateCheckin._seconds) {
+            const checkIn = employee.dateCheckin._seconds;
+            const checkInDate = new Date(checkIn * 1000);
+            checkInTime = this.datePipe.transform(checkInDate, 'hh:mm a');
+          }
+  
+          let checkOutTime = "No Data";
+          if (employee.dateCheckout && employee.dateCheckout._seconds) {
+            const checkOut = employee.dateCheckout._seconds;
+            const checkOutDate = new Date(checkOut * 1000);
+            checkOutTime = this.datePipe.transform(checkOutDate, 'hh:mm a');
+          }
+  
+          return {
+            ...employee,
+            employee: {
+              ...employee.employee,
+              data: employeeData,
+            },
+            firstName: firstName,
+            lastName: lastName,
+            highKeyId: highKeyId,
+            position: position,
+            hours:  employee.hours,
+            totalHours: totalHours,
+            payRollId: payrollId,
+            hourFrom: hourFrom,
+            in: checkInTime,
+            out: checkOutTime,
+            break: brake,
+          };
         });
-      });
-
-      this.employeesService.setEmployeesApi(this.employeesArray)
   
-        //console.log('Datass: ', this.employeesArray)
-      // Diego: ejecución con el array de datos
-      console.log('---------------------------');
-      console.log('Array empleados: ');
-     console.log(this.employeesArray);
-     console.log('---------------------------');
-
-     this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
-    })
-    .catch((error) => {
-      console.log(error)
-      this.isTblLoading = false;
-    })  
-    
+        console.log('---------------------------');
+        console.log('Array empleados: ');
+        console.log(this.employeesArray);
+        console.log('---------------------------');
+  
+        this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
+      })
+      .catch((error) => {
+        console.log(error)
+        this.isTblLoading = false;
+      });
   }
-
+  
+  
+  
+  
+  mergeEmployeesData(newEmployeesData: any[]) {
+    return newEmployeesData.map((newEmployee) => {
+      // Buscar si el empleado ya existe en this.employeesArray
+      const existingEmployee = this.employeesArray.find(emp => emp.orderId === newEmployee.orderId);
+  
+      // Si el empleado ya existe, combinar los datos actualizados
+      if (existingEmployee) {
+        return {
+          ...existingEmployee,
+          ...newEmployee,
+        };
+      } else {
+        // Si el empleado no existe, simplemente devolver los datos nuevos
+        return newEmployee;
+      }
+    });
+  }
+  
+ 
+  
   
   refresh() {
     // this.loadData();
@@ -215,125 +230,362 @@ export class AllemployeesComponent
     return String(value).padStart(2, '0');
   }
 
+ 
+  
   async checkInModal(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {
-      console.log('Objetos seleccionados para check-in:', selectedRows);
+      console.log('Empleados seleccionados para check-in:', selectedRows);
       const dialogRef = this.dialog.open(CheckInComponent, {
         data: {
           employees: this.employees,
           action: 'add',
         },
       });
-      
+  
       const result = await dialogRef.afterClosed().toPromise();
-      //console.log('Result:', result);
+  
       this.showNotification(
         'snackbar-success',
         'Successful CheckIn...!!!',
         'bottom',
         'center'
       );
+  
       const timestamp = Timestamp.fromDate(new Date(result));
-      console.log('TimeStamp: ', timestamp)
-      const checkInTimestamp = timestamp?.seconds || 0; // Obtener el timestamp de entrada en segundos
-      const checkInDate = new Date(checkInTimestamp * 1000); // Multiplicar por 1000 para convertir segundos a milisegundos
-      const checkInTime = this.datePipe.transform(checkInDate, 'hh:mm a');
-      console.log('TIME CHECKIN: ',checkInTime)
-      
-      selectedRows.forEach((row) => {
-        row.in = checkInTime;
+      console.log('TimeStamp: ', timestamp);
+      const checkInTimestamp = timestamp?.seconds || 0;
+  
+      // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
+      const updatedEmployees = this.employeesArray.map((employee) => {
+        if (selectedRows.some((row) => row.employee.data.employeeId === employee.employee.data.employeeId)) {
+          return {
+            ...employee,
+            checkin: true,
+            dateCheckin: {
+              _seconds: checkInTimestamp,
+              _nanoseconds: 0,
+            },
+            realCheckin: {
+              _seconds: checkInTimestamp,
+              _nanoseconds: 0,
+            },
+            dateCheckinRounded: {
+              _seconds: checkInTimestamp,
+              _nanoseconds: 0,
+            },
+          };
+        }
+        return employee;
       });
-
-      this.doCheckIn(selectedRows); // Llama a la función doCheckIn() para realizar cualquier otra acción necesaria
+  
+      console.log("updatedEmployees", updatedEmployees);
+  
+      const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ employees: updatedEmployees }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Actualización exitosa:', data);
+          this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+        })
+        .catch((error) => {
+          console.error('Error al actualizar:', error);
+        });
     } else {
-      console.log('Ningún objeto seleccionado para check-in.');
+      console.log('Ningún empleado seleccionado para check-in.');
     }
   }
   
-  doCheckIn(selectedRows: Employees[]) {
-    // Lógica para realizar cualquier otra acción necesaria después del check-in con los objetos seleccionados
-    // ...
   
-    // Luego de realizar las acciones necesarias, actualiza los datos en el dataSource
-    console.log('Objetos seleccionados después de actualizar:', selectedRows);
-    this.dataSource.data = this.employeesArray.slice();
+
+  
+ 
+
+  // Función para calcular las horas trabajadas por un empleado según el método regular
+/* calculateRegularHours(employee: Employee, checkOutTimestamp: number): number {
+  // Aquí deberías implementar la lógica para calcular las horas trabajadas según el método regular
+  // Utiliza las propiedades relevantes de la estructura del empleado para realizar el cálculo
+
+  // Ejemplo: calcular la diferencia de tiempo en horas entre el check-in y el check-out
+  const checkInTimestamp = employee.dateCheckin._seconds;
+  const hoursWorked = (checkOutTimestamp - checkInTimestamp) / 3600;
+
+  // Realiza las verificaciones adicionales según tus requerimientos
+
+  return hoursWorked;
+} */
+
+  // Función para calcular las horas trabajadas por un empleado con pago por hora exacta
+/* calculateExactHourPayment(employee: Employee, checkOutTimestamp: number): number {
+  // Aquí deberías implementar la lógica para calcular las horas exactas trabajadas por el empleado
+  // Utiliza las propiedades relevantes de la estructura del empleado para realizar el cálculo
+
+  // Ejemplo: calcular la diferencia de tiempo en horas entre el check-in y el check-out
+  const checkInTimestamp = employee.dateCheckin._seconds;
+  const hoursWorked = (checkOutTimestamp - checkInTimestamp) / 3600;
+
+  return hoursWorked;
+} */
+
+
+  // Función para calcular las horas trabajadas por un empleado
+/* calculateHoursWorked(employee: Employee, checkOutTimestamp: number): number {
+  if (this.order.exactHourPayment) {
+    // Realizar el cálculo según el pago por hora exacta
+    return this.calculateExactHourPayment(employee, checkOutTimestamp);
+  } else {
+    // Realizar el cálculo según el método regular
+    return this.calculateRegularHours(employee, checkOutTimestamp);
+  }
+}
+ */
+roundHours(hour: number) {
+  let decimal = (hour - Math.floor(hour));
+  let trunc = Math.trunc(hour);
+
+
+  let minutes = decimal * 60;
+  minutes = Math.round(minutes);
+  if (minutes >= 0 && minutes <= 7) {
+    decimal = 0;
+  } else if (minutes >= 8 && minutes <= 22) {
+    decimal = 0.25;
+  } else if (minutes >= 23 && minutes <= 37) {
+    decimal = 0.5;
+  } else if (minutes >= 38 && minutes <= 52) {
+    decimal = 0.75;
+  } else {
+    decimal = 1.0;
+  }
+  let fixed = trunc + decimal;
+  return fixed;
+}
+
+async checkOutModal(selectedRows: Employees[]) {
+  if (selectedRows.length > 0) {
+    console.log('Empleados seleccionados para check-out:', selectedRows);
+    const dialogRef = this.dialog.open(CheckOutComponent, {
+      data: {
+        employees: this.employees,
+        action: 'add',
+      },
+    });
+
+    const result = await dialogRef.afterClosed().toPromise();
+
+    this.showNotification(
+      'snackbar-success',
+      'Successful CheckOut...!!!',
+      'bottom',
+      'center'
+    );
+
+    const timestamp = Timestamp.fromDate(new Date(result));
+    console.log('TimeStamp: ', timestamp);
+    const checkOutTimestamp = timestamp?.seconds || 0;
+
+    // Filtrar y actualizar solo los empleados seleccionados con sus datos actualizados
+    const updatedEmployees = this.employeesArray.map((employee) => {
+      if (selectedRows.some((row) => row.employee.data.employeeId === employee.employee.data.employeeId)) {
+
+        const roundedHours = this.calculateHoursWorked(employee, checkOutTimestamp);
+        // console.log("hoursWorked to send", hoursWorked)
+        return {
+          ...employee,
+          checkout: true,
+          dateCheckout: {
+            _seconds: checkOutTimestamp,
+            _nanoseconds: 0,
+          },
+          dateCheckoutRounded: {
+            _seconds: checkOutTimestamp,
+            _nanoseconds: 0,
+          },
+          status: 'Checked Out',
+          hours: roundedHours.toFixed(2),
+        };
+      }
+      return employee;
+    });
+
+    console.log('updatedEmployees', updatedEmployees);
+
+    const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+    fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ employees: updatedEmployees }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Actualización exitosa:', data);
+        this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+      })
+      .catch((error) => {
+        console.error('Error al actualizar:', error);
+      });
+  } else {
+    console.log('Ningún empleado seleccionado para check-out.');
+  }
+}
+  
+
+calculateHoursWorked(employee: Employees, checkOutTimestamp: number): number {
+  // Aquí implementa la lógica para calcular las horas trabajadas
+  // Utiliza las propiedades 'dateCheckin', 'dateCheckout', etc., del objeto 'employee'
+  // para realizar el cálculo de manera adecuada
+  // Luego devuelve el resultado como un número
+/*   
+ const lateThreshold = 8; // Umbral de llegada tarde en horas
+ if (this.order.exactHourPayment) {
+    let hoursNumberExact = this.calculateExactHourPayment(employee);
+    const hours = hoursNumberExact.toFixed(2);
+    employee.hours = hours;
+  } else {
+    let hoursNumber =
+      (employee.dateCheckoutRounded.getTime() -
+        employee.dateCheckinRounded.toDate().getTime()) /
+      3600000;
+    hoursNumber = this.roundHours(hoursNumber);
+
+    if (hoursNumber < 5) {
+      let late = this.validateCheckout1(
+        employee.hourFrom,
+        employee.dateCheckin.toDate()
+      );
+      if (late < 8) {
+        hoursNumber = 5;
+      } else {
+        if (late > lateThreshold) {
+          hoursNumber = this.calculateRegularHours(employee);
+        }
+      }
+    }
+  } */
+
+  // Ejemplo:
+
+  // const lateThreshold = 8; // Umbral de llegada tarde en horas
+  const checkInTime = employee.dateCheckin._seconds;
+  const checkOutTime = checkOutTimestamp;
+  const secondsWorked = checkOutTime - checkInTime;
+  const hoursWorked = secondsWorked / 3600;
+  const roundedHours = this.roundHours(hoursWorked);
+  return roundedHours;
+}
+
+validateCheckout1(hourFrom: string, checkinDate: Date): number {
+  const [hour, minute] = hourFrom.split(":");
+  const hourLimit = new Date(checkinDate);
+  hourLimit.setHours(Number(hour), Number(minute), 0, 0);
+
+  if (checkinDate.getTime() > hourLimit.getTime()) {
+    const diff = Math.abs(checkinDate.getTime() - hourLimit.getTime());
+    const minutes = Math.floor(diff / 60000);
+    return minutes;
   }
 
-  async checkOutModal(selectedRows: Employees[]) {
+  return 0;
+}
+
+calculateRegularHours(employee) {
+  // Cálculo de horas trabajadas sin tener en cuenta la llegada tardía
+  const hours = (employee.dateCheckoutRounded.getTime() - employee.dateCheckinRounded.toDate().getTime()) / 3600000;
+  return Number(hours.toFixed(2));
+}
+calculateExactHourPayment(employee){
+
+  const timeDiff = employee.dateCheckout.getTime() - employee.dateCheckin.toDate().getTime();
+  const hours = timeDiff / (1000 * 60 * 60); // Convertir milisegundos a horas
+  
+  return Number(hours.toFixed(2));
+
+    // const minutes = Math.round((timeDiff / (1000 * 60)) % 60); // Obtener los minutos redondeados
+    // const hour = Math.floor(timeDiff / (1000 * 60 * 60)); // Obtener las horas enteras
+    // console.log("horas trabajadas", hour)
+    // console.log("minutos trabajados", minutes)
+    
+    //horas exactas;
+    // console.log("hours", hours)
+    
+  }
+
+
+ 
+
+  async breakModal(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {
-      console.log('Objetos seleccionados para check-out:', selectedRows);
-      const dialogRef = this.dialog.open(CheckOutComponent, {
+      console.log('Empleados seleccionados para break:', selectedRows);
+      const dialogRef = this.dialog.open(BreakComponent, {
         data: {
           employees: this.employees,
           action: 'add',
         },
       });
-      
+  
       const result = await dialogRef.afterClosed().toPromise();
-      
+      console.log('Result break: ', result);
+  
       this.showNotification(
         'snackbar-success',
-        'Successful CheckOut...!!!',
+        'Successful break...!!!',
         'bottom',
         'center'
       );
-      //console.log('Result:', result);
-      const timestamp = Timestamp.fromDate(new Date(result));
-      console.log('TimeStamp: ', timestamp)
-      const checkOutTimestamp = timestamp?.seconds || 0; // Obtener el timestamp de entrada en segundos
-      const checkOutDate = new Date(checkOutTimestamp * 1000); // Multiplicar por 1000 para convertir segundos a milisegundos
-      const checkOutTime = this.datePipe.transform(checkOutDate, 'hh:mm a');
-      console.log('TIME CHECKOUT: ',checkOutTime)
-      
-      selectedRows.forEach((row) => {
-        row.out = checkOutTime;
-      });
+  
+        // Redondear los minutos del tiempo de descanso
+        const roundedBreak = this.roundHours(result.break / 60);
 
-      this.doCheckOut(selectedRows); // Llama a la función doCheckIn() para realizar cualquier otra acción necesaria
+      // Convertir el tiempo de descanso de minutos a horas
+      // const breakInHours = result.break / 60;
+  
+      // Filtrar y actualizar solo los empleados seleccionados con sus datos actualizados
+      const updatedEmployees = this.employeesArray.map((employee) => {
+        if (selectedRows.some((row) => row.employee.data.employeeId === employee.employee.data.employeeId)) {
+          // Restar el tiempo de descanso del total de horas trabajadas
+          // const updatedHours = employee.hours - breakInHours;
+          const updatedHours = employee.hours - roundedBreak;
+  
+          return {
+            ...employee,
+            break: result.break,
+            hours: updatedHours.toFixed(2),
+          };
+        }
+        return employee;
+      });
+  
+      console.log('updatedEmployees', updatedEmployees);
+  
+      const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ employees: updatedEmployees }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Actualización exitosa:', data);
+          this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+        })
+        .catch((error) => {
+          console.error('Error al actualizar:', error);
+        });
     } else {
-      console.log('Ningún objeto seleccionado para check-in.');
+      console.log('Ningún empleado seleccionado para break.');
     }
   }
   
-  doCheckOut(selectedRows: Employees[]) {
-    // Lógica para realizar cualquier otra acción necesaria después del check-in con los objetos seleccionados
-    // ...
   
-    // Luego de realizar las acciones necesarias, actualiza los datos en el dataSource
-    console.log('Objetos seleccionados después de actualizar:', selectedRows);
-    this.dataSource.data = this.employeesArray.slice();
-  }
-
-  async breakModal(selectedRows: Employees[]) {
-    let tempDirection: Direction;
-    const dialogRef = this.dialog.open(BreakComponent, {
-      data: {
-        employees: this.employees,
-        action: 'add',
-      },
-      direction: tempDirection,
-    });
-    const result = await dialogRef.afterClosed().toPromise();
-    console.log('Result break: ', result)
-    this.showNotification(
-      'snackbar-success',
-      'Successful break...!!!',
-      'bottom',
-      'center'
-    );
-    selectedRows.forEach((row) => {
-      row.break = result.break;
-    });
-    this.doBreak(selectedRows);
-  }
-  doBreak(selectedRows: Employees[]) {
-    // Lógica para realizar cualquier otra acción necesaria después del check-in con los objetos seleccionados
-    // ...
-  
-    // Luego de realizar las acciones necesarias, actualiza los datos en el dataSource
-    console.log('Objetos seleccionados después de actualizar:', selectedRows);
-    this.dataSource.data = this.employeesArray.slice();
-  }
 
   addNew() {
     let tempDirection: Direction;
@@ -588,7 +840,7 @@ export class ExampleDataSource extends DataSource<Employees> {
               employees.highKeyId +
               employees.payRollId +
               employees.position +
-              employees.horaAcordada +
+              employees.hourFrom +
               employees.in +
               employees.out +
               employees.break +
@@ -653,8 +905,8 @@ export class ExampleDataSource extends DataSource<Employees> {
         case 'payRollID':
           [propertyA, propertyB] = [a.payRollId, b.payRollId]; //Diego
           break;
-          case 'horaAcordada':
-            [propertyA, propertyB] = [a.horaAcordada, b.horaAcordada]; //Diego
+          case 'hourFrom':
+            [propertyA, propertyB] = [a.hourFrom, b.hourFrom]; //Diego
             break;  
         case 'in':
           [propertyA, propertyB] = [a.in, b.in]; //Diego

@@ -84,13 +84,15 @@ export class SearchOrderComponent{
   //Trae las órdenes en general desde la url de la API, más arriba se usa solo para los administradores y executives.
   getOrders(){
     fetch(
-      `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
+      `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getActiveOrders`
+      // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
     )
     .then((response) => response.json())
     .then((data) => {
       //console.log(data)
       this.orders = data;
-      //console.log('Ordenes desde el método getOrders: ', this.orders)
+      this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
+      // console.log('Ordenes desde el método getOrders: ', this.orders)
     })
     .catch((error)=> {
       console.log(error)
@@ -101,12 +103,15 @@ export class SearchOrderComponent{
   getOrderByIdUser(user){
     
     fetch(
-      `${this.orderFunctionsURL}/order/getOrdersByUser/user?user=${user}`
+      `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getActiveOrders`
+      // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user==${user}`
+      // `${this.orderFunctionsURL}/order/getOrdersByUser/user?user=${user}`
     )
     .then((response) => response.json())
     .then((data) => {
       //console.log(data)
       this.orders = data;
+      this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
     })
     .catch((error)=> {
       console.log(error)
@@ -130,7 +135,7 @@ export class SearchOrderComponent{
   //Diego: Inicio búsqueda de órdenes por el input
   
   getSearchOrders(): void {
-    const apiUrl = 'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders';
+    const apiUrl = 'http://127.0.0.1:5001/highkeystaff/us-central1/orders/getActiveOrders';//'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders';
 
     this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
       this.ordenes = ordenes;

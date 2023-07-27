@@ -122,7 +122,8 @@ export class DashboardLmComponent implements OnInit {
 
   getRegistByOrder(){
     fetch(
-      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
+      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`
+      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
       
       )
     .then((response) => response.json())
@@ -141,7 +142,7 @@ export class DashboardLmComponent implements OnInit {
     const positions: { [name: string]: Position } = {};
 
     data.employees.forEach((employee)=>{
-      console.log('RR: ', employee.employee.data)  
+      // console.log('RR: ', employee.employee.data)  
       const positionName = employee.position;
       const hourFrom = employee.hourFrom;
     

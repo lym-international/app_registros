@@ -6,11 +6,35 @@ export class Employees {
   highKeyId:string;
   payRollId:string;
   position:string;
-  horaAcordada:string;
+  hourFrom:string;
   in:string;
+  dateCheckin: { _seconds: number; _nanoseconds: number }
   out:string;
   break:string; 
   totalHours:string;
+  orderId: string;
+  hours: number;
+  employee: {   // Agregar la propiedad 'employee' como un objeto
+    agmRate: number;
+    booking: string;
+    data: {
+      firstname: string;
+      gender: string;
+      phone: string;
+      company: string;
+      employeeId: number;
+      positions: { rate: number; name: string }[];
+      email: string;
+      lastname: string;
+      status: string;
+      // Otras propiedades de 'data' si es necesario
+    };
+    rate: number;
+    id: string;
+    favourite: string;
+    status: string;
+    // Otras propiedades de 'employee' si es necesario
+  };
   // id: number;  //Plantilla
   // img: string;  //Plantilla
   // highKeyID: string; //Diego
@@ -38,10 +62,13 @@ export class Employees {
       this.position = employees.position || '',
       this.totalHours = employees.totalHours || '',
       this.payRollId = employees.payRollId || '',
-      this.horaAcordada = employees.horaAcordada || '',
-      this.in = employees.in || '';
+      this.hourFrom = employees.hourFrom || '',
+      this.in = employees.in || '',
+      this.dateCheckin = employees.dateCheckin ,
       this.out = employees.out || '';
       this.break = employees.break || '';
+      this.orderId=employees.orderId || '';
+      this.hours=employees.hours || 0;
 
      /*  this.id = employees.id || this.getRandomID();
       this.img = employees.img || 'assets/images/user/user1.jpg';
