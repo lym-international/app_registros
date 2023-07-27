@@ -350,6 +350,10 @@
                                                 <td class="column-check">{{ item.hourFrom }}</td>
                                                 <td class="column-check">{{ item.quantity }}</td>
                                                 <td class="column-check">{{ item.m }}</td>
+                                                <td> {{(item.m/item.quantity) * 100}} %
+                                                    <mat-progress-bar mode="determinate" class="progress-round violet-progress" value="{{(item.m/item.quantity) * 100}}">
+                                                    </mat-progress-bar>
+                                                </td>
                                                 <td class="column-check">{{ checkinValues[item.position][item.hourFrom] }}</td>
                                                 <td> {{(checkinValues[item.position][item.hourFrom]/item.m) * 100}} %
                                                     <mat-progress-bar mode="determinate" class="progress-round green-progress" value="{{(checkinValues[item.position][item.hourFrom]/item.m) * 100}}">

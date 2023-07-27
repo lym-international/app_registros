@@ -204,7 +204,7 @@ export class AllemployeesComponent
   
   
   refresh() {
-    //this.loadData();
+    this.loadData();
   }
 
   getSelectedRow(): Employees | null {
