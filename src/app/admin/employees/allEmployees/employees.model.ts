@@ -8,7 +8,10 @@ export class Employees {
   position:string;
   hourFrom:string;
   in:string;
-  dateCheckin: { _seconds: number; _nanoseconds: number }
+  dateCheckin: { _seconds: number; _nanoseconds: number };
+  dateCheckinRounded: { _seconds: number; _nanoseconds: number };
+  dateCheckout:  { _seconds: number; _nanoseconds: number };   
+  dateCheckoutRounded:{ _seconds: number; _nanoseconds: number };
   out:string;
   break:string; 
   totalHours:string;
