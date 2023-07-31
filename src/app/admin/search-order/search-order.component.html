@@ -1,4 +1,4 @@
-<div class="container" style="margin-left: 90px;">
+<div class="container marginContainer" style="margin-left: 90px;">
     <div class="block-header" style="margin-top: 70px;">
         <!-- breadcrumb -->
         <app-breadcrumb [title]="'Search Order'" [active_item]="'Search order'">
@@ -6,7 +6,7 @@
     </div>
 
     <div class="row" style="margin-top: 130px;">
-        <div class="col col-sm-7">
+        <div class="col-sm-12 col-md-7 col-lg-7">
             <div>
                 <label class="form-label">List of orders</label>
             </div>
@@ -21,15 +21,17 @@
 
             <!-- Inicio filtro órdenes -->
             <div class="row">
-                <div>
+                <div class="col-sm-12 col-md-6">
                     <label class="form-label">Order number</label>
                 </div>
-                <mat-form-field style="display: inline-flex; width: 30%;">
-                    <mat-label>Input</mat-label>
-                    <input matInput [(ngModel)]="orderNumber" (ngModelChange)="searchOrder()">
-                    <!--(keyup.enter)="searchOrder()"-->
-                    <!--(ngModelChange)="searchOrder()"-->
-                </mat-form-field>
+                <div>
+                    <mat-form-field style="display: inline-flex; width: 30%;" class="col-sm-12 col-md-6 col-lg-6">
+                        <mat-label>Input</mat-label>
+                        <input matInput [(ngModel)]="orderNumber" (ngModelChange)="searchOrder()">
+                        <!--(keyup.enter)="searchOrder()"-->
+                        <!--(ngModelChange)="searchOrder()"-->
+                    </mat-form-field>
+                </div>
             </div>
             <!--Final filtro órdenes-->
 
@@ -37,7 +39,7 @@
                 <button mat-raised-button color="primary" (click)="navegar()" [disabled]="!(selectedOrder || foundOrder)">Search</button>
             </div>
         </div>
-        <div class="col col-sm-5" style="text-align: center;">
+        <div class="ocultarImg col-md-5 col-lg-5" style="text-align: center;">
             <img src="assets/images/search-order.png" style="height: 300px;" alt="">
         </div>
         <p style="color:#414244;">You will only be able to view the open orders in which you are a supervisor.</p>

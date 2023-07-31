@@ -45,15 +45,25 @@
     padding: 20px;
 }
 
-@media screen and (min-width: 600px) {
+.column-check {
+    text-align: center;
+}
+
+@media (min-width: 767px) {
+    .content-block {
+        width: 100%;
+        padding: 10px;
+    }
     .container {
         grid-template-columns: 1fr 1fr;
     }
     .sub-columns {
         grid-template-columns: repeat(2, 1fr);
     }
-}
-
-.column-check {
-    text-align: center;
+    .contenedorSM {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+    }
 }

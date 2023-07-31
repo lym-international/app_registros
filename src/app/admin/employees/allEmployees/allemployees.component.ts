@@ -76,6 +76,8 @@ export class AllemployeesComponent
   public checkIn!: any;
   public checkInTime!:any;
   public checkOutTime!:any
+  showCheckInButton = false;
+  showCheckOutButton = false;
   
   
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -96,6 +98,7 @@ export class AllemployeesComponent
     private orderDataService: OrderDataService,
     //private checkInService: CheckInService,
     
+    
   ) {
     super();
     // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
@@ -108,10 +111,38 @@ export class AllemployeesComponent
     this.getEmployees();
     this.loadData();
     
+    
   }
- 
+  
+  // Función para verificar la visibilidad de los botones al hacer clic en el checkbox
+  onCheckboxClick(row: Employees) {
+    console.log('dateCheckin antes IF: ', row.dateCheckin) 
+    if (row.dateCheckin === null || row.dateCheckin === undefined) {
+      console.log('dateCheckin', row.dateCheckin) 
+      this.showCheckInButton = true;
+      //this.showCheckOutButton = false;
+      console.log('Si no hay checkIN: ')
+      console.log('CheckIn button: ',this.showCheckInButton )
+      //console.log('CheckOut button: ',this.showCheckOutButton )
+      console.log('---------------------------------')
+    } else {
+      //this.showCheckInButton = false;
+      this.showCheckOutButton = true;
+      console.log('Si hay checkIN: ')
+      //console.log('CheckIn button: ',this.showCheckInButton )
+      console.log('CheckOut button: ',this.showCheckOutButton )
+      console.log('---------------------------------')
+    }
+  }
 
-
+  deleteInTime() {
+    const selectedRows = this.selection.selected;
+    selectedRows.forEach((row) => {
+      row.in = "No Data"; // Set the "In" time to "No Data" for each selected employee
+    });
+    this.selection.clear(); // Clear the selection after updating the "In" times
+  }
+  
   getEmployees() {
     //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`
     fetch(`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
@@ -214,7 +245,7 @@ export class AllemployeesComponent
     }
     return null;
   }
-  onActionButtonClick() {
+  onActionButtonClick() { //botones de acciones (ya no aplica)
     const selectedRows = this.getSelectedRows();
   if (selectedRows.length > 0) {
     // Realiza la acción con los objetos seleccionados, por ejemplo:
@@ -293,6 +324,7 @@ export class AllemployeesComponent
         .then((data) => {
           console.log('Actualización exitosa:', data);
           this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+          this.removeSelectedRows()
         })
         .catch((error) => {
           console.error('Error al actualizar:', error);
@@ -428,6 +460,7 @@ async checkOutModal(selectedRows: Employees[]) {
       .then((data) => {
         console.log('Actualización exitosa:', data);
         this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+        this.removeSelectedRows()
       })
       .catch((error) => {
         console.error('Error al actualizar:', error);
@@ -577,6 +610,7 @@ calculateExactHourPayment(employee){
         .then((data) => {
           console.log('Actualización exitosa:', data);
           this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+          this.removeSelectedRows()
         })
         .catch((error) => {
           console.error('Error al actualizar:', error);
@@ -619,6 +653,7 @@ calculateExactHourPayment(employee){
       }
     });
   }
+  //Abre el modal FormDialogComponent para editar los datos.
   editCall(row: Employees) {
     this.id = row.id;
     let tempDirection: Direction;
@@ -721,14 +756,15 @@ calculateExactHourPayment(employee){
       this.refreshTable();
       this.selection = new SelectionModel<Employees>(true, []);
     });
-    this.showNotification(
+    /*this.showNotification(
       'snackbar-danger',
       totalSelect + ' Record Delete Successfully...!!!',
       'bottom',
       'center'
-    );
+    );*/
   }
-  
+
+  //buscador
   public loadData() {
     this.exampleDatabase = new EmployeesService(this.httpClient);
     //this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
@@ -878,11 +914,6 @@ export class ExampleDataSource extends DataSource<Employees> {
   sortData(data: Employees[]): Employees[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
-
-
-
-
-
     }
     return data.sort((a, b) => {
       let propertyA: number | string = '';
