@@ -84,9 +84,9 @@ export class SearchOrderComponent{
   //Trae las órdenes en general desde la url de la API, más arriba se usa solo para los administradores y executives.
   getOrders(){
     fetch(
-      //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getActiveOrders`
+      `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getActiveOrders`
       //`https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
-      `https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`
+      // `https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`
     )
     .then((response) => response.json())
     .then((data) => {
@@ -104,8 +104,9 @@ export class SearchOrderComponent{
   getOrderByIdUser(user){
     
     fetch(
-      `https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`
-      //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getActiveOrders`
+      // `https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`
+      // https://us-central1-highkeystaff.cloudfunctions.net/orders/getActiveOrders
+      `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getActiveOrders`
       // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user==${user}`
       // `${this.orderFunctionsURL}/order/getOrdersByUser/user?user=${user}`
     )
@@ -137,7 +138,7 @@ export class SearchOrderComponent{
   //Diego: Inicio búsqueda de órdenes por el input
   
   getSearchOrders(): void {
-    const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`//'http://127.0.0.1:5001/highkeystaff/us-central1/orders/getActiveOrders';//'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders';
+    const apiUrl = 'http://127.0.0.1:5001/highkeystaff/us-central1/orders/getActiveOrders';//`https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`;//'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders';
 
     this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
       this.ordenes = ordenes;
