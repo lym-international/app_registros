@@ -69,6 +69,7 @@ export class AllemployeesComponent
   public dataEmployees!: any;
   employeesData: any[] = [];
   public orderId!: string;
+  public exactHourPayment: boolean;
   public empleados: string;
   public employeesDatos: any[];
   employeesArray: any[] = [];
@@ -78,6 +79,10 @@ export class AllemployeesComponent
   public checkOutTime!:any
   showCheckInButton = false;
   showCheckOutButton = false;
+  showBreakButton = false;
+  showNoShowButton = false;
+
+
   
   
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -108,6 +113,7 @@ export class AllemployeesComponent
     this.dataEmployees = this.orderDataService.getSelectedOrder();
     console.log('Data Order: ', this.dataEmployees)
     this.orderId = this.dataEmployees.id;
+    this.exactHourPayment=this.dataEmployees.data.exactHourPayment;
     this.getEmployees();
     this.loadData();
     
@@ -117,31 +123,152 @@ export class AllemployeesComponent
   // Función para verificar la visibilidad de los botones al hacer clic en el checkbox
   onCheckboxClick(row: Employees) {
     console.log('dateCheckin antes IF: ', row.dateCheckin) 
-    if (row.dateCheckin === null || row.dateCheckin === undefined) {
+    if ((row.dateCheckin === null || row.dateCheckin === undefined)&&(row.dateCheckout === null || row.dateCheckout === undefined)) {
       console.log('dateCheckin', row.dateCheckin) 
       this.showCheckInButton = true;
-      //this.showCheckOutButton = false;
+      this.showCheckOutButton = false;
+      this.showBreakButton = false;
+      this.showNoShowButton = true;
       console.log('Si no hay checkIN: ')
-      console.log('CheckIn button: ',this.showCheckInButton )
+      console.log('CheckIn button: ',this.showCheckInButton)
+      console.log('NoShow button: ',this.showNoShowButton)
       //console.log('CheckOut button: ',this.showCheckOutButton )
       console.log('---------------------------------')
-    } else {
-      //this.showCheckInButton = false;
+    }
+    else if((row.dateCheckin !== null || row.dateCheckin !== undefined)&&(row.dateCheckout === null || row.dateCheckout === undefined)) {
+      this.showCheckInButton = false;
       this.showCheckOutButton = true;
-      console.log('Si hay checkIN: ')
-      //console.log('CheckIn button: ',this.showCheckInButton )
+      this.showBreakButton = true;
+      this.showNoShowButton = false;
+      console.log('Si hay checkIN y no hay checkOut: ')
       console.log('CheckOut button: ',this.showCheckOutButton )
+      console.log('Break button: ',this.showBreakButton )
+      console.log('---------------------------------')
+    }  
+    else if ((row.dateCheckout !== null || row.dateCheckout !== undefined)&&(row.break === null || row.break === undefined || row.break === "0")){
+      this.showCheckInButton = false;
+      this.showCheckOutButton = false;
+      this.showBreakButton = true;
+      this.showNoShowButton = false;
+      console.log('Si hay checkIN y hay checkOut: ')
+      console.log('Break button: ',this.showBreakButton )
+      console.log('---------------------------------')
+    }
+    else {
+      this.showCheckInButton = false;
+      this.showCheckOutButton = false;
+      this.showBreakButton = false;
+      this.showNoShowButton = false;
+      console.log('Si hay checkIN, checkOut y Break: Botones no visibles')
       console.log('---------------------------------')
     }
   }
 
-  deleteInTime() {
-    const selectedRows = this.selection.selected;
-    selectedRows.forEach((row) => {
-      row.in = "No Data"; // Set the "In" time to "No Data" for each selected employee
-    });
-    this.selection.clear(); // Clear the selection after updating the "In" times
+  deleteInTime(selectedRows: Employees[]) {
+    if (selectedRows.length > 0) {
+      // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
+      const updatedEmployees = this.employeesArray.map((employee) => {
+        if (
+          selectedRows.some(
+            (row) =>
+              row.employee.data.employeeId === employee.employee.data.employeeId
+          )
+        ) {
+          return {
+            ...employee,
+            checkin: false,
+            dateCheckin: "-",
+            realCheckin: "-",
+            dateCheckinRounded: "-",
+            checkout: false,
+            dateCheckout: "-",
+            dateCheckoutRounded: "-",
+            status: 'reseted',
+            hours: 0,
+            break: 0,
+            in: 'No Data',
+            out: 'No Data',
+            totalHours:0,
+          };
+        }
+        return employee;
+      });
+
+      console.log('updatedEmployees', updatedEmployees);
+
+      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ employees: updatedEmployees }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log('Actualización exitosa:', data);
+          this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+          this.removeSelectedRows();
+        })
+        .catch((error) => {
+          console.error('Error al actualizar:', error);
+        });
+    } else {
+      // console.log('Ningún empleado seleccionado para check-in.');
+    }
   }
+  // función noShow
+  outEmployee(selectedRows: Employees[]) {
+    if (selectedRows.length > 0) {
+      // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
+      const updatedEmployees = this.employeesArray.map((employee) => {
+        if (
+          selectedRows.some(
+            (row) =>
+              row.employee.data.employeeId === employee.employee.data.employeeId
+          )
+        ) {
+          return {
+            ...employee,
+            checkin: false,
+            checkout: false,
+            dateCheckin : "-",
+            dateCheckout : "-",
+            realCheckin: "-",
+            // updateUser = this.profile.email;
+            status: 'No show',
+            hours: 0,
+            break: 0,
+            totalHours:0
+          };
+        }
+        return employee;
+      });
+
+      console.log('updatedEmployees', updatedEmployees);
+
+      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ employees: updatedEmployees }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log('Actualización exitosa:', data);
+          this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+          this.removeSelectedRows();
+        })
+        .catch((error) => {
+          console.error('Error al actualizar:', error);
+        });
+    } else {
+      // console.log('Ningún empleado seleccionado para check-in.');
+    }
+  }
+  
   
   getEmployees() {
     //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`
@@ -158,9 +285,9 @@ export class AllemployeesComponent
           const lastName = employeeData.lastname || "No data";
           const highKeyId = employeeData.employeeId || "No data";
           const position = employee.position || "No data";
-          const totalHours = employee.hours || "No data";
+          const totalHours = employee.hours || 0;
           const payrollId = employeeData.payrollid || "No data";
-          const brake = employee.break || "No data";
+          const brake = employee.break || "0";
           const hourFrom = employee.hourFrom || "No data";
   
           let checkInTime = "No Data";
@@ -262,7 +389,7 @@ export class AllemployeesComponent
     return String(value).padStart(2, '0');
   }
 
- 
+  
   
   async checkInModal(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {
@@ -284,9 +411,12 @@ export class AllemployeesComponent
       );
   
       const timestamp = Timestamp.fromDate(new Date(result));
-      console.log('TimeStamp: ', timestamp);
+      //console.log('TimeStamp: ', timestamp);
       const checkInTimestamp = timestamp?.seconds || 0;
-  
+      const  rounded = this.roundDate(result)
+    const timestampCheckinRounded= Timestamp.fromDate(new Date(rounded));
+    const dateCheckinRounded = timestampCheckinRounded?.seconds || 0;
+
       // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
       const updatedEmployees = this.employeesArray.map((employee) => {
         if (selectedRows.some((row) => row.employee.data.employeeId === employee.employee.data.employeeId)) {
@@ -302,7 +432,7 @@ export class AllemployeesComponent
               _nanoseconds: 0,
             },
             dateCheckinRounded: {
-              _seconds: checkInTimestamp,
+              _seconds: dateCheckinRounded,
               _nanoseconds: 0,
             },
           };
@@ -322,7 +452,7 @@ export class AllemployeesComponent
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log('Actualización exitosa:', data);
+          //console.log('Actualización exitosa:', data);
           this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
           this.removeSelectedRows() //Actualiza la tabla para que no duplique el dato en el anterior empleado.
         })
@@ -377,6 +507,28 @@ export class AllemployeesComponent
   }
 }
  */
+
+roundDate(date: Date){
+  let roundedDate = date;
+  roundedDate.setSeconds(0, 0);
+  let minutes = roundedDate.getMinutes();
+  let sum = 0;
+  roundedDate.setMinutes(0);
+  if (minutes >= 0 && minutes <= 7) {
+    sum = 0;
+  } else if (minutes >= 8 && minutes <= 22) {
+    sum = 15;
+  } else if (minutes >= 23 && minutes <= 37) {
+    sum = 30;
+  } else if (minutes >= 38 && minutes <= 52) {
+    sum = 45;
+  } else {
+    sum = 60;
+  }
+  roundedDate.setMinutes(sum);
+  return roundedDate;
+}
+
 roundHours(hour: number) {
   let decimal = (hour - Math.floor(hour));
   let trunc = Math.trunc(hour);
@@ -421,12 +573,16 @@ async checkOutModal(selectedRows: Employees[]) {
     const timestamp = Timestamp.fromDate(new Date(result));
     console.log('TimeStamp: ', timestamp);
     const checkOutTimestamp = timestamp?.seconds || 0;
+    const  rounded = this.roundDate(result)
+    const timestampCheckoutRounded= Timestamp.fromDate(new Date(rounded));
+    const dateCheckoutRounded = timestampCheckoutRounded?.seconds || 0;
+
 
     // Filtrar y actualizar solo los empleados seleccionados con sus datos actualizados
     const updatedEmployees = this.employeesArray.map((employee) => {
       if (selectedRows.some((row) => row.employee.data.employeeId === employee.employee.data.employeeId)) {
 
-        const roundedHours = this.calculateHoursWorked(employee, checkOutTimestamp);
+        const roundedHours = this.calculateHoursWorked(employee, checkOutTimestamp, dateCheckoutRounded);
         // console.log("hoursWorked to send", hoursWorked)
         return {
           ...employee,
@@ -436,7 +592,8 @@ async checkOutModal(selectedRows: Employees[]) {
             _nanoseconds: 0,
           },
           dateCheckoutRounded: {
-            _seconds: checkOutTimestamp,
+            _seconds: dateCheckoutRounded,
+            //_seconds: checkOutTimestamp,
             _nanoseconds: 0,
           },
           status: 'Checked Out',
@@ -459,7 +616,7 @@ async checkOutModal(selectedRows: Employees[]) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log('Actualización exitosa:', data);
+        //console.log('Actualización exitosa:', data);
         this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
         this.removeSelectedRows()
       })
@@ -467,59 +624,62 @@ async checkOutModal(selectedRows: Employees[]) {
         console.error('Error al actualizar:', error);
       });
   } else {
-    console.log('Ningún empleado seleccionado para check-out.');
+    //console.log('Ningún empleado seleccionado para check-out.');
   }
 }
-  
 
-calculateHoursWorked(employee: Employees, checkOutTimestamp: number): number {
-  // Aquí implementa la lógica para calcular las horas trabajadas
-  // Utiliza las propiedades 'dateCheckin', 'dateCheckout', etc., del objeto 'employee'
-  // para realizar el cálculo de manera adecuada
-  // Luego devuelve el resultado como un número
-/*   
- const lateThreshold = 8; // Umbral de llegada tarde en horas
- if (this.order.exactHourPayment) {
-    let hoursNumberExact = this.calculateExactHourPayment(employee);
-    const hours = hoursNumberExact.toFixed(2);
-    employee.hours = hours;
-  } else {
-    let hoursNumber =
-      (employee.dateCheckoutRounded.getTime() -
-        employee.dateCheckinRounded.toDate().getTime()) /
-      3600000;
-    hoursNumber = this.roundHours(hoursNumber);
-
-    if (hoursNumber < 5) {
-      let late = this.validateCheckout1(
-        employee.hourFrom,
-        employee.dateCheckin.toDate()
-      );
-      if (late < 8) {
-        hoursNumber = 5;
-      } else {
-        if (late > lateThreshold) {
-          hoursNumber = this.calculateRegularHours(employee);
-        }
-      }
-    }
-  } */
-
-  // Ejemplo:
-
-  // const lateThreshold = 8; // Umbral de llegada tarde en horas
-  const checkInTime = employee.dateCheckin._seconds;
-  const checkOutTime = checkOutTimestamp;
+calculateHoursWorked(employee: Employees, checkOutTimestamp: number, dateCheckoutRounded: number): number {
+  if(this.exactHourPayment){
+    const hoursNumberExact = this.calculateExactHourPayment(employee, checkOutTimestamp); 
+    // const hours = hoursNumberExact.toFixed(2);
+    return hoursNumberExact;
+  }else{
+  const lateThreshold = 8; // Umbral de llegada tarde en horas
+  const checkInTime = employee.dateCheckinRounded._seconds;
+  const checkOutTime = dateCheckoutRounded;
+ 
+  // console.log("Jr checkInTime", checkInTime)
+  // console.log("Jr checkOutTime", checkOutTime)
   const secondsWorked = checkOutTime - checkInTime;
-  const hoursWorked = secondsWorked / 3600;
+  const hoursWorked = secondsWorked / 3600; //3600000
+  // console.log("oursWorked", hoursWorked)
+  let hoursNumber = this.roundHours(hoursWorked);
   const roundedHours = this.roundHours(hoursWorked);
-  return roundedHours;
+  
+  if (hoursNumber < 5) {
+    // console.log("employe", employee.dateCheckin)
+    // console.log("employee.dateCheckin", employee.dateCheckin);
+    // console.log("employee.dateCheckin", employee.dateCheckin)
+    // console.log("employee.dateCheckin.toDate()", employee.dateCheckin.toDate())
+    
+    const dateCheckin = new Date(employee.dateCheckin._seconds * 1000);
+    // console.log("employee.hourFrom", employee.hourFrom)
+    // console.log("employe", dateCheckin);
+
+    let late = this.validateCheckout1(
+      employee.hourFrom,
+      dateCheckin
+    );
+    if (late < 8) {
+      hoursNumber = 5;
+   }else
+   {
+     if (late > lateThreshold) {
+       // hoursNumber = lateThreshold;
+       hoursNumber = this.calculateRegularHours(employee, dateCheckoutRounded);       
+     }
+   } 
+
+  }
+  return hoursNumber;
+
+  }
 }
 
-validateCheckout1(hourFrom: string, checkinDate: Date): number {
+validateCheckout1(hourFrom, checkinDate) {
   const [hour, minute] = hourFrom.split(":");
   const hourLimit = new Date(checkinDate);
-  hourLimit.setHours(Number(hour), Number(minute), 0, 0);
+  hourLimit.setHours(hour, minute, 0, 0);
 
   if (checkinDate.getTime() > hourLimit.getTime()) {
     const diff = Math.abs(checkinDate.getTime() - hourLimit.getTime());
@@ -530,17 +690,48 @@ validateCheckout1(hourFrom: string, checkinDate: Date): number {
   return 0;
 }
 
-calculateRegularHours(employee) {
-  // Cálculo de horas trabajadas sin tener en cuenta la llegada tardía
-  const hours = (employee.dateCheckoutRounded.getTime() - employee.dateCheckinRounded.toDate().getTime()) / 3600000;
+calculateRegularHours(employee: Employees, dateCheckoutRounded: number) {
+  /* console.log("Cálculo de horas trabajadas sin tener en cuenta la llegada tardía")
+
+  // Conversión manual del timestamp a objeto Date
+  const checkinTime = new Date(employee.dateCheckin._seconds * 1000);
+  console.log("checkinTime", checkinTime)
+  console.log("checkOutTimestamp", checkOutTimestamp)
+  const checkOutTime = new Date(checkOutTimestamp)
+  console.log("checkOutTime", checkOutTime)
+  // const checkoutTime = checkOutTimestamp.toDate();
+
+  // const hours = (checkoutTime.getTime() - checkinTime.getTime()) / 3600000;
+  // return Number(hours.toFixed(2));
+  return 108 */
+  //Cálculo de horas trabajadas sin tener en cuenta la llegada tardía;
+  // Conversión manual del timestamp a objeto Date
+  const checkinTime = new Date(employee.dateCheckinRounded._seconds * 1000);
+  // console.log("checkinTime", checkinTime);
+  // console.log("checkOutTimestamp", dateCheckoutRounded);
+  const checkOutTime = new Date(dateCheckoutRounded * 1000);
+  // console.log("checkOutTime", checkOutTime);
+
+  const hours = (checkOutTime.getTime() - checkinTime.getTime()) / 3600000;
   return Number(hours.toFixed(2));
 }
-calculateExactHourPayment(employee){
 
-  const timeDiff = employee.dateCheckout.getTime() - employee.dateCheckin.toDate().getTime();
-  const hours = timeDiff / (1000 * 60 * 60); // Convertir milisegundos a horas
+calculateExactHourPayment(employee: Employees, checkOutTimestamp: number){
+  const checkInTime = employee.dateCheckin._seconds;
+  const checkOutTime = checkOutTimestamp;
   
-  return Number(hours.toFixed(2));
+  const secondsWorked = checkOutTime - checkInTime;
+  const hoursWorked = secondsWorked / 3600;
+  /* console.log("in", checkInTime)
+  console.log("out", checkOutTime)
+  console.log("timeDiff",secondsWorked)
+  console.log("ours", hoursWorked) */
+  return Number(hoursWorked.toFixed(2))
+
+  // const timeDiff = employee.dateCheckout.getTime() - employee.dateCheckin.toDate().getTime();
+  // const hours = timeDiff / (1000 * 60 * 60); // Convertir milisegundos a horas
+  
+  // return Number(hours.toFixed(2));
 
     // const minutes = Math.round((timeDiff / (1000 * 60)) % 60); // Obtener los minutos redondeados
     // const hour = Math.floor(timeDiff / (1000 * 60 * 60)); // Obtener las horas enteras
@@ -551,10 +742,7 @@ calculateExactHourPayment(employee){
     // console.log("hours", hours)
     
   }
-
-
- 
-
+  
   async breakModal(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {
       console.log('Empleados seleccionados para break:', selectedRows);
@@ -599,7 +787,7 @@ calculateExactHourPayment(employee){
   
       console.log('updatedEmployees', updatedEmployees);
   
-      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;//`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -609,19 +797,16 @@ calculateExactHourPayment(employee){
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log('Actualización exitosa:', data);
+          // console.log('Actualización exitosa:', data);
           this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
-          this.removeSelectedRows()
         })
         .catch((error) => {
           console.error('Error al actualizar:', error);
         });
     } else {
-      console.log('Ningún empleado seleccionado para break.');
+      // console.log('Ningún empleado seleccionado para break.');
     }
   }
-  
-  
 
   addNew() {
     let tempDirection: Direction;

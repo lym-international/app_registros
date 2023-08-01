@@ -64,7 +64,8 @@
                                 </li>
 
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="BREAK">
+                                    <div class="m-l-10" *ngIf="showBreakButton" matTooltip="BREAK">
+                                        <!--<div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="BREAK">-->
                                         <button mat-mini-fab color="primary" (click)="breakModal(getSelectedRows())"> 
                                             <mat-icon class="col-white">coffee</mat-icon>
                                         </button>
@@ -72,8 +73,9 @@
                                 </li>
 
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="NOSHOW">
-                                        <button mat-mini-fab color="warn"> <!--Ingresar función (click)=""-->
+                                    <div class="m-l-10" *ngIf="showNoShowButton" matTooltip="NOSHOW">
+                                        <!--<div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="NOSHOW"> -->
+                                        <button mat-mini-fab color="warn" (click)="outEmployee(getSelectedRows())"> 
                                             <mat-icon class="col-white">visibility_off</mat-icon>
                                         </button>
                                     </div>
@@ -81,7 +83,7 @@
 
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="DELETE: IN, OUT, BREAK">
-                                        <button mat-mini-fab color="warn" (click)="deleteInTime()"><!--Ingresar función (click)=""-->
+                                        <button mat-mini-fab color="warn" (click)="deleteInTime(getSelectedRows())">
                                         <mat-icon class="col-white">refresh</mat-icon>
                                       </button>
                                     </div>
