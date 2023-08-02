@@ -440,7 +440,7 @@ export class AllemployeesComponent
         return employee;
       });
   
-      console.log("updatedEmployees", updatedEmployees);
+      console.log("updatedEmployees: ", updatedEmployees);
   
       const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`//`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
@@ -799,6 +799,7 @@ calculateExactHourPayment(employee: Employees, checkOutTimestamp: number){
         .then((data) => {
           // console.log('Actualización exitosa:', data);
           this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+          this.removeSelectedRows()
         })
         .catch((error) => {
           console.error('Error al actualizar:', error);

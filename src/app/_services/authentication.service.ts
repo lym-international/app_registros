@@ -78,7 +78,8 @@ export class AuthenticationService {
             // const date = new Date(auxDate.getTime() - (auxDate.getTimezoneOffset() * 60000));
             
             if(this.currentUserData.role=="Employee"){
-                this.router.navigate(['/employee/dashboard']);
+              console.log("Es Empleado")
+                this.router.navigate(['/admin/search-order/']);//this.router.navigate(['/employee/dashboard']);
             } else if (this.currentUserData.role=="Client"){
                 this.router.navigate(['/client/dashboard']);
             } else if (this.currentUserData.role=='Executive'){
@@ -86,10 +87,10 @@ export class AuthenticationService {
             } else if (this.currentUserData.role == "Supervisor"){
                 console.log("Supervisor")
             } else if (this.currentUserData.role=="Administrator"){
-              console.log("si es admin")
+              console.log("Es administrador")
               this.router.navigate(['/admin/search-order/']);
             } else {
-              this.router.navigate(['/authentication/signin']); // /authentication/signin
+              this.router.navigate(['/authentication/signin']); 
             }
           });
         });

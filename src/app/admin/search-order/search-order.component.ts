@@ -52,7 +52,7 @@ export class SearchOrderComponent{
       // Almacenar los datos en el localStorage
       localStorage.setItem('currentUserData', JSON.stringify(this.data));
     }
-    // Aquí tienes acceso a los datos del usuario en la variable data
+    // Aquí se tiene acceso a los datos del usuario en la variable data
     console.log('Datos en storedUserData desde el SearchOrder: ', storedUserData);
 
     //Inicio validación de rol para la visualización de las órdenes.
@@ -71,7 +71,11 @@ export class SearchOrderComponent{
       //this.loadSupervisorOrders();
       //this.loadParameters();
       this.getOrderByIdUser(this.data.email)
-
+    } else if (
+      this.data.role == "Employee"
+    ) {
+      this.getOrderByIdUser(this.data.email)
+      console.log('Ordenes del empleado: ', this.getOrderByIdUser)
     }
 
     //Fin validación de rol para la visualización de las órdenes.
