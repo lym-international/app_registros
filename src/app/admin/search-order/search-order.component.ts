@@ -75,7 +75,7 @@ export class SearchOrderComponent{
       this.data.role == "Employee"
     ) {
       this.getOrderByIdUser(this.data.email)
-      console.log('Ordenes del empleado: ', this.getOrderByIdUser)
+      console.log('Ordenes del empleado: ', this.getOrderByIdUser(this.data.email))
     }
 
     //Fin validación de rol para la visualización de las órdenes.
@@ -136,7 +136,13 @@ export class SearchOrderComponent{
   }
 
   navegar(){
+    if (this.data.role == "Administrator"){
     this.router.navigate(['/admin/dashboard-lm/']);
+    }
+    else if(this.data.role == "Employee"){
+      this.router.navigate(['/admin/employees/admin-employees']);
+    }
+
   }
   
   //Diego: Inicio búsqueda de órdenes por el input
