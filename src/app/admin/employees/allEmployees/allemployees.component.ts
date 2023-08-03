@@ -26,15 +26,18 @@ import { delay } from 'rxjs/operators'; //Jairo
 import { CheckInComponent } from './dialogs/check-in/check-in.component';
 import { CheckOutComponent } from './dialogs/check-out/check-out.component';
 import { BreakComponent } from './dialogs/break/break.component';
-import { Timestamp } from "firebase/firestore";
+import { Timestamp } from 'firebase/firestore';
+import { AuthenticationService } from 'app/_services/authentication.service';
 
-
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-allemployees',
   templateUrl: './allemployees.component.html',
   styleUrls: ['./allemployees.component.scss'],
-  providers: [DatePipe]
+  providers: [DatePipe],
 })
 export class AllemployeesComponent
   extends UnsubscribeOnDestroyAdapter
@@ -75,17 +78,24 @@ export class AllemployeesComponent
   employeesArray: any[] = [];
   isTblLoading = true;
   public checkIn!: any;
-  public checkInTime!:any;
-  public checkOutTime!:any
-  
-  
+  public checkInTime!: any;
+  public checkOutTime!: any;
+  public dataUser!: any;
+
+  groupEmployees = [];
+  private totalEmployees = [];
+  public timeSheet: any = {};
+
+  public outEmployees = [];
+  public pdfEmployees = [];  
+
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
   @ViewChild(MatMenuTrigger)
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
-  
+
   dataSource!: ExampleDataSource;
 
   constructor(
@@ -95,60 +105,72 @@ export class AllemployeesComponent
     public employeesService: EmployeesService,
     private snackBar: MatSnackBar,
     private orderDataService: OrderDataService,
-    //private checkInService: CheckInService,
-    
-  ) {
+    public authenticationService: AuthenticationService
+  ) //private checkInService: CheckInService,
+
+  {
     super();
     // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
   }
 
   ngOnInit() {
     this.dataEmployees = this.orderDataService.getSelectedOrder();
-    console.log('Data Order: ', this.dataEmployees)
+    console.log('Data Order: ', this.dataEmployees);
     this.orderId = this.dataEmployees.id;
-    this.exactHourPayment=this.dataEmployees.data.exactHourPayment;
+    this.exactHourPayment = this.dataEmployees.data.exactHourPayment;
     this.getEmployees();
     this.loadData();
-    
-  }
- 
 
+    this.dataUser = this.authenticationService.getData();
+    // const storedUserData = localStorage.getItem('currentUserData');
+    const storedUserData = localStorage.getItem('currentUserData');
+    if (storedUserData) {
+      this.dataUser = JSON.parse(storedUserData);
+    } else {
+      // Si no se encuentran los datos en el localStorage, obtenerlos del servicio
+      this.dataUser = this.authenticationService.getData();
+      // Almacenar los datos en el localStorage
+      localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
+    }
+  }
 
   getEmployees() {
     // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
     //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`
-    fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
+    fetch(
+      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`
+    )
       .then((response) => response.json())
       .then((data) => {
         this.isTblLoading = false;
-        console.log("datadelRegistro", data);
-  
+        console.log('datadelRegistro', data);
+
         this.employeesArray = data.employees.map((employee) => {
           const employeeData = { ...employee.employee.data };
-  
-          const firstName = employeeData.firstname || "No data";
-          const lastName = employeeData.lastname || "No data";
-          const highKeyId = employeeData.employeeId || "No data";
-          const position = employee.position || "No data";
-          const totalHours = employee.hours || "No data";
-          const payrollId = employeeData.payrollid || "No data";
-          const brake = employee.break || "No data";
-          const hourFrom = employee.hourFrom || "No data";
-  
-          let checkInTime = "No Data";
+
+          const firstName = employeeData.firstname || 'No data';
+          const lastName = employeeData.lastname || 'No data';
+          const highKeyId = employeeData.employeeId || 'No data';
+          const position = employee.position || 'No data';
+          const totalHours = employee.hours || 0;
+          const payrollId = employeeData.payrollid || 'No data';
+          const brake = employee.break || 'No data';
+          const hourFrom = employee.hourFrom || 'No data';
+
+          let checkInTime = 'No Data';
           if (employee.dateCheckin && employee.dateCheckin._seconds) {
             const checkIn = employee.dateCheckin._seconds;
             const checkInDate = new Date(checkIn * 1000);
             checkInTime = this.datePipe.transform(checkInDate, 'hh:mm a');
           }
-  
-          let checkOutTime = "No Data";
+
+          let checkOutTime = 'No Data';
           if (employee.dateCheckout && employee.dateCheckout._seconds) {
             const checkOut = employee.dateCheckout._seconds;
             const checkOutDate = new Date(checkOut * 1000);
             checkOutTime = this.datePipe.transform(checkOutDate, 'hh:mm a');
           }
-  
+
           return {
             ...employee,
             employee: {
@@ -159,7 +181,7 @@ export class AllemployeesComponent
             lastName: lastName,
             highKeyId: highKeyId,
             position: position,
-            hours:  employee.hours,
+            hours: employee.hours,
             totalHours: totalHours,
             payRollId: payrollId,
             hourFrom: hourFrom,
@@ -168,28 +190,139 @@ export class AllemployeesComponent
             break: brake,
           };
         });
-  
+
         console.log('---------------------------');
         console.log('Array empleados: ');
         console.log(this.employeesArray);
         console.log('---------------------------');
-  
-        this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
+
+        this.dataSource = new ExampleDataSource(
+          this.exampleDatabase,
+          this.paginator,
+          this.sort,
+          this.employeesArray
+        );
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
         this.isTblLoading = false;
       });
   }
-  
-  
-  
-  
+
+  deleteInTime(selectedRows: Employees[]) {
+    if (selectedRows.length > 0) {
+      // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
+      const updatedEmployees = this.employeesArray.map((employee) => {
+        if (
+          selectedRows.some(
+            (row) =>
+              row.employee.data.employeeId === employee.employee.data.employeeId
+          )
+        ) {
+          return {
+            ...employee,
+            checkin: false,
+            dateCheckin: "-",
+            realCheckin: "-",
+            dateCheckinRounded: "-",
+            checkout: false,
+            dateCheckout: "-",
+            dateCheckoutRounded: "-",
+            updateUser:this.dataUser.email,
+            status: 'reseted',
+            hours: 0,
+            break: 0,
+            in: 'No Data',
+            out: 'No Data',
+            totalHours:0,
+
+          };
+        }
+        return employee;
+      });
+
+      console.log('updatedEmployees', updatedEmployees);
+
+      const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ employees: updatedEmployees }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log('Actualización exitosa:', data);
+          this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+          this.removeSelectedRows();
+        })
+        .catch((error) => {
+          console.error('Error al actualizar:', error);
+        });
+    } else {
+      // console.log('Ningún empleado seleccionado para check-in.');
+    }
+  }
+
+  outEmployee(selectedRows: Employees[]) {
+    if (selectedRows.length > 0) {
+      // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
+      const updatedEmployees = this.employeesArray.map((employee) => {
+        if (
+          selectedRows.some(
+            (row) =>
+              row.employee.data.employeeId === employee.employee.data.employeeId
+          )
+        ) {
+          return {
+            ...employee,
+            checkin: false,
+            checkout: false,
+            dateCheckin : "-",
+            dateCheckout : "-",
+            realCheckin: "-",
+            updateUser:this.dataUser.email,
+            status: 'No show',
+            hours: 0,
+            break: 0,
+            totalHours:0
+          };
+        }
+        return employee;
+      });
+
+      console.log('updatedEmployees', updatedEmployees);
+
+      const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ employees: updatedEmployees }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log('Actualización exitosa:', data);
+          this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+          this.removeSelectedRows();
+        })
+        .catch((error) => {
+          console.error('Error al actualizar:', error);
+        });
+    } else {
+      // console.log('Ningún empleado seleccionado para check-in.');
+    }
+  }
+
   mergeEmployeesData(newEmployeesData: any[]) {
     return newEmployeesData.map((newEmployee) => {
       // Buscar si el empleado ya existe en this.employeesArray
-      const existingEmployee = this.employeesArray.find(emp => emp.orderId === newEmployee.orderId);
-  
+      const existingEmployee = this.employeesArray.find(
+        (emp) => emp.orderId === newEmployee.orderId
+      );
+
       // Si el empleado ya existe, combinar los datos actualizados
       if (existingEmployee) {
         return {
@@ -202,10 +335,7 @@ export class AllemployeesComponent
       }
     });
   }
-  
- 
-  
-  
+
   refresh() {
     // this.loadData();
   }
@@ -219,55 +349,63 @@ export class AllemployeesComponent
   }
   onActionButtonClick() {
     const selectedRows = this.getSelectedRows();
-  if (selectedRows.length > 0) {
-    // Realiza la acción con los objetos seleccionados, por ejemplo:
-    console.log('Objetos seleccionados:', selectedRows);
-  } else {
-    console.log('Ningún objeto seleccionado.');
-  }
+    if (selectedRows.length > 0) {
+      // Realiza la acción con los objetos seleccionados, por ejemplo:
+      console.log('Objetos seleccionados:', selectedRows);
+    } else {
+      console.log('Ningún objeto seleccionado.');
+    }
   }
   getSelectedRows(): Employees[] {
     return this.selection.selected;
   }
-  
+
   formatTwoDigits(value: number): string {
     return String(value).padStart(2, '0');
   }
 
- 
-  
   async checkInModal(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {
-       console.log('Empleados seleccionados para check-in:', selectedRows);
+      console.log('Empleados seleccionados para check-in:', selectedRows);
       const dialogRef = this.dialog.open(CheckInComponent, {
         data: {
           employees: this.employees,
           action: 'add',
         },
       });
-  
+
       const result = await dialogRef.afterClosed().toPromise();
-  
+
       this.showNotification(
         'snackbar-success',
         'Successful CheckIn...!!!',
         'bottom',
         'center'
       );
-  
+
       const timestamp = Timestamp.fromDate(new Date(result));
       // console.log('TimeStamp: ', timestamp);
       const checkInTimestamp = timestamp?.seconds || 0;
-    const  rounded = this.roundDate(result)
-    const timestampCheckinRounded= Timestamp.fromDate(new Date(rounded));
-    const dateCheckinRounded = timestampCheckinRounded?.seconds || 0;
-  
+      const rounded = this.roundDate(result);
+      const timestampCheckinRounded = Timestamp.fromDate(new Date(rounded));
+      const dateCheckinRounded = timestampCheckinRounded?.seconds || 0;
+      // console.log("this.dataUser_CKIN", this.dataUser.email)
       // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
       const updatedEmployees = this.employeesArray.map((employee) => {
-        if (selectedRows.some((row) => row.employee.data.employeeId === employee.employee.data.employeeId)) {
-          return {
+        if (
+          selectedRows.some(
+            (row) =>
+            row.employee.data.employeeId === employee.employee.data.employeeId
+            )
+            ) {
+              // Si updateUser es null o undefined, inicializarlo como un arreglo vacío
+              // const updatedUser = [...(employee.updateUser || []), this.dataUser.email];
+              // const emailAlreadyExists = updatedUser.includes(this.dataUser.email);
+              // if (!emailAlreadyExists) {
+            return {
             ...employee,
             checkin: true,
+            status : "Checked In",
             dateCheckin: {
               _seconds: checkInTimestamp,
               _nanoseconds: 0,
@@ -280,14 +418,20 @@ export class AllemployeesComponent
               _seconds: dateCheckinRounded,
               _nanoseconds: 0,
             },
+            // updateUser:this.dataUser.email
+            // updateUser: [...updatedUser, this.dataUser.email],
+            // updateUser: 
+            updateUser:this.dataUser.email
+            
           };
+        // }
         }
         return employee;
       });
-  
-      console.log("updatedEmployees", updatedEmployees);
-  
-      const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;//`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+
+      console.log('updatedEmployees', updatedEmployees);
+
+      const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -299,6 +443,7 @@ export class AllemployeesComponent
         .then((data) => {
           // console.log('Actualización exitosa:', data);
           this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+          this.removeSelectedRows();
         })
         .catch((error) => {
           console.error('Error al actualizar:', error);
@@ -307,173 +452,138 @@ export class AllemployeesComponent
       // console.log('Ningún empleado seleccionado para check-in.');
     }
   }
-  
-  
 
-  
- 
-
-  // Función para calcular las horas trabajadas por un empleado según el método regular
-/* calculateRegularHours(employee: Employee, checkOutTimestamp: number): number {
-  // Aquí deberías implementar la lógica para calcular las horas trabajadas según el método regular
-  // Utiliza las propiedades relevantes de la estructura del empleado para realizar el cálculo
-
-  // Ejemplo: calcular la diferencia de tiempo en horas entre el check-in y el check-out
-  const checkInTimestamp = employee.dateCheckin._seconds;
-  const hoursWorked = (checkOutTimestamp - checkInTimestamp) / 3600;
-
-  // Realiza las verificaciones adicionales según tus requerimientos
-
-  return hoursWorked;
-} */
-
-  // Función para calcular las horas trabajadas por un empleado con pago por hora exacta
-/* calculateExactHourPayment(employee: Employee, checkOutTimestamp: number): number {
-  // Aquí deberías implementar la lógica para calcular las horas exactas trabajadas por el empleado
-  // Utiliza las propiedades relevantes de la estructura del empleado para realizar el cálculo
-
-  // Ejemplo: calcular la diferencia de tiempo en horas entre el check-in y el check-out
-  const checkInTimestamp = employee.dateCheckin._seconds;
-  const hoursWorked = (checkOutTimestamp - checkInTimestamp) / 3600;
-
-  return hoursWorked;
-} */
-
-
-  // Función para calcular las horas trabajadas por un empleado
-/* calculateHoursWorked(employee: Employee, checkOutTimestamp: number): number {
-  if (this.order.exactHourPayment) {
-    // Realizar el cálculo según el pago por hora exacta
-    return this.calculateExactHourPayment(employee, checkOutTimestamp);
-  } else {
-    // Realizar el cálculo según el método regular
-    return this.calculateRegularHours(employee, checkOutTimestamp);
+  roundDate(date: Date) {
+    let roundedDate = date;
+    roundedDate.setSeconds(0, 0);
+    let minutes = roundedDate.getMinutes();
+    let sum = 0;
+    roundedDate.setMinutes(0);
+    if (minutes >= 0 && minutes <= 7) {
+      sum = 0;
+    } else if (minutes >= 8 && minutes <= 22) {
+      sum = 15;
+    } else if (minutes >= 23 && minutes <= 37) {
+      sum = 30;
+    } else if (minutes >= 38 && minutes <= 52) {
+      sum = 45;
+    } else {
+      sum = 60;
+    }
+    roundedDate.setMinutes(sum);
+    return roundedDate;
   }
-}
- */
 
-roundDate(date: Date){
-  let roundedDate = date;
-  roundedDate.setSeconds(0, 0);
-  let minutes = roundedDate.getMinutes();
-  let sum = 0;
-  roundedDate.setMinutes(0);
-  if (minutes >= 0 && minutes <= 7) {
-    sum = 0;
-  } else if (minutes >= 8 && minutes <= 22) {
-    sum = 15;
-  } else if (minutes >= 23 && minutes <= 37) {
-    sum = 30;
-  } else if (minutes >= 38 && minutes <= 52) {
-    sum = 45;
-  } else {
-    sum = 60;
+  roundHours(hour: number) {
+    let decimal = hour - Math.floor(hour);
+    let trunc = Math.trunc(hour);
+
+    let minutes = decimal * 60;
+    minutes = Math.round(minutes);
+    if (minutes >= 0 && minutes <= 7) {
+      decimal = 0;
+    } else if (minutes >= 8 && minutes <= 22) {
+      decimal = 0.25;
+    } else if (minutes >= 23 && minutes <= 37) {
+      decimal = 0.5;
+    } else if (minutes >= 38 && minutes <= 52) {
+      decimal = 0.75;
+    } else {
+      decimal = 1.0;
+    }
+    let fixed = trunc + decimal;
+    return fixed;
   }
-  roundedDate.setMinutes(sum);
-  return roundedDate;
-}
 
-roundHours(hour: number) {
-  let decimal = (hour - Math.floor(hour));
-  let trunc = Math.trunc(hour);
-
-
-  let minutes = decimal * 60;
-  minutes = Math.round(minutes);
-  if (minutes >= 0 && minutes <= 7) {
-    decimal = 0;
-  } else if (minutes >= 8 && minutes <= 22) {
-    decimal = 0.25;
-  } else if (minutes >= 23 && minutes <= 37) {
-    decimal = 0.5;
-  } else if (minutes >= 38 && minutes <= 52) {
-    decimal = 0.75;
-  } else {
-    decimal = 1.0;
-  }
-  let fixed = trunc + decimal;
-  return fixed;
-}
-
-async checkOutModal(selectedRows: Employees[]) {
-  if (selectedRows.length > 0) {
-    console.log('Empleados seleccionados para check-out:', selectedRows);
-    const dialogRef = this.dialog.open(CheckOutComponent, {
-      data: {
-        employees: this.employees,
-        action: 'add',
-      },
-    });
-
-    const result = await dialogRef.afterClosed().toPromise();
-
-    this.showNotification(
-      'snackbar-success',
-      'Successful CheckOut...!!!',
-      'bottom',
-      'center'
-    );
-
-    const timestamp = Timestamp.fromDate(new Date(result));
-    // console.log('TimeStamp: ', timestamp);
-    const checkOutTimestamp = timestamp?.seconds || 0;
-    const  rounded = this.roundDate(result)
-    const timestampCheckoutRounded= Timestamp.fromDate(new Date(rounded));
-    const dateCheckoutRounded = timestampCheckoutRounded?.seconds || 0;
- 
-
-    // Filtrar y actualizar solo los empleados seleccionados con sus datos actualizados
-    const updatedEmployees = this.employeesArray.map((employee) => {
-      if (selectedRows.some((row) => row.employee.data.employeeId === employee.employee.data.employeeId)) {
-
-        const roundedHours = this.calculateHoursWorked(employee, checkOutTimestamp, dateCheckoutRounded);
-        // console.log("hoursWorked to send", hoursWorked)
-        return {
-          ...employee,
-          checkout: true,
-          dateCheckout: {
-            _seconds: checkOutTimestamp,
-            _nanoseconds: 0,
-          },
-          dateCheckoutRounded: {
-            _seconds: dateCheckoutRounded,
-            _nanoseconds: 0,
-          },
-          status: 'Checked Out',
-          hours: roundedHours.toFixed(2),
-          break : 0,
-        };
-      }
-      return employee;
-    });
-
-    console.log('updatedEmployees', updatedEmployees);
-
-    const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;//`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-    fetch(apiUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ employees: updatedEmployees }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // console.log('Actualización exitosa:', data);
-        this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
-      })
-      .catch((error) => {
-        console.error('Error al actualizar:', error);
+  async checkOutModal(selectedRows: Employees[]) {
+    if (selectedRows.length > 0) {
+      // console.log('Empleados seleccionados para check-out:', selectedRows);
+      const dialogRef = this.dialog.open(CheckOutComponent, {
+        data: {
+          employees: this.employees,
+          action: 'add',
+        },
       });
-  } else {
-    // console.log('Ningún empleado seleccionado para check-out.');
-  }
-}
-  
 
-calculateHoursWorked(employee: Employees, checkOutTimestamp: number, dateCheckoutRounded: number): number {
-  
-/*   
+      const result = await dialogRef.afterClosed().toPromise();
+
+      this.showNotification(
+        'snackbar-success',
+        'Successful CheckOut...!!!',
+        'bottom',
+        'center'
+      );
+
+      const timestamp = Timestamp.fromDate(new Date(result));
+      // console.log('TimeStamp: ', timestamp);
+      const checkOutTimestamp = timestamp?.seconds || 0;
+      const rounded = this.roundDate(result);
+      const timestampCheckoutRounded = Timestamp.fromDate(new Date(rounded));
+      const dateCheckoutRounded = timestampCheckoutRounded?.seconds || 0;
+      // Filtrar y actualizar solo los empleados seleccionados con sus datos actualizados
+      const updatedEmployees = this.employeesArray.map((employee) => {
+        if (
+          selectedRows.some(
+            (row) =>
+              row.employee.data.employeeId === employee.employee.data.employeeId
+          )
+        ) {
+          const roundedHours = this.calculateHoursWorked(
+            employee,
+            checkOutTimestamp,
+            dateCheckoutRounded
+          );
+          // console.log("hoursWorked to send", hoursWorked)
+          return {
+            ...employee,
+            checkout: true,
+            dateCheckout: {
+              _seconds: checkOutTimestamp,
+              _nanoseconds: 0,
+            },
+            dateCheckoutRounded: {
+              _seconds: dateCheckoutRounded,
+              _nanoseconds: 0,
+            },
+            updateUser:this.dataUser.email,
+            status: 'Checked Out',
+            hours: roundedHours.toFixed(2),
+            break: 0,
+          };
+        }
+        return employee;
+      });
+
+      console.log('updatedEmployees', updatedEmployees);
+
+      const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ employees: updatedEmployees }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log('Actualización exitosa:', data);
+          this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+          this.removeSelectedRows();
+        })
+        .catch((error) => {
+          console.error('Error al actualizar:', error);
+        });
+    } else {
+      // console.log('Ningún empleado seleccionado para check-out.');
+    }
+  }
+
+  calculateHoursWorked(
+    employee: Employees,
+    checkOutTimestamp: number,
+    dateCheckoutRounded: number
+  ): number {
+    /*   
  const lateThreshold = 8; // Umbral de llegada tarde en horas
  if (this.order.exactHourPayment) {
     let hoursNumberExact = this.calculateExactHourPayment(employee);
@@ -502,73 +612,71 @@ calculateHoursWorked(employee: Employees, checkOutTimestamp: number, dateCheckou
   } 
   */
 
-  // this.exactHourPayment
+    // this.exactHourPayment
 
-  if(this.exactHourPayment){
-    const hoursNumberExact = this.calculateExactHourPayment(employee, checkOutTimestamp); 
-    // const hours = hoursNumberExact.toFixed(2);
-    return hoursNumberExact;
-  }else{
-  const lateThreshold = 8; // Umbral de llegada tarde en horas
-  const checkInTime = employee.dateCheckinRounded._seconds;
-  const checkOutTime = dateCheckoutRounded;
- 
-  // console.log("Jr checkInTime", checkInTime)
-  // console.log("Jr checkOutTime", checkOutTime)
-  const secondsWorked = checkOutTime - checkInTime;
-  const hoursWorked = secondsWorked / 3600; //3600000
-  // console.log("oursWorked", hoursWorked)
-  let hoursNumber = this.roundHours(hoursWorked);
-  const roundedHours = this.roundHours(hoursWorked);
-  
-  if (hoursNumber < 5) {
-    // console.log("employe", employee.dateCheckin)
-    // console.log("employee.dateCheckin", employee.dateCheckin);
-    // console.log("employee.dateCheckin", employee.dateCheckin)
-    // console.log("employee.dateCheckin.toDate()", employee.dateCheckin.toDate())
-    
-    const dateCheckin = new Date(employee.dateCheckin._seconds * 1000);
-    // console.log("employee.hourFrom", employee.hourFrom)
-    // console.log("employe", dateCheckin);
+    if (this.exactHourPayment) {
+      const hoursNumberExact = this.calculateExactHourPayment(
+        employee,
+        checkOutTimestamp
+      );
+      // const hours = hoursNumberExact.toFixed(2);
+      return hoursNumberExact;
+    } else {
+      const lateThreshold = 8; // Umbral de llegada tarde en horas
+      const checkInTime = employee.dateCheckinRounded._seconds;
+      const checkOutTime = dateCheckoutRounded;
 
-    let late = this.validateCheckout1(
-      employee.hourFrom,
-      dateCheckin
-    );
-    if (late < 8) {
-      hoursNumber = 5;
-   }else
-   {
-     if (late > lateThreshold) {
-       // hoursNumber = lateThreshold;
-       hoursNumber = this.calculateRegularHours(employee, dateCheckoutRounded);       
-     }
-   } 
+      // console.log("Jr checkInTime", checkInTime)
+      // console.log("Jr checkOutTime", checkOutTime)
+      const secondsWorked = checkOutTime - checkInTime;
+      const hoursWorked = secondsWorked / 3600; //3600000
+      // console.log("oursWorked", hoursWorked)
+      let hoursNumber = this.roundHours(hoursWorked);
+      const roundedHours = this.roundHours(hoursWorked);
 
-  }
-  return hoursNumber;
+      if (hoursNumber < 5) {
+        // console.log("employe", employee.dateCheckin)
+        // console.log("employee.dateCheckin", employee.dateCheckin);
+        // console.log("employee.dateCheckin", employee.dateCheckin)
+        // console.log("employee.dateCheckin.toDate()", employee.dateCheckin.toDate())
 
-  }
-}
+        const dateCheckin = new Date(employee.dateCheckin._seconds * 1000);
+        // console.log("employee.hourFrom", employee.hourFrom)
+        // console.log("employe", dateCheckin);
 
-
-validateCheckout1(hourFrom, checkinDate) {
-  const [hour, minute] = hourFrom.split(":");
-  const hourLimit = new Date(checkinDate);
-  hourLimit.setHours(hour, minute, 0, 0);
-
-  if (checkinDate.getTime() > hourLimit.getTime()) {
-    const diff = Math.abs(checkinDate.getTime() - hourLimit.getTime());
-    const minutes = Math.floor(diff / 60000);
-    return minutes;
+        let late = this.validateCheckout1(employee.hourFrom, dateCheckin);
+        if (late < 8) {
+          hoursNumber = 5;
+        } else {
+          if (late > lateThreshold) {
+            // hoursNumber = lateThreshold;
+            hoursNumber = this.calculateRegularHours(
+              employee,
+              dateCheckoutRounded
+            );
+          }
+        }
+      }
+      return hoursNumber;
+    }
   }
 
-  return 0;
-}
+  validateCheckout1(hourFrom, checkinDate) {
+    const [hour, minute] = hourFrom.split(':');
+    const hourLimit = new Date(checkinDate);
+    hourLimit.setHours(hour, minute, 0, 0);
 
+    if (checkinDate.getTime() > hourLimit.getTime()) {
+      const diff = Math.abs(checkinDate.getTime() - hourLimit.getTime());
+      const minutes = Math.floor(diff / 60000);
+      return minutes;
+    }
 
-calculateRegularHours(employee: Employees, dateCheckoutRounded: number) {
-  /* console.log("Cálculo de horas trabajadas sin tener en cuenta la llegada tardía")
+    return 0;
+  }
+
+  calculateRegularHours(employee: Employees, dateCheckoutRounded: number) {
+    /* console.log("Cálculo de horas trabajadas sin tener en cuenta la llegada tardía")
 
   // Conversión manual del timestamp a objeto Date
   const checkinTime = new Date(employee.dateCheckin._seconds * 1000);
@@ -581,51 +689,43 @@ calculateRegularHours(employee: Employees, dateCheckoutRounded: number) {
   // const hours = (checkoutTime.getTime() - checkinTime.getTime()) / 3600000;
   // return Number(hours.toFixed(2));
   return 108 */
-  //Cálculo de horas trabajadas sin tener en cuenta la llegada tardía;
-  // Conversión manual del timestamp a objeto Date
-  const checkinTime = new Date(employee.dateCheckinRounded._seconds * 1000);
-  // console.log("checkinTime", checkinTime);
-  // console.log("checkOutTimestamp", dateCheckoutRounded);
-  const checkOutTime = new Date(dateCheckoutRounded * 1000);
-  // console.log("checkOutTime", checkOutTime);
+    //Cálculo de horas trabajadas sin tener en cuenta la llegada tardía;
+    // Conversión manual del timestamp a objeto Date
+    const checkinTime = new Date(employee.dateCheckinRounded._seconds * 1000);
+    // console.log("checkinTime", checkinTime);
+    // console.log("checkOutTimestamp", dateCheckoutRounded);
+    const checkOutTime = new Date(dateCheckoutRounded * 1000);
+    // console.log("checkOutTime", checkOutTime);
 
-  const hours = (checkOutTime.getTime() - checkinTime.getTime()) / 3600000;
-  return Number(hours.toFixed(2));
-}
+    const hours = (checkOutTime.getTime() - checkinTime.getTime()) / 3600000;
+    return Number(hours.toFixed(2));
+  }
 
+  calculateExactHourPayment(employee: Employees, checkOutTimestamp: number) {
+    const checkInTime = employee.dateCheckin._seconds;
+    const checkOutTime = checkOutTimestamp;
 
-
-calculateExactHourPayment(employee: Employees, checkOutTimestamp: number){
-
- 
-  const checkInTime = employee.dateCheckin._seconds;
-  const checkOutTime = checkOutTimestamp;
-  
-  const secondsWorked = checkOutTime - checkInTime;
-  const hoursWorked = secondsWorked / 3600;
-  /* console.log("in", checkInTime)
+    const secondsWorked = checkOutTime - checkInTime;
+    const hoursWorked = secondsWorked / 3600;
+    /* console.log("in", checkInTime)
   console.log("out", checkOutTime)
   console.log("timeDiff",secondsWorked)
   console.log("ours", hoursWorked) */
-  return Number(hoursWorked.toFixed(2))
+    return Number(hoursWorked.toFixed(2));
 
-  // const timeDiff = employee.dateCheckout.getTime() - employee.dateCheckin.toDate().getTime();
-  // const hours = timeDiff / (1000 * 60 * 60); // Convertir milisegundos a horas
-  
-  // return Number(hours.toFixed(2));
+    // const timeDiff = employee.dateCheckout.getTime() - employee.dateCheckin.toDate().getTime();
+    // const hours = timeDiff / (1000 * 60 * 60); // Convertir milisegundos a horas
+
+    // return Number(hours.toFixed(2));
 
     // const minutes = Math.round((timeDiff / (1000 * 60)) % 60); // Obtener los minutos redondeados
     // const hour = Math.floor(timeDiff / (1000 * 60 * 60)); // Obtener las horas enteras
     // console.log("horas trabajadas", hour)
     // console.log("minutos trabajados", minutes)
-    
+
     //horas exactas;
     // console.log("hours", hours)
-    
   }
-
-
- 
 
   async breakModal(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {
@@ -636,41 +736,41 @@ calculateExactHourPayment(employee: Employees, checkOutTimestamp: number){
           action: 'add',
         },
       });
-  
+
       const result = await dialogRef.afterClosed().toPromise();
       console.log('Result break: ', result);
-  
+
       this.showNotification(
         'snackbar-success',
         'Successful break...!!!',
         'bottom',
         'center'
       );
-  
-        // Redondear los minutos del tiempo de descanso
-        const roundedBreak = this.roundHours(result.break / 60);
-
+      const roundedBreak = this.roundHours(result.break / 60);
       // Convertir el tiempo de descanso de minutos a horas
       // const breakInHours = result.break / 60;
-  
-      // Filtrar y actualizar solo los empleados seleccionados con sus datos actualizados
       const updatedEmployees = this.employeesArray.map((employee) => {
-        if (selectedRows.some((row) => row.employee.data.employeeId === employee.employee.data.employeeId)) {
+        if (
+          selectedRows.some(
+            (row) =>
+              row.employee.data.employeeId === employee.employee.data.employeeId
+          )
+        ) {
           // Restar el tiempo de descanso del total de horas trabajadas
           // const updatedHours = employee.hours - breakInHours;
           const updatedHours = employee.hours - roundedBreak;
-  
           return {
             ...employee,
+            updateUser:this.dataUser.email,
             break: result.break,
             hours: updatedHours.toFixed(2),
           };
         }
         return employee;
       });
-  
+
       console.log('updatedEmployees', updatedEmployees);
-  
+
       const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
@@ -683,6 +783,7 @@ calculateExactHourPayment(employee: Employees, checkOutTimestamp: number){
         .then((data) => {
           // console.log('Actualización exitosa:', data);
           this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+          this.removeSelectedRows();
         })
         .catch((error) => {
           console.error('Error al actualizar:', error);
@@ -691,9 +792,414 @@ calculateExactHourPayment(employee: Employees, checkOutTimestamp: number){
       // console.log('Ningún empleado seleccionado para break.');
     }
   }
+
+  async loadTimesheet() {
+    this.outEmployees = [];
+    this.pdfEmployees = [];
+    let total = 0;
+     if (this.employeesArray) {
+     await this.employeesArray.forEach((emp) => {
+        this.outEmployees.push(emp);
+        if (emp.checkout) {
+          total += Number(emp.hours);
+          this.pdfEmployees.push(emp);
+        }
+      });
+     }
+    /* this.employeesArray.forEach((emp) => {
+      this.outEmployees.push(emp);
+    }); */
+    // this.timeSheet.employees = this.outEmployees;
+    this.timeSheet.total = total.toFixed(2);
+
+    //
+    //
+  }
+
+  getEmployeesObject(employees) {
+    return {
+      columns: [
+        { width: '*', text: ''},
+        {
+          width: 'auto', 
+          alignment: 'left', // Alineación central dentro de la columna
+          table: {
+            widths: [
+              "auto",
+              "auto",
+              "auto",
+              "auto",
+              "auto",
+              "auto",
+              "auto",
+              "auto",
+            ],
+            body: [
+              [
+                {
+                  text: "No",
+                  style: "tableHeader",
+                },
+                {
+                  text: "LAST NAME",
+                  style: "tableHeader",
+                },
+                {
+                  text: "FIRST NAME",
+                  style: "tableHeader",
+                },
+                {
+                  text: "HK ID",
+                  style: "tableHeader",
+                },
+                {
+                  text: "IN",
+                  style: "tableHeader",
+                },
+                {
+                  text: "BREAK",
+                  style: "tableHeader",
+                },
+                {
+                  text: "OUT",
+                  style: "tableHeader",
+                },
+                {
+                  text: "TOTAL",
+                  style: "tableHeader",
+                },
+                
+              ],
+              // this.groupEmployees
+              ...this.groupEmployees.map((emp) => {
+                return emp;
+              }),
+            ],
+            
+          },
+        },
+        
+        // {alignment: 'left',
+        //  margin: [0, 0, 0, 0],
+        // },
+        {  alignment: 'left',  margin: [30, 10, 0, 10],   text: ''},
+         
+      ]
+    };
+  }
   
+  async getDocumentDefinition() {
+
+    async function getImageAsBase64(url) {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    let generated = this.datePipe.transform (Date.now(), "MMMM d, y");
+    const logoBase64 = await getImageAsBase64('https://firebasestorage.googleapis.com/v0/b/highkeystaff.appspot.com/o/Emails%2Flogolm-min.png?alt=media&token=7f1badc5-9f07-476c-82b0-7a16a3254ff0');
+    await this.loadTimesheet();  
+    return {
+      content: [
+        {
+          image: logoBase64,
+          width: 100,
+          height: 70,
+          absolutePosition: { x: 30, y: 10 },
+        },
+        {
+          text: "(410) 922-6140\noperations@stafflm.com", // Combinamos teléfono y correo en un solo bloque de texto
+          style: "header",
+          fontSize: 9.5,
+          alignment: "left",
+          absolutePosition: { x: 35, y: 70 },
+        },
+        {
+          text: `Order: ${this.dataEmployees.data.orderId}`,
+          // text :"Order 1234", 
+          style: "header",
+          alignment: "right"
+        },
+        {
+          text: `Timesheet`,
+          bold: true,
+          fontSize: 30,
+          alignment: "center",
+          margin: [0, 0, 0, 5],
+        },
+        {
+          text: `Customer:${this.dataEmployees.data.company}`,
+          // text: `Customer: algo`,
+          bold: true,
+          fontSize: 20,
+          alignment: "center",
+          margin: [0, 0, 0, 5],
+        },
+        {
+          text: `${this.dataEmployees.data.place}`,
+          // text: `place`,
+          bold: true,
+          fontSize: 15,
+          alignment: "center",
+          margin: [0, 0, 0, 5],
+        },
+        {
+          text: `${this.dataEmployees.data.address} ${this.dataEmployees.data.city} ${this.dataEmployees.data.state} ${this.dataEmployees.data.zipcode}`,
+          // text: `address city state zipcode}`,
+          bold: true,
+          fontSize: 13,
+          alignment: "center",
+          margin: [0, 0, 0, 5],
+        },
+        {
+          text: `Date: ${this.dataEmployees.data.startDate}`,
+          // text: `Date: startDate`,
+          bold: true,
+          alignment: "center",
+          margin: [0, 0, 0, 20],
+        },
+
+        this.getEmployeesObject(this.employeesArray), 
+        {
+          // text: this.timeSheet.total !== 0 ? `Total hours: ${this.timeSheet.total}` : '',
+          text: this.timeSheet.total > 0 ? `Total hours: ${this.timeSheet.total}` : '',
+          margin: [380, 10, 0, 0], 
+        },
+        {
+          text: "NOTE:",
+            alignment: 'left',
+          margin: [30, 30, 0, 0],   
+        },
+        {
+          canvas: [
+            {
+              type: "rect",
+              x: 10,
+              y: 10,
+              w: 400,
+              h: 80,
+            },
+          ],
+            alignment: 'left',
+          margin: [30, 10, 0, 10],  
+        },
+        {
+          text: "The time as shown on the Time-Sheet are correct and the work has been performed to our satisfaction. Employee certifies that this form is true and accurate and that no injuries were sustained during this assigment and will not solicit permanent, part time, independent contract with any of our clients.",
+          fontSize: 10,    
+           alignment: 'left',
+          margin: [30, 10, 0, 10],    
+        },           
+       
+        {
+          text: `________________________\n Authorized Representative of Costumer\n ${this.dataEmployees.data.company}`,
+          alignment: 'left',
+          margin: [30, 10, 0, 10],   
+        },
+        {
+          text: '________________\n Invoice',
+          alignment: "right",
+          margin: [0, 20, 0, 0],
+        },
+      ],
+      footer: function (currentPage, pageCount) {
+        return {
+          margin: 10,
+          columns: [
+            {
+              fontSize: 10,
+              text: [
+                {
+                  text:
+                    "--------------------------------------------------------------------------" +
+                    "\n"+ 
+                    "L&M Internacional"+
+                    "\n",
+                  margin: [0, 20],
+                },
+                {
+                  text: `Your Staffing Solution: T:(410)922-6140, F:(410)922-6150, www.stafflm.com, Generated: ${generated}`
+                },
+                // {
+                //   text: "© L&M " + currentPage.toString() + " of " + pageCount,
+                // },
+              ],
+              alignment: "center",
+            },
+          ],
+        };
+      },
+      info: {
+        title: `Timesheet ${this.dataEmployees.data.company}_${this.dataEmployees.data.orderId}_${this.dataEmployees.data.startDate}`,
+      },
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 20, 0, 10],
+          decoration: "underline",
+        },
+        name: {
+          fontSize: 16,
+          bold: true,
+        },
+        tableHeader: {
+          bold: true,
+        },
+        signature: {
+          margin: [20, 0, 0, 20],
+        },
+      },
+    };
+  }
+
   
 
+  generatePdf() {
+    this.groupEmployees = [];
+    const positions = [];
+    function convertTimestampToTime(timestamp: any): string {
+    // Verifica si el timestamp es válido y no está vacío
+      if (timestamp && timestamp._seconds && timestamp._nanoseconds !== undefined) {
+        // Crea un objeto Date a partir del timestamp (suponiendo que el valor es en segundos)
+        const date = new Date(timestamp._seconds * 1000);
+        // Obtiene la hora, los minutos y el período (AM o PM)
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const period = hours >= 12 ? "PM" : "AM";
+        // Ajusta las horas en formato 12 horas y agrega ceros iniciales si es necesario
+        const formattedHours = (hours % 12 === 0 ? 12 : hours % 12).toString().padStart(2, "0");
+        // Ajusta los minutos y agrega ceros iniciales si es necesario
+        const formattedMinutes = minutes.toString().padStart(2, "0");
+        // Retorna la hora formateada con el período (AM o PM)
+        return `${formattedHours}:${formattedMinutes} ${period}`;
+      }
+   // Si el timestamp no es válido, retorna una cadena vacía
+    return "";
+  }
+
+    this.employeesArray.forEach((employee) => {
+      const findedPosition = positions.find(
+        (group) =>
+          group.name == employee.position && group.hour == employee.hourFrom
+      );
+      if (!findedPosition) {
+        let totalHours = 0;
+        const positionsArray = this.employeesArray.filter(
+          (emps) =>
+            emps.position == employee.position &&
+            emps.hourFrom == employee.hourFrom
+        );
+        // console.log("positios", positionsArray)
+        positionsArray.forEach((position) => {
+          totalHours += Number(position.hours);
+        });
+        positions.push({
+          name: employee.position,
+          hour: employee.hourFrom,
+          total: totalHours,
+        });
+      }
+    });
+    positions.forEach((position) => {
+      this.groupEmployees.push([
+        {
+          colSpan: 8,
+          text: `${position.name} - ${position.hour} / Hours by position: ${position.total}`,
+          style: "tableHeader",
+        },
+        "-",
+        "-",
+        "-",
+        "-",
+        "-",
+        "-",
+        "-",
+      ]);
+      const employees = this.employeesArray.filter(
+        (employee) =>
+          employee.position == position.name &&
+          employee.hourFrom == position.hour
+      );
+        // console.log("empl", employees)
+        
+      const emps = employees.map((emp, index) => {
+
+        // console.log("emop", emp)
+        let dateFrom, dateTo;
+        if (emp.status == "No show") {
+          dateFrom = "No show";
+          emp.hours = 0;
+          emp.break = "No show";
+          dateTo = "No show";
+        } else {  
+          
+          if (emp.checkin) {
+            const formattedTime = convertTimestampToTime(emp.dateCheckin);
+            // console.log("formattedFrom",formattedTime);
+            dateFrom =formattedTime; 
+            /* this.datePipe.transform(
+              emp.dateCheckin.toDate(),
+              "h:mm a"
+            ); */
+          } else {
+            dateFrom = "-";
+            emp.hours = "-";
+            emp.break = "No checkout";
+          }
+          if (emp.checkout) {
+
+            const formattedTime = convertTimestampToTime(emp.dateCheckout);
+            // console.log("formattedTo",formattedTime);
+
+            dateTo = formattedTime;
+            /* this.datePipe.transform(
+              emp.dateCheckout.toDate(),
+              "h:mm a"
+            ); */
+          } else {
+            dateTo = "-";
+            emp.hours = "-";
+            emp.break = "No checkout";
+          }
+        }
+
+        return [
+          index + 1,
+          // emp.employee.data.lastname,
+          emp.employee.data.lastname[0].toUpperCase() + emp.employee.data.lastname.substring(1).toLowerCase(),
+          // emp.employee.data.firstname,
+          emp.employee.data.firstname[0].toUpperCase() + emp.employee.data.firstname.substring(1).toLowerCase(),
+          emp.employee.data.employeeId ? emp.employee.data.employeeId : "0",
+          dateFrom,
+          //dateFrom,
+          emp.break,
+          //dateTo,
+          dateTo,
+          emp.hours,
+          //emp.position,
+          // profile.username
+        ];
+      });
+      
+      emps.forEach((employee) => {
+        this.groupEmployees.push(employee);
+      });
+    });
+   
+
+    const documentDefinition = this.getDocumentDefinition();
+    
+    documentDefinition.then((result) => {
+      pdfMake.createPdf(result).open();
+    });
+    //
+  }
+  
   addNew() {
     let tempDirection: Direction;
     if (localStorage.getItem('isRtl') === 'true') {
@@ -763,7 +1269,7 @@ calculateExactHourPayment(employee: Employees, checkOutTimestamp: number){
     });
   }
   deleteItem(i: number, row: Employees) {
-   /*  this.index = i;
+    /*  this.index = i;
     this.id = row.id;
     let tempDirection: Direction;
     if (localStorage.getItem('isRtl') === 'true') {
@@ -815,6 +1321,7 @@ calculateExactHourPayment(employee: Employees, checkOutTimestamp: number){
           this.selection.select(row)
         );
   }
+
   removeSelectedRows() {
     const totalSelect = this.selection.selected.length;
     this.selection.selected.forEach((item) => {
@@ -827,14 +1334,14 @@ calculateExactHourPayment(employee: Employees, checkOutTimestamp: number){
       this.refreshTable();
       this.selection = new SelectionModel<Employees>(true, []);
     });
-    this.showNotification(
+    /*  this.showNotification(
       'snackbar-danger',
       totalSelect + ' Record Delete Successfully...!!!',
       'bottom',
       'center'
-    );
+    ); */
   }
-  
+
   public loadData() {
     this.exampleDatabase = new EmployeesService(this.httpClient);
     //this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
@@ -842,16 +1349,14 @@ calculateExactHourPayment(employee: Employees, checkOutTimestamp: number){
       () => {
         if (!this.dataSource) {
           return;
-        }    
+        }
         this.dataSource.filter = this.filter.nativeElement.value;
       }
     );
   }
 
-
   // export table data in excel file
   exportExcel() {
-    
     /* // key name with space add in brackets
     const exportData: Partial<TableElement>[] =
       this.dataSource.filteredData.map((x) => ({
@@ -873,7 +1378,6 @@ calculateExactHourPayment(employee: Employees, checkOutTimestamp: number){
 
     TableExportUtil.exportToExcel(exportData, 'excel');
    */
-  
   }
   showNotification(
     colorName: string,
@@ -912,13 +1416,11 @@ export class ExampleDataSource extends DataSource<Employees> {
   filteredData: Employees[] = [];
   renderedData: Employees[] = [];
   constructor(
-    
     public exampleDatabase: EmployeesService,
     public paginator: MatPaginator,
     public _sort: MatSort,
 
     public employeesArray: any[]
-
   ) {
     super();
     // Reset to the first page when the user changes the filter.
@@ -933,7 +1435,7 @@ export class ExampleDataSource extends DataSource<Employees> {
       this.filterChange,
       this.paginator.page,
     ];
-   
+
     this.exampleDatabase.getAllEmployeess();
     return merge(...displayDataChanges).pipe(
       map(() => {
@@ -951,27 +1453,30 @@ export class ExampleDataSource extends DataSource<Employees> {
               employees.in +
               employees.out +
               employees.break +
-              employees.totalHours 
+              employees.totalHours
+            )
               //employees.department +
               //employees.role +
               //employees.degree +
               //employees.email +
               //employees.mobile
-            ).toLowerCase();
+              .toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
         // Sort filtered data
         const sortedData = this.sortData(this.filteredData.slice());
         // Grab the page's slice of the filtered sorted data.
-        
+
         const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
-        this.renderedData = sortedData.splice(startIndex, this.paginator.pageSize);
+        this.renderedData = sortedData.splice(
+          startIndex,
+          this.paginator.pageSize
+        );
         // console.log("startIndex", startIndex)
         // console.log("this.paginator.pageSize", this.paginator.pageSize)
         // console.log("antesdel renderr", this.employeesArray)
         // this.renderedData = this.employeesArray.slice(startIndex, this.paginator.pageSize);
         // console.log("this.renderedData", this.renderedData)
-
 
         return this.renderedData;
       })
@@ -984,11 +1489,6 @@ export class ExampleDataSource extends DataSource<Employees> {
   sortData(data: Employees[]): Employees[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
-
-
-
-
-
     }
     return data.sort((a, b) => {
       let propertyA: number | string = '';
@@ -1005,23 +1505,22 @@ export class ExampleDataSource extends DataSource<Employees> {
           break;
         case 'position':
           [propertyA, propertyB] = [a.position, b.position]; //Diego
-          break;  
+          break;
         case 'totalHours':
           [propertyA, propertyB] = [a.totalHours, b.totalHours]; //Diego
-          break;  
+          break;
         case 'payRollID':
           [propertyA, propertyB] = [a.payRollId, b.payRollId]; //Diego
           break;
-          case 'hourFrom':
-            [propertyA, propertyB] = [a.hourFrom, b.hourFrom]; //Diego
-            break;  
+        case 'hourFrom':
+          [propertyA, propertyB] = [a.hourFrom, b.hourFrom]; //Diego
+          break;
         case 'in':
           [propertyA, propertyB] = [a.in, b.in]; //Diego
-          break;  
+          break;
         case 'out':
           [propertyA, propertyB] = [a.out, b.out]; //Diego
-          break;  
-        
+          break;
       }
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
       const valueB = isNaN(+propertyB) ? propertyB : +propertyB;

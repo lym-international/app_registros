@@ -20,7 +20,10 @@
                         <mat-card class="tarjeta-pequena">
                             <mat-card-content>
                                 <mat-card-title>Client</mat-card-title>
-                                {{dataEmployees.data.clientName}}
+                                <!-- {{dataEmployees.data.clientName}} -->
+                                {{dataEmployees.data.clientName ? dataEmployees.data.clientName : dataEmployees.data.company}}
+
+                                <!-- company -->
                             </mat-card-content>
                         </mat-card>
                     </div>
@@ -71,7 +74,7 @@
 
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="NOSHOW">
-                                        <button mat-mini-fab color="warn"> <!--Ingresar función (click)=""-->
+                                        <button mat-mini-fab color="warn" (click)="outEmployee(getSelectedRows())"> <!--Ingresar función (click)=""-->
                                             <mat-icon class="col-white">visibility_off</mat-icon>
                                         </button>
                                     </div>
@@ -79,7 +82,7 @@
 
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="DELETE: IN, OUT, BREAK">
-                                        <button mat-mini-fab color="warn"><!--Ingresar función (click)=""-->
+                                        <button mat-mini-fab color="warn" (click)="deleteInTime(getSelectedRows())"><!--Ingresar función (click)=""-->
                                         <mat-icon class="col-white">refresh</mat-icon>
                                       </button>
                                     </div>
@@ -95,7 +98,8 @@
 
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" matTooltip="DOWNLOAD">
-                                        <button mat-mini-fab color="primary" (click)="exportExcel()">
+                                        <button mat-mini-fab color="primary" (click)="generatePdf()">
+                                            <!-- (click)="exportExcel()" -->
                                         <mat-icon class="col-white">download</mat-icon>
                                       </button>
                                     </div>
