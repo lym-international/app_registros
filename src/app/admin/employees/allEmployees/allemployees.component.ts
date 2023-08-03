@@ -308,7 +308,7 @@ export class AllemployeesComponent
       // console.log('Ningún empleado seleccionado para check-in.');
     }
   }
-
+//Noshow
   outEmployee(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {
       // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
@@ -422,13 +422,6 @@ export class AllemployeesComponent
 
       const result = await dialogRef.afterClosed().toPromise();
 
-      this.showNotification(
-        'snackbar-success',
-        'Successful CheckIn...!!!',
-        'bottom',
-        'center'
-      );
-
       const timestamp = Timestamp.fromDate(new Date(result));
       //console.log('TimeStamp: ', timestamp);
       const checkInTimestamp = timestamp?.seconds || 0;
@@ -487,6 +480,12 @@ export class AllemployeesComponent
       })
         .then((response) => response.json())
         .then((data) => {
+          this.showNotification(
+            'snackbar-success',
+            'Successful CheckIn...!!!',
+            'bottom',
+            'center'
+          );
           //console.log('Actualización exitosa:', data);
           this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
           this.removeSelectedRows() //Actualiza la tabla para que no duplique el dato en el anterior empleado.
