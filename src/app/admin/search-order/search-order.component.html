@@ -1,45 +1,49 @@
-<div class="container" style="margin-left: 90px;">
-    <div class="block-header" style="margin-top: 70px;">
-        <!-- breadcrumb -->
-        <app-breadcrumb [title]="'Search Order'" [active_item]="'Search order'">
-        </app-breadcrumb>
-    </div>
+<section class="content">
+    <div class="container marginContainer" style="margin-left: 10px;">
+        <div class="block-header" style="margin-top: 70px;">
+            <!-- breadcrumb -->
+            <app-breadcrumb [title]="'Search Order'" [active_item]="'Search order'">
+            </app-breadcrumb>
+        </div>
 
-    <div class="row" style="margin-top: 130px;">
-        <div class="col col-sm-7">
-            <div>
-                <label class="form-label">List of orders</label>
-            </div>
-            <mat-form-field style="display: inline;">
-                <mat-label>Select</mat-label>
-                <mat-select [(value)]="selectedOrder" (selectionChange)="onOrderSelection($event.value)">
-                    <mat-option (click)="orderOption(order)" *ngFor="let order of orders" [value]="order">{{ order.data.orderId}} / {{ order.data.clientName ? order.data.clientName : order.data.company }} / {{order.data.startDate}} / {{order.data.place}}</mat-option>
-                </mat-select>
-            </mat-form-field>
-
-            <!-- <button (click)="navegar()">cualquier cosa</button> -->
-
-            <!-- Inicio filtro órdenes -->
-            <div class="row">
+        <div class="row" style="margin-top: 130px;">
+            <div class="col-sm-12 col-md-7 col-lg-7">
                 <div>
-                    <label class="form-label">Order number</label>
+                    <label class="form-label">List of orders</label>
                 </div>
-                <mat-form-field style="display: inline-flex; width: 30%;">
-                    <mat-label>Input</mat-label>
-                    <input matInput [(ngModel)]="orderNumber" (ngModelChange)="searchOrder()">
-                    <!--(keyup.enter)="searchOrder()"-->
-                    <!--(ngModelChange)="searchOrder()"-->
+                <mat-form-field style="display: inline;">
+                    <mat-label>Select</mat-label>
+                    <mat-select [(value)]="selectedOrder" (selectionChange)="onOrderSelection($event.value)">
+                        <mat-option (click)="orderOption(order)" *ngFor="let order of orders" [value]="order">{{ order.data.orderId}} / {{ order.data.clientName ? order.data.clientName : order.data.company }} / {{order.data.startDate}} / {{order.data.place}}</mat-option>
+                    </mat-select>
                 </mat-form-field>
-            </div>
-            <!--Final filtro órdenes-->
 
-            <div>
-                <button mat-raised-button color="primary" (click)="navegar()" [disabled]="!(selectedOrder || foundOrder)">Search</button>
+                <!-- <button (click)="navegar()">cualquier cosa</button> -->
+
+                <!-- Inicio filtro órdenes -->
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <label class="form-label">Order number</label>
+                    </div>
+                    <div>
+                        <mat-form-field style="display: inline-flex; width: 30%;" class="col-sm-12 col-md-6 col-lg-6">
+                            <mat-label>Input</mat-label>
+                            <input matInput [(ngModel)]="orderNumber" (ngModelChange)="searchOrder()">
+                            <!--(keyup.enter)="searchOrder()"-->
+                            <!--(ngModelChange)="searchOrder()"-->
+                        </mat-form-field>
+                    </div>
+                </div>
+                <!--Final filtro órdenes-->
+
+                <div>
+                    <button mat-raised-button color="primary" (click)="navegar()" [disabled]="!(selectedOrder || foundOrder)">Search</button>
+                </div>
             </div>
+            <div class="ocultarImg col-md-5 col-lg-5" style="text-align: center;">
+                <img src="assets/images/search-order.png" style="height: 300px;" alt="">
+            </div>
+            <p style="color:#414244;">You will only be able to view the open orders in which you are a supervisor.</p>
         </div>
-        <div class="col col-sm-5" style="text-align: center;">
-            <img src="assets/images/search-order.png" style="height: 300px;" alt="">
-        </div>
-        <p style="color:#414244;">You will only be able to view the open orders in which you are a supervisor.</p>
     </div>
-</div>
+</section>

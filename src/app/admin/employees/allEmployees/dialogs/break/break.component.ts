@@ -98,7 +98,7 @@ export class BreakComponent implements OnInit{
       if (isNaN(value) || value === null || value === '') {
         return { 'invalidNumber': true };
       } 
-      if (value < 20 || value > 45) {
+      if (value < 20 || value > 120) {
         return { 'outOfRange': true };
       }
       return null;

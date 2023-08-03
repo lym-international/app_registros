@@ -35,7 +35,7 @@
                     <div class="sub-sub-column">
                         <mat-card class="tarjeta-pequena">
                             <mat-card-content>
-                                <mat-card-title>Event date</mat-card-title>
+                                <mat-card-title>Expected CheckIn</mat-card-title>
                                 {{dataOrder.data.startDate}}
                             </mat-card-content>
                         </mat-card>
@@ -44,7 +44,7 @@
             </div>
         </div>
 
-        <hr style="color: #004676; width: 50%; margin: 70px auto 70px auto; " />
+        <!-- <hr style="color: #004676; width: 50%; margin: 70px auto 70px auto; " />
 
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" style="text-align: center;">
             <mat-card class="" style="background-color: #1A202E; color: white; font-size: large; border-radius: 8px;">
@@ -53,8 +53,8 @@
                 </mat-card-content>
             </mat-card>
         </div>
-        <br/>
-        <div class="row ">
+        <br/> -->
+        <!--<div class="row ">
             <div class="col-xl-3 col-lg-6 tarjeta-indicadores">
                 <div class="card l-bg-green-dark">
                     <div class="card-statistic-3" style="padding-bottom: 70px">
@@ -63,12 +63,12 @@
                             <h4 class="card-title">Requested</h4>
                             <span class="data-1" style="padding-bottom: 50px;">{{totalRequest}}</span>
 
-                            <!--<mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow orange-progress mt-2 mb-2" value="40">
-                            </mat-progress-bar> -->
-                            <!--<p class="mb-0 text-sm">
+                            <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow orange-progress mt-2 mb-2" value="40">
+                            </mat-progress-bar>
+                            <p class="mb-0 text-sm">
                                 <span class="mr-2"><i class="fa fa-arrow-up"></i> 10%</span>
                                 <span class="text-nowrap"> Since last month</span>
-                            </p> -->
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -82,10 +82,10 @@
                             <span class="data-1">{{totalConfirmed}}</span>
                             <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow orange-progress mt-2 mb-2" value={{porcentajeConfirmed}}>
                             </mat-progress-bar>
-                            <!-- <p class="mb-0 text-sm">
+                             <p class="mb-0 text-sm">
                                 <span class="mr-2"><i class="fa fa-arrow-up"></i> 04%</span>
                                 <span class="text-nowrap"> Since last month</span>
-                            </p> -->
+                            </p> 
                         </div>
                     </div>
                 </div>
@@ -99,10 +99,10 @@
                             <span class="data-1">{{checkIn}}</span>
                             <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow green-progress mt-2 mb-2" value={{porcentajeCheckIn}}>
                             </mat-progress-bar>
-                            <!--<p class="mb-0 text-sm">
+                            <p class="mb-0 text-sm">
                                 <span class="mr-2"><i class="fa fa-arrow-up"></i> 23%</span>
                                 <span class="text-nowrap"> Since last month</span>
-                            </p>-->
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -116,10 +116,10 @@
                             <span class="data-1">{{checkOut}}</span>
                             <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow sky-progress mt-2 mb-2" value={{porcentajeCheckOut}}>
                             </mat-progress-bar>
-                            <!--<p class="mb-0 text-sm">
+                            <p class="mb-0 text-sm">
                                 <span class="mr-2"><i class="fa fa-arrow-down"></i> 06%</span>
                                 <span class="text-nowrap"> Since last month</span>
-                            </p>-->
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -133,15 +133,15 @@
                             <span class="data-1">{{noShow}}</span>
                             <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow violet-progress mt-2 mb-2" value={{porcentajeNoshow}}>
                             </mat-progress-bar>
-                            <!--<p class="mb-0 text-sm">
+                            <p class="mb-0 text-sm">
                                 <span class="mr-2"><i class="fa fa-arrow-down"></i> 06%</span>
                                 <span class="text-nowrap"> Since last month</span>
-                            </p>-->
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- <div class="row clearfix">
             
             <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12">
@@ -201,7 +201,7 @@
 
         <hr style="color: #004676; width: 50%; margin: 50px auto 70px auto; " />
 
-        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" style="padding-right: 0px; text-align: center;">
+        <!--<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" style="padding-right: 0px; text-align: center;">
             <mat-card class="" style="background-color: #1A202E; color: white; font-size: large; border-radius: 8px;">
                 <mat-card-content>
                     <mat-card-title>P O S I T I O N S</mat-card-title>
@@ -219,20 +219,20 @@
         <br/>
         <div class="row clearfix" style="margin-right: 0px; margin-left: 0px">
 
-            <!--<div class="col-xl-3 col-lg-6">
-                <div class="card l-bg-orange-dark" >
+            <div class="col-xl-3 col-lg-6">
+                <div class="card l-bg-orange-dark">
                     <div class="card-statistic-3">
                         <div class="card-icon card-icon-large"></div>
                         <div class="card-content">
                             <h4 class="card-title">Required positions</h4>
                             <span class="data-1">3</span>
-                            
+
                         </div>
                     </div>
                 </div>
-            </div> -->
-            <!--<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                 <div class="card">
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                <div class="card">
                     <div class="header">
                         <h2>Notice Board</h2>
                         <button mat-icon-button [matMenuTriggerFor]="menu" class="header-dropdown">
@@ -319,9 +319,9 @@
                             </div>
                         </ng-scrollbar>
                     </div>
-                </div> 
+                </div>
             </div> -->
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <!--<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                 <div class="card">
                     <div class="header">
                         <h2 style="color: #1A202E;">Complience by position, hours and employees</h2>
@@ -369,65 +369,6 @@
                                             </tr>
                                         </ng-container>
                                     </tbody>
-
-                                    <!--<tbody>
-                                        <tr *ngFor="let item of dataItems; let i = index">
-                                            <ng-container *ngIf="item.m !== 0">
-                                                <td>{{ item.position }}</td>
-                                                <td class="column-check">{{ item.m }}</td>
-                                                <td class="column-check">{{ checkinPosicion }}</td>
-                                                <td class="column-check">{{ item.hourFrom }}</td>
-                                            </ng-container>
-                                        </tr>
-                                    </tbody> -->
-
-                                    <!-- <tbody >
-                                        <tr>
-                                            <td> Server</td>
-                                            <td class="column-check">40</td>
-                                            <td class="column-check">38</td>
-                                            <td>95%
-                                                <mat-progress-bar mode="determinate" class="progress-round green-progress" value="95">
-                                                </mat-progress-bar>
-                                            </td>
-                                            <td class="column-check">37</td>
-                                            <td>97%
-                                                <mat-progress-bar mode="determinate" class="progress-round green-progress" value="97">
-                                                </mat-progress-bar>
-                                            </td>
-                                            <td class="column-check">2</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Bartender</td>
-                                            <td class="column-check">6</td>
-                                            <td class="column-check">2</td>
-                                            <td>33%
-                                                <mat-progress-bar mode="determinate" class="progress-round red-progress" value="33">
-                                                </mat-progress-bar>
-                                            </td>
-                                            <td class="column-check">2</td>
-                                            <td>100%
-                                                <mat-progress-bar mode="determinate" class="progress-round green-progress" value="100">
-                                                </mat-progress-bar>
-                                            </td>
-                                            <td class="column-check">4</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Captain</td>
-                                            <td class="column-check">3</td>
-                                            <td class="column-check">2</td>
-                                            <td>66%
-                                                <mat-progress-bar mode="determinate" class="progress-round orange-progress" value="66">
-                                                </mat-progress-bar>
-                                            </td>
-                                            <td class="column-check">2</td>
-                                            <td>100%
-                                                <mat-progress-bar mode="determinate" class="progress-round green-progress" value="100">
-                                                </mat-progress-bar>
-                                            </td>
-                                            <td class="column-check">1</td>
-                                        </tr>
-                                    </tbody> -->
                                 </table>
                             </div>
                         </div>
@@ -435,7 +376,7 @@
                 </div>
             </div>
 
-            <!-- <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                 <div class="card">
                     <div class="header">
                         <h2>Earning Source</h2>
@@ -495,8 +436,8 @@
                         </div>
                     </div>
                 </div>
-            </div> -->
-        </div>
+            </div>
+        </div> -->
         <!--<div class="row clearfix">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="card">
@@ -656,4 +597,5 @@
             </div>
         </div> -->
     </div>
+
 </section>

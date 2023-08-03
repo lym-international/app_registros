@@ -49,7 +49,8 @@
                             <ul class="tbl-export-btn">
 
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="CHECKIN">
+                                    <div class="m-l-10" *ngIf="showCheckInButton" matTooltip="CHECKIN">
+                                        <!--<div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="CHECKIN"> -->
                                         <button mat-mini-fab color="primary" (click)="checkInModal(getSelectedRows())"> 
                                             <mat-icon class="col-white">how_to_reg</mat-icon>
                                         </button>
@@ -57,7 +58,8 @@
                                 </li>
 
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="CHECKOUT">
+                                    <div class="m-l-10" *ngIf="showCheckOutButton" matTooltip="CHECKOUT">
+                                        <!--<div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="CHECKOUT"> -->
                                         <button mat-mini-fab color="primary" (click)="checkOutModal(getSelectedRows())"> 
                                             <mat-icon class="col-white">logout</mat-icon>
                                         </button>
@@ -65,7 +67,8 @@
                                 </li>
 
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="BREAK">
+                                    <div class="m-l-10" *ngIf="showBreakButton" matTooltip="BREAK">
+                                        <!--<div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="BREAK">-->
                                         <button mat-mini-fab color="primary" (click)="breakModal(getSelectedRows())"> 
                                             <mat-icon class="col-white">coffee</mat-icon>
                                         </button>
@@ -73,8 +76,9 @@
                                 </li>
 
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="NOSHOW">
-                                        <button mat-mini-fab color="warn" (click)="outEmployee(getSelectedRows())"> <!--Ingresar función (click)=""-->
+                                    <div class="m-l-10" *ngIf="showNoShowButton" matTooltip="NOSHOW">
+                                        <!--<div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="NOSHOW"> -->
+                                        <button mat-mini-fab color="warn" (click)="outEmployee(getSelectedRows())"> 
                                             <mat-icon class="col-white">visibility_off</mat-icon>
                                         </button>
                                     </div>
@@ -82,7 +86,7 @@
 
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="DELETE: IN, OUT, BREAK">
-                                        <button mat-mini-fab color="warn" (click)="deleteInTime(getSelectedRows())"><!--Ingresar función (click)=""-->
+                                        <button mat-mini-fab color="warn" (click)="deleteInTime(getSelectedRows())">
                                         <mat-icon class="col-white">refresh</mat-icon>
                                       </button>
                                     </div>
@@ -128,16 +132,32 @@
                             <table mat-table [dataSource]="dataSource" matSort class="mat-cell">
                                 <!--#table-->
                                 <!-- Checkbox Column -->
+
                                 <ng-container matColumnDef="select">
                                     <mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-7'">
                                         <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [ngClass]="'tbl-checkbox'">
                                         </mat-checkbox>
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [ngClass]="'tbl-col-width-per-7'">
-                                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [ngClass]="'tbl-checkbox'">
+                                        <mat-checkbox (click)="onCheckboxClick(row)" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [ngClass]="'tbl-checkbox'">
                                         </mat-checkbox>
                                     </mat-cell>
                                 </ng-container>
+
+                                <!--<ng-container matColumnDef="select">
+                                    <mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-7'">
+                                        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [ngClass]="'tbl-checkbox'">
+                                        </mat-checkbox>
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" [ngClass]="'tbl-col-width-per-7'">
+                                        <mat-checkbox (click)="$event.stopPropagation()" (change)="onCheckboxClick()" [checked]="selection.hasValue() && isAllSelected()" [ngClass]="'tbl-checkbox'">
+                                        </mat-checkbox> -->
+                                <!-- "anterior" <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [ngClass]="'tbl-checkbox'">
+                                        </mat-checkbox> -->
+                                <!--</mat-cell>
+                                </ng-container> -->
+
+
                                 <!-- ID Column -->
                                 <!--<ng-container matColumnDef="id">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
@@ -151,43 +171,53 @@
                                 </ng-container>-->
                                 <ng-container matColumnDef="lastName">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>LastName</mat-header-cell>
-                                    <mat-cell class="celda" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">LastName:</span>{{row.lastName}}</mat-cell>
+                                    <mat-cell class="celda" *matCellDef="let row"> <span class="mobile-label">LastName:</span>{{row.lastName}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
                                 </ng-container>
                                 <ng-container matColumnDef="firstName">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>FirstName</mat-header-cell>
-                                    <mat-cell class="celda" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">FirstName:</span>{{row.firstName}}</mat-cell>
+                                    <mat-cell class="celda" *matCellDef="let row"> <span class="mobile-label">FirstName:</span>{{row.firstName}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
                                 </ng-container>
                                 <ng-container matColumnDef="highKeyID">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>HighKey ID</mat-header-cell>
-                                    <mat-cell class="celda" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">HighKeyId:</span>{{row.highKeyId}}</mat-cell>
+                                    <mat-cell class="celda" *matCellDef="let row"> <span class="mobile-label">HighKeyId:</span>{{row.highKeyId}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
                                 </ng-container>
                                 <ng-container matColumnDef="payRollID">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>PayRoll ID</mat-header-cell>
-                                    <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">PayRoll ID:</span>{{row.payRollId}}</mat-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">PayRoll ID:</span>{{row.payRollId}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
                                 </ng-container>
                                 <ng-container matColumnDef="position">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Position</mat-header-cell>
-                                    <mat-cell class="celda" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Position:</span>{{row.position}}</mat-cell>
+                                    <mat-cell class="celda" *matCellDef="let row"> <span class="mobile-label">Position:</span>{{row.position}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
                                 </ng-container>
                                 <ng-container matColumnDef="hourFrom">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Scheduled time</mat-header-cell>
-                                    <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Scheduled time:</span>{{row.hourFrom}}</mat-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Scheduled time:</span>{{row.hourFrom}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
                                 </ng-container>
                                 <ng-container matColumnDef="in">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>In</mat-header-cell>
-                                    <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">In:</span>{{row.in}}</mat-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">In:</span>{{row.in}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
                                 </ng-container>
                                 <ng-container matColumnDef="out">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Out</mat-header-cell>
-                                    <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Out:</span>{{row.out}}</mat-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Out:</span>{{row.out}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
                                 </ng-container>
                                 <ng-container matColumnDef="break">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Break</mat-header-cell>
-                                    <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Break:</span>{{row.break}}</mat-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Break:</span>{{row.break}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
                                 </ng-container>
                                 <ng-container matColumnDef="totalHours">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Total hours</mat-header-cell>
-                                    <mat-cell class="celda2" *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> <span class="mobile-label">Total hours:</span>{{row.totalHours}}</mat-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Total hours:</span>{{row.totalHours}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
                                 </ng-container>
 
 
@@ -219,16 +249,20 @@
                                         <span class="mobile-label">Joining Date:</span> {{row.date | date: 'MM/dd/yyyy'}}</mat-cell>
                                 </ng-container>
                             -->
-                                <ng-container matColumnDef="actions">
+                                <!--<ng-container matColumnDef="actions">
                                     <mat-header-cell class="pr-0" *matHeaderCellDef></mat-header-cell>
                                     <mat-cell class="celda" *matCellDef="let row; let i=index;" class="pr-0">
-                                        <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Delete In,Out,Break"> <!--Adicionar los siguientes eventos para que elimine la fila: (click)="$event.stopPropagation()" (click)="deleteItem(i, row)"-->
-                                <app-feather-icons [icon]="'refresh-ccw'" [class]="'tbl-fav-delete'"></app-feather-icons>
+                                        <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Delete In,Out,Break"> -->
+                                <!--Adicionar los siguientes eventos para que elimine la fila: (click)="$event.stopPropagation()" (click)="deleteItem(i, row)"-->
+                                <!--<app-feather-icons [icon]="'refresh-ccw'" [class]="'tbl-fav-delete'"></app-feather-icons>
                                         </button>
                                     </mat-cell>
-                                </ng-container>
+                                </ng-container> -->
+
+
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="editCall(row)" [style.cursor]="'pointer'" matRipple>
+                                <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'" matRipple>
+                                    <!--(click)="editCall(row)"-->
                                 </mat-row>
                             </table>
                             <!-- Loading spinner -->
