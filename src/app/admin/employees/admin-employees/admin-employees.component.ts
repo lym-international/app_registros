@@ -18,7 +18,6 @@ import {
   ApexNonAxisChartSeries,
 } from 'ng-apexcharts';
 import { Position } from 'app/interfaces/position.interface';
-import { HeaderComponent } from 'app/layout/header/header.component';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -65,12 +64,9 @@ export class AdminEmployeesComponent implements OnInit{
   checkOutValues: { [position: string]: { [hourFrom: string]: number } } = {};
   noShowValues: { [position: string]: { [hourFrom: string]: number } } = {};
   filteredCheckinValues: number[];
-  public headerEmail: string
   
   //  color: ["#3FA7DC", "#F6A025", "#9BC311"],
-  constructor(
-    private orderDataService: OrderDataService, 
-    private headerComponent: HeaderComponent) {
+  constructor(private orderDataService: OrderDataService) {
     // controller code
   }
   ngOnInit() {
@@ -87,10 +83,6 @@ export class AdminEmployeesComponent implements OnInit{
   }
   //this.orderSelected = this.selectedOrder;
   
-  validateDataUser(){
-    
-  }
-
   getTotalRequest(){
     
     if(this.dataOrder.data.items){

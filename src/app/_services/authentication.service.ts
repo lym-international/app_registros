@@ -79,7 +79,7 @@ export class AuthenticationService {
             
             if(this.currentUserData.role=="Employee"){
               console.log("Es Empleado")
-                this.router.navigate(['/admin/search-order/']);//this.router.navigate(['/employee/dashboard']);
+                this.router.navigate(['/admin/search-order']);
             } else if (this.currentUserData.role=="Client"){
                 this.router.navigate(['/client/dashboard']);
             } else if (this.currentUserData.role=='Executive'){

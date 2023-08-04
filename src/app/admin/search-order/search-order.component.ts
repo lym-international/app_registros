@@ -137,10 +137,10 @@ export class SearchOrderComponent{
 
   navegar(){
     if (this.data.role == "Administrator"){
-    this.router.navigate(['/admin/dashboard-lm/']);
+      this.router.navigate(['/admin/dashboard-lm/']);
     }
     else if(this.data.role == "Employee"){
-      this.router.navigate(['/admin/employees/admin-employees']);
+      this.router.navigate(['/admin/employees/admin-employees/']);
     }
 
   }
@@ -194,4 +194,3 @@ export class SearchOrderComponent{
   
 }
   
-

@@ -30,7 +30,7 @@ const routes: Routes = [
         loadChildren: () =>
           import('./admin/search-order/search-order.module').then((m) => m.SearchOrderModule),
       },
-      {
+      /*{
         path: 'employee',
         canActivate: [AuthGuard],
         data: {
@@ -38,7 +38,7 @@ const routes: Routes = [
         },
         loadChildren: () =>
           import('./employee/employee.module').then((m) => m.EmployeeModule),
-      },
+      },*/
       {
         path: 'client',
         canActivate: [AuthGuard],
