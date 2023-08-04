@@ -83,7 +83,6 @@ export class AllemployeesComponent
   public dataUser!: any;
 
   groupEmployees = [];
-  private totalEmployees = [];
   public timeSheet: any = {};
 
   public outEmployees = [];
