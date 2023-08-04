@@ -1,5 +1,5 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import {
   UntypedFormControl,
   Validators,
@@ -74,6 +74,11 @@ export class CheckInComponent implements OnInit {
     Validators.required,
     // Validators.email,
   ]);
+
+  // Paso 2: Crear el EventEmitter
+  checkInUpdated: EventEmitter<any> = new EventEmitter<any>(); //
+
+  
   getErrorMessage() {
     return this.formControl.hasError('required')
       ? 'Required field'
@@ -86,12 +91,12 @@ export class CheckInComponent implements OnInit {
 
   createContactForm(): UntypedFormGroup {
     return this.fb.group({
-      id: [this.checkIn.id],
-      title: [this.checkIn.title],
-      category: [this.checkIn.category],
+      //id: [this.checkIn.id],
+      //title: [this.checkIn.title],
+      //category: [this.checkIn.category],
       startDate: [this.checkIn.startDate, [Validators.required]],
-      endDate: [this.checkIn.endDate],
-      details: [this.checkIn.details],
+      //endDate: [this.checkIn.endDate],
+      //details: [this.checkIn.details],
     });
   }
 

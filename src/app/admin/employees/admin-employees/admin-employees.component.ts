@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderDataService } from 'app/_services/orderData.service';
-import { Employees } from '../employees/allEmployees/employees.model';
-
 
 import {
   ApexAxisChartSeries,
@@ -20,6 +18,7 @@ import {
   ApexNonAxisChartSeries,
 } from 'ng-apexcharts';
 import { Position } from 'app/interfaces/position.interface';
+import { HeaderComponent } from 'app/layout/header/header.component';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -39,14 +38,12 @@ export type ChartOptions = {
   responsive: ApexResponsive[];
   labels: string[];
 };
-
 @Component({
-  selector: 'app-dashboard-lm',
-  templateUrl: './dashboard-lm.component.html',
-  styleUrls: ['./dashboard-lm.component.scss']
+  selector: 'app-admin-employees',
+  templateUrl: './admin-employees.component.html',
+  styleUrls: ['./admin-employees.component.scss']
 })
-
-export class DashboardLmComponent implements OnInit {
+export class AdminEmployeesComponent implements OnInit{
   public lineChartOptions!: Partial<ChartOptions>;
   public pieChartOptions!: Partial<ChartOptions>;
   public orderSelected!: any;
@@ -68,9 +65,12 @@ export class DashboardLmComponent implements OnInit {
   checkOutValues: { [position: string]: { [hourFrom: string]: number } } = {};
   noShowValues: { [position: string]: { [hourFrom: string]: number } } = {};
   filteredCheckinValues: number[];
+  public headerEmail: string
   
   //  color: ["#3FA7DC", "#F6A025", "#9BC311"],
-  constructor(private orderDataService: OrderDataService) {
+  constructor(
+    private orderDataService: OrderDataService, 
+    private headerComponent: HeaderComponent) {
     // controller code
   }
   ngOnInit() {
@@ -87,6 +87,10 @@ export class DashboardLmComponent implements OnInit {
   }
   //this.orderSelected = this.selectedOrder;
   
+  validateDataUser(){
+    
+  }
+
   getTotalRequest(){
     
     if(this.dataOrder.data.items){
@@ -377,4 +381,5 @@ export class DashboardLmComponent implements OnInit {
       ],
     };
   }*/
-} 
+
+}
