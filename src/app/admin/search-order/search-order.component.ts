@@ -76,7 +76,7 @@ export class SearchOrderComponent{
     ) {
       this.getOrderByIdUser(this.data.email,this.data.hkId)
       //this.getSearchOrders()
-      
+      console.log('Orden por usuario: ', this.getOrderByIdUser(this.data.email,this.data.hkId))
     }
 
     //Fin validación de rol para la visualización de las órdenes.
@@ -120,7 +120,7 @@ export class SearchOrderComponent{
       )
       .then((response) => response.json())
       .then((data) => {
-        //console.log(data)
+        console.log('Datos de la orden por usuario con highKey: ', data)
         this.orders = data;
         this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
       })
@@ -136,7 +136,7 @@ export class SearchOrderComponent{
       )
       .then((response) => response.json())
       .then((data) => {
-        
+        console.log('Datos de la orden por usuario por email: ', data)
         this.orders = data;
         this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
       })
@@ -144,9 +144,7 @@ export class SearchOrderComponent{
         console.log(error)
       }
       )
-    }
-
-       
+    }   
   }
   
   orderOption(order: any){

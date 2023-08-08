@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { EmployeesService } from '../allEmployees/employees.service';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
@@ -50,6 +50,7 @@ import {
   ApexNonAxisChartSeries,
 } from 'ng-apexcharts';
 import { Position } from 'app/interfaces/position.interface';
+import { HeaderComponent } from '../../../layout/header/header.component';
 
 
 export type ChartOptions = {
@@ -126,6 +127,7 @@ implements OnInit
   public timeSheet: any = {};
   public outEmployees = [];
   public pdfEmployees = [];
+  
 
 
   
@@ -138,6 +140,7 @@ implements OnInit
   contextMenuPosition = { x: '0px', y: '0px' };
 
   dataSource!: ExampleDataSource;
+  HeaderComponent: any;
 
   constructor(
     private datePipe: DatePipe,
@@ -154,6 +157,8 @@ implements OnInit
     super();
     // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
   }
+  
+  @Input() datosUsuario: any; // Trae los datos del usaurio desde el headerComponent
 
   ngOnInit() {
     this.dataEmployees = this.orderDataService.getSelectedOrder();
@@ -162,9 +167,8 @@ implements OnInit
     this.exactHourPayment = this.dataEmployees.data.exactHourPayment;
     this.getEmployees();
     this.loadData();
-    this.dataUser = this.authenticationService.getData();
-    // const storedUserData = localStorage.getItem('currentUserData');
-    const storedUserData = localStorage.getItem('currentUserData');
+    this.dataUser = this.authenticationService.getData(); //Persistencia de datos
+    const storedUserData = localStorage.getItem('currentUserData'); //Persistencia de datos
     if (storedUserData) {
       this.dataUser = JSON.parse(storedUserData);
     } else {
@@ -173,9 +177,11 @@ implements OnInit
       // Almacenar los datos en el localStorage
       localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
     }
+
+    console.log('Datos traídos desde el header: ', this.datosUsuario)
   }
   
-  // Función para verificar la visibilidad de los botones al hacer clic en el checkbox
+  // Función para controlar la visibilidad de los botones al hacer clic en el checkbox
   onCheckboxClick(row: AdminEmployees) {
     console.log('dateCheckin antes IF: ', row.dateCheckin) 
     if ((row.dateCheckin === null || row.dateCheckin === undefined)&&(row.dateCheckout === null || row.dateCheckout === undefined)) {
@@ -985,6 +991,10 @@ implements OnInit
   }
   
 }
+
+
+
+
 export class ExampleDataSource extends DataSource<AdminEmployees> {
   data: any[];
   filterChange = new BehaviorSubject('');
