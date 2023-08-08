@@ -23,16 +23,11 @@ import { TableExportUtil, TableElement } from '@shared';
 import { DatePipe, formatDate } from '@angular/common';
 import { OrderDataService } from 'app/_services/orderData.service';
 import { delay } from 'rxjs/operators'; //Jairo
-//import { CheckInComponent } from './dialogs/check-in/check-in.component';
-//import { CheckOutComponent } from './dialogs/check-out/check-out.component';
-//import { BreakComponent } from './dialogs/break/break.component';
 import { Timestamp } from 'firebase/firestore';
 import { AuthenticationService } from 'app/_services/authentication.service';
-
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -50,7 +45,10 @@ import {
   ApexNonAxisChartSeries,
 } from 'ng-apexcharts';
 import { Position } from 'app/interfaces/position.interface';
-import { HeaderComponent } from '../../../layout/header/header.component';
+import { CheckInAdminEmployeesComponent } from './dialogs/check-in-admin-employees/check-in-admin-employees.component';
+import { CheckOutAdminEmployeesComponent } from './dialogs/check-out-admin-employees/check-out-admin-employees.component';
+import { BreakAdminEmployeesComponent } from './dialogs/break-admin-employees/break-admin-employees.component';
+//import { HeaderComponent } from '../../../layout/header/header.component';
 
 
 export type ChartOptions = {
@@ -127,7 +125,7 @@ implements OnInit
   public timeSheet: any = {};
   public outEmployees = [];
   public pdfEmployees = [];
-  
+  employeeArray: any[] = []
 
 
   
@@ -158,8 +156,8 @@ implements OnInit
     // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
   }
   
-  @Input() datosUsuario: any; // Trae los datos del usaurio desde el headerComponent
-
+  //@Input() datosUsuario: any; // Trae los datos del usaurio desde el headerComponent
+  
   ngOnInit() {
     this.dataEmployees = this.orderDataService.getSelectedOrder();
     console.log('Data Order: ', this.dataEmployees);
@@ -178,7 +176,7 @@ implements OnInit
       localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
     }
 
-    console.log('Datos traídos desde el header: ', this.datosUsuario)
+    console.log('Datos traídos desde el header: ', this.dataUser)
   }
   
   // Función para controlar la visibilidad de los botones al hacer clic en el checkbox
@@ -282,12 +280,22 @@ implements OnInit
         console.log('Array empleados: ');
         console.log(this.employeesArray);
         console.log('---------------------------');
+        
+        const hkId = this.dataUser.highkeyId;
+        console.log('HKID: ', hkId);
+        //validación de la propiedad highKeyId del empleado con el highkeyId del usuario
+        this.employeeArray = this.employeesArray.filter((employee) => {
+        console.log('highKeyId: ', employee.highKeyId);
+          return employee.highKeyId === Number(hkId); // Usar hkId en lugar de this.dataUser.highkeyId
+          });
 
+      console.log('employeeArray: ', this.employeeArray);
+        
         this.dataSource = new ExampleDataSource(
           this.exampleDatabase,
           this.paginator,
           this.sort,
-          this.employeesArray
+          this.employeeArray //muestra la info de la orden según empleado en el listado.
         );
       })
       .catch((error) => {
@@ -401,10 +409,10 @@ implements OnInit
     return String(value).padStart(2, '0');
   }
 
-  /*async checkInModal(selectedRows: AdminEmployees[]) {
+  async checkInModal(selectedRows: AdminEmployees[]) {
     if (selectedRows.length > 0) {
       console.log('Empleados seleccionados para check-in:', selectedRows);
-      const dialogRef = this.dialog.open(CheckInComponent, {
+      const dialogRef = this.dialog.open(CheckInAdminEmployeesComponent, {
         data: {
           employees: this.employees,
           action: 'add',
@@ -487,7 +495,7 @@ implements OnInit
     } else {
       console.log('Ningún empleado seleccionado para check-in.');
     }
-  }*/
+  }
 
   roundDate(date: Date) {
     let roundedDate = date;
@@ -531,10 +539,10 @@ implements OnInit
     return fixed;
   }
 
-  /*async checkOutModal(selectedRows: AdminEmployees[]) {
+  async checkOutModal(selectedRows: AdminEmployees[]) {
     if (selectedRows.length > 0) {
       // console.log('Empleados seleccionados para check-out:', selectedRows);
-      const dialogRef = this.dialog.open(CheckOutComponent, {
+      const dialogRef = this.dialog.open(CheckOutAdminEmployeesComponent, {
         data: {
           employees: this.employees,
           action: 'add',
@@ -611,7 +619,7 @@ implements OnInit
     } else {
       // console.log('Ningún empleado seleccionado para check-out.');
     }
-  } */
+  }
 
   calculateHoursWorked(
     employee: AdminEmployees,
@@ -762,10 +770,10 @@ implements OnInit
     // console.log("hours", hours)
   }
 
-  /*async breakModal(selectedRows: AdminEmployees[]) {
+  async breakModal(selectedRows: AdminEmployees[]) {
     if (selectedRows.length > 0) {
       console.log('Empleados seleccionados para break:', selectedRows);
-      const dialogRef = this.dialog.open(BreakComponent, {
+      const dialogRef = this.dialog.open(BreakAdminEmployeesComponent, {
         data: {
           employees: this.employees,
           action: 'add',
@@ -825,7 +833,7 @@ implements OnInit
     } else {
       // console.log('Ningún empleado seleccionado para break.');
     }
-  }*/
+  }
 
   async loadTimesheet() {
     this.outEmployees = [];

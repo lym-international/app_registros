@@ -17,6 +17,9 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
 import { CheckOutComponent } from './allEmployees/dialogs/check-out/check-out.component';
 import { BreakComponent } from './allEmployees/dialogs/break/break.component';
 import { AdminEmployeesComponent } from './admin-employees/admin-employees.component';
+import { CheckInAdminEmployeesComponent } from './admin-employees/dialogs/check-in-admin-employees/check-in-admin-employees.component';
+import { CheckOutAdminEmployeesComponent } from './admin-employees/dialogs/check-out-admin-employees/check-out-admin-employees.component';
+import { BreakAdminEmployeesComponent } from './admin-employees/dialogs/break-admin-employees/break-admin-employees.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +33,9 @@ import { AdminEmployeesComponent } from './admin-employees/admin-employees.compo
     CheckOutComponent,
     BreakComponent,
     AdminEmployeesComponent,
+    CheckInAdminEmployeesComponent,
+    CheckOutAdminEmployeesComponent,
+    BreakAdminEmployeesComponent,
   ],
   imports: [
     CommonModule,
