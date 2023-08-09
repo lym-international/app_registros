@@ -260,7 +260,8 @@ export class AllemployeesComponent
         if (
           selectedRows.some(
             (row) =>
-              row.employee.data.employeeId === employee.employee.data.employeeId
+              row.employee.data.employeeId === employee.employee.data.employeeId && 
+              row.hourFrom === employee.hourFrom,
           )
         ) {
           return {
@@ -316,7 +317,8 @@ export class AllemployeesComponent
         if (
           selectedRows.some(
             (row) =>
-              row.employee.data.employeeId === employee.employee.data.employeeId
+              row.employee.data.employeeId === employee.employee.data.employeeId &&
+              row.hourFrom === employee.hourFrom,
           )
         ) {
           return {
@@ -434,7 +436,8 @@ export class AllemployeesComponent
         if (
           selectedRows.some(
             (row) =>
-            row.employee.data.employeeId === employee.employee.data.employeeId
+            row.employee.data.employeeId === employee.employee.data.employeeId &&
+            row.hourFrom === employee.hourFrom,
             )
             ) {
               // Si updateUser es null o undefined, inicializarlo como un arreglo vacío
@@ -563,7 +566,8 @@ export class AllemployeesComponent
         if (
           selectedRows.some(
             (row) =>
-              row.employee.data.employeeId === employee.employee.data.employeeId
+              row.employee.data.employeeId === employee.employee.data.employeeId && 
+              row.hourFrom === employee.hourFrom,
           )
         ) {
           const roundedHours = this.calculateHoursWorked(
@@ -790,7 +794,8 @@ export class AllemployeesComponent
         if (
           selectedRows.some(
             (row) =>
-              row.employee.data.employeeId === employee.employee.data.employeeId
+              row.employee.data.employeeId === employee.employee.data.employeeId && 
+              row.hourFrom === employee.hourFrom,
           )
         ) {
           // Restar el tiempo de descanso del total de horas trabajadas

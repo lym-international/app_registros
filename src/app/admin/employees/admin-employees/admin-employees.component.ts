@@ -90,6 +90,7 @@ implements OnInit
     'in',
     'out',
     'break',
+    //'uniform',
     //'totalHours',
     //'department',
     //'role',
@@ -232,7 +233,7 @@ implements OnInit
   
         this.employeesArray = data.employees.map((employee) => {
           const employeeData = { ...employee.employee.data };
-  
+          
           const firstName = employeeData.firstname || "No data";
           const lastName = employeeData.lastname || "No data";
           const highKeyId = employeeData.employeeId || "No data";
@@ -241,7 +242,8 @@ implements OnInit
           const payrollId = employeeData.payrollid || "No data";
           const brake = employee.break || "0";
           const hourFrom = employee.hourFrom || "No data";
-  
+          //const uniform = employee.hourFrom || "No data";
+
           let checkInTime = "No Data";
           if (employee.dateCheckin && employee.dateCheckin._seconds) {
             const checkIn = employee.dateCheckin._seconds;
@@ -282,10 +284,10 @@ implements OnInit
         console.log('---------------------------');
         
         const hkId = this.dataUser.highkeyId;
-        console.log('HKID: ', hkId);
+        
         //validación de la propiedad highKeyId del empleado con el highkeyId del usuario
         this.employeeArray = this.employeesArray.filter((employee) => {
-        console.log('highKeyId: ', employee.highKeyId);
+        
           return employee.highKeyId === Number(hkId); // Usar hkId en lugar de this.dataUser.highkeyId
           });
 
@@ -307,11 +309,12 @@ implements OnInit
   deleteInTime(selectedRows: AdminEmployees[]) {
     if (selectedRows.length > 0) {
       // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
-      const updatedEmployees = this.employeesArray.map((employee) => {
+      const updatedEmployees = this.employeeArray.map((employee) => {
         if (
           selectedRows.some(
             (row) =>
-              row.employee.data.employeeId === employee.employee.data.employeeId
+              row.employee.data.employeeId === employee.employee.data.employeeId &&
+              row.hourFrom === employee.hourFrom,
           )
         ) {
           return {
@@ -412,11 +415,14 @@ implements OnInit
   async checkInModal(selectedRows: AdminEmployees[]) {
     if (selectedRows.length > 0) {
       console.log('Empleados seleccionados para check-in:', selectedRows);
+      
       const dialogRef = this.dialog.open(CheckInAdminEmployeesComponent, {
+        
         data: {
           employees: this.employees,
           action: 'add',
         },
+        
       });
 
       const result = await dialogRef.afterClosed().toPromise();
@@ -429,11 +435,16 @@ implements OnInit
     const dateCheckinRounded = timestampCheckinRounded?.seconds || 0;
 
       // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
-      const updatedEmployees = this.employeesArray.map((employee) => {
+      const updatedEmployees = this.employeeArray.map((employee) => {
+        
         if (
           selectedRows.some(
             (row) =>
-            row.employee.data.employeeId === employee.employee.data.employeeId
+            row.employee.data.employeeId === employee.employee.data.employeeId && 
+            row.hourFrom === employee.hourFrom,
+            //console.log('row.employee.data: ',row.employee.data),
+            //console.log('employee.employee.data',employee.hourFrom),
+            //console.log('HOURFROM: ', row)
             )
             ) {
               // Si updateUser es null o undefined, inicializarlo como un arreglo vacío
@@ -558,11 +569,12 @@ implements OnInit
       const timestampCheckoutRounded = Timestamp.fromDate(new Date(rounded));
       const dateCheckoutRounded = timestampCheckoutRounded?.seconds || 0;
       // Filtrar y actualizar solo los empleados seleccionados con sus datos actualizados
-      const updatedEmployees = this.employeesArray.map((employee) => {
+      const updatedEmployees = this.employeeArray.map((employee) => {
         if (
           selectedRows.some(
             (row) =>
-              row.employee.data.employeeId === employee.employee.data.employeeId
+              row.employee.data.employeeId === employee.employee.data.employeeId &&
+              row.hourFrom === employee.hourFrom,
           )
         ) {
           const roundedHours = this.calculateHoursWorked(
@@ -785,11 +797,12 @@ implements OnInit
       const roundedBreak = this.roundHours(result.break / 60);
       // Convertir el tiempo de descanso de minutos a horas
       // const breakInHours = result.break / 60;
-      const updatedEmployees = this.employeesArray.map((employee) => {
+      const updatedEmployees = this.employeeArray.map((employee) => {
         if (
           selectedRows.some(
             (row) =>
-              row.employee.data.employeeId === employee.employee.data.employeeId
+              row.employee.data.employeeId === employee.employee.data.employeeId &&
+              row.hourFrom === employee.hourFrom,
           )
         ) {
           // Restar el tiempo de descanso del total de horas trabajadas

@@ -10,8 +10,8 @@ export const environment = {
   testing: false,
   firebase:{
     apiKey: "AIzaSyC6oGm9cwDuswR8Jf6vo6MNAZkrXoZ3wSY",
-    authDomain: "register.highkeystaff.com",
-    //authDomain: "highkeystaff.firebaseapp.com",
+    //authDomain: "register.highkeystaff.com",
+    authDomain: "highkeystaff.firebaseapp.com",
     databaseURL: "https://highkeystaff.firebaseio.com",
     projectId: "highkeystaff",
     storageBucket: "highkeystaff.appspot.com",
