@@ -309,7 +309,7 @@ implements OnInit
   deleteInTime(selectedRows: AdminEmployees[]) {
     if (selectedRows.length > 0) {
       // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
-      const updatedEmployees = this.employeeArray.map((employee) => {
+      const updatedEmployees = this.employeesArray.map((employee) => {
         if (
           selectedRows.some(
             (row) =>
@@ -435,7 +435,7 @@ implements OnInit
     const dateCheckinRounded = timestampCheckinRounded?.seconds || 0;
 
       // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
-      const updatedEmployees = this.employeeArray.map((employee) => {
+      const updatedEmployees = this.employeesArray.map((employee) => {
         
         if (
           selectedRows.some(
@@ -569,7 +569,7 @@ implements OnInit
       const timestampCheckoutRounded = Timestamp.fromDate(new Date(rounded));
       const dateCheckoutRounded = timestampCheckoutRounded?.seconds || 0;
       // Filtrar y actualizar solo los empleados seleccionados con sus datos actualizados
-      const updatedEmployees = this.employeeArray.map((employee) => {
+      const updatedEmployees = this.employeesArray.map((employee) => {
         if (
           selectedRows.some(
             (row) =>
@@ -731,21 +731,7 @@ implements OnInit
   }
 
   calculateRegularHours(employee: AdminEmployees, dateCheckoutRounded: number) {
-    /* console.log("Cálculo de horas trabajadas sin tener en cuenta la llegada tardía")
-
-  // Conversión manual del timestamp a objeto Date
-  const checkinTime = new Date(employee.dateCheckin._seconds * 1000);
-  console.log("checkinTime", checkinTime)
-  console.log("checkOutTimestamp", checkOutTimestamp)
-  const checkOutTime = new Date(checkOutTimestamp)
-  console.log("checkOutTime", checkOutTime)
-  // const checkoutTime = checkOutTimestamp.toDate();
-
-  // const hours = (checkoutTime.getTime() - checkinTime.getTime()) / 3600000;
-  // return Number(hours.toFixed(2));
-  return 108 */
-    //Cálculo de horas trabajadas sin tener en cuenta la llegada tardía;
-    // Conversión manual del timestamp a objeto Date
+   
     const checkinTime = new Date(employee.dateCheckinRounded._seconds * 1000);
     // console.log("checkinTime", checkinTime);
     // console.log("checkOutTimestamp", dateCheckoutRounded);
@@ -762,10 +748,7 @@ implements OnInit
 
     const secondsWorked = checkOutTime - checkInTime;
     const hoursWorked = secondsWorked / 3600;
-    /* console.log("in", checkInTime)
-  console.log("out", checkOutTime)
-  console.log("timeDiff",secondsWorked)
-  console.log("ours", hoursWorked) */
+
     return Number(hoursWorked.toFixed(2));
 
     // const timeDiff = employee.dateCheckout.getTime() - employee.dateCheckin.toDate().getTime();
@@ -797,7 +780,7 @@ implements OnInit
       const roundedBreak = this.roundHours(result.break / 60);
       // Convertir el tiempo de descanso de minutos a horas
       // const breakInHours = result.break / 60;
-      const updatedEmployees = this.employeeArray.map((employee) => {
+      const updatedEmployees = this.employeesArray.map((employee) => {
         if (
           selectedRows.some(
             (row) =>
