@@ -29,7 +29,7 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 import { CoreModule } from '@core';
 
 import { SharedModule } from '@shared';
-import { environment } from '../environments/environment';
+import { environment, environment_A } from '../environments/environment';
 import { CloseEventComponent } from './close-event/close-event.component';
 import { OcultarSidebarService } from './_services/ocultar-sidebar.service'; // Diego
 import { TimesheetComponent } from './timesheet/timesheet.component'; //Jairo
@@ -53,7 +53,7 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   imports: [
     BrowserModule,
-    AngularFireModule.initializeApp(environment.firebase), //Jairo
+    AngularFireModule.initializeApp(environment_A.firebase), //Jairo
     BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
