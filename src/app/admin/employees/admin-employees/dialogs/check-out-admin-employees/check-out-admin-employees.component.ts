@@ -31,6 +31,7 @@ export class CheckOutAdminEmployeesComponent implements OnInit{
   employees: Employees;
   showDeleteBtn = false;
   fechaSalida: FormControl;
+  inputDisabled = true;
   
   ngOnInit(): void {
     this.checkOutForm.patchValue({

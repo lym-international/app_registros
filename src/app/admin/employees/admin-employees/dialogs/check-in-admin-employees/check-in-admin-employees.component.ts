@@ -30,6 +30,7 @@ export class CheckInAdminEmployeesComponent implements OnInit{
   showDeleteBtn = false;
   fechaInicio: FormControl;
   public dataCheckIn!: any;
+  inputDisabled = true;
   
   ngOnInit(): void {
     this.checkInForm.patchValue({
