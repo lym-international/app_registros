@@ -90,8 +90,8 @@ implements OnInit
     'in',
     'out',
     'break',
+    'totalHours',
     //'uniform',
-    //'totalHours',
     //'department',
     //'role',
     //'degree',
@@ -126,7 +126,9 @@ implements OnInit
   public timeSheet: any = {};
   public outEmployees = [];
   public pdfEmployees = [];
-  employeeArray: any[] = []
+  employeeArray: any[] = [];
+  totalHoursArray: number[] = [];
+  totalHoursSum: number
 
 
   
@@ -178,6 +180,8 @@ implements OnInit
     }
 
     console.log('Datos traídos desde el header: ', this.dataUser)
+    
+    
   }
   
   // Función para controlar la visibilidad de los botones al hacer clic en el checkbox
@@ -243,6 +247,7 @@ implements OnInit
           const brake = employee.break || "0";
           const hourFrom = employee.hourFrom || "No data";
           //const uniform = employee.hourFrom || "No data";
+          //console.log('HORAS TRABAJADAS: ',totalHours)
 
           let checkInTime = "No Data";
           if (employee.dateCheckin && employee.dateCheckin._seconds) {
@@ -299,12 +304,37 @@ implements OnInit
           this.sort,
           this.employeeArray //muestra la info de la orden según empleado en el listado.
         );
+        
+                //SUMANDO LOS TOTALES DE LAS HORAS TRABAJADAS
+
+        this.totalHoursArray = [];
+        //creando el arreglo y llenándolo con los valores de la propiedad hours de amployeeArray
+        console.log('ARRAY EmployeeArray: ',this.employeeArray)
+        for (const item of this.employeeArray) {
+          this.totalHoursArray.push(item.hours);
+        }
+        console.log('Horas ARRAY: ', this.totalHoursArray)
+        
+        //convirtiendo los valores de totalHoursArray a tipo number
+        const numberArray = this.totalHoursArray.map((stringValue) => {
+          return Number(stringValue);
+        });
+        
+        //Sumando los valores del arreglo
+        this.totalHoursSum = numberArray.reduce((accumulator, currentValue) => {
+          return accumulator + currentValue;
+        }, 0);
+        
+        console.log('Suma Total Horas: ', this.totalHoursSum);
+        
+        
       })
       .catch((error) => {
         console.log(error);
         this.isTblLoading = false;
       });
   }
+
 //Borra checkIn, CheckOut y break.
   deleteInTime(selectedRows: AdminEmployees[]) {
     if (selectedRows.length > 0) {

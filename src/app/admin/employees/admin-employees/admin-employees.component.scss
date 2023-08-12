@@ -20,11 +20,11 @@
 }
 
 .container {
-    display: block;
-    grid-template-columns: 1fr;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
     gap: 10px;
-    padding-left: 250px;
-    padding-right: 250px;
+    padding-left: 100px;
+    padding-right: 100px;
 }
 
 .column {
@@ -33,7 +33,7 @@
 }
 
 .sub-column {
-    display: grid;
+    display: inline-block;
     grid-template-columns: repeat(2, 1fr);
     //grid-template-columns: 1fr;
     gap: 10px;
@@ -42,7 +42,7 @@
 
 .sub-sub-column {
     display: grid;
-    padding: 20px;
+    //padding: 20px;
 }
 
 .column-check {

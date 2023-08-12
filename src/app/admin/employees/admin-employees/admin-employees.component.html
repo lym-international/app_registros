@@ -17,31 +17,31 @@
                             <br/> <br/> {{dataEmployees.data.address}}
                             <br/> <br/> {{dataEmployees.data.city}} {{dataEmployees.data.state}} {{dataEmployees.data.zipcode}}
                             <br/> <br/> Order Number: {{dataEmployees.data.orderId}}
+                            <br/> <br/> Event date: {{dataEmployees.data.startDate}}
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!--<div class="column" style="margin: auto;">
+            <div class="column" style="margin: auto;">
                 <div class="sub-column">
                     <div class="sub-sub-column">
-                        <mat-card class="tarjeta-pequena">
+                        <mat-card class="tarjeta-pequena" style="background: linear-gradient(135deg, #3d0d96 60%, rgb(255, 255, 255) 100%);">
                             <mat-card-content>
-                                <mat-card-title>Expected CheckIn</mat-card-title>
-                                {{dataEmployees.data.items.hourFrom}} debe mostrar la hora esperada de llegada al evento según su posición
+                                <mat-card-title>Highkey ID: {{dataUser.highkeyId}}</mat-card-title>
                             </mat-card-content>
                         </mat-card>
                     </div>
                     <div class="sub-sub-column">
-                        <mat-card class="tarjeta-pequena">
+                        <mat-card class="tarjeta-pequena" style="background: linear-gradient(135deg, #0f325f 60%, rgb(255, 255, 255) 100%);">
                             <mat-card-content>
-                                <mat-card-title>Position</mat-card-title>
-                                {{dataEmployees.data.clientName ? dataEmployees.data.clientName : dataEmployees.data.company}}debe mostrar la posición del empleado para ese evento
+                                <mat-card-title>Total hours worked: {{totalHoursSum}}</mat-card-title>
+                                <!--{{dataEmployees.data.clientName ? dataEmployees.data.clientName : dataEmployees.data.company}} -->
                             </mat-card-content>
                         </mat-card>
                     </div>
                 </div>
-            </div> -->
+            </div>
         </div>
 
         <hr class="separador" />
@@ -176,6 +176,10 @@
                                 <ng-container matColumnDef="break">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Break</mat-header-cell>
                                     <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Break:</span>{{row.break}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="totalHours">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Total Hours</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Total Hours:</span>{{row.totalHours}}</mat-cell>
                                 </ng-container>
                                 <!--<ng-container matColumnDef="uniform">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Uniform</mat-header-cell>

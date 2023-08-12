@@ -22,8 +22,16 @@
                                 <mat-card-title>Client</mat-card-title>
                                 <!-- {{dataEmployees.data.clientName}} -->
                                 {{dataEmployees.data.clientName ? dataEmployees.data.clientName : dataEmployees.data.company}}
-
                                 <!-- company -->
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+
+                    <div class="sub-sub-column">
+                        <mat-card class="tarjeta-pequena">
+                            <mat-card-content>
+                                <mat-card-title>Total hours worked </mat-card-title>
+                                {{totalHoursSum}}
                             </mat-card-content>
                         </mat-card>
                     </div>

@@ -89,7 +89,8 @@ export class AllemployeesComponent
   public timeSheet: any = {};
   public outEmployees = [];
   public pdfEmployees = [];
-
+  totalHoursArray: number[] = [];
+  totalHoursSum: number
 
   
   
@@ -246,6 +247,27 @@ export class AllemployeesComponent
           this.sort,
           this.employeesArray
         );
+        //SUMANDO LOS TOTALES DE LAS HORAS TRABAJADAS
+
+        this.totalHoursArray = [];
+        //creando el arreglo y llenándolo con los valores de la propiedad hours de amployeeArray
+        console.log('ARRAY EmployeeArray: ',this.employeesArray)
+        for (const item of this.employeesArray) {
+          this.totalHoursArray.push(item.hours);
+        }
+        console.log('Horas ARRAY: ', this.totalHoursArray)
+        
+        //convirtiendo los valores de totalHoursArray a tipo number
+        const numberArray = this.totalHoursArray.map((stringValue) => {
+          return Number(stringValue);
+        });
+        
+        //Sumando los valores del arreglo
+        this.totalHoursSum = numberArray.reduce((accumulator, currentValue) => {
+          return accumulator + currentValue;
+        }, 0);
+        
+        console.log('Suma Total Horas: ', this.totalHoursSum);
       })
       .catch((error) => {
         console.log(error);
