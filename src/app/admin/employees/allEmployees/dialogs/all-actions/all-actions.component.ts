@@ -8,14 +8,14 @@ import {
   UntypedFormBuilder,
   FormControl,
   FormGroup,
+  ValidatorFn,
+  AbstractControl,
 } from '@angular/forms';
 //import { CheckInModel } from './check-in.model';
 
 import { formatDate } from '@angular/common';
+//import { BreakModel } from './break.model';
 //import { AllActionsModel } from './all-actions.model';
-
-
-
 
 export interface DialogData {
   id: number;
@@ -34,31 +34,30 @@ export class AllActionsComponent implements OnInit{
   allActionsForm: UntypedFormGroup;
   //checkIn: CheckInModel;
   //allActions: AllActionsModel;
+  //public dataCheckIn!: any;
   showDeleteBtn = false;
   fechaInicio: FormControl;
   fechaSalida: FormControl;
-  public dataCheckIn!: any;
+  breakTime : FormControl;
+  //break: BreakModel;
   
+
   ngOnInit(): void {
     this.allActionsForm.patchValue({
       startDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
       endDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
     });
-    this.fechaInicio = new FormControl(new Date());
-    this.fechaSalida = new FormControl(new Date());
+    this.fechaInicio = new FormControl(new Date());//this.fechaInicio = new FormControl(new Date());
+    this.fechaSalida = new FormControl(new Date());//this.fechaSalida = new FormControl(new Date());
+    this.breakTime = new FormControl();
     this.allActionsForm = new FormGroup({
     startDate: this.fechaInicio,
-    endDate: this.fechaSalida
+    endDate: this.fechaSalida,
+    break: this.breakTime
     });
     //this.dataCheckIn = this.checkInService.setCheckIn();
-    
+    console.log('ActionsForm: ', this.allActionsForm)
   }
-
-  /*constructor(private orderDataService: OrderDataService) {
-    // controller code
-  }
-  ngOnInit() {
-    this.dataOrder = this.orderDataService.getSelectedOrder(); */
 
   constructor(
     public dialogRef: MatDialogRef<AllActionsComponent>,
@@ -70,8 +69,8 @@ export class AllActionsComponent implements OnInit{
       //this.showDeleteBtn = true;
     } else {
       this.dialogTitle = 'All Actions:';
-      //const blankObject = {} as AllActionsModel;
-      //this.allActions = new AllActionsModel(blankObject);
+      //const blankObject = {} as BreakModel;
+      //this.break = new BreakModel(blankObject);
       //this.showDeleteBtn = false;
     }
     this.allActionsForm = this.createContactForm();
@@ -99,6 +98,7 @@ export class AllActionsComponent implements OnInit{
 
   createContactForm(): UntypedFormGroup {
     return this.fb.group({
+      //break: [this.break.break, [Validators.required, Validators.pattern(/^[0-9]*$/), this.numberValidator()]],
       //id: [this.checkIn.id],
       //title: [this.checkIn.title],
       //category: [this.checkIn.category],
@@ -106,6 +106,20 @@ export class AllActionsComponent implements OnInit{
       //endDate: [this.allActions.date, [Validators.required]],
       //details: [this.checkIn.details],
     });
+  }
+  
+  //validación del rango del break
+  numberValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const value = control.value;
+      if (isNaN(value) || value === null || value === '') {
+        return { 'invalidNumber': true };
+      } 
+      if (value < 20 || value > 120) {
+        return { 'outOfRange': true };
+      }
+      return null;
+    };
   }
 
   submit() {
@@ -123,11 +137,13 @@ export class AllActionsComponent implements OnInit{
   public confirmAdd(): void {
     const startDate = this.fechaInicio.value;
     const endDate = this.fechaSalida.value;
-    
+    const _break = this.allActionsForm.value.break;//this.breakForm.value;
     const result = {
       startDate: startDate,
-      endDate: endDate
+      endDate: endDate,
+      break: _break
   };
+  console.log('RESULT ::',result)
 
     // Cierra el diálogo y pasa el resultado
     this.dialogRef.close(result);

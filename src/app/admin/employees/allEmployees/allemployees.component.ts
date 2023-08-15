@@ -449,7 +449,11 @@ export class AllemployeesComponent
       });
       
       const result = await dialogRef.afterClosed().toPromise();
-
+      console.log('Result => ', result.break);
+      
+      const roundedBreak = this.roundHours(result.break / 60);
+      console.log('RoundedBreak => ', roundedBreak);
+      
       const timestampIn = Timestamp.fromDate(new Date(result.startDate));
       const timestampOut = Timestamp.fromDate(new Date(result.endDate));
 
@@ -481,13 +485,18 @@ export class AllemployeesComponent
                   checkInTimestamp,
                   dateCheckinRounded,
                   checkOutTimestamp,
-                  dateCheckoutRounded
+                  dateCheckoutRounded,
+                  
                 );
-            
+              console.log('roundedHours: ',roundedHours)  
+              console.log('result.break: ',result.break)  
+              const updatedHours =  roundedHours - roundedBreak;
+
               return {
             ...employee,
             checkin: true,
             checkout: true,
+            break: result.break,
             status : "Checked Out",
             dateCheckin: {
               _seconds: checkInTimestamp,
@@ -509,14 +518,8 @@ export class AllemployeesComponent
               _seconds: dateCheckoutRounded,
               _nanoseconds: 0,
             },
-
-            hours: roundedHours.toFixed(2),
-            break: 0,
-            
-            // updateUser: [...updatedUser, this.dataUser.email],
-            // updateUser: 
+            hours: updatedHours.toFixed(2),
             updateUser:this.dataUser.email
-            
           };
         // }
         }
@@ -773,13 +776,15 @@ export class AllemployeesComponent
     checkInTimestamp: number,
     dateCheckinRounded: number,
     checkOutTimestamp: number,
-    dateCheckoutRounded: number
+    dateCheckoutRounded: number,
+    //roundedBreak: number
   ): number {
  
     if (this.exactHourPayment) {
       const hoursNumberExact = this.calculateExactHourPaymentAll(
         checkInTimestamp,
-        checkOutTimestamp
+        checkOutTimestamp,
+        //roundedBreak
       );
       // const hours = hoursNumberExact.toFixed(2);
       return hoursNumberExact;
@@ -787,6 +792,7 @@ export class AllemployeesComponent
       const lateThreshold = 8; // Umbral de llegada tarde en horas
       const checkInTime = dateCheckinRounded;
       const checkOutTime = dateCheckoutRounded;
+      //const breakTime = roundedBreak;
       const secondsWorked = checkOutTime - checkInTime;
       const hoursWorked = secondsWorked / 3600; //3600000
       // console.log("oursWorked", hoursWorked)
@@ -951,10 +957,13 @@ export class AllemployeesComponent
   calculateExactHourPaymentAll(checkInTimestamp: number, checkOutTimestamp: number) {
     const checkInTime = checkInTimestamp;
     const checkOutTime = checkOutTimestamp;
+    //const breakTime = roundedBreak;
 
     const secondsWorked = checkOutTime - checkInTime;
     const hoursWorked = secondsWorked / 3600;
     
+    
+
     return Number(hoursWorked.toFixed(2));
   }
 
@@ -1009,6 +1018,8 @@ export class AllemployeesComponent
         ) {
           // Restar el tiempo de descanso del total de horas trabajadas
           // const updatedHours = employee.hours - breakInHours;
+          console.log('employee.hours :',employee.hours)
+          console.log('roundedBreak :',roundedBreak)
           const updatedHours = employee.hours - roundedBreak;
           return {
             ...employee,

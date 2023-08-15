@@ -36,6 +36,22 @@
                         <owl-date-time #endDate></owl-date-time>
                     </mat-form-field>
 
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Break</mat-label>
+                        <input matInput formControlName="break" placeholder="Enter BreakTime" required min="20" max="120">
+                        <!--[owlDateTimeTrigger]="endDate" [owlDateTime]="endDate" -->
+                        <mat-icon matSuffix class="local_cafe"></mat-icon>
+                        <mat-error *ngIf="allActionsForm.get('break')?.hasError('required')">
+                            Break is required!
+                        </mat-error>
+                        <mat-error *ngIf="allActionsForm.get('break')?.hasError('pattern')">
+                            Type only numbers!
+                        </mat-error>
+                        <mat-error *ngIf="allActionsForm.get('break')?.hasError('outOfRange')">
+                            Break must be between 20 and 120.
+                        </mat-error>
+                        <!--<owl-date-time #endDate></owl-date-time>-->
+                    </mat-form-field>
                 </div>
             </div>
             <div class="row">
