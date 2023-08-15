@@ -26,11 +26,13 @@ import { delay } from 'rxjs/operators'; //Jairo
 import { CheckInComponent } from './dialogs/check-in/check-in.component';
 import { CheckOutComponent } from './dialogs/check-out/check-out.component';
 import { BreakComponent } from './dialogs/break/break.component';
+import { AllActionsComponent } from './dialogs/all-actions/all-actions.component';
 import { Timestamp } from 'firebase/firestore';
 import { AuthenticationService } from 'app/_services/authentication.service';
 
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -247,15 +249,16 @@ export class AllemployeesComponent
           this.sort,
           this.employeesArray
         );
+        
         //SUMANDO LOS TOTALES DE LAS HORAS TRABAJADAS
 
         this.totalHoursArray = [];
         //creando el arreglo y llenándolo con los valores de la propiedad hours de amployeeArray
-        console.log('ARRAY EmployeeArray: ',this.employeesArray)
+        //console.log('ARRAY EmployeeArray: ',this.employeesArray)
         for (const item of this.employeesArray) {
           this.totalHoursArray.push(item.hours);
         }
-        console.log('Horas ARRAY: ', this.totalHoursArray)
+        //console.log('Horas ARRAY: ', this.totalHoursArray)
         
         //convirtiendo los valores de totalHoursArray a tipo number
         const numberArray = this.totalHoursArray.map((stringValue) => {
@@ -267,7 +270,7 @@ export class AllemployeesComponent
           return accumulator + currentValue;
         }, 0);
         
-        console.log('Suma Total Horas: ', this.totalHoursSum);
+        //console.log('Suma Total Horas: ', this.totalHoursSum);
       })
       .catch((error) => {
         console.log(error);
@@ -331,6 +334,7 @@ export class AllemployeesComponent
       // console.log('Ningún empleado seleccionado para check-in.');
     }
   }
+
 //Noshow
   outEmployee(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {
@@ -432,7 +436,123 @@ export class AllemployeesComponent
     return String(value).padStart(2, '0');
   }
 
+  //MODAL ALLACTIONS
+
+  async allActionsModal(selectedRows: Employees[]) {
+    if (selectedRows.length > 0) {
+      //console.log('Empleados seleccionados para AllActions:', selectedRows);
+      const dialogRef = this.dialog.open(AllActionsComponent, {
+        data: {
+          employees: this.employees,
+          action: 'add',
+        },
+      });
+      
+      const result = await dialogRef.afterClosed().toPromise();
+
+      const timestampIn = Timestamp.fromDate(new Date(result.startDate));
+      const timestampOut = Timestamp.fromDate(new Date(result.endDate));
+
+      const checkInTimestamp = timestampIn?.seconds || 0;
+      const checkOutTimestamp = timestampOut?.seconds || 0;
+      
+      const  roundedIn = this.roundDate(result.startDate);
+      const  roundedOut = this.roundDate(result.endDate);
+
+      const timestampCheckinRounded= Timestamp.fromDate(new Date(roundedIn));
+      const timestampCheckoutRounded = Timestamp.fromDate(new Date(roundedOut));
+      
+      const dateCheckinRounded = timestampCheckinRounded?.seconds || 0;
+      const dateCheckoutRounded = timestampCheckoutRounded?.seconds || 0;
+      
+
+      // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
+      const updatedEmployees = this.employeesArray.map((employee) => {
+        if (
+          selectedRows.some(
+            (row) =>
+            row.employee.data.employeeId === employee.employee.data.employeeId &&
+            row.hourFrom === employee.hourFrom,
+            )
+            ) {
+              
+                const roundedHours = this.calculateHoursWorkedAll(
+                  employee,
+                  checkInTimestamp,
+                  dateCheckinRounded,
+                  checkOutTimestamp,
+                  dateCheckoutRounded
+                );
+            
+              return {
+            ...employee,
+            checkin: true,
+            checkout: true,
+            status : "Checked Out",
+            dateCheckin: {
+              _seconds: checkInTimestamp,
+              _nanoseconds: 0,
+            },
+            realCheckin: {
+              _seconds: checkInTimestamp,
+              _nanoseconds: 0,
+            },
+            dateCheckinRounded: {
+              _seconds: dateCheckinRounded,
+              _nanoseconds: 0,
+            },
+            dateCheckout: {
+              _seconds: checkOutTimestamp,
+              _nanoseconds: 0,
+            },
+            dateCheckoutRounded: {
+              _seconds: dateCheckoutRounded,
+              _nanoseconds: 0,
+            },
+
+            hours: roundedHours.toFixed(2),
+            break: 0,
+            
+            // updateUser: [...updatedUser, this.dataUser.email],
+            // updateUser: 
+            updateUser:this.dataUser.email
+            
+          };
+        // }
+        }
+        return employee;
+      });
   
+      console.log("updatedEmployees ALLActionsModal: ", updatedEmployees);
+  
+      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`//`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ employees: updatedEmployees }),
+      })
+        
+      .then((response) => response.json())
+      .then((data) => {
+          this.showNotification(
+            'snackbar-success',
+            'Successful update!!!',
+            'bottom',
+            'center'
+          );
+          //console.log('Actualización exitosa:', data);
+          this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+          this.removeSelectedRows() //Actualiza la tabla para que no duplique el dato en el anterior empleado.
+        })
+        .catch((error) => {
+          console.error('Error al actualizar:', error);
+        });
+    } else {
+      console.log('Ningún empleado seleccionado para check-in.');
+    }
+  }
   
   async checkInModal(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {
@@ -618,7 +738,7 @@ export class AllemployeesComponent
         return employee;
       });
 
-      console.log('updatedEmployees', updatedEmployees);
+      console.log('updatedEmployees CHECKOUT', updatedEmployees);
 
       const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
@@ -648,8 +768,54 @@ export class AllemployeesComponent
     }
   }
 
+  calculateHoursWorkedAll(
+    employee: Employees,
+    checkInTimestamp: number,
+    dateCheckinRounded: number,
+    checkOutTimestamp: number,
+    dateCheckoutRounded: number
+  ): number {
+ 
+    if (this.exactHourPayment) {
+      const hoursNumberExact = this.calculateExactHourPaymentAll(
+        checkInTimestamp,
+        checkOutTimestamp
+      );
+      // const hours = hoursNumberExact.toFixed(2);
+      return hoursNumberExact;
+    } else {
+      const lateThreshold = 8; // Umbral de llegada tarde en horas
+      const checkInTime = dateCheckinRounded;
+      const checkOutTime = dateCheckoutRounded;
+      const secondsWorked = checkOutTime - checkInTime;
+      const hoursWorked = secondsWorked / 3600; //3600000
+      // console.log("oursWorked", hoursWorked)
+      let hoursNumber = this.roundHours(hoursWorked);
+      const roundedHours = this.roundHours(hoursWorked);
+
+      if (hoursNumber < 5) {
+        const dateCheckin = new Date(checkInTimestamp * 1000);
+        let late = this.validateCheckout1(employee.hourFrom, dateCheckin);
+        
+        if (late < 8) {
+          hoursNumber = 5;
+        } else {
+          if (late > lateThreshold) {
+            // hoursNumber = lateThreshold;
+            hoursNumber = this.calculateRegularHoursAll(
+              dateCheckinRounded,
+              dateCheckoutRounded
+            );
+          }
+        }
+      }
+      return hoursNumber;
+    }
+  }
+
   calculateHoursWorked(
     employee: Employees,
+
     checkOutTimestamp: number,
     dateCheckoutRounded: number
   ): number {
@@ -683,7 +849,7 @@ export class AllemployeesComponent
   */
 
     // this.exactHourPayment
-
+    console.log('EMPLOYEE: ', employee)
     if (this.exactHourPayment) {
       const hoursNumberExact = this.calculateExactHourPayment(
         employee,
@@ -744,6 +910,16 @@ export class AllemployeesComponent
 
     return 0;
   }
+  
+  calculateRegularHoursAll(dateCheckinRounded: number, dateCheckoutRounded: number) {
+   
+    //Cálculo de horas trabajadas sin tener en cuenta la llegada tardía;
+    // Conversión manual del timestamp a objeto Date
+    const checkinTime = new Date(dateCheckinRounded * 1000);
+    const checkOutTime = new Date(dateCheckoutRounded * 1000);
+    const hours = (checkOutTime.getTime() - checkinTime.getTime()) / 3600000;
+    return Number(hours.toFixed(2));
+  }
 
   calculateRegularHours(employee: Employees, dateCheckoutRounded: number) {
     /* console.log("Cálculo de horas trabajadas sin tener en cuenta la llegada tardía")
@@ -769,6 +945,17 @@ export class AllemployeesComponent
 
     const hours = (checkOutTime.getTime() - checkinTime.getTime()) / 3600000;
     return Number(hours.toFixed(2));
+  }
+  
+  //Aplica solo para dos clientes específicos
+  calculateExactHourPaymentAll(checkInTimestamp: number, checkOutTimestamp: number) {
+    const checkInTime = checkInTimestamp;
+    const checkOutTime = checkOutTimestamp;
+
+    const secondsWorked = checkOutTime - checkInTime;
+    const hoursWorked = secondsWorked / 3600;
+    
+    return Number(hoursWorked.toFixed(2));
   }
 
   calculateExactHourPayment(employee: Employees, checkOutTimestamp: number) {

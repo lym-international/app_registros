@@ -20,6 +20,7 @@ import { AdminEmployeesComponent } from './admin-employees/admin-employees.compo
 import { CheckInAdminEmployeesComponent } from './admin-employees/dialogs/check-in-admin-employees/check-in-admin-employees.component';
 import { CheckOutAdminEmployeesComponent } from './admin-employees/dialogs/check-out-admin-employees/check-out-admin-employees.component';
 import { BreakAdminEmployeesComponent } from './admin-employees/dialogs/break-admin-employees/break-admin-employees.component';
+import { AllActionsComponent } from './allEmployees/dialogs/all-actions/all-actions.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { BreakAdminEmployeesComponent } from './admin-employees/dialogs/break-ad
     CheckInAdminEmployeesComponent,
     CheckOutAdminEmployeesComponent,
     BreakAdminEmployeesComponent,
+    AllActionsComponent,
   ],
   imports: [
     CommonModule,

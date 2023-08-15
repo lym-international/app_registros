@@ -1,4 +1,4 @@
-<div class="addContainer">
+<div class="addContainer containerModal">
     <div class="modalHeader">
         <div class="editRowModal">
             <div class="modalHeader clearfix">
@@ -12,26 +12,36 @@
       </button>
     </div>
     <div mat-dialog-content>
-        <form class="register-form m-4" [formGroup]="checkOutForm">
-
+        <form class="register-form m-4" [formGroup]="allActionsForm">
             <div class="row">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 ">
+
                     <mat-form-field class="example-full-width mb-3" appearance="outline">
-                        <mat-label>Date</mat-label>
+                        <mat-label>CheckIn</mat-label>
+                        <input matInput formControlName="startDate" [owlDateTimeTrigger]="startDate" [owlDateTime]="startDate" placeholder="Choose a date" required>
+                        <mat-icon matSuffix [owlDateTimeTrigger]="startDate" class="date-icon">today</mat-icon>
+                        <mat-error *ngIf="allActionsForm.get('startDate')?.hasError('required')">
+                            CheckIn is required!
+                        </mat-error>
+                        <owl-date-time #startDate></owl-date-time>
+                    </mat-form-field>
+
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>CheckOut</mat-label>
                         <input matInput formControlName="endDate" [owlDateTimeTrigger]="endDate" [owlDateTime]="endDate" placeholder="Choose a date" required>
                         <mat-icon matSuffix [owlDateTimeTrigger]="endDate" class="date-icon">today</mat-icon>
-                        <mat-error *ngIf="checkOutForm.get('endDate')?.hasError('required')">
+                        <mat-error *ngIf="allActionsForm.get('endDate')?.hasError('required')">
                             CheckOut is required!
                         </mat-error>
                         <owl-date-time #endDate></owl-date-time>
                     </mat-form-field>
+
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-xl-10 col-lg-10 col-md-12 col-sm-12">
                     <div class="example-button-row">
-                        <button mat-raised-button color="primary" [type]="submit" [disabled]="!checkOutForm.valid" (click)="confirmAdd()">Save</button>
+                        <button mat-raised-button color="primary" [type]="submit" [disabled]="!allActionsForm.valid" (click)="confirmAdd()">Save</button>
                         <button mat-raised-button color="warn" (click)="dialogRef.close()" tabindex="-1">Cancel</button>
                     </div>
                 </div>
@@ -41,7 +51,7 @@
                             <mat-icon class="font-20">delete</mat-icon>
                         </button>
                     </div>
-                </div> -->
+                </div>-->
             </div>
         </form>
     </div>

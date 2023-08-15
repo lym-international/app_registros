@@ -1,3 +1,4 @@
+
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import {
@@ -9,7 +10,12 @@ import {
   FormGroup,
 } from '@angular/forms';
 //import { CheckInModel } from './check-in.model';
+
 import { formatDate } from '@angular/common';
+//import { AllActionsModel } from './all-actions.model';
+
+
+
 
 export interface DialogData {
   id: number;
@@ -17,26 +23,32 @@ export interface DialogData {
 }
 
 @Component({
-  selector: 'app-check-in',
-  templateUrl: './check-in.component.html',
-  styleUrls: ['./check-in.component.scss'],
+  selector: 'app-all-actions',
+  templateUrl: './all-actions.component.html',
+  styleUrls: ['./all-actions.component.scss']
 })
-export class CheckInComponent implements OnInit {
+export class AllActionsComponent implements OnInit{
+
   action: string;
   dialogTitle: string;
-  checkInForm: UntypedFormGroup;
-  fechaInicio: FormControl;
+  allActionsForm: UntypedFormGroup;
   //checkIn: CheckInModel;
-  //showDeleteBtn = false;
-  //public dataCheckIn!: any;
+  //allActions: AllActionsModel;
+  showDeleteBtn = false;
+  fechaInicio: FormControl;
+  fechaSalida: FormControl;
+  public dataCheckIn!: any;
   
   ngOnInit(): void {
-    this.checkInForm.patchValue({
+    this.allActionsForm.patchValue({
       startDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
+      endDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
     });
     this.fechaInicio = new FormControl(new Date());
-    this.checkInForm = new FormGroup({
-    startDate: this.fechaInicio
+    this.fechaSalida = new FormControl(new Date());
+    this.allActionsForm = new FormGroup({
+    startDate: this.fechaInicio,
+    endDate: this.fechaSalida
     });
     //this.dataCheckIn = this.checkInService.setCheckIn();
     
@@ -49,7 +61,7 @@ export class CheckInComponent implements OnInit {
     this.dataOrder = this.orderDataService.getSelectedOrder(); */
 
   constructor(
-    public dialogRef: MatDialogRef<CheckInComponent>,
+    public dialogRef: MatDialogRef<AllActionsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private fb: UntypedFormBuilder
   ) {
@@ -57,12 +69,12 @@ export class CheckInComponent implements OnInit {
     if (this.action === 'edit') {
       //this.showDeleteBtn = true;
     } else {
-      this.dialogTitle = 'CheckIn date:';
-      //const blankObject = {} as CheckInModel;
-      //this.checkIn = new CheckInModel(blankObject);
+      this.dialogTitle = 'All Actions:';
+      //const blankObject = {} as AllActionsModel;
+      //this.allActions = new AllActionsModel(blankObject);
       //this.showDeleteBtn = false;
     }
-    this.checkInForm = this.createContactForm();
+    this.allActionsForm = this.createContactForm();
     //console.log('Propiedades modalCheckIn ==>',this.checkInForm.controls)
   }
   
@@ -90,8 +102,8 @@ export class CheckInComponent implements OnInit {
       //id: [this.checkIn.id],
       //title: [this.checkIn.title],
       //category: [this.checkIn.category],
-      //startDate: [this.checkIn.startDate, [Validators.required]],
-      //endDate: [this.checkIn.endDate],
+      //startDate: [this.allActions.date, [Validators.required]],
+      //endDate: [this.allActions.date, [Validators.required]],
       //details: [this.checkIn.details],
     });
   }
@@ -110,6 +122,15 @@ export class CheckInComponent implements OnInit {
 
   public confirmAdd(): void {
     const startDate = this.fechaInicio.value;
-    this.dialogRef.close(startDate);
+    const endDate = this.fechaSalida.value;
+    
+    const result = {
+      startDate: startDate,
+      endDate: endDate
+  };
+
+    // Cierra el diálogo y pasa el resultado
+    this.dialogRef.close(result);
   }
+  
 }
