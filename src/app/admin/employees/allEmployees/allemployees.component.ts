@@ -92,7 +92,8 @@ export class AllemployeesComponent
   public outEmployees = [];
   public pdfEmployees = [];
   totalHoursArray: number[] = [];
-  totalHoursSum: number
+  totalHoursSum: number;
+  updatedHours: number
 
   
   
@@ -490,7 +491,12 @@ export class AllemployeesComponent
                 );
               console.log('roundedHours: ',roundedHours)  
               console.log('result.break: ',result.break)  
-              const updatedHours =  roundedHours - roundedBreak;
+              
+              if(roundedHours==5){
+                this.updatedHours = roundedHours 
+              } else{
+                this.updatedHours =  roundedHours - roundedBreak;
+              }
 
               return {
             ...employee,
@@ -518,7 +524,7 @@ export class AllemployeesComponent
               _seconds: dateCheckoutRounded,
               _nanoseconds: 0,
             },
-            hours: updatedHours.toFixed(2),
+            hours: this.updatedHours.toFixed(2),
             updateUser:this.dataUser.email
           };
         // }
@@ -781,6 +787,7 @@ export class AllemployeesComponent
   ): number {
  
     if (this.exactHourPayment) {
+      //console.log('Entró al IF')
       const hoursNumberExact = this.calculateExactHourPaymentAll(
         checkInTimestamp,
         checkOutTimestamp,
@@ -789,6 +796,7 @@ export class AllemployeesComponent
       // const hours = hoursNumberExact.toFixed(2);
       return hoursNumberExact;
     } else {
+      //console.log('Entró al else')
       const lateThreshold = 8; // Umbral de llegada tarde en horas
       const checkInTime = dateCheckinRounded;
       const checkOutTime = dateCheckoutRounded;
@@ -1020,12 +1028,19 @@ export class AllemployeesComponent
           // const updatedHours = employee.hours - breakInHours;
           console.log('employee.hours :',employee.hours)
           console.log('roundedBreak :',roundedBreak)
-          const updatedHours = employee.hours - roundedBreak;
+
+          if(employee.hours==5){
+            this.updatedHours = employee.hours
+          } else{
+            this.updatedHours =  employee.hours - roundedBreak;
+          }
+
+          //const updatedHours = employee.hours - roundedBreak;
           return {
             ...employee,
             updateUser:this.dataUser.email,
             break: result.break,
-            hours: updatedHours.toFixed(2),
+            hours: this.updatedHours,//.toFixed(2),
           };
         }
         return employee;
