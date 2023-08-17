@@ -1507,13 +1507,14 @@ export class AllemployeesComponent
         this.refreshTable();
         this.showNotification(
           'snackbar-success',
-          'Add Record Successfully...!!!',
+          'New employee added successfully...!!!',
           'bottom',
           'center'
         );
       }
     });
   }
+
   //Abre el modal FormDialogComponent para editar los datos.
   editCall(row: Employees) {
     this.id = row.id;

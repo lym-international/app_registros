@@ -47,16 +47,15 @@ export class AllActionsComponent implements OnInit{
       startDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
       endDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
     });
-    this.fechaInicio = new FormControl(new Date());//this.fechaInicio = new FormControl(new Date());
-    this.fechaSalida = new FormControl(new Date());//this.fechaSalida = new FormControl(new Date());
-    this.breakTime = new FormControl();
+    this.fechaInicio = new FormControl();//this.fechaInicio = new FormControl(new Date());
+    this.fechaSalida = new FormControl();//this.fechaSalida = new FormControl(new Date());
+    this.breakTime = new FormControl('0');
     this.allActionsForm = new FormGroup({
     startDate: this.fechaInicio,
     endDate: this.fechaSalida,
     break: this.breakTime
     });
     //this.dataCheckIn = this.checkInService.setCheckIn();
-    console.log('ActionsForm: ', this.allActionsForm)
   }
 
   constructor(

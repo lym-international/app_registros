@@ -16,6 +16,7 @@
         <form class="register-form m-4" [formGroup]="employeesForm" (ngSubmit)="submit">
             <div class="row">
 
+                <!--
                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                     <mat-form-field class="example-full-width" appearance="outline">
                         <mat-label>In</mat-label>
@@ -27,13 +28,24 @@
                         </mat-error>
                     </mat-form-field>
                 </div>
+                -->
                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                     <mat-form-field class="example-full-width" appearance="outline">
-                        <mat-label>Name</mat-label>
-                        <input matInput formControlName="name" required>
+                        <mat-label>FirstName</mat-label>
+                        <input matInput formControlName="FirsName" required>
                         <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>face</mat-icon>
-                        <mat-error *ngIf="employeesForm.get('name')?.hasError('required')">
-                            Name is required
+                        <mat-error *ngIf="employeesForm.get('FirsName')?.hasError('required')">
+                            FirstName is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>LastName</mat-label>
+                        <input matInput formControlName="LastName" required>
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>face</mat-icon>
+                        <mat-error *ngIf="employeesForm.get('LastName')?.hasError('required')">
+                            LastName is required
                         </mat-error>
                     </mat-form-field>
                 </div>
@@ -92,8 +104,8 @@
                     </mat-form-field>
                 </div> -->
             </div>
-            <div class="row">
-
+            <!--
+            <div class="row">    
                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                     <mat-form-field class="example-full-width" appearance="outline">
                         <mat-label>Position</mat-label>
@@ -103,9 +115,9 @@
                             Position is required.
                         </mat-error>
                     </mat-form-field>
-                </div>
-
+                </div>  
             </div>
+            -->
             <!--<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                     <mat-form-field class="example-full-width" appearance="outline">
                         <mat-label>Mobile</mat-label>

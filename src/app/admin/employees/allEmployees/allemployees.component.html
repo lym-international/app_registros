@@ -113,21 +113,30 @@
                                 <li class="tbl-header-btn borde-izq">
                                     <div class="m-l-10" matTooltip="All ACTIONS">
                                         <button mat-mini-fab color="primary" (click)="allActionsModal(getSelectedRows())"> 
-                                        <mat-icon class="col-white">sync_alt</mat-icon>
+                                        <mat-icon class="col-white">swap_horizontal_circle</mat-icon>
                                       </button>
                                     </div>
                                 </li>
-
+                                <div class="background">
+                                    <li class="tbl-header-btn">
+                                        <div class=" marginButton" matTooltip="ADD">
+                                            <!--class="m-l-10"-->
+                                            <button mat-mini-fab color="primary" (click)="addNew()">
+                                            <mat-icon class="col-white">person_add</mat-icon>
+                                        </button>
+                                        </div>
+                                    </li>
+                                    <li class="tbl-header-btn">
+                                        <div class="marginButton" matTooltip="SEARCH EMPLOYEE">
+                                            <!--class="m-l-10"-->
+                                            <button mat-mini-fab color="primary" (click)="addNew()">
+                                            <mat-icon class="col-white">person_search</mat-icon>
+                                        </button>
+                                        </div>
+                                    </li>
+                                </div>
                                 <li class="tbl-header-btn">
-                                    <div class="m-l-10" matTooltip="ADD">
-                                        <button mat-mini-fab color="primary" (click)="addNew()">
-                                        <mat-icon class="col-white">person_add</mat-icon>
-                                      </button>
-                                    </div>
-                                </li>
-
-                                <li class="tbl-header-btn">
-                                    <div class="m-l-10" matTooltip="DOWNLOAD">
+                                    <div class="" matTooltip="DOWNLOAD">
                                         <button mat-mini-fab color="primary" (click)="generatePdf()">
                                             <!-- (click)="exportExcel()" -->
                                         <mat-icon class="col-white">download</mat-icon>

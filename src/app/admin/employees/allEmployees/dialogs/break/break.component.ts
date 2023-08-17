@@ -35,7 +35,7 @@ export class BreakComponent implements OnInit{
   break: BreakModel;
   employees: Employees;
   //showDeleteBtn = false;
-  breakTime : FormControl;
+  //breakTime : FormControl;
   
   ngOnInit(): void {
     
@@ -63,8 +63,8 @@ export class BreakComponent implements OnInit{
       //this.showDeleteBtn = false;
     //}
     this.breakForm = this.createContactForm();
-    console.log('Break Time ==>',this.breakForm.controls)
-    console.log('this.break.break: ', this.break.break)
+    //console.log('Break Time ==>',this.breakForm.controls)
+    //console.log('this.break.break: ', this.break.break)
   }
   
   /*formControl = new UntypedFormControl('', [

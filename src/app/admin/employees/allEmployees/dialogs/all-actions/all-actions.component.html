@@ -38,7 +38,7 @@
 
                     <mat-form-field class="example-full-width mb-3" appearance="outline">
                         <mat-label>Break</mat-label>
-                        <input matInput formControlName="break" placeholder="Enter BreakTime" required min="20" max="120">
+                        <input matInput formControlName="break" placeholder="Enter BreakTime" min="20" max="120">
                         <!--[owlDateTimeTrigger]="endDate" [owlDateTime]="endDate" -->
                         <mat-icon matSuffix class="local_cafe"></mat-icon>
                         <mat-error *ngIf="allActionsForm.get('break')?.hasError('required')">
