@@ -6,9 +6,12 @@ import {
   Validators,
   UntypedFormGroup,
   UntypedFormBuilder,
+  FormControl,
+  FormGroup,
 } from '@angular/forms';
 import { Employees } from '../../employees.model';
 import { formatDate } from '@angular/common';
+import { NavigationExtras, Router } from '@angular/router';
 export interface DialogData {
   id: number;
   action: string;
@@ -24,23 +27,34 @@ export class FormDialogComponent {
   dialogTitle: string;
   employeesForm: UntypedFormGroup;
   employees: Employees;
+  firstName: FormControl;
+  lastName: FormControl;
+  mail: FormControl;
+  phone: FormControl;
+  formData: any;
+  
+  ngOnInit(): void {
+    this.firstName = new FormControl();
+    this.lastName = new FormControl();
+    this.mail = new FormControl();
+    this.phone = new FormControl();
+    this.employeesForm = new FormGroup({
+      firstName: this.firstName,
+      lastName: this.lastName,
+      mail: this.mail,
+      phone: this.phone,
+      });
+  }
+
   constructor(
+    
     public dialogRef: MatDialogRef<FormDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    public employeesService: EmployeesService,
+    //public employeesService: EmployeesService,
     private fb: UntypedFormBuilder
   ) {
-    // Set the defaults
-    this.action = data.action;
-    if (this.action === 'edit') {
-      this.dialogTitle = data.employees.firstName;
-      this.employees = data.employees;
-    } else {
-      this.dialogTitle = 'New emergency employee';
-      const blankObject = {} as Employees;
-      this.employees = new Employees(blankObject);
-    }
-    this.employeesForm = this.createContactForm();
+    
+    this.dialogTitle = 'New emergency employee';
   }
   formControl = new UntypedFormControl('', [
     Validators.required,
@@ -53,22 +67,8 @@ export class FormDialogComponent {
       ? 'Not a valid email'
       : '';
   }
-  createContactForm(): UntypedFormGroup {
-    return this.fb.group({
-      id: [this.employees.id],
-      // img: [this.employees.img],
-      highKeyID: [this.employees.highKeyId],
-      position: [this.employees.position],
-      in: [this.employees.highKeyId],
-      firstName: [this.employees.firstName],
-      lastName: [this.employees.lastName],
-      
-      // role: [this.employees.role],
-      // mobile: [this.employees.mobile],
-      // department: [this.employees.department],
-      // degree: [this.employees.degree],
-    });
-  }
+  
+
   submit() {
     // emppty stuff
   }
@@ -76,6 +76,12 @@ export class FormDialogComponent {
     this.dialogRef.close();
   }
   public confirmAdd(): void {
-    this.employeesService.addEmployees(this.employeesForm.getRawValue());
+    
+    this.formData = this.employeesForm.value;
+    
+    console.log('FormData en form-dialog: ', this.formData)
+  
+    this.dialogRef.close(this.formData);
+    
   }
 }

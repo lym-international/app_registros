@@ -63,15 +63,15 @@ export class AllActionsComponent implements OnInit{
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private fb: UntypedFormBuilder
   ) {
-    this.action = data.action;
-    if (this.action === 'edit') {
+    //this.action = data.action;
+    //if (this.action === 'edit') {
       //this.showDeleteBtn = true;
-    } else {
+    //} else {
       this.dialogTitle = 'All Actions:';
       //const blankObject = {} as BreakModel;
       //this.break = new BreakModel(blankObject);
       //this.showDeleteBtn = false;
-    }
+    //}
     this.allActionsForm = this.createContactForm();
     //console.log('Propiedades modalCheckIn ==>',this.checkInForm.controls)
   }
@@ -142,7 +142,7 @@ export class AllActionsComponent implements OnInit{
       endDate: endDate,
       break: _break
   };
-  console.log('RESULT ::',result)
+  //console.log('RESULT ::',result)
 
     // Cierra el diálogo y pasa el resultado
     this.dialogRef.close(result);

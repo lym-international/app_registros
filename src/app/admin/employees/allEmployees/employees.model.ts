@@ -17,13 +17,15 @@ export class Employees {
   totalHours:string;
   orderId: string;
   hours: number;
+  phone: number;
+  mail: string;
   employee: {   // Agregar la propiedad 'employee' como un objeto
     agmRate: number;
     booking: string;
     data: {
       firstname: string;
       gender: string;
-      phone: string;
+      phone: number;
       company: string;
       employeeId: number;
       positions: { rate: number; name: string }[];
@@ -56,8 +58,6 @@ export class Employees {
   // degree: string;  //Plantilla
   constructor(employees: Employees) {
     {
-
-     
       this.id = employees.id || this.getRandomID();
       this.firstName = employees.firstName || '';
       this.lastName = employees.lastName || '',
@@ -72,6 +72,8 @@ export class Employees {
       this.break = employees.break || '';
       this.orderId=employees.orderId || '';
       this.hours=employees.hours || 0;
+      this.phone = employees.phone ;
+      this.mail = employees.mail || '';
 
      /*  this.id = employees.id || this.getRandomID();
       this.img = employees.img || 'assets/images/user/user1.jpg';

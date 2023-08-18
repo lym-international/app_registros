@@ -32,6 +32,7 @@ import { AuthenticationService } from 'app/_services/authentication.service';
 
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import { ActivatedRoute } from '@angular/router';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -115,6 +116,7 @@ export class AllemployeesComponent
     private orderDataService: OrderDataService,
     public authenticationService: AuthenticationService,
     //private checkInService: CheckInService,
+    private route: ActivatedRoute
     
     
   ) {
@@ -140,6 +142,13 @@ export class AllemployeesComponent
       // Almacenar los datos en el localStorage
       localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
     }
+    this.route.queryParams.subscribe(params => {
+      if (params) {
+        // Now you can use the params object directly in Component B
+        console.log('FormData en AllEmployees:', params);
+      }
+    });
+    
   }
   
   // Función para verificar la visibilidad de los botones al hacer clic en el checkbox
@@ -441,19 +450,19 @@ export class AllemployeesComponent
 
   async allActionsModal(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {
-      //console.log('Empleados seleccionados para AllActions:', selectedRows);
-      const dialogRef = this.dialog.open(AllActionsComponent, {
+      
+      const dialogRef = this.dialog.open(AllActionsComponent)
+      
+      /*const dialogRef = this.dialog.open(AllActionsComponent, {
         data: {
           employees: this.employees,
           action: 'add',
         },
-      });
-      
+      });*/
+
       const result = await dialogRef.afterClosed().toPromise();
-      console.log('Result => ', result.break);
       
       const roundedBreak = this.roundHours(result.break / 60);
-      console.log('RoundedBreak => ', roundedBreak);
       
       const timestampIn = Timestamp.fromDate(new Date(result.startDate));
       const timestampOut = Timestamp.fromDate(new Date(result.endDate));
@@ -1012,7 +1021,7 @@ export class AllemployeesComponent
       });
 
       const result = await dialogRef.afterClosed().toPromise();
-      console.log('Result break: ', result);
+      //console.log('Result break: ', result);
       const roundedBreak = this.roundHours(result.break / 60);
       // Convertir el tiempo de descanso de minutos a horas
       // const breakInHours = result.break / 60;
@@ -1483,13 +1492,144 @@ export class AllemployeesComponent
     //
   }
   
-  addNew() {
-    let tempDirection: Direction;
+  
+  async addNewEmergencyEmployeeModal() {
+    
+    const dialogRef = this.dialog.open(FormDialogComponent)
+    const result = await dialogRef.afterClosed().toPromise();
+    console.log('RESULT--> ', result)
+
+    if (result) {
+      const previousEmployee = this.employeesArray[0];
+      
+      const addNewEmployee = {
+        ...previousEmployee,
+        //...this.employeesArray[0], //Acá se están tomando las propiedades del primer elemento como base del nuevo elemento del arreglo
+        orderId: previousEmployee.orderId,
+        firstName: result.firstName,
+        lastName: result.lastName,
+        mail: result.mail,
+        phone: result.phone,
+        updateUser: this.dataUser.email
+      };
+      Object.keys(addNewEmployee).forEach((key) => {
+        if (key !== 'orderId' && key !== 'firstName' && key !== 'lastName' && key !== 'mail' && key !== 'phone' && key !== 'updateUser') {
+          addNewEmployee[key] = '';
+        }
+      });
+ 
+      this.employeesArray.push(addNewEmployee);
+  
+      console.log('employeesArray después de adicionar nuevo employee: ', this.employeesArray);
+    }
+
+/*
+    const addNewEmployee = this.employeesArray.map((employee) => {
+      return {
+        ...employee,
+        firstName: result.firstName,
+        lastName: result.lastName,
+        mail: result.mail,
+        phone: result.phone,
+        
+        updateUser:this.dataUser.email
+      };
+      return employee;  
+    });
+  
+    console.log('addEmployee: ',addNewEmployee)
+    */
+
+
+    //const dialogRef = this.dialog.open(AllActionsComponent);
+      
+      //const result = await dialogRef.afterClosed().toPromise();
+      //console.log('Result => ', result);
+      
+      //const addEmployee = 
+
+      /*
+      const updatedEmployees = this.employeesArray.map((employee) => {
+        
+        if (
+          selectedRows.some(
+            (row) =>
+            row.employee.data.employeeId === employee.employee.data.employeeId &&
+            row.hourFrom === employee.hourFrom,
+            )
+            ){
+              
+                const roundedHours = this.calculateHoursWorkedAll(
+                  employee,
+                  checkInTimestamp,
+                  dateCheckinRounded,
+                  checkOutTimestamp,
+                  dateCheckoutRounded,
+                  
+                );
+              console.log('roundedHours: ',roundedHours)  
+              console.log('result.break: ',result.break)  
+              
+              if(roundedHours==5){
+                this.updatedHours = roundedHours 
+              } else{
+                this.updatedHours =  roundedHours - roundedBreak;
+              }
+
+              return {
+                ...employee,
+                checkin: true,
+                checkout: true,
+                break: result.break,
+            
+                updateUser:this.dataUser.email
+              };
+        //  }
+        }
+        return employee;
+      });
+      
+  
+      console.log("updatedEmployees ALLActionsModal: ", updatedEmployees);
+  
+      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`//`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ employees: updatedEmployees }),
+      })
+        
+      .then((response) => response.json())
+      .then((data) => {
+          this.showNotification(
+            'snackbar-success',
+            'New emergency employee added successfully...!!!',
+            'bottom',
+            'center'
+          );
+          //console.log('Actualización exitosa:', data);
+          this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+          this.removeSelectedRows() //Actualiza la tabla para que no duplique el dato en el anterior empleado.
+        })
+        .catch((error) => {
+          console.error('Error al actualizar:', error);
+        });
+    } else {
+      console.log('Ningún empleado seleccionado para check-in.');
+    }
+    */
+
+    // PLANTILLA
+   
+    /*let tempDirection: Direction;
     if (localStorage.getItem('isRtl') === 'true') {
       tempDirection = 'rtl';
     } else {
       tempDirection = 'ltr';
     }
+
     const dialogRef = this.dialog.open(FormDialogComponent, {
       data: {
         employees: this.employees,
@@ -1497,6 +1637,9 @@ export class AllemployeesComponent
       },
       direction: tempDirection,
     });
+    
+    const addEmployee = 
+
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
       if (result === 1) {
         // After dialog is closed we're doing frontend updates
@@ -1504,15 +1647,20 @@ export class AllemployeesComponent
         this.exampleDatabase?.dataChange.value.unshift(
           this.employeesService.getDialogData()
         );
+
+
+
         this.refreshTable();
+
         this.showNotification(
           'snackbar-success',
-          'New employee added successfully...!!!',
+          'New emergency employee added successfully...!!!',
           'bottom',
           'center'
         );
       }
     });
+    */
   }
 
   //Abre el modal FormDialogComponent para editar los datos.
@@ -1690,6 +1838,14 @@ export class AllemployeesComponent
     }
   }
 }
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
 export class ExampleDataSource extends DataSource<Employees> {
   data: any[];
   filterChange = new BehaviorSubject('');
