@@ -12,6 +12,8 @@ import {
 import { Employees } from '../../employees.model';
 import { formatDate } from '@angular/common';
 import { NavigationExtras, Router } from '@angular/router';
+
+
 export interface DialogData {
   id: number;
   action: string;
@@ -32,7 +34,21 @@ export class FormDialogComponent {
   mail: FormControl;
   phone: FormControl;
   formData: any;
+  positions = [];
   
+  constructor(
+    
+    public dialogRef: MatDialogRef<FormDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    //public employeesService: EmployeesService,
+    private fb: UntypedFormBuilder,
+    
+  ) {
+    
+    this.dialogTitle = 'New emergency employee';
+    
+  }
+
   ngOnInit(): void {
     this.firstName = new FormControl();
     this.lastName = new FormControl();
@@ -44,18 +60,11 @@ export class FormDialogComponent {
       mail: this.mail,
       phone: this.phone,
       });
+      //this.positions = this.positionsService.positions;
+    const storedPositions = localStorage.getItem('positions');
+    this.positions = storedPositions ? JSON.parse(storedPositions) : {};
   }
 
-  constructor(
-    
-    public dialogRef: MatDialogRef<FormDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    //public employeesService: EmployeesService,
-    private fb: UntypedFormBuilder
-  ) {
-    
-    this.dialogTitle = 'New emergency employee';
-  }
   formControl = new UntypedFormControl('', [
     Validators.required,
     // Validators.email,
@@ -80,7 +89,7 @@ export class FormDialogComponent {
     this.formData = this.employeesForm.value;
     
     console.log('FormData en form-dialog: ', this.formData)
-  
+    
     this.dialogRef.close(this.formData);
     
   }

@@ -105,44 +105,46 @@
                     </mat-form-field>
                 </div> -->
             </div>
-            <!--
-            <div class="row">    
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                    <mat-form-field class="example-full-width" appearance="outline">
-                        <mat-label>Position</mat-label>
-                        <input matInput formControlName="position" required>
-                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>flag</mat-icon>
-                        <mat-error *ngIf="employeesForm.get('position')?.hasError('required')">
-                            Position is required.
-                        </mat-error>
-                    </mat-form-field>
-                </div>  
-            </div>
-            -->
-            <!--<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                    <mat-form-field class="example-full-width" appearance="outline">
-                        <mat-label>Mobile</mat-label>
-                        <input matInput formControlName="mobile" type="number">
-                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>phone</mat-icon>
-                        <mat-error *ngIf="employeesForm.get('mobile')?.hasError('required')">
-                            Mobile is required
-                        </mat-error>
-                    </mat-form-field>
-                </div> -->
 
-            <!--<div class="row">
-               <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                    <mat-form-field class="example-full-width" appearance="outline">
-                        <mat-label>Joining date</mat-label>
-                        <input matInput [matDatepicker]="picker" formControlName="date">
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-                        <mat-error *ngIf="employeesForm.get('date')?.hasError('required')">
-                            Please select date
-                        </mat-error>
-                    </mat-form-field>
-                </div> 
-            </div>-->
+            <hr style="color:#004676; width:80%; margin: 20px auto">
+
+            <!--TABLA POSICIONES-->
+            <div class="row clearfix" style="margin-right: 0px; margin-left: 0px">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2 style="color: #1A202E;">Check a Position</h2>
+                        </div>
+                        <ng-scrollbar style="height: 210px" visibility="hover">
+                            <div class="tableBody">
+                                <div class="responsive_table">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th class="column-check">Position</th>
+                                                <th class="column-check">Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <ng-container *ngFor="let position of positions | keyvalue">
+                                                <!-- <ng-container *ngFor="let item of dataItems; let i = index">-->
+                                                <tr *ngFor="let hour of position.value.hours | keyvalue">
+                                                    <!--<tr *ngIf="item.m !== 0"> -->
+                                                    <td class="column-check"> {{ position.key }}</td>
+                                                    <!--{{ item.position }} -->
+                                                    <td class="column-check"> {{ hour.key }} </td>
+                                                    <!--{{ item.hourFrom }} -->
+                                                </tr>
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </ng-scrollbar>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
                     <div class="example-button-row" align="end">

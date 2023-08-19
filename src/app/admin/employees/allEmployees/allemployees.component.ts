@@ -34,6 +34,7 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { ActivatedRoute } from '@angular/router';
 
+
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -94,8 +95,8 @@ export class AllemployeesComponent
   public pdfEmployees = [];
   totalHoursArray: number[] = [];
   totalHoursSum: number;
-  updatedHours: number
-
+  updatedHours: number;
+  highKeyid: number;
   
   
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -106,6 +107,8 @@ export class AllemployeesComponent
   contextMenuPosition = { x: '0px', y: '0px' };
 
   dataSource!: ExampleDataSource;
+  positions = [];
+  
 
   constructor(
     private datePipe: DatePipe,
@@ -116,7 +119,8 @@ export class AllemployeesComponent
     private orderDataService: OrderDataService,
     public authenticationService: AuthenticationService,
     //private checkInService: CheckInService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    
     
     
   ) {
@@ -145,7 +149,7 @@ export class AllemployeesComponent
     this.route.queryParams.subscribe(params => {
       if (params) {
         // Now you can use the params object directly in Component B
-        console.log('FormData en AllEmployees:', params);
+        //console.log('FormData en AllEmployees:', params);
       }
     });
     
@@ -1498,100 +1502,60 @@ export class AllemployeesComponent
     const dialogRef = this.dialog.open(FormDialogComponent)
     const result = await dialogRef.afterClosed().toPromise();
     console.log('RESULT--> ', result)
+    
 
+    fetch(`https://us-central1-highkeystaff.cloudfunctions.net/users/getLastEmployeeID`)
+      .then((response) => response.json())
+      .then((data) => {
+        //console.log("last highKey Id: ", data.lastEmployeeID);
+        console.log('POSITIONS desde allEmployees: ',this.positions)
+        this.highKeyid = data.lastEmployeeID + 1;
+        if (result) {
+          //const previousEmployee = this.employeesArray[0];
+          //console.log('HighkeyId: ',this.highKeyid)
+          const addNewEmployee = {
+            orderId: this.orderId,
+            firstName: result.firstName.toUpperCase(),
+            lastName: result.lastName.toUpperCase(),
+            mail: result.mail,
+            phone: result.phone,
+            updateUser: this.dataUser.email,
+            employeeId: this.highKeyid,
+            status: "Active",
+            company: "L&M Employee",
+            
+          };
+          console.log('addNewEmployee: ',addNewEmployee)
+          this.employeesArray.push(addNewEmployee);
+        }
+        console.log('this.employeesArray: ',this.employeesArray)
+      }).catch((error) => {
+        console.log(error);
+      });
+      
+    /*  
     if (result) {
       const previousEmployee = this.employeesArray[0];
-      
+      console.log('HighkeyId: ',this.highKeyid)
       const addNewEmployee = {
-        ...previousEmployee,
-        //...this.employeesArray[0], //Acá se están tomando las propiedades del primer elemento como base del nuevo elemento del arreglo
         orderId: previousEmployee.orderId,
         firstName: result.firstName,
         lastName: result.lastName,
         mail: result.mail,
         phone: result.phone,
         updateUser: this.dataUser.email
+        
       };
-      Object.keys(addNewEmployee).forEach((key) => {
-        if (key !== 'orderId' && key !== 'firstName' && key !== 'lastName' && key !== 'mail' && key !== 'phone' && key !== 'updateUser') {
-          addNewEmployee[key] = '';
-        }
-      });
- 
+      
       this.employeesArray.push(addNewEmployee);
-  
-      console.log('employeesArray después de adicionar nuevo employee: ', this.employeesArray);
     }
-
-/*
-    const addNewEmployee = this.employeesArray.map((employee) => {
-      return {
-        ...employee,
-        firstName: result.firstName,
-        lastName: result.lastName,
-        mail: result.mail,
-        phone: result.phone,
-        
-        updateUser:this.dataUser.email
-      };
-      return employee;  
-    });
-  
-    console.log('addEmployee: ',addNewEmployee)
-    */
-
-
-    //const dialogRef = this.dialog.open(AllActionsComponent);
-      
-      //const result = await dialogRef.afterClosed().toPromise();
-      //console.log('Result => ', result);
-      
-      //const addEmployee = 
-
-      /*
-      const updatedEmployees = this.employeesArray.map((employee) => {
-        
-        if (
-          selectedRows.some(
-            (row) =>
-            row.employee.data.employeeId === employee.employee.data.employeeId &&
-            row.hourFrom === employee.hourFrom,
-            )
-            ){
-              
-                const roundedHours = this.calculateHoursWorkedAll(
-                  employee,
-                  checkInTimestamp,
-                  dateCheckinRounded,
-                  checkOutTimestamp,
-                  dateCheckoutRounded,
-                  
-                );
-              console.log('roundedHours: ',roundedHours)  
-              console.log('result.break: ',result.break)  
-              
-              if(roundedHours==5){
-                this.updatedHours = roundedHours 
-              } else{
-                this.updatedHours =  roundedHours - roundedBreak;
-              }
-
-              return {
-                ...employee,
-                checkin: true,
-                checkout: true,
-                break: result.break,
-            
-                updateUser:this.dataUser.email
-              };
-        //  }
-        }
-        return employee;
-      });
-      
-  
-      console.log("updatedEmployees ALLActionsModal: ", updatedEmployees);
-  
+      */
+    
+    //console.log('this.employeesArray: ',this.employeesArray)
+    
+/*    
+    
+/*  
       const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`//`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
@@ -1621,46 +1585,6 @@ export class AllemployeesComponent
     }
     */
 
-    // PLANTILLA
-   
-    /*let tempDirection: Direction;
-    if (localStorage.getItem('isRtl') === 'true') {
-      tempDirection = 'rtl';
-    } else {
-      tempDirection = 'ltr';
-    }
-
-    const dialogRef = this.dialog.open(FormDialogComponent, {
-      data: {
-        employees: this.employees,
-        action: 'add',
-      },
-      direction: tempDirection,
-    });
-    
-    const addEmployee = 
-
-    this.subs.sink = dialogRef.afterClosed().subscribe((result) => {
-      if (result === 1) {
-        // After dialog is closed we're doing frontend updates
-        // For add we're just pushing a new row inside DataServicex
-        this.exampleDatabase?.dataChange.value.unshift(
-          this.employeesService.getDialogData()
-        );
-
-
-
-        this.refreshTable();
-
-        this.showNotification(
-          'snackbar-success',
-          'New emergency employee added successfully...!!!',
-          'bottom',
-          'center'
-        );
-      }
-    });
-    */
   }
 
   //Abre el modal FormDialogComponent para editar los datos.

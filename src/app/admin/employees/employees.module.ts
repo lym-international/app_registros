@@ -22,6 +22,7 @@ import { CheckOutAdminEmployeesComponent } from './admin-employees/dialogs/check
 import { BreakAdminEmployeesComponent } from './admin-employees/dialogs/break-admin-employees/break-admin-employees.component';
 import { AllActionsComponent } from './allEmployees/dialogs/all-actions/all-actions.component';
 import { AddExistingEmployeeComponent } from './allEmployees/dialogs/add-existing-employee/add-existing-employee.component';
+import { NgScrollbarModule } from 'ngx-scrollbar';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { AddExistingEmployeeComponent } from './allEmployees/dialogs/add-existin
     SharedModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
+    NgScrollbarModule
   ],
   providers: [EmployeesService, DatePipe],
 })

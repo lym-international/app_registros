@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderDataService } from 'app/_services/orderData.service';
 import { Employees } from '../employees/allEmployees/employees.model';
-
-
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -20,6 +18,9 @@ import {
   ApexNonAxisChartSeries,
 } from 'ng-apexcharts';
 import { Position } from 'app/interfaces/position.interface';
+
+
+
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -69,6 +70,7 @@ export class DashboardLmComponent implements OnInit {
   noShowValues: { [position: string]: { [hourFrom: string]: number } } = {};
   filteredCheckinValues: number[];
   
+  
   //  color: ["#3FA7DC", "#F6A025", "#9BC311"],
   constructor(private orderDataService: OrderDataService) {
     // controller code
@@ -83,6 +85,7 @@ export class DashboardLmComponent implements OnInit {
     this.getRegistByOrder();
     this.getTotalRequest();
     //this.porcentajes();
+    
     
   }
   //this.orderSelected = this.selectedOrder;
@@ -202,6 +205,9 @@ export class DashboardLmComponent implements OnInit {
       }*/
 
       })
+      
+      
+      localStorage.setItem('positions', JSON.stringify(positions));
       
       // Imprimir los totales por posición y hora inicial
     
