@@ -1508,7 +1508,7 @@ export class AllemployeesComponent
       .then((response) => response.json())
       .then((data) => {
         //console.log("last highKey Id: ", data.lastEmployeeID);
-        console.log('POSITIONS desde allEmployees: ',this.positions)
+        //console.log('POSITIONS desde allEmployees: ',this.positions)
         this.highKeyid = data.lastEmployeeID + 1;
         if (result) {
           //const previousEmployee = this.employeesArray[0];
@@ -1523,7 +1523,8 @@ export class AllemployeesComponent
             employeeId: this.highKeyid,
             status: "Active",
             company: "L&M Employee",
-            
+            position: result.position,
+            hour: result.hour
           };
           console.log('addNewEmployee: ',addNewEmployee)
           this.employeesArray.push(addNewEmployee);

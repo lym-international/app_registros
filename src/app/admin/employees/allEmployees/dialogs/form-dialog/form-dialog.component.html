@@ -113,7 +113,7 @@
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                     <div class="card">
                         <div class="header">
-                            <h2 style="color: #1A202E;">Check a Position</h2>
+                            <h2 style="color: #1A202E;">Select a Position</h2>
                         </div>
                         <ng-scrollbar style="height: 210px" visibility="hover">
                             <div class="tableBody">
@@ -121,20 +121,30 @@
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
-                                                <th class="column-check">Position</th>
-                                                <th class="column-check">Time</th>
+                                                <th class="center">Select</th>
+                                                <th class="center">Position</th>
+                                                <th class="center">Time</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <ng-container *ngFor="let position of positions | keyvalue">
-                                                <!-- <ng-container *ngFor="let item of dataItems; let i = index">-->
-                                                <tr *ngFor="let hour of position.value.hours | keyvalue">
-                                                    <!--<tr *ngIf="item.m !== 0"> -->
-                                                    <td class="column-check"> {{ position.key }}</td>
-                                                    <!--{{ item.position }} -->
-                                                    <td class="column-check"> {{ hour.key }} </td>
-                                                    <!--{{ item.hourFrom }} -->
-                                                </tr>
+                                                <ng-container *ngFor="let hour of position.value.hours | keyvalue">
+                                                    <!--<ng-container>--/
+                                                        <!--<tr *ngFor="let hour of position.value.hours | keyvalue"> -->
+                                                    <tr>
+                                                        <td class="center">
+                                                            <!--para tomar únicamente el valor de la posición, debe ser: (change)="handleCheckboxChange($event, position.key)", si se le quita el .key muestra todo el array con horas-->
+                                                            <!--<input type="checkbox" class="check_box" [checked]="position.key === selectedRow?.key" (change)="handleCheckboxChange($event, position)" /> -->
+                                                            <input type="checkbox" class="check_box" [checked]="isRowSelected(position, hour)" (change)="handleCheckboxChange($event, position, hour)" />
+                                                        </td>
+                                                        <!--<tr *ngIf=" item.m !==0 "> -->
+                                                        <td class="center "> {{ position.key }}</td>
+                                                        <!--{{ item.position }} -->
+                                                        <td class="center "> {{ hour.key }} </td>
+                                                        <!--{{ item.hourFrom }} -->
+                                                    </tr>
+                                                    <!--</ng-container>-->
+                                                </ng-container>
                                             </ng-container>
                                         </tbody>
                                     </table>
@@ -145,11 +155,11 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                    <div class="example-button-row" align="end">
-                        <button mat-raised-button color="primary" [disabled]="!employeesForm.valid" [mat-dialog-close]="1" (click)="confirmAdd()">Save</button>
-                        <button mat-raised-button color="warn" (click)="onNoClick()" tabindex="-1">Cancel</button>
+            <div class="row ">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 ">
+                    <div class="example-button-row " align="end ">
+                        <button mat-raised-button color="primary" [disabled]="!employeesForm.valid " [mat-dialog-close]="1 " (click)="confirmAdd()">Save</button>
+                        <button mat-raised-button color="warn" (click)="onNoClick() " tabindex="-1 ">Cancel</button>
                     </div>
                 </div>
             </div>
