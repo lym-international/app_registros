@@ -42,6 +42,7 @@ export class FormDialogComponent {
   selectedHour: string | null = null;
   selectedRow: any = null;
   selectedRows: { [key: string]: boolean } = {};
+  isTableSelected: boolean = false;
 
 
   constructor(
@@ -111,6 +112,11 @@ export class FormDialogComponent {
       this.selectedPosition = null;
       this.selectedHour = null;
     }
+    this.updateIsTableSelected();
+  }
+
+  updateIsTableSelected() {
+    this.isTableSelected = !!this.selectedPosition && !!this.selectedHour;
   }
  //Este funciona bien
   /*handleCheckboxChange(event: any, row: any) {  
