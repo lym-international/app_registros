@@ -8,12 +8,8 @@ import {
   FormControl,
   FormGroup,
 } from '@angular/forms';
-import { CheckInModel } from './check-in.model';
-
+//import { CheckInModel } from './check-in.model';
 import { formatDate } from '@angular/common';
-
-
-
 
 export interface DialogData {
   id: number;
@@ -29,10 +25,10 @@ export class CheckInComponent implements OnInit {
   action: string;
   dialogTitle: string;
   checkInForm: UntypedFormGroup;
-  checkIn: CheckInModel;
-  showDeleteBtn = false;
   fechaInicio: FormControl;
-  public dataCheckIn!: any;
+  //checkIn: CheckInModel;
+  //showDeleteBtn = false;
+  //public dataCheckIn!: any;
   
   ngOnInit(): void {
     this.checkInForm.patchValue({
@@ -59,12 +55,12 @@ export class CheckInComponent implements OnInit {
   ) {
     this.action = data.action;
     if (this.action === 'edit') {
-      this.showDeleteBtn = true;
+      //this.showDeleteBtn = true;
     } else {
       this.dialogTitle = 'CheckIn date:';
-      const blankObject = {} as CheckInModel;
-      this.checkIn = new CheckInModel(blankObject);
-      this.showDeleteBtn = false;
+      //const blankObject = {} as CheckInModel;
+      //this.checkIn = new CheckInModel(blankObject);
+      //this.showDeleteBtn = false;
     }
     this.checkInForm = this.createContactForm();
     //console.log('Propiedades modalCheckIn ==>',this.checkInForm.controls)
@@ -94,7 +90,7 @@ export class CheckInComponent implements OnInit {
       //id: [this.checkIn.id],
       //title: [this.checkIn.title],
       //category: [this.checkIn.category],
-      startDate: [this.checkIn.startDate, [Validators.required]],
+      //startDate: [this.checkIn.startDate, [Validators.required]],
       //endDate: [this.checkIn.endDate],
       //details: [this.checkIn.details],
     });

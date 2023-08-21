@@ -16,6 +16,7 @@
         <form class="register-form m-4" [formGroup]="employeesForm" (ngSubmit)="submit">
             <div class="row">
 
+                <!--
                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                     <mat-form-field class="example-full-width" appearance="outline">
                         <mat-label>In</mat-label>
@@ -27,13 +28,24 @@
                         </mat-error>
                     </mat-form-field>
                 </div>
+                -->
                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                     <mat-form-field class="example-full-width" appearance="outline">
-                        <mat-label>Name</mat-label>
-                        <input matInput formControlName="name" required>
+                        <mat-label>FirstName</mat-label>
+                        <input matInput formControlName="firstName" required>
                         <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>face</mat-icon>
-                        <mat-error *ngIf="employeesForm.get('name')?.hasError('required')">
-                            Name is required
+                        <mat-error *ngIf="employeesForm.get('FirsName')?.hasError('required')">
+                            FirstName is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>LastName</mat-label>
+                        <input matInput formControlName="lastName" required>
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>face</mat-icon>
+                        <mat-error *ngIf="employeesForm.get('LastName')?.hasError('required')">
+                            LastName is required
                         </mat-error>
                     </mat-form-field>
                 </div>
@@ -54,9 +66,9 @@
                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                     <mat-form-field class="example-full-width" appearance="outline">
                         <mat-label>Mobile</mat-label>
-                        <input matInput formControlName="mobile" type="number">
+                        <input matInput formControlName="phone" type="number">
                         <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>phone</mat-icon>
-                        <mat-error *ngIf="employeesForm.get('mobile')?.hasError('required')">
+                        <mat-error *ngIf="employeesForm.get('phone')?.hasError('required')">
                             Mobile is required
                         </mat-error>
                     </mat-form-field>
@@ -64,13 +76,14 @@
                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                     <mat-form-field class="example-full-width" appearance="outline">
                         <mat-label>Email</mat-label>
-                        <input matInput formControlName="email" required>
+                        <input matInput formControlName="mail" required>
                         <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>email</mat-icon>
                         <mat-error *ngIf="employeesForm.get('email')?.hasError('required') || employeesForm.get('email')?.touched">
                             Please enter a valid email address
                         </mat-error>
                     </mat-form-field>
                 </div>
+
                 <!--<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                     <mat-form-field class="example-full-width" appearance="outline">
                         <mat-label>role</mat-label>
@@ -92,49 +105,61 @@
                     </mat-form-field>
                 </div> -->
             </div>
-            <div class="row">
 
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                    <mat-form-field class="example-full-width" appearance="outline">
-                        <mat-label>Position</mat-label>
-                        <input matInput formControlName="position" required>
-                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>flag</mat-icon>
-                        <mat-error *ngIf="employeesForm.get('position')?.hasError('required')">
-                            Position is required.
-                        </mat-error>
-                    </mat-form-field>
+            <hr style="color:#004676; width:80%; margin: 20px auto">
+
+            <!--TABLA POSICIONES-->
+            <div class="row clearfix" style="margin-right: 0px; margin-left: 0px">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2 style="color: #1A202E;">Select a Position</h2>
+                        </div>
+                        <ng-scrollbar style="height: 210px" visibility="hover">
+                            <div class="tableBody">
+                                <div class="responsive_table">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th class="center">Select</th>
+                                                <th class="center">Position</th>
+                                                <th class="center">Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <ng-container *ngFor="let position of positions | keyvalue">
+                                                <ng-container *ngFor="let hour of position.value.hours | keyvalue">
+                                                    <!--<ng-container>--/
+                                                        <!--<tr *ngFor="let hour of position.value.hours | keyvalue"> -->
+                                                    <tr>
+                                                        <td class="center">
+                                                            <!--para tomar únicamente el valor de la posición, debe ser: (change)="handleCheckboxChange($event, position.key)", si se le quita el .key muestra todo el array con horas-->
+                                                            <!--<input type="checkbox" class="check_box" [checked]="position.key === selectedRow?.key" (change)="handleCheckboxChange($event, position)" /> -->
+                                                            <input type="checkbox" class="check_box" [checked]="isRowSelected(position, hour)" (change)="handleCheckboxChange($event, position, hour)" />
+                                                        </td>
+                                                        <!--<tr *ngIf=" item.m !==0 "> -->
+                                                        <td class="center "> {{ position.key }}</td>
+                                                        <!--{{ item.position }} -->
+                                                        <td class="center "> {{ hour.key }} </td>
+                                                        <!--{{ item.hourFrom }} -->
+                                                    </tr>
+                                                    <!--</ng-container>-->
+                                                </ng-container>
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </ng-scrollbar>
+                    </div>
                 </div>
-
             </div>
-            <!--<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                    <mat-form-field class="example-full-width" appearance="outline">
-                        <mat-label>Mobile</mat-label>
-                        <input matInput formControlName="mobile" type="number">
-                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>phone</mat-icon>
-                        <mat-error *ngIf="employeesForm.get('mobile')?.hasError('required')">
-                            Mobile is required
-                        </mat-error>
-                    </mat-form-field>
-                </div> -->
 
-            <!--<div class="row">
-               <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                    <mat-form-field class="example-full-width" appearance="outline">
-                        <mat-label>Joining date</mat-label>
-                        <input matInput [matDatepicker]="picker" formControlName="date">
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-                        <mat-error *ngIf="employeesForm.get('date')?.hasError('required')">
-                            Please select date
-                        </mat-error>
-                    </mat-form-field>
-                </div> 
-            </div>-->
-            <div class="row">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                    <div class="example-button-row" align="end">
-                        <button mat-raised-button color="primary" [disabled]="!employeesForm.valid" [mat-dialog-close]="1" (click)="confirmAdd()">Save</button>
-                        <button mat-raised-button color="warn" (click)="onNoClick()" tabindex="-1">Cancel</button>
+            <div class="row ">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 ">
+                    <div class="example-button-row " align="end ">
+                        <button mat-raised-button color="primary" [disabled]="!employeesForm.valid || !isTableSelected" [mat-dialog-close]="1 " (click)="confirmAdd()">Save</button>
+                        <button mat-raised-button color="warn" (click)="onNoClick() " tabindex="-1 ">Cancel</button>
                     </div>
                 </div>
             </div>

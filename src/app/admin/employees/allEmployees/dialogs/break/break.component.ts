@@ -34,8 +34,8 @@ export class BreakComponent implements OnInit{
   breakForm: UntypedFormGroup;
   break: BreakModel;
   employees: Employees;
-  showDeleteBtn = false;
-  breakTime : FormControl;
+  //showDeleteBtn = false;
+  //breakTime : FormControl;
   
   ngOnInit(): void {
     
@@ -60,11 +60,11 @@ export class BreakComponent implements OnInit{
       this.dialogTitle = 'Break time:';
       const blankObject = {} as BreakModel;
       this.break = new BreakModel(blankObject);
-      this.showDeleteBtn = false;
+      //this.showDeleteBtn = false;
     //}
     this.breakForm = this.createContactForm();
-    console.log('Break Time ==>',this.breakForm.controls)
-    
+    //console.log('Break Time ==>',this.breakForm.controls)
+    //console.log('this.break.break: ', this.break.break)
   }
   
   /*formControl = new UntypedFormControl('', [
@@ -90,8 +90,9 @@ export class BreakComponent implements OnInit{
       //endDate: [this.checkIn.endDate],
       //details: [this.checkIn.details],  
     });
+    
   }
-  
+
   numberValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
       const value = control.value;

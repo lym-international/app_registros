@@ -17,6 +17,12 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
 import { CheckOutComponent } from './allEmployees/dialogs/check-out/check-out.component';
 import { BreakComponent } from './allEmployees/dialogs/break/break.component';
 import { AdminEmployeesComponent } from './admin-employees/admin-employees.component';
+import { CheckInAdminEmployeesComponent } from './admin-employees/dialogs/check-in-admin-employees/check-in-admin-employees.component';
+import { CheckOutAdminEmployeesComponent } from './admin-employees/dialogs/check-out-admin-employees/check-out-admin-employees.component';
+import { BreakAdminEmployeesComponent } from './admin-employees/dialogs/break-admin-employees/break-admin-employees.component';
+import { AllActionsComponent } from './allEmployees/dialogs/all-actions/all-actions.component';
+import { AddExistingEmployeeComponent } from './allEmployees/dialogs/add-existing-employee/add-existing-employee.component';
+import { NgScrollbarModule } from 'ngx-scrollbar';
 
 @NgModule({
   declarations: [
@@ -30,6 +36,11 @@ import { AdminEmployeesComponent } from './admin-employees/admin-employees.compo
     CheckOutComponent,
     BreakComponent,
     AdminEmployeesComponent,
+    CheckInAdminEmployeesComponent,
+    CheckOutAdminEmployeesComponent,
+    BreakAdminEmployeesComponent,
+    AllActionsComponent,
+    AddExistingEmployeeComponent,
   ],
   imports: [
     CommonModule,
@@ -40,6 +51,7 @@ import { AdminEmployeesComponent } from './admin-employees/admin-employees.compo
     SharedModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
+    NgScrollbarModule
   ],
   providers: [EmployeesService, DatePipe],
 })

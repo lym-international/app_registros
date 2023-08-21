@@ -5,6 +5,8 @@ import {
   ElementRef,
   OnInit,
   Renderer2,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfigService } from '@config';
@@ -42,6 +44,7 @@ export class HeaderComponent
   docElement: HTMLElement | undefined;
   isFullScreen = false;
   public dataUser!: any;
+  public datosUsuario: any;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -78,6 +81,8 @@ export class HeaderComponent
     },
   ]*/
   
+  @Output() datosUsuarioEmitter: EventEmitter<any> = new EventEmitter<any>();
+
   ngOnInit() {
     //const userRole = this.authService.currentUserValue.role;
     //this.userImg = this.authService.currentUserValue.img;
@@ -99,6 +104,10 @@ export class HeaderComponent
     // Acceso a los datos del usuario en la variable dataUser
     console.log('Datos en storedUserData desde el HEADER: ', storedUserData);
     console.log('dataUser ==> ', this.dataUser)
+    
+    this.datosUsuario = this.dataUser;
+    this.datosUsuarioEmitter.emit(this.datosUsuario);
+    console.log('Datos Usuario EMITER: ',this.datosUsuario)
     
     /*if (userRole === 'Admin') { 
       this.homePage = 'admin/search-order';

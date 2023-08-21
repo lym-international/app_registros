@@ -78,7 +78,8 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from '../models/user';
-import { environment } from 'environments/environment';
+//import { environment } from 'environments/environment';
+import {environment, environment_A} from 'environments/environment'
 
 @Injectable({
   providedIn: 'root',
@@ -100,7 +101,7 @@ export class AuthService {
 
   login(username: string, password: string) {
     return this.http
-      .post<User>(`${environment.apiUrl}/authenticate`, {
+      .post<User>(`${environment_A.apiUrl}/authenticate`, {
         username,
         password,
       })

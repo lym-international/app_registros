@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 import { Employees } from '../../employees.model';
 import { formatDate } from '@angular/common';
-import { CheckOutModel } from './check-out.model';
+//import { CheckOutModel } from './check-out.model';
 export interface DialogData {
   id: number;
   action: string;
@@ -26,9 +26,9 @@ export class CheckOutComponent implements OnInit{
   action: string;
   dialogTitle: string;
   checkOutForm: UntypedFormGroup;
-  checkOut: CheckOutModel;
+  //checkOut: CheckOutModel;
   employees: Employees;
-  showDeleteBtn = false;
+  //showDeleteBtn = false;
   fechaSalida: FormControl;
   
   ngOnInit(): void {
@@ -52,12 +52,12 @@ export class CheckOutComponent implements OnInit{
     if (this.action === 'edit') {
       //this.dialogTitle = data.checkIn.title;
       //this.calendar = data.calendar;
-      this.showDeleteBtn = true;
+      //this.showDeleteBtn = true;
     } else {
       this.dialogTitle = 'CheckOut date:';
-      const blankObject = {} as CheckOutModel;
-      this.checkOut = new CheckOutModel(blankObject);
-      this.showDeleteBtn = false;
+      //const blankObject = {} as CheckOutModel;
+      //this.checkOut = new CheckOutModel(blankObject);
+      //this.showDeleteBtn = false;
     }
     this.checkOutForm = this.createContactForm();
     console.log('Hora CheckOut ==>',this.checkOutForm.controls)
@@ -76,12 +76,12 @@ export class CheckOutComponent implements OnInit{
   }
   createContactForm(): UntypedFormGroup {
     return this.fb.group({
-      id: [this.checkOut.id],
-      title: [this.checkOut.title],
-      category: [this.checkOut.category],
-      startDate: [this.checkOut.startDate],
-      endDate: [this.checkOut.endDate, [Validators.required]],
-      details: [this.checkOut.details],  
+      //id: [this.checkOut.id],
+      //title: [this.checkOut.title],
+      //category: [this.checkOut.category],
+      //startDate: [this.checkOut.startDate],
+      //endDate: [this.checkOut.endDate, [Validators.required]],
+      //details: [this.checkOut.details],  
     });
   }
   

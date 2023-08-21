@@ -1,4 +1,4 @@
-import { formatDate } from '@angular/common';
+/*import { formatDate } from '@angular/common';
 export class CheckOutModel {
   id: string;
   title: string;
@@ -24,3 +24,4 @@ export class CheckOutModel {
     return S4() + S4();
   }
 }
+*/

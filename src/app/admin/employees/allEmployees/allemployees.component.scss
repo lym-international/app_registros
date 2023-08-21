@@ -1,3 +1,16 @@
+.background {
+    background-color: #ECF0F4;
+    border-radius: 30px;
+    padding: 6px 0px 6px 0;
+    margin-left: 6px;
+    margin-right: 6px
+}
+
+.marginButton {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
 .borde-izq {
     border-left: thick solid #004676;
     margin-left: 20px;
@@ -39,7 +52,7 @@
 
 .sub-column {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     //grid-template-columns: 1fr;
     gap: 10px;
     //padding: 10px;
@@ -52,10 +65,13 @@
 
 @media screen and (min-width: 600px) {
     .container {
-        grid-template-columns: 1fr 1fr;
+        //grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
+        //padding: 0 0px;
     }
     .sub-columns {
-        grid-template-columns: repeat(2, 1fr);
+        //grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
     }
 }
 

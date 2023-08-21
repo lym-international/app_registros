@@ -36,8 +36,6 @@ export class SidebarComponent implements OnInit {
   mostrarMenu: boolean = true;
 
   
-  
-
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
@@ -99,23 +97,18 @@ export class SidebarComponent implements OnInit {
     }
     // Aquí tienes acceso a los datos del usuario en la variable dataUser
     console.log('Datos en storedUserData desde el sideBar: ', storedUserData);
-
+    console.log('Datos usuario desde el sideBar: ', this.dataUser)
+    
+    //Validación del rol del usuario para la visualización de los items del sidebar
     if (this.dataUser) {
       const userRole = this.dataUser.role;
+      this.sidebarItems = ROUTES.filter(
+        (x) => x.role.indexOf(userRole) !== -1 || x.role.indexOf('All') !== -1
+      );
+      //console.log('SIDEBAR ITEMS: ', this.sidebarItems)
       
     }
-
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        // Check if the current route is 'search-order'
-        this.currentRoute = event.url;
-        this.mostrarMenu = !this.currentRoute.startsWith('/admin/search-order');
-        this.renderer.removeClass(this.document.body, 'overlay-open');
-      }
-    // console.log('MOSTRAR MENU =>', this.mostrarMenu)
-    });
     
-    this.sidebarItems = ROUTES.filter((sidebarItem) => sidebarItem);
     this.initLeftSidebar();
     this.bodyTag = this.document.body;
   }
