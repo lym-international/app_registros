@@ -26,6 +26,7 @@ import { delay } from 'rxjs/operators'; //Jairo
 import { CheckInComponent } from './dialogs/check-in/check-in.component';
 import { CheckOutComponent } from './dialogs/check-out/check-out.component';
 import { BreakComponent } from './dialogs/break/break.component';
+import { AddExistingEmployeeComponent } from './dialogs/add-existing-employee/add-existing-employee.component';
 import { AllActionsComponent } from './dialogs/all-actions/all-actions.component';
 import { Timestamp } from 'firebase/firestore';
 import { AuthenticationService } from 'app/_services/authentication.service';
@@ -1496,7 +1497,100 @@ export class AllemployeesComponent
     //
   }
   
-  
+  async addExistingEmergencyEmployeeModal() {
+    
+    const dialogRef = this.dialog.open(AddExistingEmployeeComponent)
+    const result = await dialogRef.afterClosed().toPromise();
+    console.log('RESULT--> ', result)
+    
+
+    fetch(`https://us-central1-highkeystaff.cloudfunctions.net/users/getLastEmployeeID`)
+      .then((response) => response.json())
+      .then((data) => {
+        //console.log("last highKey Id: ", data.lastEmployeeID);
+        //console.log('POSITIONS desde allEmployees: ',this.positions)
+        this.highKeyid = data.lastEmployeeID + 1;
+        if (result) {
+          console.log('RESULT ::',result)
+          //const previousEmployee = this.employeesArray[0];
+          //console.log('HighkeyId: ',this.highKeyid)
+          /*const addNewEmployee = {
+            orderId: this.orderId,
+            firstname: result.firstname.toUpperCase(),
+            lastname: result.lastname.toUpperCase(),
+            email: result.email,
+            phone: result.phone,
+            updateUser: this.dataUser.email,
+            employeeId: this.highKeyid,
+            status: "Active",
+            company: "L&M Employee",
+            position: result.position,
+            hourFrom: result.hourFrom
+          };*/
+
+          this.employeesArray.push(result);
+        
+        }
+
+        console.log('this.employeesArray: ',this.employeesArray)
+      }).catch((error) => {
+        console.log(error);
+      });
+      
+    /*  
+    if (result) {
+      const previousEmployee = this.employeesArray[0];
+      console.log('HighkeyId: ',this.highKeyid)
+      const addNewEmployee = {
+        orderId: previousEmployee.orderId,
+        firstName: result.firstName,
+        lastName: result.lastName,
+        mail: result.mail,
+        phone: result.phone,
+        updateUser: this.dataUser.email
+        
+      };
+      
+      this.employeesArray.push(addNewEmployee);
+    }
+      */
+    
+    //console.log('this.employeesArray: ',this.employeesArray)
+    
+/*    
+    
+/*  
+      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`//`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ employees: updatedEmployees }),
+      })
+        
+      .then((response) => response.json())
+      .then((data) => {
+          this.showNotification(
+            'snackbar-success',
+            'New emergency employee added successfully...!!!',
+            'bottom',
+            'center'
+          );
+          //console.log('Actualización exitosa:', data);
+          this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+          this.removeSelectedRows() //Actualiza la tabla para que no duplique el dato en el anterior empleado.
+        })
+        .catch((error) => {
+          console.error('Error al actualizar:', error);
+        });
+    } else {
+      console.log('Ningún empleado seleccionado para check-in.');
+    }
+    */
+
+  }
+
   async addNewEmergencyEmployeeModal() {
     
     const dialogRef = this.dialog.open(FormDialogComponent)
@@ -1524,7 +1618,7 @@ export class AllemployeesComponent
             status: "Active",
             company: "L&M Employee",
             position: result.position,
-            hour: result.hour
+            hourFrom: result.hourFrom
           };
           console.log('addNewEmployee: ',addNewEmployee)
           this.employeesArray.push(addNewEmployee);

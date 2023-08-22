@@ -33,7 +33,7 @@ export class FormDialogComponent {
   employees: Employees;
   firstName: FormControl;
   lastName: FormControl;
-  mail: FormControl;
+  email: FormControl;
   phone: FormControl;
   formData: any;
   positions = [];
@@ -59,14 +59,14 @@ export class FormDialogComponent {
   ngOnInit(): void {
     this.firstName = new FormControl();
     this.lastName = new FormControl();
-    this.mail = new FormControl();
+    this.email = new FormControl();
     this.phone = new FormControl();
     
 
     this.employeesForm = new FormGroup({
       firstName: this.firstName,
       lastName: this.lastName,
-      mail: this.mail,
+      email: this.email,
       phone: this.phone,
       });
      
@@ -161,7 +161,7 @@ export class FormDialogComponent {
       // Si hay una fila seleccionada, agrega la posición y la hora al objeto formData
       this.formData = this.employeesForm.value;
       this.formData.position = this.selectedPosition;
-      this.formData.hour = this.selectedHour;
+      this.formData.hourFrom = this.selectedHour;
   
       console.log('FormData en form-dialog: ', this.formData);
   
