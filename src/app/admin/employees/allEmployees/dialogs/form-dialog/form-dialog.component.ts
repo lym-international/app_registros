@@ -40,9 +40,10 @@ export class FormDialogComponent {
   //selectedPositions: any[] = [];
   selectedPosition: string | null = null;
   selectedHour: string | null = null;
+  selectedRate : number | 0 = 0;
   selectedRow: any = null;
   selectedRows: { [key: string]: boolean } = {};
-  isTableSelected: boolean = false;
+  isTableSelected = false;
 
 
   constructor(
@@ -74,7 +75,7 @@ export class FormDialogComponent {
     const storedPositions = localStorage.getItem('positions');
     this.positions = storedPositions ? JSON.parse(storedPositions) : {};
     
-    console.log('this.positions en el Modal: ',this.positions)
+    // console.log('this.positions en el Modal: ',this.positions)
     
   }
 
@@ -98,25 +99,25 @@ export class FormDialogComponent {
     const positionKey = position.key;
     const hourKey = hour.key;
     
+    const rateValue = hour.value.rate
+
+  // console.log("Position:", position, "Hour:", hour, "Rate:", rateValue);
+
     if (event.target.checked) {
-      console.log('ENTRO AL IF');
-      // Marca la fila seleccionada usando la clave compuesta de posición y hora
-      //this.selectedRows[`${positionKey}-${hourKey}`] = true;
       this.selectedPosition = positionKey;
       this.selectedHour = hourKey;
-      
+      this.selectedRate = rateValue;
     } else {
-      console.log('ENTRO AL ELSE');
-      // Desmarca la fila seleccionada
-      //delete this.selectedRows[`${positionKey}-${hourKey}`];
+      
       this.selectedPosition = null;
       this.selectedHour = null;
+      this.selectedRate = 0
     }
     this.updateIsTableSelected();
   }
 
   updateIsTableSelected() {
-    this.isTableSelected = !!this.selectedPosition && !!this.selectedHour;
+    this.isTableSelected = !!this.selectedPosition && !!this.selectedHour && !!this.selectedRate;
   }
  //Este funciona bien
   /*handleCheckboxChange(event: any, row: any) {  
@@ -161,9 +162,9 @@ export class FormDialogComponent {
       // Si hay una fila seleccionada, agrega la posición y la hora al objeto formData
       this.formData = this.employeesForm.value;
       this.formData.position = this.selectedPosition;
-      this.formData.hour = this.selectedHour;
-  
-      console.log('FormData en form-dialog: ', this.formData);
+      this.formData.hourFrom = this.selectedHour;
+      this.formData.rate = this.selectedRate;
+      //  console.log('FormData en form-dialog: ', this.formData);
   
       this.dialogRef.close(this.formData);
     } else {

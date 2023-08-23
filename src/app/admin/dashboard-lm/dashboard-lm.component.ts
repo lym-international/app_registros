@@ -131,7 +131,7 @@ export class DashboardLmComponent implements OnInit {
       )
     .then((response) => response.json())
     .then((data) => {
-    console.log('Id Data: ', data.employees)
+    // console.log('Id Data: ', data.employees)
     this.checkIn = data.employees.filter((employee) => employee.checkin === true).length;
     
     this.checkOut = data.employees.filter((employee) => employee.checkout === true).length;
@@ -143,11 +143,13 @@ export class DashboardLmComponent implements OnInit {
     this.porcentajes(this.checkIn, this.checkOut, this.noShow, this.totalConfirmed, this.totalRequest)
   
     const positions: { [name: string]: Position } = {};
-
+    
+// console.log("datica", data)
     data.employees.forEach((employee)=>{
-      // console.log('RR: ', employee.employee.data)  
+        // console.log('RR: ', employee.employee.data)  
       const positionName = employee.position;
       const hourFrom = employee.hourFrom;
+      const rate = employee.employee.agmRate
     
     if (!positions[positionName]) {
       // Si la posición no existe en el objeto, crearla
@@ -163,9 +165,11 @@ export class DashboardLmComponent implements OnInit {
         totalCheckin: 0,
         totalCheckout: 0,
         totalnoShow: 0,
+        // rate: rate, 
       };
     }
-      
+     
+    positions[positionName].hours[hourFrom]['rate'] = rate;
     if (employee.checkin) {
       // Incrementar el total de check-in para la posición y hora inicial
      positions[positionName].hours[hourFrom].totalCheckin++; 
@@ -182,30 +186,8 @@ export class DashboardLmComponent implements OnInit {
     }
   
 
-  
-      /*const positionName = employee.position;
-
-      if (!positions[positionName]) {
-        // Si la posición no existe en el objeto, crearla
-        positions[positionName] = {
-        name: positionName,
-        totalCheckin: 0,
-        totalCheckout: 0,
-        };
-      }
-
-      if (employee.checkin) {
-        // Incrementar el total de check-in para la posición
-        positions[positionName].totalCheckin++;
-      }
-
-      if (employee.checkout) {
-        // Incrementar el total de check-out para la posición
-        positions[positionName].totalCheckout++;
-      }*/
-
       })
-      
+      // console.log("positiions ",positions)
       
       localStorage.setItem('positions', JSON.stringify(positions));
       

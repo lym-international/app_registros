@@ -200,7 +200,8 @@ export class AllemployeesComponent
   }  
   getEmployees() {
     //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`
-    fetch(`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
+    //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
+    fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
       .then((response) => response.json())
       .then((data) => {
         this.isTblLoading = false;
@@ -1353,8 +1354,6 @@ export class AllemployeesComponent
     };
   }
 
-  
-
   generatePdf() {
     this.groupEmployees = [];
     const positions = [];
@@ -1501,10 +1500,9 @@ export class AllemployeesComponent
     
     const dialogRef = this.dialog.open(FormDialogComponent)
     const result = await dialogRef.afterClosed().toPromise();
-    console.log('RESULT--> ', result)
     
-
-    fetch(`https://us-central1-highkeystaff.cloudfunctions.net/users/getLastEmployeeID`)
+    fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/users/getLastEmployeeID`)
+    
       .then((response) => response.json())
       .then((data) => {
         //console.log("last highKey Id: ", data.lastEmployeeID);
@@ -1514,22 +1512,100 @@ export class AllemployeesComponent
           //const previousEmployee = this.employeesArray[0];
           //console.log('HighkeyId: ',this.highKeyid)
           const addNewEmployee = {
-            orderId: this.orderId,
-            firstName: result.firstName.toUpperCase(),
-            lastName: result.lastName.toUpperCase(),
-            mail: result.mail,
+            firstname: result.firstName.toUpperCase(),
             phone: result.phone,
-            updateUser: this.dataUser.email,
-            employeeId: this.highKeyid,
-            status: "Active",
             company: "L&M Employee",
-            position: result.position,
-            hour: result.hour
-          };
-          console.log('addNewEmployee: ',addNewEmployee)
-          this.employeesArray.push(addNewEmployee);
+            employeeId: this.highKeyid,
+            positions: [
+                {
+                    rate: result.rate,
+                    name: result.position
+                }
+            ],
+            email: result.mail,
+            lastname: result.lastName.toUpperCase(),
+            status: "Active"
+        };
+        console.log('newEmployee: ',addNewEmployee)
+
+        fetch('http://127.0.0.1:5001/highkeystaff/us-central1/users/addEmployee', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(addNewEmployee)    
+          })
+          .then(response => response.json())
+          .then(data => {
+              console.log('Empleado creado exitosamente:', data, "con id: ", this.highKeyid);
+          })
+          .catch(error => {
+              console.error('Hubo un error al crear el empleado:', error);
+        })
+
+        const newEmployeeRegist = {
+          hours: 0, 
+          hourFrom: result.hourFrom,
+          orderId:this.orderId,
+          position: result.position,
+          employee: {
+              agmRate: result.rate, 
+              booking: "Emergency",
+              data: {
+                  firstname: result.firstName.toUpperCase(),
+                  employeeId:  this.highKeyid,
+                  positions: [
+                      {
+                          rate: result.rate,
+                          name: result.position
+                      }
+                  ],
+                  // payrollid: nuevoEmployeeId, 
+                  lastname: result.lastName.toUpperCase(),
+                  phone: result.phone,
+                  company: "L&M Employee",
+                  email:  result.mail,
+                  status: "Active"
+              },
+              rate:  result.rate, 
+              // id: "ID del nuevo empleado",
+              favourite: "Emergency",
+              status: "Confirmed"
+          },
+      };
+      
+          console.log("newEmployeeRegist", newEmployeeRegist)
+          this.employeesArray.push(newEmployeeRegist);
         }
         console.log('this.employeesArray: ',this.employeesArray)
+      const apiUrl =
+      //  `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+       `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+        //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ employees: this.employeesArray}),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.showNotification(
+            'snackbar-success',
+            'Successful Add Employee...!!!',
+            'bottom',
+            'center'
+          );
+          // console.log('Actualización exitosa:', data);
+          this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+          this.removeSelectedRows()
+        })
+        .catch((error) => {
+          console.error('Error al actualizar:', error);
+        });
+
+
       }).catch((error) => {
         console.log(error);
       });
