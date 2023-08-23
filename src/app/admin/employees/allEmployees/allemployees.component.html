@@ -254,6 +254,11 @@
                                     <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Total hours:</span>{{row.totalHours}}</mat-cell>
                                     <!--(contextmenu)="onContextMenu($event, row)"-->
                                 </ng-container>
+                                <ng-container matColumnDef="status">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Status:</span>{{row.status}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
+                                </ng-container>
 
 
 

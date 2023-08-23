@@ -60,6 +60,7 @@ export class AllemployeesComponent
     'out',
     'break',
     'totalHours',
+    'status',
     //'department',
     //'role',
     //'degree',
