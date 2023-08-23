@@ -97,6 +97,29 @@ export class FormDialogComponent {
   handleCheckboxChange(event: any, position: any, hour: any) {
     const positionKey = position.key;
     const hourKey = hour.key;
+  
+    if (event.target.checked) {
+      // Deseleccionar la fila previamente seleccionada si hay una
+      if (this.selectedPosition !== null && this.selectedHour !== null) {
+        this.selectedPosition = null;
+        this.selectedHour = null;
+      }
+  
+      this.selectedPosition = positionKey;
+      this.selectedHour = hourKey;
+    } else {
+      // Si se desmarca la casilla, también deseleccionamos la fila
+      this.selectedPosition = null;
+      this.selectedHour = null;
+    }
+  
+    this.updateIsTableSelected();
+  }
+
+  /*
+  handleCheckboxChange(event: any, position: any, hour: any) {
+    const positionKey = position.key;
+    const hourKey = hour.key;
     
     if (event.target.checked) {
       console.log('ENTRO AL IF');
@@ -114,6 +137,7 @@ export class FormDialogComponent {
     }
     this.updateIsTableSelected();
   }
+  */
 
   updateIsTableSelected() {
     this.isTableSelected = !!this.selectedPosition && !!this.selectedHour;

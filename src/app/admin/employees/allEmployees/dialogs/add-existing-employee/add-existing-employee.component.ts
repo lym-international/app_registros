@@ -144,6 +144,11 @@ export class AddExistingEmployeeComponent {
       console.log('ENTRO AL IF');
       // Marca la fila seleccionada usando la clave compuesta de posición y hora
       //this.selectedRows[`${positionKey}-${hourKey}`] = true;
+      if (this.selectedPosition !== null && this.selectedHour !== null) {
+        this.selectedPosition = null;
+        this.selectedHour = null;
+      }
+      
       this.selectedPosition = positionKey;
       this.selectedHour = hourKey;
       

@@ -1511,7 +1511,6 @@ export class AllemployeesComponent
         //console.log('POSITIONS desde allEmployees: ',this.positions)
         this.highKeyid = data.lastEmployeeID + 1;
         if (result) {
-          console.log('RESULT ::',result)
           //const previousEmployee = this.employeesArray[0];
           //console.log('HighkeyId: ',this.highKeyid)
           /*const addNewEmployee = {

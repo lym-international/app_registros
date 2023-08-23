@@ -134,8 +134,8 @@
                                                     <tr>
                                                         <td class="center">
                                                             <!--para tomar únicamente el valor de la posición, debe ser: (change)="handleCheckboxChange($event, position.key)", si se le quita el .key muestra todo el array con horas-->
-                                                            <!--<input type="checkbox" class="check_box" [checked]="position.key === selectedRow?.key" (change)="handleCheckboxChange($event, position)" /> -->
-                                                            <input type="checkbox" class="check_box" [checked]="isRowSelected(position, hour)" (change)="handleCheckboxChange($event, position, hour)" />
+                                                            <!--<input type="checkbox" class="check_box" [checked]="isRowSelected(position, hour)" (change)="handleCheckboxChange($event, position, hour)" /> -->
+                                                            <input type="checkbox" class="check_box" [checked]="position.key === selectedPosition && hour.key === selectedHour" (change)="handleCheckboxChange($event, position, hour)" />
                                                         </td>
                                                         <!--<tr *ngIf=" item.m !==0 "> -->
                                                         <td class="center "> {{ position.key }}</td>
