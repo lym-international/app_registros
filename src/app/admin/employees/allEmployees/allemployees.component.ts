@@ -132,7 +132,7 @@ export class AllemployeesComponent
 
   ngOnInit() {
     this.dataEmployees = this.orderDataService.getSelectedOrder();
-    console.log('Data Order: ', this.dataEmployees);
+    // console.log('Data Order: ', this.dataEmployees);
     this.orderId = this.dataEmployees.id;
     this.exactHourPayment = this.dataEmployees.data.exactHourPayment;
     this.getEmployees();
@@ -159,45 +159,45 @@ export class AllemployeesComponent
   
   // Función para verificar la visibilidad de los botones al hacer clic en el checkbox
   onCheckboxClick(row: Employees) {
-    console.log('dateCheckin antes IF: ', row.dateCheckin) 
+    // console.log('dateCheckin antes IF: ', row.dateCheckin) 
     if ((row.dateCheckin === null || row.dateCheckin === undefined)&&(row.dateCheckout === null || row.dateCheckout === undefined)) {
-      console.log('dateCheckin', row.dateCheckin) 
+      // console.log('dateCheckin', row.dateCheckin) 
       this.showCheckInButton = true;
       this.showCheckOutButton = false;
       this.showBreakButton = false;
       this.showNoShowButton = true;
-      console.log('Si no hay checkIN: ')
-      console.log('CheckIn button: ',this.showCheckInButton)
-      console.log('NoShow button: ',this.showNoShowButton)
+      // console.log('Si no hay checkIN: ')
+      // console.log('CheckIn button: ',this.showCheckInButton)
+      // console.log('NoShow button: ',this.showNoShowButton)
       //console.log('CheckOut button: ',this.showCheckOutButton )
-      console.log('---------------------------------')
+      // console.log('---------------------------------')
     }
     else if((row.dateCheckin !== null || row.dateCheckin !== undefined)&&(row.dateCheckout === null || row.dateCheckout === undefined)) {
       this.showCheckInButton = false;
       this.showCheckOutButton = true;
       this.showBreakButton = true;
       this.showNoShowButton = false;
-      console.log('Si hay checkIN y no hay checkOut: ')
-      console.log('CheckOut button: ',this.showCheckOutButton )
-      console.log('Break button: ',this.showBreakButton )
-      console.log('---------------------------------')
+      // console.log('Si hay checkIN y no hay checkOut: ')
+      // console.log('CheckOut button: ',this.showCheckOutButton )
+      // console.log('Break button: ',this.showBreakButton )
+      // console.log('---------------------------------')
     }  
     else if ((row.dateCheckout !== null || row.dateCheckout !== undefined)&&(row.break === null || row.break === undefined || row.break === "0")){
       this.showCheckInButton = false;
       this.showCheckOutButton = false;
       this.showBreakButton = true;
       this.showNoShowButton = false;
-      console.log('Si hay checkIN y hay checkOut: ')
-      console.log('Break button: ',this.showBreakButton )
-      console.log('---------------------------------')
+      // console.log('Si hay checkIN y hay checkOut: ')
+      // console.log('Break button: ',this.showBreakButton )
+      // console.log('---------------------------------')
     }
     else {
       this.showCheckInButton = false;
       this.showCheckOutButton = false;
       this.showBreakButton = false;
       this.showNoShowButton = false;
-      console.log('Si hay checkIN, checkOut y Break: Botones no visibles')
-      console.log('---------------------------------')
+      // console.log('Si hay checkIN, checkOut y Break: Botones no visibles')
+      // console.log('---------------------------------')
     }
   }  
   getEmployees() {
@@ -207,7 +207,7 @@ export class AllemployeesComponent
       .then((response) => response.json())
       .then((data) => {
         this.isTblLoading = false;
-        console.log("datadelRegistroJR", data);
+        // console.log("datadelRegistroJR", data);
   
         this.employeesArray = data.employees.map((employee) => {
           const employeeData = { ...employee.employee.data };
@@ -255,10 +255,10 @@ export class AllemployeesComponent
           };
         });
 
-        console.log('---------------------------');
-        console.log('Array empleados: ');
-        console.log(this.employeesArray);
-        console.log('---------------------------');
+        // console.log('---------------------------');
+        // console.log('Array empleados: ');
+        // console.log(this.employeesArray);
+        // console.log('---------------------------');
 
         this.dataSource = new ExampleDataSource(
           this.exampleDatabase,
@@ -328,7 +328,7 @@ export class AllemployeesComponent
         return employee;
       });
 
-      console.log('updatedEmployees', updatedEmployees);
+      // console.log('updatedEmployees', updatedEmployees);
 
       const apiUrl =
       //  `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
@@ -383,7 +383,7 @@ export class AllemployeesComponent
         return employee;
       });
 
-      console.log('updatedEmployees', updatedEmployees);
+      // console.log('updatedEmployees', updatedEmployees);
 
       const apiUrl =
       // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
@@ -444,9 +444,9 @@ export class AllemployeesComponent
     const selectedRows = this.getSelectedRows();
     if (selectedRows.length > 0) {
       // Realiza la acción con los objetos seleccionados, por ejemplo:
-      console.log('Objetos seleccionados:', selectedRows);
+      // console.log('Objetos seleccionados:', selectedRows);
     } else {
-      console.log('Ningún objeto seleccionado.');
+      // console.log('Ningún objeto seleccionado.');
     }
   }
   getSelectedRows(): Employees[] {
@@ -509,8 +509,8 @@ export class AllemployeesComponent
                   dateCheckoutRounded,
                   
                 );
-              console.log('roundedHours: ',roundedHours)  
-              console.log('result.break: ',result.break)  
+              // console.log('roundedHours: ',roundedHours)  
+              // console.log('result.break: ',result.break)  
               
               if(roundedHours==5){
                 this.updatedHours = roundedHours 
@@ -552,7 +552,7 @@ export class AllemployeesComponent
         return employee;
       });
   
-      console.log("updatedEmployees ALLActionsModal: ", updatedEmployees);
+      // console.log("updatedEmployees ALLActionsModal: ", updatedEmployees);
   
       const apiUrl = 
       // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
@@ -581,13 +581,13 @@ export class AllemployeesComponent
           console.error('Error al actualizar:', error);
         });
     } else {
-      console.log('Ningún empleado seleccionado para check-in.');
+      // console.log('Ningún empleado seleccionado para check-in.');
     }
   }
   
   async checkInModal(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {
-      console.log('Empleados seleccionados para check-in:', selectedRows);
+      // console.log('Empleados seleccionados para check-in:', selectedRows);
       const dialogRef = this.dialog.open(CheckInComponent, {
         data: {
           employees: this.employees,
@@ -644,7 +644,7 @@ export class AllemployeesComponent
         return employee;
       });
   
-      console.log("updatedEmployees: ", updatedEmployees);
+      // console.log("updatedEmployees: ", updatedEmployees);
   
       const apiUrl = 
       // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
@@ -672,7 +672,7 @@ export class AllemployeesComponent
           console.error('Error al actualizar:', error);
         });
     } else {
-      console.log('Ningún empleado seleccionado para check-in.');
+      // console.log('Ningún empleado seleccionado para check-in.');
     }
   }
 
@@ -771,7 +771,7 @@ export class AllemployeesComponent
         return employee;
       });
 
-      console.log('updatedEmployees CHECKOUT', updatedEmployees);
+      // console.log('updatedEmployees CHECKOUT', updatedEmployees);
 
       const apiUrl =
       // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
@@ -859,34 +859,7 @@ export class AllemployeesComponent
     checkOutTimestamp: number,
     dateCheckoutRounded: number
   ): number {
-    /*   
- const lateThreshold = 8; // Umbral de llegada tarde en horas
- if (this.order.exactHourPayment) {
-    let hoursNumberExact = this.calculateExactHourPayment(employee);
-    const hours = hoursNumberExact.toFixed(2);
-    employee.hours = hours;
-  } else {
-    let hoursNumber =
-      (employee.dateCheckoutRounded.getTime() -
-        employee.dateCheckinRounded.toDate().getTime()) /
-      3600000;
-    hoursNumber = this.roundHours(hoursNumber);
-
-    if (hoursNumber < 5) {
-      let late = this.validateCheckout1(
-        employee.hourFrom,
-        employee.dateCheckin.toDate()
-      );
-      if (late < 8) {
-        hoursNumber = 5;
-      } else {
-        if (late > lateThreshold) {
-          hoursNumber = this.calculateRegularHours(employee);
-        }
-      }
-    }
-  } 
-  */
+    
 
     // this.exactHourPayment
     // console.log('EMPLOYEE: ', employee)
@@ -1012,19 +985,6 @@ export class AllemployeesComponent
   console.log("timeDiff",secondsWorked)
   console.log("ours", hoursWorked) */
     return Number(hoursWorked.toFixed(2));
-
-    // const timeDiff = employee.dateCheckout.getTime() - employee.dateCheckin.toDate().getTime();
-    // const hours = timeDiff / (1000 * 60 * 60); // Convertir milisegundos a horas
-
-    // return Number(hours.toFixed(2));
-
-    // const minutes = Math.round((timeDiff / (1000 * 60)) % 60); // Obtener los minutos redondeados
-    // const hour = Math.floor(timeDiff / (1000 * 60 * 60)); // Obtener las horas enteras
-    // console.log("horas trabajadas", hour)
-    // console.log("minutos trabajados", minutes)
-
-    //horas exactas;
-    // console.log("hours", hours)
   }
 
   async breakModal(selectedRows: Employees[]) {
@@ -1052,8 +1012,8 @@ export class AllemployeesComponent
         ) {
           // Restar el tiempo de descanso del total de horas trabajadas
           // const updatedHours = employee.hours - breakInHours;
-          console.log('employee.hours :',employee.hours)
-          console.log('roundedBreak :',roundedBreak)
+          // console.log('employee.hours :',employee.hours)
+          // console.log('roundedBreak :',roundedBreak)
 
           if(employee.hours==5){
             this.updatedHours = employee.hours
@@ -1072,7 +1032,7 @@ export class AllemployeesComponent
         return employee;
       });
 
-      console.log('updatedEmployees', updatedEmployees);
+      // console.log('updatedEmployees', updatedEmployees);
   
       const apiUrl =
       //  `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
@@ -1509,84 +1469,6 @@ export class AllemployeesComponent
     //
   }
   
-  /* async addExistingEmergencyEmployeeModal() {
-    
-    const dialogRef = this.dialog.open(AddExistingEmployeeComponent)
-    const result = await dialogRef.afterClosed().toPromise();
-if (result && result.id) {
-    console.log('RESULT--> ', result);
-    
-    const employeeId = result.id; // Obtén el ID del objeto
-    const url = `http://127.0.0.1:5001/highkeystaff/us-central1/users/updateEmployee/id?id=${employeeId}`;
-    
-    fetch(url, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(result), // Enviar el objeto result como cuerpo
-    })
-    .then(response => response.json())
-    .then(updatedData => {
-        console.log('Empleado actualizado:', updatedData);
-    })
-    .catch(error => {
-        console.error('Error al actualizar empleado:', error);
-    });
-     
-    const addEmployeeRegist = {
-      hours: 0, 
-      hourFrom: result.hourFrom,
-      orderId:this.orderId,
-      position: result.position,
-      employee: {
-          agmRate: result.rate, 
-          booking: "Emergency",
-          data: {
-              ...result,
-          },
-          rate:  result.rate, 
-          // id: "ID del nuevo empleado",
-          favourite: "Emergency",
-          status: "Confirmed"
-      },
-  };
-      console.log("addEmployeeRegist", addEmployeeRegist)
-      this.employeesArray.push(addEmployeeRegist);
-      
-      console.log('this.employeesArray: ',this.employeesArray)
-    const apiUrl =
-    //  `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-     `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-      //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-    fetch(apiUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ employees: this.employeesArray}),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        this.showNotification(
-          'snackbar-success',
-          'Successful Add Employee...!!!',
-          'bottom',
-          'center'
-        );
-        // console.log('Actualización exitosa:', data);
-        this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
-        this.removeSelectedRows()
-      })
-      .catch((error) => {
-        console.error('Error al actualizar:', error);
-      });
-    
-
-    }
-
-  }
- */
 
   async addExistingEmergencyEmployeeModal() {
     const dialogRef = this.dialog.open(AddExistingEmployeeComponent);
@@ -1597,6 +1479,7 @@ if (result && result.id) {
             await this.updateEmployee(result);
             this.addEmployeeToArray(result);
             await this.updateEmployeesArray();
+            await this.updateOrderWithNewEmployee(result);
             this.showNotification('snackbar-success', 'Successful Add Employee...!!!', 'bottom', 'center');
             this.getEmployees();
             this.removeSelectedRows();
@@ -1662,126 +1545,14 @@ async updateEmployeesArray() {
       body: JSON.stringify({ employees: this.employeesArray }),
   });
 
-  console.log("ployeesArray", this.employeesArray)
+  
   // console.log(response)
   if (!response.ok) {
       throw new Error('Failed to update employees array.');
   }
 }
 
-  /* async addNewEmergencyEmployeeModal() {
-    
-    const dialogRef = this.dialog.open(FormDialogComponent)
-    const result = await dialogRef.afterClosed().toPromise();
-    
-    fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/users/getLastEmployeeID`)
-    
-      .then((response) => response.json())
-      .then((data) => {
-        this.highKeyid = data.lastEmployeeID + 1;
-        if (result) {
-          //const previousEmployee = this.employeesArray[0];
-          //console.log('HighkeyId: ',this.highKeyid)
-          const addNewEmployee = {
-            firstname: result.firstName.toUpperCase(),
-            phone: result.phone,
-            company: "L&M Employee",
-            employeeId: this.highKeyid,
-            positions: [
-                {
-                    rate: result.rate,
-                    name: result.position
-                }
-            ],
-            email: result.email,
-            lastname: result.lastName.toUpperCase(),
-            status: "Active"
-        };
-        console.log('newEmployee: ',addNewEmployee)
-
-        fetch('http://127.0.0.1:5001/highkeystaff/us-central1/users/addEmployee', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(addNewEmployee)    
-          })
-          .then(response => response.json())
-          .then(data => {
-              console.log('Empleado creado exitosamente:', data, "con id: ", this.highKeyid);
-          })
-          .catch(error => {
-              console.error('Hubo un error al crear el empleado:', error);
-        })
-
-        const newEmployeeRegist = {
-          hours: 0, 
-          hourFrom: result.hourFrom,
-          orderId:this.orderId,
-          position: result.position,
-          employee: {
-              agmRate: result.rate, 
-              booking: "Emergency",
-              data: {
-                  firstname: result.firstName.toUpperCase(),
-                  employeeId:  this.highKeyid,
-                  positions: [
-                      {
-                          rate: result.rate,
-                          name: result.position
-                      }
-                  ],
-                  // payrollid: nuevoEmployeeId, 
-                  lastname: result.lastName.toUpperCase(),
-                  phone: result.phone,
-                  company: "L&M Employee",
-                  email:  result.email,
-                  status: "Active"
-              },
-              rate:  result.rate, 
-              // id: "ID del nuevo empleado",
-              favourite: "Emergency",
-              status: "Confirmed"
-          },
-      };
-      
-          console.log("newEmployeeRegist", newEmployeeRegist)
-          this.employeesArray.push(newEmployeeRegist);
-        }
-        console.log('this.employeesArray: ',this.employeesArray)
-      const apiUrl =
-      //  `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-       `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-        //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-      fetch(apiUrl, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ employees: this.employeesArray}),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          this.showNotification(
-            'snackbar-success',
-            'Successful Add Employee...!!!',
-            'bottom',
-            'center'
-          );
-          // console.log('Actualización exitosa:', data);
-          this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
-          this.removeSelectedRows()
-        })
-        .catch((error) => {
-          console.error('Error al actualizar:', error);
-        });
-
-
-      }).catch((error) => {
-        console.log(error);
-      });
-  } */
-
+ 
   async addNewEmergencyEmployeeModal() {
     try {
         const dialogRef = this.dialog.open(FormDialogComponent);
@@ -1796,9 +1567,14 @@ async updateEmployeesArray() {
                 await this.createEmployee(highKeyid, result);
                 this.addEmployeeToArray2(highKeyid, result);
                 await this.updateEmployeesArray();
-                this.showNotification('snackbar-success', 'Successful Add Employee...!!!', 'bottom', 'center');
+                await this.updateOrderWithNewEmployee(result);
+                this.showNotification('snackbar-success',  `Successful Add Employee with highkeyId : ${highKeyid}`, 'bottom', 'center');
                 this.getEmployees();
                 this.removeSelectedRows();
+
+
+                // Actualizar el array de employees en la orden
+
             }
         }
     } catch (error) {
@@ -1879,7 +1655,62 @@ addEmployeeToArray2(highKeyid, result) {
     console.log("newEmployeeRegist", newEmployeeRegist)
   this.employeesArray.push(newEmployeeRegist);
 }
-  //Abre el modal FormDialogComponent para editar los datos.
+
+async updateOrderWithNewEmployee(result) {
+  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+  
+  const response = await fetch(apiUrl, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch order data.');
+  }
+
+  const orderData = await response.json();
+
+  const newEmployee = {
+    agmRate: result.rate,
+    booking: 'Emergency',
+    data: {
+      ...result
+    },
+    rate: result.rate,
+    favourite: 'Emergency',
+    status: 'Confirmed',
+  };
+
+  // Busca el índice del elemento en la lista de 'items' que tenga la misma posición que el nuevo empleado.
+  const itemIndex = orderData.data.items.findIndex(item => item.position === result.position && item.hourFrom === result.hourFrom);
+
+  if (itemIndex !== -1) {
+    // Agrega el nuevo empleado al arreglo de empleados dentro del elemento encontrado.
+    orderData.data.items[itemIndex].employees.push(newEmployee);
+
+    // Actualiza la orden en el servidor con el nuevo empleado agregado.
+   
+    const updateOrderResponse = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(orderData.data), // Envía solo el objeto 'data' actualizado
+    });
+
+    if (!updateOrderResponse.ok) {
+      throw new Error('Failed to update order with new employee.');
+    }
+  } else {
+    throw new Error('Item not found in order.');
+  }
+}
+
+
+
+ //Abre el modal FormDialogComponent para editar los datos.
   editCall(row: Employees) {
     this.id = row.id;
     let tempDirection: Direction;
