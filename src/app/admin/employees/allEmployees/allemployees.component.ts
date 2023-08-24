@@ -26,6 +26,7 @@ import { delay } from 'rxjs/operators'; //Jairo
 import { CheckInComponent } from './dialogs/check-in/check-in.component';
 import { CheckOutComponent } from './dialogs/check-out/check-out.component';
 import { BreakComponent } from './dialogs/break/break.component';
+import { AddExistingEmployeeComponent } from './dialogs/add-existing-employee/add-existing-employee.component';
 import { AllActionsComponent } from './dialogs/all-actions/all-actions.component';
 import { Timestamp } from 'firebase/firestore';
 import { AuthenticationService } from 'app/_services/authentication.service';
@@ -59,6 +60,7 @@ export class AllemployeesComponent
     'out',
     'break',
     'totalHours',
+    'status',
     //'department',
     //'role',
     //'degree',
@@ -328,7 +330,9 @@ export class AllemployeesComponent
 
       console.log('updatedEmployees', updatedEmployees);
 
-      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      const apiUrl =
+      //  `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+       `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -381,7 +385,9 @@ export class AllemployeesComponent
 
       console.log('updatedEmployees', updatedEmployees);
 
-      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`; // `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      const apiUrl =
+      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+       `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -548,7 +554,9 @@ export class AllemployeesComponent
   
       console.log("updatedEmployees ALLActionsModal: ", updatedEmployees);
   
-      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`//`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      const apiUrl = 
+      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
+      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -638,7 +646,9 @@ export class AllemployeesComponent
   
       console.log("updatedEmployees: ", updatedEmployees);
   
-      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`//`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      const apiUrl = 
+      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
+      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -763,7 +773,9 @@ export class AllemployeesComponent
 
       console.log('updatedEmployees CHECKOUT', updatedEmployees);
 
-      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      const apiUrl =
+      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -877,7 +889,7 @@ export class AllemployeesComponent
   */
 
     // this.exactHourPayment
-    console.log('EMPLOYEE: ', employee)
+    // console.log('EMPLOYEE: ', employee)
     if (this.exactHourPayment) {
       const hoursNumberExact = this.calculateExactHourPayment(
         employee,
@@ -1062,7 +1074,9 @@ export class AllemployeesComponent
 
       console.log('updatedEmployees', updatedEmployees);
   
-      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      const apiUrl =
+      //  `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+       `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -1495,8 +1509,167 @@ export class AllemployeesComponent
     //
   }
   
-  
-  async addNewEmergencyEmployeeModal() {
+  /* async addExistingEmergencyEmployeeModal() {
+    
+    const dialogRef = this.dialog.open(AddExistingEmployeeComponent)
+    const result = await dialogRef.afterClosed().toPromise();
+if (result && result.id) {
+    console.log('RESULT--> ', result);
+    
+    const employeeId = result.id; // Obtén el ID del objeto
+    const url = `http://127.0.0.1:5001/highkeystaff/us-central1/users/updateEmployee/id?id=${employeeId}`;
+    
+    fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(result), // Enviar el objeto result como cuerpo
+    })
+    .then(response => response.json())
+    .then(updatedData => {
+        console.log('Empleado actualizado:', updatedData);
+    })
+    .catch(error => {
+        console.error('Error al actualizar empleado:', error);
+    });
+     
+    const addEmployeeRegist = {
+      hours: 0, 
+      hourFrom: result.hourFrom,
+      orderId:this.orderId,
+      position: result.position,
+      employee: {
+          agmRate: result.rate, 
+          booking: "Emergency",
+          data: {
+              ...result,
+          },
+          rate:  result.rate, 
+          // id: "ID del nuevo empleado",
+          favourite: "Emergency",
+          status: "Confirmed"
+      },
+  };
+      console.log("addEmployeeRegist", addEmployeeRegist)
+      this.employeesArray.push(addEmployeeRegist);
+      
+      console.log('this.employeesArray: ',this.employeesArray)
+    const apiUrl =
+    //  `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+     `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+    fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ employees: this.employeesArray}),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        this.showNotification(
+          'snackbar-success',
+          'Successful Add Employee...!!!',
+          'bottom',
+          'center'
+        );
+        // console.log('Actualización exitosa:', data);
+        this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+        this.removeSelectedRows()
+      })
+      .catch((error) => {
+        console.error('Error al actualizar:', error);
+      });
+    
+
+    }
+
+  }
+ */
+
+  async addExistingEmergencyEmployeeModal() {
+    const dialogRef = this.dialog.open(AddExistingEmployeeComponent);
+    const result = await dialogRef.afterClosed().toPromise();
+
+    if (result && result.id) {
+        try {
+            await this.updateEmployee(result);
+            this.addEmployeeToArray(result);
+            await this.updateEmployeesArray();
+            this.showNotification('snackbar-success', 'Successful Add Employee...!!!', 'bottom', 'center');
+            this.getEmployees();
+            this.removeSelectedRows();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+}
+async updateEmployee(result) {
+  const employeeId = result.id;
+  const url = `http://127.0.0.1:5001/highkeystaff/us-central1/users/updateEmployee/id?id=${employeeId}`;
+
+  const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(result),
+  });
+
+  if (!response.ok) {
+      throw new Error('Failed to update employee.');
+  }
+}
+addEmployeeToArray(result) {
+  const addEmployeeRegist = {
+      hours: 0,
+      hourFrom: result.hourFrom,
+      orderId: this.orderId,
+      position: result.position,
+      employee: {
+          agmRate: result.rate,
+          booking: "Emergency",
+          data: {
+              ...result,
+          },
+          rate: result.rate,
+          id: result.id,
+          favourite: "Emergency",
+          status: "Confirmed"
+      },
+      showNotification: (type, message, verticalPosition, horizontalPosition) => {
+          // ... (notification logic)
+          this.showNotification(
+            'snackbar-success',
+            'Successful Add Employee...!!!',
+            'bottom',
+            'center'
+          );
+      }
+  };
+  this.employeesArray.push(addEmployeeRegist);
+}
+
+async updateEmployeesArray() {
+  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+ // const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+  const response = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ employees: this.employeesArray }),
+  });
+
+  console.log("ployeesArray", this.employeesArray)
+  // console.log(response)
+  if (!response.ok) {
+      throw new Error('Failed to update employees array.');
+  }
+}
+
+  /* async addNewEmergencyEmployeeModal() {
     
     const dialogRef = this.dialog.open(FormDialogComponent)
     const result = await dialogRef.afterClosed().toPromise();
@@ -1505,8 +1678,6 @@ export class AllemployeesComponent
     
       .then((response) => response.json())
       .then((data) => {
-        //console.log("last highKey Id: ", data.lastEmployeeID);
-        //console.log('POSITIONS desde allEmployees: ',this.positions)
         this.highKeyid = data.lastEmployeeID + 1;
         if (result) {
           //const previousEmployee = this.employeesArray[0];
@@ -1522,7 +1693,7 @@ export class AllemployeesComponent
                     name: result.position
                 }
             ],
-            email: result.mail,
+            email: result.email,
             lastname: result.lastName.toUpperCase(),
             status: "Active"
         };
@@ -1564,7 +1735,7 @@ export class AllemployeesComponent
                   lastname: result.lastName.toUpperCase(),
                   phone: result.phone,
                   company: "L&M Employee",
-                  email:  result.mail,
+                  email:  result.email,
                   status: "Active"
               },
               rate:  result.rate, 
@@ -1609,61 +1780,105 @@ export class AllemployeesComponent
       }).catch((error) => {
         console.log(error);
       });
-      
-    /*  
-    if (result) {
-      const previousEmployee = this.employeesArray[0];
-      console.log('HighkeyId: ',this.highKeyid)
-      const addNewEmployee = {
-        orderId: previousEmployee.orderId,
-        firstName: result.firstName,
-        lastName: result.lastName,
-        mail: result.mail,
-        phone: result.phone,
-        updateUser: this.dataUser.email
-        
-      };
-      
-      this.employeesArray.push(addNewEmployee);
+  } */
+
+  async addNewEmergencyEmployeeModal() {
+    try {
+        const dialogRef = this.dialog.open(FormDialogComponent);
+        const result = await dialogRef.afterClosed().toPromise();
+
+        if (result) {
+            const lastEmployeeID = await this.getLastEmployeeID();
+
+            const highKeyid = lastEmployeeID + 1;
+
+            if (result) {
+                await this.createEmployee(highKeyid, result);
+                this.addEmployeeToArray2(highKeyid, result);
+                await this.updateEmployeesArray();
+                this.showNotification('snackbar-success', 'Successful Add Employee...!!!', 'bottom', 'center');
+                this.getEmployees();
+                this.removeSelectedRows();
+            }
+        }
+    } catch (error) {
+        console.error('Error:', error);
     }
-      */
-    
-    //console.log('this.employeesArray: ',this.employeesArray)
-    
-/*    
-    
-/*  
-      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`//`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-      fetch(apiUrl, {
-        method: 'PUT',
-        headers: {
+}
+
+async getLastEmployeeID() {
+  const response = await fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/users/getLastEmployeeID`);
+  const data = await response.json();
+  return data.lastEmployeeID;
+}
+async createEmployee(highKeyid, result) {
+  
+  const addNewEmployee = {
+    firstname: result.firstName.toUpperCase(),
+    phone: result.phone,
+    company: "L&M Employee",
+    employeeId: highKeyid,
+    positions: [
+        {
+            rate: result.rate,
+            name: result.position
+        }
+    ],
+    email: result.email,
+    lastname: result.lastName.toUpperCase(),
+    status: "Active"
+};
+console.log('newEmployee: ',addNewEmployee)
+
+  const response = await fetch('http://127.0.0.1:5001/highkeystaff/us-central1/users/addEmployee', {
+      method: 'POST',
+      headers: {
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ employees: updatedEmployees }),
-      })
-        
-      .then((response) => response.json())
-      .then((data) => {
-          this.showNotification(
-            'snackbar-success',
-            'New emergency employee added successfully...!!!',
-            'bottom',
-            'center'
-          );
-          //console.log('Actualización exitosa:', data);
-          this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
-          this.removeSelectedRows() //Actualiza la tabla para que no duplique el dato en el anterior empleado.
-        })
-        .catch((error) => {
-          console.error('Error al actualizar:', error);
-        });
-    } else {
-      console.log('Ningún empleado seleccionado para check-in.');
-    }
-    */
+      },
+      body: JSON.stringify(addNewEmployee),
+  });
 
+  if (!response.ok) {
+      throw new Error('Failed to create employee.');
   }
+}
 
+addEmployeeToArray2(highKeyid, result) {
+ 
+  const newEmployeeRegist = {
+    hours: 0, 
+    hourFrom: result.hourFrom,
+    orderId:this.orderId,
+    position: result.position,
+    employee: {
+        agmRate: result.rate, 
+        booking: "Emergency",
+        data: {
+            firstname: result.firstName.toUpperCase(),
+            employeeId:  highKeyid,
+            positions: [
+                {
+                    rate: result.rate,
+                    name: result.position
+                }
+            ],
+            // payrollid: nuevoEmployeeId, 
+            lastname: result.lastName.toUpperCase(),
+            phone: result.phone,
+            company: "L&M Employee",
+            email:  result.email,
+            status: "Active"
+        },
+        rate:  result.rate, 
+        // id: "ID del nuevo empleado",
+        favourite: "Emergency",
+        status: "Confirmed"
+    },
+};
+
+    console.log("newEmployeeRegist", newEmployeeRegist)
+  this.employeesArray.push(newEmployeeRegist);
+}
   //Abre el modal FormDialogComponent para editar los datos.
   editCall(row: Employees) {
     this.id = row.id;
