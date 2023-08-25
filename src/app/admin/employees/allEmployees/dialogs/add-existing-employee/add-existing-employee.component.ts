@@ -95,21 +95,41 @@ export class AddExistingEmployeeComponent {
   captureInputValue() {
     this.searchHighKey = this.filterInput.nativeElement.value;
     console.log('Usuario escribió:', this.searchHighKey);
-    fetch(` http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeeById/id?id=${this.searchHighKey}`)
-      // `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeById/id?id=${this.searchHighKey}`
+    fetch(
+      //`http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeeById/id?id=${this.searchHighKey}`
+      `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeById/id?id=${this.searchHighKey}`
+      )
       .then((response) => response.json())
       .then((data) => {
         console.log('DATA: ',data)
-        this.formData = data.data;
-        this.formData.id = data.id
-        // Asignar los valores al formulario
-        this.employeesForm.patchValue({
-          firstName: data.data.firstname,
-          lastName: data.data.lastname,
-          phone: data.data.phone,
-          email: data.data.email,
-          // Otros campos si los tienes
-        });
+        console.log('DATA message: ',data.message)
+        if(data.message === undefined){
+          console.log('ENTRO AL if')
+          this.formData = data.data;
+          this.formData.id = data.id
+          // Asignar los valores al formulario
+          this.employeesForm.patchValue({
+            firstName: data.data.firstname,
+            lastName: data.data.lastname,
+            phone: data.data.phone,
+            email: data.data.email,
+
+            // Otros campos si los tienes
+          });
+        } else {
+          console.log('ENTRO AL ELSE')
+          
+            this.formData = '';
+          this.formData.id = ''
+          // Asignar los valores al formulario
+          this.employeesForm.patchValue({
+            firstName: '',
+            lastName: '',
+            phone: '',
+            email: '',
+          });
+        }
+        
       })
     }
   @HostListener('keydown', ['$event'])

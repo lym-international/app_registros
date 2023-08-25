@@ -228,7 +228,8 @@ export class DashboardLmComponent implements OnInit {
           if (hourTotals.totalCheckout !== undefined) {
             this.checkOutValues[positionName][hourFrom] = hourTotals.totalCheckout;
             console.log(`Total de check-out: ${hourTotals.totalCheckout}`);
-          } else {
+          } else if (hourTotals.totalCheckout === 0){
+            this.checkOutValues[positionName][hourFrom] = 0;
             console.log(`Total de check-out: 0`);
           }
           

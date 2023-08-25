@@ -203,7 +203,7 @@ export class AllemployeesComponent
   getEmployees() {
     //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`
     //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
-    fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
+    fetch(`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
       .then((response) => response.json())
       .then((data) => {
         this.isTblLoading = false;
@@ -332,7 +332,8 @@ export class AllemployeesComponent
 
       const apiUrl =
       //  `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-       `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+       //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; 
+       `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -386,8 +387,8 @@ export class AllemployeesComponent
       // console.log('updatedEmployees', updatedEmployees);
 
       const apiUrl =
-      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-       `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -555,8 +556,8 @@ export class AllemployeesComponent
       // console.log("updatedEmployees ALLActionsModal: ", updatedEmployees);
   
       const apiUrl = 
-      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
-      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
+      //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -647,8 +648,8 @@ export class AllemployeesComponent
       // console.log("updatedEmployees: ", updatedEmployees);
   
       const apiUrl = 
-      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
-      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
+      //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -774,8 +775,8 @@ export class AllemployeesComponent
       // console.log('updatedEmployees CHECKOUT', updatedEmployees);
 
       const apiUrl =
-      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -1035,8 +1036,8 @@ export class AllemployeesComponent
       // console.log('updatedEmployees', updatedEmployees);
   
       const apiUrl =
-      //  `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-       `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -1471,11 +1472,13 @@ export class AllemployeesComponent
   
 
   async addExistingEmergencyEmployeeModal() {
+    
     const dialogRef = this.dialog.open(AddExistingEmployeeComponent);
     const result = await dialogRef.afterClosed().toPromise();
-
+    
     if (result && result.id) {
         try {
+            this.isTblLoading = true;
             await this.updateEmployee(result);
             this.addEmployeeToArray(result);
             await this.updateEmployeesArray();
@@ -1483,6 +1486,7 @@ export class AllemployeesComponent
             this.showNotification('snackbar-success', 'Successful Add Employee...!!!', 'bottom', 'center');
             this.getEmployees();
             this.removeSelectedRows();
+            this.isTblLoading = false;
         } catch (error) {
             console.error('Error:', error);
         }
@@ -1490,8 +1494,10 @@ export class AllemployeesComponent
 }
 async updateEmployee(result) {
   const employeeId = result.id;
-  const url = `http://127.0.0.1:5001/highkeystaff/us-central1/users/updateEmployee/id?id=${employeeId}`;
-
+  const url = `https://us-central1-highkeystaff.cloudfunctions.net/users/updateEmployee/id?id=${employeeId}`
+  
+  //`http://127.0.0.1:5001/highkeystaff/us-central1/users/updateEmployee/id?id=${employeeId}`;
+  
   const response = await fetch(url, {
       method: 'PUT',
       headers: {
@@ -1535,8 +1541,8 @@ addEmployeeToArray(result) {
 }
 
 async updateEmployeesArray() {
-  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
- // const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+//const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+ const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
   const response = await fetch(apiUrl, {
       method: 'PUT',
       headers: {
@@ -1564,6 +1570,7 @@ async updateEmployeesArray() {
             const highKeyid = lastEmployeeID + 1;
 
             if (result) {
+                this.isTblLoading = true;
                 await this.createEmployee(highKeyid, result);
                 this.addEmployeeToArray2(highKeyid, result);
                 await this.updateEmployeesArray();
@@ -1571,7 +1578,7 @@ async updateEmployeesArray() {
                 this.showNotification('snackbar-success',  `Successful Add Employee with highkeyId : ${highKeyid}`, 'bottom', 'center');
                 this.getEmployees();
                 this.removeSelectedRows();
-
+                this.isTblLoading = false;
 
                 // Actualizar el array de employees en la orden
 
@@ -1583,7 +1590,10 @@ async updateEmployeesArray() {
 }
 
 async getLastEmployeeID() {
-  const response = await fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/users/getLastEmployeeID`);
+  const response = await fetch(
+    `https://us-central1-highkeystaff.cloudfunctions.net/users/getLastEmployeeID`
+    //`http://127.0.0.1:5001/highkeystaff/us-central1/users/getLastEmployeeID`
+  );
   const data = await response.json();
   return data.lastEmployeeID;
 }
@@ -1606,7 +1616,10 @@ async createEmployee(highKeyid, result) {
 };
 console.log('newEmployee: ',addNewEmployee)
 
-  const response = await fetch('http://127.0.0.1:5001/highkeystaff/us-central1/users/addEmployee', {
+  const response = await fetch(
+    `https://us-central1-highkeystaff.cloudfunctions.net/users/addEmployee`,
+    //'http://127.0.0.1:5001/highkeystaff/us-central1/users/addEmployee', 
+    {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -1657,7 +1670,9 @@ addEmployeeToArray2(highKeyid, result) {
 }
 
 async updateOrderWithNewEmployee(result) {
-  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+  const apiUrl = 
+  `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`
+  //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
   
   const response = await fetch(apiUrl, {
     method: 'GET',
