@@ -54,8 +54,9 @@ export class AllActionsComponent implements OnInit{
     startDate: this.fechaInicio,
     endDate: this.fechaSalida,
     break: this.breakTime
-    });
-    //this.dataCheckIn = this.checkInService.setCheckIn();
+    },
+    { validators: this.dateValidator }
+    );
   }
 
   constructor(
@@ -84,6 +85,29 @@ export class AllActionsComponent implements OnInit{
   // Paso 2: Crear el EventEmitter
   checkInUpdated: EventEmitter<any> = new EventEmitter<any>(); //
 
+  
+  // Custom validator function to check if endDate is greater than startDate
+  
+  dateValidator: ValidatorFn = (formGroup: FormGroup): { [key: string]: any } | null => {
+    const startDate = formGroup.get('startDate').value;
+    const endDate = formGroup.get('endDate').value;
+  
+    // Redondear las fechas a la unidad de minutos
+    const roundedStartDate = new Date(startDate);
+    const roundedEndDate = new Date(endDate);
+  
+    roundedStartDate.setSeconds(0);
+    roundedEndDate.setSeconds(0);
+  
+    if (roundedStartDate > roundedEndDate || roundedStartDate.getTime() === roundedEndDate.getTime()) {
+      formGroup.get('endDate').setErrors({ 'customError': true }); // Set custom error
+      return { 'invalidDate': true };
+    } else {
+      formGroup.get('endDate').setErrors(null); // Clear custom error
+    }
+  
+    return null;
+  };
   
   getErrorMessage() {
     return this.formControl.hasError('required')

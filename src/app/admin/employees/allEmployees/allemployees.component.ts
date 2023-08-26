@@ -1702,9 +1702,12 @@ async updateOrderWithNewEmployee(result) {
   const itemIndex = orderData.data.items.findIndex(item => item.position === result.position && item.hourFrom === result.hourFrom);
 
   if (itemIndex !== -1) {
-    // Agrega el nuevo empleado al arreglo de empleados dentro del elemento encontrado.
+    
+    const currentPending = orderData.data.items[itemIndex].pending;
+    const currentM = orderData.data.items[itemIndex].m;
     orderData.data.items[itemIndex].employees.push(newEmployee);
-
+    orderData.data.items[itemIndex].pending = currentPending - 1;
+    orderData.data.items[itemIndex].m = currentM + 1;
     // Actualiza la orden en el servidor con el nuevo empleado agregado.
    
     const updateOrderResponse = await fetch(apiUrl, {

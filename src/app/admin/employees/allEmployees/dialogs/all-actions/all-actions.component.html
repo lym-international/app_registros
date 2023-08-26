@@ -33,8 +33,23 @@
                         <mat-error *ngIf="allActionsForm.get('endDate')?.hasError('required')">
                             CheckOut is required!
                         </mat-error>
+
+                        <!--
+                        <div *ngIf="allActionsForm.hasError('invalidDate') && (allActionsForm.get('endDate').dirty || allActionsForm.get('endDate').touched)">
+                            CheckOut date must be greater than CheckIn date.
+                        </div>
+                        -->
+                        <mat-error *ngIf="allActionsForm.hasError('invalidDate')">
+                            CheckOut must be greater than CheckIn.
+                        </mat-error>
+                        <!--<mat-error *ngIf="allActionsForm.hasError('customError')">
+                            
+                            CheckOut must be greater than CheckIn.
+                        </mat-error>-->
                         <owl-date-time #endDate></owl-date-time>
                     </mat-form-field>
+
+
 
                     <mat-form-field class="example-full-width mb-3" appearance="outline">
                         <mat-label>Break</mat-label>

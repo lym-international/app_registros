@@ -60,8 +60,11 @@ export class AddExistingEmployeeComponent {
     this.employeesForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      phone: ['', Validators.required],
-      email: ['', Validators.required],
+      //phone: ['', Validators.required],
+      //email: ['', Validators.required],
+      phone: [''],
+      email: [''],
+      
 
       // Otros campos del formulario si los tienes
     });
