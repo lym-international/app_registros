@@ -34,6 +34,7 @@ import { AuthenticationService } from 'app/_services/authentication.service';
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { ActivatedRoute } from '@angular/router';
+import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
 
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -99,6 +100,7 @@ export class AllemployeesComponent
   totalHoursSum: number;
   updatedHours: number;
   highKeyid: number;
+  public statusOrder!: string;
   
   
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -122,6 +124,7 @@ export class AllemployeesComponent
     public authenticationService: AuthenticationService,
     //private checkInService: CheckInService,
     private route: ActivatedRoute,
+    private sharingCloseOrderService: SharingCloseOrderService,
     
     
     
@@ -132,8 +135,22 @@ export class AllemployeesComponent
 
   ngOnInit() {
     this.dataEmployees = this.orderDataService.getSelectedOrder();
-    // console.log('Data Order: ', this.dataEmployees);
+
+    this.statusOrder = this.dataEmployees.data.status;  
     this.orderId = this.dataEmployees.id;
+    this.orderDataService.getSelectedOrderObservable().subscribe((selectedOrder) => {
+      console.log('Activa el subscribe en allEmployees')
+      if (selectedOrder) {
+        this.dataEmployees = selectedOrder;
+        this.statusOrder = this.dataEmployees.data.status;  
+        this.orderId = this.dataEmployees.id;  
+      }
+    });
+    console.log('Data Order: ', this.dataEmployees);
+    
+    console.log('Data StatusOrder: ', this.statusOrder);
+    
+    
     this.exactHourPayment = this.dataEmployees.data.exactHourPayment;
     this.getEmployees();
     this.loadData();
@@ -154,7 +171,13 @@ export class AllemployeesComponent
         //console.log('FormData en AllEmployees:', params);
       }
     });
-    
+    /*
+    this.sharingCloseOrderService.setStatusOrder(this.statusOrder);
+    this.sharingCloseOrderService.getStatusOrderObservable().subscribe((status) => {
+      this.statusOrder = status;
+    });
+    */
+    this.sharingCloseOrderService.setStatusOrder(this.statusOrder);
   }
   
   // Función para verificar la visibilidad de los botones al hacer clic en el checkbox
@@ -1702,7 +1725,7 @@ async updateOrderWithNewEmployee(result) {
   const itemIndex = orderData.data.items.findIndex(item => item.position === result.position && item.hourFrom === result.hourFrom);
 
   if (itemIndex !== -1) {
-    
+
     const currentPending = orderData.data.items[itemIndex].pending;
     const currentM = orderData.data.items[itemIndex].m;
     orderData.data.items[itemIndex].employees.push(newEmployee);

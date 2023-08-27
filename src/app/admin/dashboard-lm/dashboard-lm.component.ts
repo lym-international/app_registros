@@ -18,9 +18,7 @@ import {
   ApexNonAxisChartSeries,
 } from 'ng-apexcharts';
 import { Position } from 'app/interfaces/position.interface';
-
-
-
+import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -69,23 +67,50 @@ export class DashboardLmComponent implements OnInit {
   checkOutValues: { [position: string]: { [hourFrom: string]: number } } = {};
   noShowValues: { [position: string]: { [hourFrom: string]: number } } = {};
   filteredCheckinValues: number[];
+  statusOrder: string;
   
   
   //  color: ["#3FA7DC", "#F6A025", "#9BC311"],
-  constructor(private orderDataService: OrderDataService) {
+  constructor(
+    private orderDataService: OrderDataService, 
+    private sharingCloseOrderService: SharingCloseOrderService,
+    ) {
     // controller code
   }
   ngOnInit() {
     this.dataOrder = this.orderDataService.getSelectedOrder();
+    
+    this.statusOrder = this.dataOrder.data.status;  
+    this.orderId = this.dataOrder.id;
+    /*
+    this.orderDataService.getSelectedOrderObservable().subscribe((selectedOrder) => {
+      console.log('Activa el subscribe en dashboardLm')
+      if (selectedOrder) {
+        console.log('entró el IF')
+        this.dataOrder = selectedOrder;
+        this.statusOrder = this.dataOrder.data.status;  
+        this.orderId = this.dataOrder.id;
+      }  
+    });
+    
+    console.log('Data Order en dashboard: ', this.dataOrder);
+    console.log('Data StatusOrder en dashboard: ', this.statusOrder);
+    
+    */
+
     //this.chart1(); //Plantilla
     //this.chart2(); //Plantilla
     console.log('Data: ', this.dataOrder)
-    this.orderId = this.dataOrder.id;
+    //this.orderId = this.dataOrder.id;
     console.log('OrderID ===>', this.orderId)
     this.getRegistByOrder();
     this.getTotalRequest();
     //this.porcentajes();
     
+    this.sharingCloseOrderService.getStatusOrderObservable().subscribe((status) => {
+      this.statusOrder = status;
+    });
+    console.log('STATUS ORDER en dasboardLm: ',this.statusOrder)
     
   }
   //this.orderSelected = this.selectedOrder;
