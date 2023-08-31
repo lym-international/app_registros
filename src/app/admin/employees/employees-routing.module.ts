@@ -12,6 +12,8 @@ const routes: Routes = [
     path: "allEmployees",
     component: AllemployeesComponent,
   },
+  
+  
   {
     path: "admin-employees",
     component: AdminEmployeesComponent,

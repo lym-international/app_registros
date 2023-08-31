@@ -91,6 +91,8 @@ export class AllActionsComponent implements OnInit{
   dateValidator: ValidatorFn = (formGroup: FormGroup): { [key: string]: any } | null => {
     const startDate = formGroup.get('startDate').value;
     const endDate = formGroup.get('endDate').value;
+    console.log('startDate desde all actions: ',startDate)
+    console.log('endDate  all actions: ',endDate)
   
     // Redondear las fechas a la unidad de minutos
     const roundedStartDate = new Date(startDate);

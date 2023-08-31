@@ -29,7 +29,7 @@
                     <div class="sub-sub-column">
                         <mat-card class="tarjeta-pequena">
                             <mat-card-content>
-                                <mat-card-title>Total hours worked </mat-card-title>
+                                <mat-card-title>Hours worked </mat-card-title>
                                 {{totalHoursSum}}
                             </mat-card-content>
                         </mat-card>
@@ -43,7 +43,7 @@
                         </mat-card>
                     </div>
                     <div class="sub-sub-column">
-                        <mat-card class="tarjeta-pequena">
+                        <mat-card class="tarjeta-pequena-2">
                             <mat-card-content>
                                 <mat-card-title>Status </mat-card-title>
                                 {{statusOrder}}
@@ -70,78 +70,79 @@
                         </div>
                         <div class="right">
                             <ul class="tbl-export-btn">
-
-                                <li class="tbl-header-btn">
-                                    <div class="m-l-10" *ngIf="showCheckInButton" matTooltip="CHECKIN">
-                                        <!--<div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="CHECKIN"> -->
-                                        <button mat-mini-fab color="primary" (click)="checkInModal(getSelectedRows())"> 
-                                            <mat-icon class="col-white">how_to_reg</mat-icon>
-                                        </button>
-                                    </div>
-                                </li>
-
-                                <li class="tbl-header-btn">
-                                    <div class="m-l-10" *ngIf="showCheckOutButton" matTooltip="CHECKOUT">
-                                        <!--<div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="CHECKOUT"> -->
-                                        <button mat-mini-fab color="primary" (click)="checkOutModal(getSelectedRows())"> 
-                                            <mat-icon class="col-white">logout</mat-icon>
-                                        </button>
-                                    </div>
-                                </li>
-
-                                <li class="tbl-header-btn">
-                                    <div class="m-l-10" *ngIf="showBreakButton" matTooltip="BREAK">
-                                        <!--<div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="BREAK">-->
-                                        <button mat-mini-fab color="primary" (click)="breakModal(getSelectedRows())"> 
-                                            <mat-icon class="col-white">coffee</mat-icon>
-                                        </button>
-                                    </div>
-                                </li>
-
-                                <li class="tbl-header-btn">
-                                    <div class="m-l-10" *ngIf="showNoShowButton" matTooltip="NOSHOW">
-                                        <!--<div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="NOSHOW"> -->
-                                        <button mat-mini-fab color="warn" (click)="outEmployee(getSelectedRows())"> 
-                                            <mat-icon class="col-white">visibility_off</mat-icon>
-                                        </button>
-                                    </div>
-                                </li>
-
-                                <li class="tbl-header-btn">
-                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="DELETE: IN, OUT, BREAK">
-                                        <button mat-mini-fab color="warn" (click)="deleteInTime(getSelectedRows())">
-                                        <mat-icon class="col-white">refresh</mat-icon>
-                                      </button>
-                                    </div>
-                                </li>
-
-                                <!-- BOTONES ESTÁTICOS -->
-
-                                <li class="tbl-header-btn borde-izq">
-                                    <div class="m-l-10" matTooltip="All ACTIONS">
-                                        <button mat-mini-fab color="primary" (click)="allActionsModal(getSelectedRows())"> 
-                                        <mat-icon class="col-white">swap_horizontal_circle</mat-icon>
-                                      </button>
-                                    </div>
-                                </li>
-                                <div class="background">
+                                <span *ngIf="ShowButtons" class="tbl-export-btn">
                                     <li class="tbl-header-btn">
-                                        <div class=" marginButton" matTooltip="ADD NEW">
-                                            <!--class="m-l-10"-->
-                                            <button mat-mini-fab color="primary" (click)="addNewEmergencyEmployeeModal()">
-                                            <mat-icon class="col-white">person_add</mat-icon>
+                                        <div class="m-l-10" *ngIf="showCheckInButton" matTooltip="CHECKIN">
+                                            <!--<div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="CHECKIN"> -->
+                                            <button mat-mini-fab color="primary" (click)="checkInModal(getSelectedRows())"> 
+                                                <mat-icon class="col-white">how_to_reg</mat-icon>
+                                            </button>
+                                        </div>
+                                    </li>
+
+                                    <li class="tbl-header-btn">
+                                        <div class="m-l-10" *ngIf="showCheckOutButton" matTooltip="CHECKOUT">
+                                            <!--<div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="CHECKOUT"> -->
+                                            <button mat-mini-fab color="primary" (click)="checkOutModal(getSelectedRows())"> 
+                                                <mat-icon class="col-white">logout</mat-icon>
+                                            </button>
+                                        </div>
+                                    </li>
+
+                                    <li class="tbl-header-btn">
+                                        <div class="m-l-10" *ngIf="showBreakButton" matTooltip="BREAK">
+                                            <!--<div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="BREAK">-->
+                                            <button mat-mini-fab color="primary" (click)="breakModal(getSelectedRows())"> 
+                                                <mat-icon class="col-white">coffee</mat-icon>
+                                            </button>
+                                        </div>
+                                    </li>
+
+                                    <li class="tbl-header-btn">
+                                        <div class="m-l-10" *ngIf="showNoShowButton" matTooltip="NOSHOW">
+                                            <!--<div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="NOSHOW"> -->
+                                            <button mat-mini-fab color="warn" (click)="outEmployee(getSelectedRows())"> 
+                                                <mat-icon class="col-white">visibility_off</mat-icon>
+                                            </button>
+                                        </div>
+                                    </li>
+
+                                    <li class="tbl-header-btn">
+                                        <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="DELETE: IN, OUT, BREAK">
+                                            <button mat-mini-fab color="warn" (click)="deleteInTime(getSelectedRows())">
+                                            <mat-icon class="col-white">refresh</mat-icon>
                                         </button>
                                         </div>
                                     </li>
-                                    <li class="tbl-header-btn">
-                                        <div class="marginButton" matTooltip="SEARCH EMPLOYEE">
-                                            <!--class="m-l-10"-->
-                                            <button mat-mini-fab color="primary" (click)="addExistingEmergencyEmployeeModal()">
-                                            <mat-icon class="col-white">person_search</mat-icon>
+
+                                    <!-- BOTONES ESTÁTICOS -->
+
+                                    <li class="tbl-header-btn borde-izq">
+                                        <div class="m-l-10" matTooltip="All ACTIONS">
+                                            <button mat-mini-fab color="primary" (click)="allActionsModal(getSelectedRows())"> 
+                                            <mat-icon class="col-white">swap_horizontal_circle</mat-icon>
                                         </button>
                                         </div>
                                     </li>
-                                </div>
+                                    <div class="background">
+                                        <li class="tbl-header-btn">
+                                            <div class=" marginButton" matTooltip="ADD NEW">
+                                                <!--class="m-l-10"-->
+                                                <button mat-mini-fab color="primary" (click)="addNewEmergencyEmployeeModal()">
+                                                <mat-icon class="col-white">person_add</mat-icon>
+                                            </button>
+                                            </div>
+                                        </li>
+                                        <li class="tbl-header-btn">
+                                            <div class="marginButton" matTooltip="SEARCH EMPLOYEE">
+                                                <!--class="m-l-10"-->
+                                                <button mat-mini-fab color="primary" (click)="addExistingEmergencyEmployeeModal()">
+                                                <mat-icon class="col-white">person_search</mat-icon>
+                                            </button>
+                                            </div>
+                                        </li>
+                                    </div>
+                                </span>
                                 <li class="tbl-header-btn">
                                     <div class="" matTooltip="DOWNLOAD">
                                         <button mat-mini-fab color="primary" (click)="generatePdf()">

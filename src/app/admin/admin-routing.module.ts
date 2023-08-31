@@ -4,11 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   
-  {
-    path: 'close-order',
-    loadChildren: () =>
-      import('./close-order/close-order.module').then((m) => m.CloseOrderModule),
-  },
+  
   {
     path: 'dashboard-lm',
     loadChildren: () =>

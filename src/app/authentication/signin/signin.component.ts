@@ -79,10 +79,10 @@ export class SigninComponent
       return;
     } else {
         
-      const username = this.authForm.get('username')?.value;
+      const username = this.authForm.get('username')?.value.toLowerCase();
       const password = this.authForm.get('password')?.value;
-      console.log('Usernameee:', username);
-      console.log('Password:', password); 
+      //console.log('Username:', username);
+      //console.log('Password:', password); 
     
       this.authenticationService.login(username, password); //jairo
       

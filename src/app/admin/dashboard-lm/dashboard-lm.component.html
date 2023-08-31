@@ -13,10 +13,11 @@
                     <div class="card-statistic-3">
                         <div class="card-icon card-icon-large"><i class="fa fa-globe"></i></div>
                         <div class="tarjeta">
-                            <span style="font-size: large; color: #1A202E; font-weight: 700;">{{dataOrder.data.clientName}}</span>
+                            <span class="clientName">{{dataOrder.data.clientName}}</span>
                             <br/> <br/> {{dataOrder.data.place}}
                             <br/> <br/> {{dataOrder.data.address}}
                             <br/> <br/> {{dataOrder.data.city}} {{dataOrder.data.state}} {{dataOrder.data.zipcode}}
+                            <br/> <br/> <span class="colorStatus">Status Order: {{statusOrder}}</span>
                         </div>
                     </div>
                 </div>
@@ -40,6 +41,7 @@
                             </mat-card-content>
                         </mat-card>
                     </div>
+                    <!--
                     <div class="sub-sub-column">
                         <mat-card class="tarjeta-pequena">
                             <mat-card-content>
@@ -48,6 +50,7 @@
                             </mat-card-content>
                         </mat-card>
                     </div>
+                    -->
                 </div>
             </div>
         </div>

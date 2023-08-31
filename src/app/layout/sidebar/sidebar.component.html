@@ -57,7 +57,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li>
+                        <li *ngIf="currentRoute === '/admin/employees/allEmployees'">
                             <a (click)="closeOrder()" *ngIf="isUserRoleValid()" class="menu-top">
                                 <i-feather name="x-circle" class="sidebarIcon"></i-feather>
                                 <span class="hide-menu">Close order</span>

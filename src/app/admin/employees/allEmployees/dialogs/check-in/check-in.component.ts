@@ -10,6 +10,7 @@ import {
 } from '@angular/forms';
 //import { CheckInModel } from './check-in.model';
 import { formatDate } from '@angular/common';
+import { CheckoutValidatorService } from 'app/_services/checkout-validator.service';
 
 export interface DialogData {
   id: number;
@@ -26,6 +27,7 @@ export class CheckInComponent implements OnInit {
   dialogTitle: string;
   checkInForm: UntypedFormGroup;
   fechaInicio: FormControl;
+  private checkInDateTemp: Date | null = null; // Variable temporal para almacenar la fecha del check-in
   //checkIn: CheckInModel;
   //showDeleteBtn = false;
   //public dataCheckIn!: any;
@@ -34,7 +36,7 @@ export class CheckInComponent implements OnInit {
     this.checkInForm.patchValue({
       startDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
     });
-    this.fechaInicio = new FormControl(new Date());
+    this.fechaInicio = new FormControl(); //new Date()
     this.checkInForm = new FormGroup({
     startDate: this.fechaInicio
     });
@@ -42,16 +44,11 @@ export class CheckInComponent implements OnInit {
     
   }
 
-  /*constructor(private orderDataService: OrderDataService) {
-    // controller code
-  }
-  ngOnInit() {
-    this.dataOrder = this.orderDataService.getSelectedOrder(); */
-
   constructor(
     public dialogRef: MatDialogRef<CheckInComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private fb: UntypedFormBuilder
+    private fb: UntypedFormBuilder,
+    private checkoutValidatorService: CheckoutValidatorService,
   ) {
     this.action = data.action;
     if (this.action === 'edit') {
@@ -110,6 +107,11 @@ export class CheckInComponent implements OnInit {
 
   public confirmAdd(): void {
     const startDate = this.fechaInicio.value;
+
+    this.checkoutValidatorService.setCheckInDate(startDate);
+
     this.dialogRef.close(startDate);
+
+    //console.log('this.checkoutValidatorService.checkInDate: ',this.checkoutValidatorService.checkInDate)
   }
 }

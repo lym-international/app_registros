@@ -23,7 +23,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Administrator'],
+    role: ['Administrator', 'Supervisor', 'Client'],
     submenu: [],
   },
   {
@@ -35,7 +35,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Administrator'],
+    role: ['Administrator', 'Supervisor', 'Client'],
     submenu: [],
   },
   /*

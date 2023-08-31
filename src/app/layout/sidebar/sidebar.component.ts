@@ -15,6 +15,7 @@ import { RouteInfo } from './sidebar.metadata';
 import { AuthenticationService } from 'app/_services/authentication.service';
 import { Subscription } from 'rxjs';
 import { OrderDataService } from 'app/_services/orderData.service';
+import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -47,7 +48,7 @@ export class SidebarComponent implements OnInit {
     private router: Router,
     public authenticationService: AuthenticationService,
     private orderDataService: OrderDataService,
-    
+    private sharingCloseOrderService: SharingCloseOrderService,
 
   ) {
     this.elementRef.nativeElement.closest('body');
@@ -127,7 +128,7 @@ export class SidebarComponent implements OnInit {
     if (this.dataUser && this.dataUser.role) {
       const userRole = this.dataUser.role;
       // Verifica si el rol del usuario es "Administrator" o "Client"
-      return userRole === 'Administrator'; //|| userRole === 'Client';
+      return userRole === 'Administrator' || userRole === 'Supervisor';//|| userRole === 'Client';
     }
     // Si no se proporciona un rol de usuario válido, oculta el botón
     return false;
@@ -144,12 +145,13 @@ export class SidebarComponent implements OnInit {
         //console.log('DATA del method PUT', data);
         this.orderDataService.setSelectedOrder(data);
         
+        // Forzar la recarga de la página actual (para actualizar la página de allEmployees y que no se vean los botones)
+        window.location.reload();
       })
       .catch((error) => {
         console.error('Error al actualizar:', error);
       });
       //console.log('ORDEN CERRADA')
-
   }
   
   initLeftSidebar() {

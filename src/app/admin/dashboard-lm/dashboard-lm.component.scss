@@ -49,6 +49,17 @@
     text-align: center;
 }
 
+.colorStatus {
+    color: rgb(255, 145, 0);
+}
+
+.clientName {
+    font-size: large;
+    color: #1A202E;
+    font-weight: 600;
+    font-size: 23px;
+}
+
 @media (min-width: 767px) {
     .content-block {
         width: 100%;

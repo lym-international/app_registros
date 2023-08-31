@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EmployeesService } from './employees.service';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,8 +12,8 @@ import {
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { BehaviorSubject, fromEvent, merge, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, fromEvent, merge, Observable, Subscription } from 'rxjs';
+import { first, map } from 'rxjs/operators';
 import { FormDialogComponent } from './dialogs/form-dialog/form-dialog.component';
 import { DeleteDialogComponent } from './dialogs/delete/delete.component';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -62,12 +62,6 @@ export class AllemployeesComponent
     'break',
     'totalHours',
     'status',
-    //'department',
-    //'role',
-    //'degree',
-    //'mobile',
-    //'email',
-    //'date',
     //'actions',
   ];
 
@@ -101,6 +95,8 @@ export class AllemployeesComponent
   updatedHours: number;
   highKeyid: number;
   public statusOrder!: string;
+  public ShowButtons = true;
+  
   
   
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -155,7 +151,7 @@ export class AllemployeesComponent
     this.getEmployees();
     this.loadData();
     this.dataUser = this.authenticationService.getData();
-    // const storedUserData = localStorage.getItem('currentUserData');
+    
     const storedUserData = localStorage.getItem('currentUserData');
     if (storedUserData) {
       this.dataUser = JSON.parse(storedUserData);
@@ -171,14 +167,17 @@ export class AllemployeesComponent
         //console.log('FormData en AllEmployees:', params);
       }
     });
-    /*
+    
     this.sharingCloseOrderService.setStatusOrder(this.statusOrder);
-    this.sharingCloseOrderService.getStatusOrderObservable().subscribe((status) => {
-      this.statusOrder = status;
-    });
-    */
-    this.sharingCloseOrderService.setStatusOrder(this.statusOrder);
+  
+    //Oculta todos los botones de la tabla si la orden es cerrada.
+    if(this.statusOrder === 'closed'){
+      this.ShowButtons = false
+     }
+
+    
   }
+  
   
   // Función para verificar la visibilidad de los botones al hacer clic en el checkbox
   onCheckboxClick(row: Employees) {
