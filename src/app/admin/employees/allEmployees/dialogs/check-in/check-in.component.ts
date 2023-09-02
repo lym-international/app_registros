@@ -27,7 +27,8 @@ export class CheckInComponent implements OnInit {
   dialogTitle: string;
   checkInForm: UntypedFormGroup;
   fechaInicio: FormControl;
-  private checkInDateTemp: Date | null = null; // Variable temporal para almacenar la fecha del check-in
+  roundedCheckIn: Date;
+  localStorageCheckIn: any;
   //checkIn: CheckInModel;
   //showDeleteBtn = false;
   //public dataCheckIn!: any;
@@ -104,14 +105,10 @@ export class CheckInComponent implements OnInit {
   onNoClick(): void {
     this.dialogRef.close();
   }
-
+  
   public confirmAdd(): void {
     const startDate = this.fechaInicio.value;
-
-    this.checkoutValidatorService.setCheckInDate(startDate);
-
+    this.checkoutValidatorService.setCheckInDate(startDate); // Llama al método del servicio
     this.dialogRef.close(startDate);
-
-    //console.log('this.checkoutValidatorService.checkInDate: ',this.checkoutValidatorService.checkInDate)
   }
 }

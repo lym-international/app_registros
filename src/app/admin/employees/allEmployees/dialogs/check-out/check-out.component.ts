@@ -80,7 +80,20 @@ export class CheckOutComponent implements OnInit{
     Validators.required,
     // Validators.email,
   ]);
-
+  /*
+  validateCheckOut() {
+    const checkOutDate = this.fechaSalida.value;
+    console.log('Validación del servicio: ', this.checkoutValidatorService.validateDates(checkOutDate));
+  
+    if (this.checkoutValidatorService.validateDates(checkOutDate)) {
+      this.showError = false;
+    } else {
+      this.showError = true;
+    }
+    console.log('Validación después del IF: ', this.showError);
+  }
+  */
+  
   validateCheckOut() {
     const checkOutDate = this.fechaSalida.value;
     this.checkoutValidatorService.setCheckOutDate(checkOutDate);
@@ -102,6 +115,7 @@ export class CheckOutComponent implements OnInit{
     }
     console.log('Validación después del IF: ',this.checkoutValidatorService.validateDates())
   }
+  
 
   getErrorMessage() {
     return this.formControl.hasError('required')

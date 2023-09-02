@@ -277,10 +277,10 @@ export class AllemployeesComponent
           };
         });
 
-        // console.log('---------------------------');
-        // console.log('Array empleados: ');
-        // console.log(this.employeesArray);
-        // console.log('---------------------------');
+         console.log('---------------------------');
+        console.log('Array empleados: ');
+         console.log(this.employeesArray);
+        console.log('---------------------------');
 
         this.dataSource = new ExampleDataSource(
           this.exampleDatabase,
@@ -316,7 +316,8 @@ export class AllemployeesComponent
         this.isTblLoading = false;
       });
   }
-
+  
+  // Reset checkin, checkout y break
   deleteInTime(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {
       // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
