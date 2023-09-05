@@ -229,7 +229,7 @@ export class AllemployeesComponent
       .then((response) => response.json())
       .then((data) => {
         this.isTblLoading = false;
-        // console.log("datadelRegistroJR", data);
+        console.log("datadelRegistro: ", data);
   
         this.employeesArray = data.employees.map((employee) => {
           const employeeData = { ...employee.employee.data };
@@ -241,8 +241,27 @@ export class AllemployeesComponent
           const totalHours = employee.hours || 0;
           const payrollId = employeeData.payrollid || "No data";
           const brake = employee.break || "0";
-          const hourFrom = employee.hourFrom || "No data";
+          //const hourFrom = employee.hourFrom || "No data";
   
+          let hourFromFormatted = "No Data";
+          if (employee.hourFrom) {
+            const hourParts = employee.hourFrom.split(':');
+            if (hourParts.length === 2) {
+              const hours = parseInt(hourParts[0]);
+              const minutes = parseInt(hourParts[1]);
+          
+              // Calcula el período (AM o PM)
+              const period = hours >= 12 ? 'PM' : 'AM';
+          
+              // Convierte las horas al formato de 12 horas
+              const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
+              const formattedMinutes = minutes.toString().padStart(2, '0');
+          
+              // Formatea la hora en un string
+              hourFromFormatted = `${formattedHours}:${formattedMinutes} ${period}`;
+            }
+          }
+          
           let checkInTime = "No Data";
           if (employee.dateCheckin && employee.dateCheckin._seconds) {
             const checkIn = employee.dateCheckin._seconds;
@@ -270,7 +289,8 @@ export class AllemployeesComponent
             hours: employee.hours,
             totalHours: totalHours,
             payRollId: payrollId,
-            hourFrom: hourFrom,
+            hourFrom: hourFromFormatted,
+            //hourFrom: hourFrom,
             in: checkInTime,
             out: checkOutTime,
             break: brake,
