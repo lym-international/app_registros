@@ -1,5 +1,5 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, OnInit } from '@angular/core';
 import {
   UntypedFormControl,
   Validators,
@@ -11,6 +11,7 @@ import {
 //import { CheckInModel } from './check-in.model';
 import { formatDate } from '@angular/common';
 import { CheckoutValidatorService } from 'app/_services/checkout-validator.service';
+
 
 export interface DialogData {
   id: number;
@@ -29,6 +30,10 @@ export class CheckInComponent implements OnInit {
   fechaInicio: FormControl;
   roundedCheckIn: Date;
   localStorageCheckIn: any;
+  
+
+
+  //private owlDateTime: OwlDateTime;
   //checkIn: CheckInModel;
   //showDeleteBtn = false;
   //public dataCheckIn!: any;
@@ -43,6 +48,7 @@ export class CheckInComponent implements OnInit {
     });
     //this.dataCheckIn = this.checkInService.setCheckIn();
     
+    
   }
 
   constructor(
@@ -50,6 +56,7 @@ export class CheckInComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private fb: UntypedFormBuilder,
     private checkoutValidatorService: CheckoutValidatorService,
+    private readonly el: ElementRef
   ) {
     this.action = data.action;
     if (this.action === 'edit') {
@@ -62,6 +69,8 @@ export class CheckInComponent implements OnInit {
     }
     this.checkInForm = this.createContactForm();
     //console.log('Propiedades modalCheckIn ==>',this.checkInForm.controls)
+
+    
   }
   
   formControl = new UntypedFormControl('', [

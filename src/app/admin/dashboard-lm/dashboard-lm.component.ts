@@ -169,13 +169,14 @@ export class DashboardLmComponent implements OnInit {
   
     const positions: { [name: string]: Position } = {};
     
-// console.log("datica", data)
+    // console.log("datica", data)
     data.employees.forEach((employee)=>{
         // console.log('RR: ', employee.employee.data)  
       const positionName = employee.position;
       const hourFrom = employee.hourFrom;
       const rate = employee.employee.agmRate
-    
+      
+      
     if (!positions[positionName]) {
       // Si la posición no existe en el objeto, crearla
       positions[positionName] = {
@@ -212,6 +213,8 @@ export class DashboardLmComponent implements OnInit {
   
 
       })
+      
+
       // console.log("positiions ",positions)
       
       localStorage.setItem('positions', JSON.stringify(positions));
@@ -276,6 +279,14 @@ export class DashboardLmComponent implements OnInit {
     }
     )   
   }
+  
+  formatTimeTo12HourFormat(time: string): string {
+    const [hour, minute] = time.split(':').map(Number);
+    const period = hour < 12 ? 'AM' : 'PM';
+    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+    return `${formattedHour}:${minute < 10 ? '0' : ''}${minute} ${period}`;
+  }
+  
   //Tarjetas superiores
   porcentajes(checkIn,checkOut,noShow,totalConfirmed, totalRequest){
     if (this.totalConfirmed !== 0) {

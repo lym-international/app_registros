@@ -193,37 +193,7 @@ export class AddExistingEmployeeComponent {
 
   updateIsTableSelected() {
     this.isTableSelected = !!this.selectedPosition && !!this.selectedHour && !!this.selectedRate;
-  }
- //Este funciona bien
-  /*handleCheckboxChange(event: any, row: any) {  
-    
-    if (event.target.checked) {
-      console.log('ENTRO AL IF');
-      // Marca la posición actualmente seleccionada
-      this.selectedRow = row;
-      console.log('this.selectedRow:',this.selectedRow)
-      console.log('this.selectedRow.key:',this.selectedRow.key)
-      console.log('this.selectedRow.value.hours:',this.selectedRow.value.hours)
-    } else if (this.selectedRow === row) {
-      console.log('ENTRO AL ELSE');
-      // Desmarca la posición actualmente seleccionada
-      this.selectedRow = null;
-    }
-  }
-  */
-    /*if (event.target.checked) {
-      console.log('ENTRO AL IF')
-      // Agrega la posición seleccionada al arreglo selectedPositions
-      this.selectedPositions.push(position);
-    } else {
-      console.log('ENTRO AL ELSE')
-      // Elimina la posición seleccionada del arreglo selectedPositions
-      const index = this.selectedPositions.findIndex(p => p.key === position.key);
-      if (index !== -1) {
-        this.selectedPositions.splice(index, 1);
-      }
-    }*/
-  
+  } 
 
   submit() {
     // emppty stuff
@@ -268,25 +238,4 @@ export class AddExistingEmployeeComponent {
       console.log('No se ha seleccionado ninguna fila');
     }
   }
-  
-  
-  /*
-  public confirmAdd(): void {
-    
-    if (Object.keys(this.selectedRows).length > 0) {
-      // Si hay una fila seleccionada, agrega su posición al objeto formData
-      // Puedes elegir la primera fila seleccionada si es relevante para tu lógica.
-      const firstSelectedRowKey = Object.keys(this.selectedRows)[0];
-      this.formData = this.employeesForm.value;
-      this.formData.position = firstSelectedRowKey;
-
-      console.log('FormData en form-dialog: ', this.formData);
-
-      this.dialogRef.close(this.formData);
-    } else {
-      // Si no hay fila seleccionada, muestra un mensaje de error o toma la acción apropiada
-      console.log('No se ha seleccionado ninguna fila');
-    }
-  }*/
-
 }

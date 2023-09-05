@@ -359,7 +359,7 @@
                                         <ng-container *ngFor="let item of dataItems; let i = index">
                                             <tr *ngIf="item.m !== 0">
                                                 <td class="column-check">{{ item.position }}</td>
-                                                <td class="column-check">{{ item.hourFrom }}</td>
+                                                <td class="column-check">{{ formatTimeTo12HourFormat(item.hourFrom) }}</td>
                                                 <td class="column-check">{{ item.quantity }}</td>
                                                 <td class="column-check">{{ item.m }}</td>
                                                 <td> {{((item.m/item.quantity) * 100).toFixed(0)}} %
