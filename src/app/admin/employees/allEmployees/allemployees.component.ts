@@ -241,7 +241,8 @@ export class AllemployeesComponent
           const totalHours = employee.hours || 0;
           const payrollId = employeeData.payrollid || "No data";
           const brake = employee.break || "0";
-          //const hourFrom = employee.hourFrom || "No data";
+          const hourFrom = employee.hourFrom || "No data";
+          //console.log('hourFrom: ', hourFrom)
   
           let hourFromFormatted = "No Data";
           if (employee.hourFrom) {
@@ -259,6 +260,7 @@ export class AllemployeesComponent
           
               // Formatea la hora en un string
               hourFromFormatted = `${formattedHours}:${formattedMinutes} ${period}`;
+            //console.log('hourFromFormatted: ',hourFromFormatted)
             }
           }
           
@@ -289,8 +291,8 @@ export class AllemployeesComponent
             hours: employee.hours,
             totalHours: totalHours,
             payRollId: payrollId,
-            hourFrom: hourFromFormatted,
-            //hourFrom: hourFrom,
+            hourFromFormatted: hourFromFormatted,
+            hourFrom: hourFrom,
             in: checkInTime,
             out: checkOutTime,
             break: brake,
