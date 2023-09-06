@@ -14,6 +14,7 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import {
   OwlDateTimeModule,
   OwlNativeDateTimeModule,
+  OWL_DATE_TIME_LOCALE,
 } from '@danielmoncada/angular-datetime-picker';
 import { ComponentsModule } from '../shared/components/components.module';
 import { SharedModule } from '../shared/shared.module';
@@ -40,6 +41,14 @@ import { SharedModule } from '../shared/shared.module';
     ComponentsModule,
     SharedModule,
   ],
-  providers: [provideNgxMask()],
+  providers: [provideNgxMask(),
+    { provide: OWL_DATE_TIME_LOCALE, useValue: {hour12Timer: true} }]
+  /* providers: [
+    // Configura OWL_DATE_TIME_LOCALE con 'en-US' y hour12Timer en true
+    { provide: OWL_DATE_TIME_LOCALE, useValue: 'en-US' },
+    // { provide: OWL_DATE_TIME_FORMATS, useValue: {hour12Timer: true, ...} }, // Agrega esto para configurar hour12Timer
+  ], */
+
+  
 })
 export class FormModule {}

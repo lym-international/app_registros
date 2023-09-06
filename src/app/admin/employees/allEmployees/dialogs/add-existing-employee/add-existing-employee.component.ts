@@ -60,9 +60,10 @@ export class AddExistingEmployeeComponent {
     this.employeesForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      phone: ['', Validators.required],
-      email: ['', Validators.required],
-
+      // phone: ['', Validators.required],
+      // email: ['', Validators.required],
+      phone: [''],
+      email: [''],
       // Otros campos del formulario si los tienes
     });
   }
@@ -95,8 +96,10 @@ export class AddExistingEmployeeComponent {
   captureInputValue() {
     this.searchHighKey = this.filterInput.nativeElement.value;
     console.log('Usuario escribió:', this.searchHighKey);
-    fetch(` http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeeById/id?id=${this.searchHighKey}`)
-      // `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeById/id?id=${this.searchHighKey}`
+    fetch(
+      // `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeeById/id?id=${this.searchHighKey}`
+      `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeById/id?id=${this.searchHighKey}`
+      )
       .then((response) => response.json())
       .then((data) => {
         console.log('DATA: ',data)
@@ -171,36 +174,6 @@ export class AddExistingEmployeeComponent {
   updateIsTableSelected() {
     this.isTableSelected = !!this.selectedPosition && !!this.selectedHour && !!this.selectedRate;
   }
- //Este funciona bien
-  /*handleCheckboxChange(event: any, row: any) {  
-    
-    if (event.target.checked) {
-      console.log('ENTRO AL IF');
-      // Marca la posición actualmente seleccionada
-      this.selectedRow = row;
-      console.log('this.selectedRow:',this.selectedRow)
-      console.log('this.selectedRow.key:',this.selectedRow.key)
-      console.log('this.selectedRow.value.hours:',this.selectedRow.value.hours)
-    } else if (this.selectedRow === row) {
-      console.log('ENTRO AL ELSE');
-      // Desmarca la posición actualmente seleccionada
-      this.selectedRow = null;
-    }
-  }
-  */
-    /*if (event.target.checked) {
-      console.log('ENTRO AL IF')
-      // Agrega la posición seleccionada al arreglo selectedPositions
-      this.selectedPositions.push(position);
-    } else {
-      console.log('ENTRO AL ELSE')
-      // Elimina la posición seleccionada del arreglo selectedPositions
-      const index = this.selectedPositions.findIndex(p => p.key === position.key);
-      if (index !== -1) {
-        this.selectedPositions.splice(index, 1);
-      }
-    }*/
-  
 
   submit() {
     // emppty stuff

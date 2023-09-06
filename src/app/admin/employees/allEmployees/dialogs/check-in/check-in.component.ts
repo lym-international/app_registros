@@ -50,10 +50,10 @@ export class CheckInComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<CheckInComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    // @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private fb: UntypedFormBuilder
   ) {
-    this.action = data.action;
+    // this.action = data.action;
     if (this.action === 'edit') {
       //this.showDeleteBtn = true;
     } else {

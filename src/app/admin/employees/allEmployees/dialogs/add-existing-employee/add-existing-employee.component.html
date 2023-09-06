@@ -63,19 +63,19 @@
                         <mat-label>Mobile</mat-label>
                         <input matInput formControlName="phone" type="number">
                         <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>phone</mat-icon>
-                        <mat-error *ngIf="employeesForm.get('phone')?.hasError('required')">
+                       <!--  <mat-error *ngIf="employeesForm.get('phone')?.hasError('required')">
                             Mobile is required
-                        </mat-error>
+                        </mat-error> -->
                     </mat-form-field>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                     <mat-form-field class="example-full-width" appearance="outline">
                         <mat-label>Email</mat-label>
-                        <input matInput formControlName="email" required>
+                        <input matInput formControlName="email">
                         <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>email</mat-icon>
-                        <mat-error *ngIf="employeesForm.get('email')?.hasError('required') || employeesForm.get('email')?.touched">
+                        <!-- <mat-error *ngIf="employeesForm.get('email')?.hasError('required') || employeesForm.get('email')?.touched">
                             Please enter a valid email address
-                        </mat-error>
+                        </mat-error> -->
                     </mat-form-field>
                 </div>
             </div>

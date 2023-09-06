@@ -7,6 +7,7 @@ export class OrderDataService {
   private storageKey = 'selectedOrder';
 
   setSelectedOrder(order: any) {
+    
     localStorage.setItem(this.storageKey, JSON.stringify(order));
     //console.log("llamando al servicio", order);
   }

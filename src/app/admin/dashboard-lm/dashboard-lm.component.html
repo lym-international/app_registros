@@ -345,8 +345,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <ng-container *ngFor="let item of dataItems; let i = index">
-                                            <tr *ngIf="item.m !== 0">
+                                        <ng-container  *ngFor="let item of dataItems; let i = index">
+                                            <tr  *ngIf="item.m !== 0">
                                                 <td class="column-check">{{ item.position }}</td>
                                                 <td class="column-check">{{ item.hourFrom }}</td>
                                                 <td class="column-check">{{ item.quantity }}</td>
@@ -355,17 +355,36 @@
                                                     <mat-progress-bar mode="determinate" class="progress-round violet-progress" value="{{(item.m/item.quantity) * 100}}">
                                                     </mat-progress-bar>
                                                 </td>
-                                                <td class="column-check">{{ checkinValues[item.position][item.hourFrom] }}</td>
-                                                <td> {{((checkinValues[item.position][item.hourFrom]/item.m) * 100).toFixed(0)}} %
-                                                    <mat-progress-bar mode="determinate" class="progress-round green-progress" value="{{(checkinValues[item.position][item.hourFrom]/item.m) * 100}}">
+                                                <!-- <td class="column-check">{{ checkinValues[item.position][item.hourFrom] }}</td> -->
+                                                <!-- <td class="column-check" *ngIf="checkinValues">{{ checkinValues[item.position][item.hourFrom] }}</td> -->
+                                                <td class="column-check" *ngIf="checkinValues && checkinValues[item.position] && checkinValues[item.position][item.hourFrom] !== undefined">{{ checkinValues[item.position][item.hourFrom] }}</td>
+
+                                
+                                                <td *ngIf="checkinValues && checkinValues[item.position] && checkinValues[item.position][item.hourFrom] !== undefined">
+                                                    {{((checkinValues[item.position][item.hourFrom] / item.m) * 100).toFixed(0)}} %
+                                                    <mat-progress-bar mode="determinate" class="progress-round green-progress"
+                                                                      [value]="(checkinValues[item.position][item.hourFrom] / item.m) * 100">
                                                     </mat-progress-bar>
                                                 </td>
-                                                <td class="column-check">{{ checkOutValues[item.position][item.hourFrom] }}</td>
-                                                <td> {{((checkOutValues[item.position][item.hourFrom]/checkinValues[item.position][item.hourFrom]) * 100).toFixed(0)}} %
-                                                    <mat-progress-bar mode="determinate" class="progress-round orange-progress" value="{{(checkOutValues[item.position][item.hourFrom]/checkinValues[item.position][item.hourFrom]) * 100}}">
+                                                
+                                                <td class="column-check"  *ngIf="checkOutValues && checkOutValues[item.position] && checkOutValues[item.position][item.hourFrom] !== undefined">{{ checkOutValues[item.position][item.hourFrom] }}</td>
+                                               <!--  <td *ngIf="checkOutValues && checkOutValues[item.position] && checkOutValues[item.position][item.hourFrom] !== undefined">
+                                                    {{((checkOutValues[item.position][item.hourFrom] / checkinValues[item.position][item.hourFrom]) * 100).toFixed(0)}} %
+                                                    <mat-progress-bar mode="determinate" class="progress-round orange-progress"
+                                                                      [value]="(checkOutValues[item.position][item.hourFrom] / checkinValues[item.position][item.hourFrom]) * 100">
+                                                    </mat-progress-bar>
+                                                </td> -->
+                                                <td *ngIf="checkOutValues && checkOutValues[item.position] && checkOutValues[item.position][item.hourFrom] !== undefined">
+                                                    <!--{{((checkOutValues[item.position][item.hourFrom] / checkinValues[item.position][item.hourFrom]) * 100).toFixed(0)}} % -->
+                                                    {{ checkinValues[item.position] && checkinValues[item.position][item.hourFrom] !== 0 ? ((checkOutValues[item.position][item.hourFrom] / checkinValues[item.position][item.hourFrom]) * 100).toFixed(0) : '0' }} %
+                                                    <mat-progress-bar mode="determinate" class="progress-round orange-progress" [value]="(checkOutValues[item.position][item.hourFrom] / checkinValues[item.position][item.hourFrom]) * 100">
                                                     </mat-progress-bar>
                                                 </td>
-                                                <td class="column-check">{{ noShowValues[item.position][item.hourFrom] }}</td>
+                                                
+                                                <td class="column-check" *ngIf="noShowValues && noShowValues[item.position] && noShowValues[item.position][item.hourFrom] !== undefined">{{ noShowValues[item.position][item.hourFrom] }}</td>
+                                                
+
+                                                
                                             </tr>
                                         </ng-container>
                                     </tbody>
