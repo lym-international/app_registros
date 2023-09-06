@@ -23,7 +23,7 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Administrator'],
+    role: ['Administrator', 'Supervisor', 'Client'],
     submenu: [],
   },
   {
@@ -35,61 +35,26 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Administrator'],
+    role: ['Administrator', 'Supervisor', 'Client'],
     submenu: [],
   },
-
-  
-  /*{
-    path: '',
-    title: 'Add emergency employee',
+  /*
+  {
+    path: '/admin/close-order',
+    title: 'Close order',
     iconType: 'feather',
-    icon: 'users',
-    class: 'menu-toggle',
+    icon: 'x-circle',
+    class: '',
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['Admin'],
-    submenu: [
-      {
-        path: '/admin/employees/allEmployees',
-        title: 'Search employee',
-        iconType: '',
-        icon: '',
-        class: '',
-        groupTitle: false,
-        badge: '',
-        badgeClass: '',
-        role: ['Admin'],
-        submenu: []
-      },
-      {
-        path: '/admin/employees/allEmployees',
-        title: 'Register employee',
-        iconType: '',
-        icon: '',
-        class: '',
-        groupTitle: false,
-        badge: '',
-        badgeClass: '',
-        role: ['Admin'],
-        submenu: []
-      }
-    ]
-  },*/
-    {
-      path: '/close-event',
-      title: 'Close event',
-      iconType: 'feather',
-      icon: 'x-circle',
-      class: '',
-      groupTitle: false,
-      badge: '',
-      badgeClass: '',
-      role: ['Administrator'],
-      submenu: [],
-    },
-    
+    role: ['Administrator'],
+    submenu: [],
+  },
+  */
+ 
+    //TIMESHEET
+    /*
     {
       path: 'src/app/timesheet',
       title: 'Timesheet',
@@ -102,7 +67,8 @@ export const ROUTES: RouteInfo[] = [
       role: ['Administrator'],
       submenu: [],
     },
-  
+    */
+
   //Inicio menú plantilla
   /*  {
     path: '',
@@ -155,6 +121,7 @@ export const ROUTES: RouteInfo[] = [
       },
     ],
   },
+
   {
     path: '',
     title: 'MENUITEMS.PROJECTS.TEXT',

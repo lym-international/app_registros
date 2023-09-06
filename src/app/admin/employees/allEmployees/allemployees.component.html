@@ -26,11 +26,10 @@
                             </mat-card-content>
                         </mat-card>
                     </div>
-
                     <div class="sub-sub-column">
                         <mat-card class="tarjeta-pequena">
                             <mat-card-content>
-                                <mat-card-title>Total hours worked </mat-card-title>
+                                <mat-card-title>Hours worked </mat-card-title>
                                 {{totalHoursSum}}
                             </mat-card-content>
                         </mat-card>
@@ -40,6 +39,14 @@
                             <mat-card-content>
                                 <mat-card-title>Event date </mat-card-title>
                                 {{dataEmployees.data.startDate}}
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    <div class="sub-sub-column">
+                        <mat-card class="tarjeta-pequena-2">
+                            <mat-card-content>
+                                <mat-card-title>Status </mat-card-title>
+                                {{statusOrder}}
                             </mat-card-content>
                         </mat-card>
                     </div>
@@ -63,7 +70,7 @@
                         </div>
                         <div class="right">
                             <ul class="tbl-export-btn">
-
+                                <span *ngIf="ShowButtons" class="tbl-export-btn">
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10"  [hidden]=!selection.hasValue() matTooltip="MARK">
                                         <button mat-mini-fab color="#ffec8b" (click)="markEmpWorkHours(getSelectedRows())"> 
@@ -125,24 +132,25 @@
                                       </button>
                                     </div>
                                 </li>
-                                <div class="background">
-                                    <li class="tbl-header-btn">
-                                        <div class=" marginButton" matTooltip="ADD NEW">
-                                            <!--class="m-l-10"-->
-                                            <button mat-mini-fab color="primary" (click)="addNewEmergencyEmployeeModal()">
-                                            <mat-icon class="col-white">person_add</mat-icon>
-                                        </button>
-                                        </div>
-                                    </li>
-                                    <li class="tbl-header-btn">
-                                        <div class="marginButton" matTooltip="SEARCH EMPLOYEE">
-                                            <!--class="m-l-10"-->
-                                            <button mat-mini-fab color="primary" (click)="addExistingEmergencyEmployeeModal()">
-                                            <mat-icon class="col-white">person_search</mat-icon>
-                                        </button>
-                                        </div>
-                                    </li>
-                                </div>
+                                    <div class="background">
+                                        <li class="tbl-header-btn">
+                                            <div class=" marginButton" matTooltip="ADD NEW">
+                                                <!--class="m-l-10"-->
+                                                <button mat-mini-fab color="primary" (click)="addNewEmergencyEmployeeModal()">
+                                                <mat-icon class="col-white">person_add</mat-icon>
+                                            </button>
+                                            </div>
+                                        </li>
+                                        <li class="tbl-header-btn">
+                                            <div class="marginButton" matTooltip="SEARCH EMPLOYEE">
+                                                <!--class="m-l-10"-->
+                                                <button mat-mini-fab color="primary" (click)="addExistingEmergencyEmployeeModal()">
+                                                <mat-icon class="col-white">person_search</mat-icon>
+                                            </button>
+                                            </div>
+                                        </li>
+                                    </div>
+                                </span>
                                 <li class="tbl-header-btn">
                                     <div class="" matTooltip="DOWNLOAD">
                                         <button mat-mini-fab color="primary" (click)="generatePdf()">
@@ -213,7 +221,7 @@
                                 </ng-container>
                                 <ng-container matColumnDef="hourFrom">
                                     <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Scheduled time</mat-header-cell>
-                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Scheduled time:</span>{{row.hourFrom}}</mat-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Scheduled time:</span>{{row.hourFromFormatted}}</mat-cell>
                                     <!--(contextmenu)="onContextMenu($event, row)"-->
                                 </ng-container>
                                 <ng-container matColumnDef="in">

@@ -1,5 +1,5 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, OnInit } from '@angular/core';
 import {
   UntypedFormControl,
   Validators,
@@ -10,6 +10,8 @@ import {
 } from '@angular/forms';
 //import { CheckInModel } from './check-in.model';
 import { formatDate } from '@angular/common';
+import { CheckoutValidatorService } from 'app/_services/checkout-validator.service';
+
 
 export interface DialogData {
   id: number;
@@ -26,6 +28,12 @@ export class CheckInComponent implements OnInit {
   dialogTitle: string;
   checkInForm: UntypedFormGroup;
   fechaInicio: FormControl;
+  roundedCheckIn: Date;
+  localStorageCheckIn: any;
+  
+
+
+  //private owlDateTime: OwlDateTime;
   //checkIn: CheckInModel;
   //showDeleteBtn = false;
   //public dataCheckIn!: any;
@@ -34,24 +42,21 @@ export class CheckInComponent implements OnInit {
     this.checkInForm.patchValue({
       startDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
     });
-    this.fechaInicio = new FormControl(new Date());
+    this.fechaInicio = new FormControl(); //new Date()
     this.checkInForm = new FormGroup({
     startDate: this.fechaInicio
     });
     //this.dataCheckIn = this.checkInService.setCheckIn();
     
+    
   }
-
-  /*constructor(private orderDataService: OrderDataService) {
-    // controller code
-  }
-  ngOnInit() {
-    this.dataOrder = this.orderDataService.getSelectedOrder(); */
 
   constructor(
     public dialogRef: MatDialogRef<CheckInComponent>,
-    // @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private fb: UntypedFormBuilder
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    private fb: UntypedFormBuilder,
+    private checkoutValidatorService: CheckoutValidatorService,
+    private readonly el: ElementRef
   ) {
     // this.action = data.action;
     if (this.action === 'edit') {
@@ -64,6 +69,8 @@ export class CheckInComponent implements OnInit {
     }
     this.checkInForm = this.createContactForm();
     //console.log('Propiedades modalCheckIn ==>',this.checkInForm.controls)
+
+    
   }
   
   formControl = new UntypedFormControl('', [
@@ -107,9 +114,10 @@ export class CheckInComponent implements OnInit {
   onNoClick(): void {
     this.dialogRef.close();
   }
-
+  
   public confirmAdd(): void {
     const startDate = this.fechaInicio.value;
+    this.checkoutValidatorService.setCheckInDate(startDate); // Llama al método del servicio
     this.dialogRef.close(startDate);
   }
 }

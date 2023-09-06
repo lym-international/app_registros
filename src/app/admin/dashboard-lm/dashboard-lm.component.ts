@@ -17,9 +17,7 @@ import {
   ApexNonAxisChartSeries,
 } from 'ng-apexcharts';
 import { Position } from 'app/interfaces/position.interface';
-
-
-
+import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -68,22 +66,34 @@ export class DashboardLmComponent implements OnInit {
   checkOutValues: { [position: string]: { [hourFrom: string]: number } } = {};
   noShowValues: { [position: string]: { [hourFrom: string]: number } } = {};
   filteredCheckinValues: number[];
+  statusOrder: string;
   
-  constructor(private orderDataService: OrderDataService) {
+  
+  //  color: ["#3FA7DC", "#F6A025", "#9BC311"],
+  constructor(
+    private orderDataService: OrderDataService, 
+    private sharingCloseOrderService: SharingCloseOrderService,
+    ) {
     // controller code
   }
   ngOnInit() {
     this.dataOrder = this.orderDataService.getSelectedOrder();
-    console.log('Data: ', this.dataOrder)
+    
+    this.statusOrder = this.dataOrder.data.status;  
     this.orderId = this.dataOrder.id;
+    
+    console.log('Data: ', this.dataOrder)
+    //this.orderId = this.dataOrder.id;
     console.log('OrderID ===>', this.orderId)
     this.getRegistByOrder();
     this.getTotalRequest();
     //this.porcentajes();
     
-    // this.porcentajes(this.checkIn, this.checkOut, this.noShow, this.totalConfirmed, this.totalRequest);
-  
-   
+    this.sharingCloseOrderService.getStatusOrderObservable().subscribe((status) => {
+      this.statusOrder = status;
+    });
+    console.log('STATUS ORDER en dasboardLm: ',this.statusOrder)
+    
   }
   //this.orderSelected = this.selectedOrder;
   
@@ -138,13 +148,13 @@ export class DashboardLmComponent implements OnInit {
     
   
     const positions: { [name: string]: Position } = {};
-
     data.employees.forEach((employee)=>{
          
       const positionName = employee.position;
       const hourFrom = employee.hourFrom;
       const rate = employee.employee.agmRate
-    
+      
+      
     if (!positions[positionName]) {
       // Si la posición no existe en el objeto, crearla
       positions[positionName] = {
@@ -181,6 +191,8 @@ export class DashboardLmComponent implements OnInit {
   
 
       })
+      
+
       // console.log("positiions ",positions)
       
       localStorage.setItem('positions', JSON.stringify(positions));
@@ -216,7 +228,8 @@ export class DashboardLmComponent implements OnInit {
           if (hourTotals.totalCheckout !== undefined) {
             this.checkOutValues[positionName][hourFrom] = hourTotals.totalCheckout;
             console.log(`Total de check-out: ${hourTotals.totalCheckout}`);
-          } else {
+          } else if (hourTotals.totalCheckout === 0){
+            this.checkOutValues[positionName][hourFrom] = 0;
             console.log(`Total de check-out: 0`);
           }          
           if (hourTotals.totalnoShow !== undefined) {
@@ -236,6 +249,14 @@ export class DashboardLmComponent implements OnInit {
     }
     )   
   }
+  
+  formatTimeTo12HourFormat(time: string): string {
+    const [hour, minute] = time.split(':').map(Number);
+    const period = hour < 12 ? 'AM' : 'PM';
+    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+    return `${formattedHour}:${minute < 10 ? '0' : ''}${minute} ${period}`;
+  }
+  
   //Tarjetas superiores
   porcentajes(checkIn,checkOut,noShow,totalConfirmed, totalRequest){
     if (this.totalConfirmed !== 0) {

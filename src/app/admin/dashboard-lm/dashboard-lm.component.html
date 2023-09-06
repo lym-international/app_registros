@@ -13,10 +13,11 @@
                     <div class="card-statistic-3">
                         <div class="card-icon card-icon-large"><i class="fa fa-globe"></i></div>
                         <div class="tarjeta">
-                            <span style="font-size: large; color: #1A202E; font-weight: 700;">{{dataOrder.data.clientName}}</span>
+                            <span class="clientName">{{dataOrder.data.clientName}}</span>
                             <br/> <br/> {{dataOrder.data.place}}
                             <br/> <br/> {{dataOrder.data.address}}
                             <br/> <br/> {{dataOrder.data.city}} {{dataOrder.data.state}} {{dataOrder.data.zipcode}}
+                            <br/> <br/> <span class="colorStatus">Status Order: {{statusOrder}}</span>
                         </div>
                     </div>
                 </div>
@@ -40,6 +41,16 @@
                             </mat-card-content>
                         </mat-card>
                     </div>
+                    <!--
+                    <div class="sub-sub-column">
+                        <mat-card class="tarjeta-pequena">
+                            <mat-card-content>
+                                <mat-card-title>Status order</mat-card-title>
+                                {{statusOrder}}
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    -->
                 </div>
             </div>
         </div>
@@ -348,7 +359,7 @@
                                         <ng-container  *ngFor="let item of dataItems; let i = index">
                                             <tr  *ngIf="item.m !== 0">
                                                 <td class="column-check">{{ item.position }}</td>
-                                                <td class="column-check">{{ item.hourFrom }}</td>
+                                                <td class="column-check">{{ formatTimeTo12HourFormat(item.hourFrom) }}</td>
                                                 <td class="column-check">{{ item.quantity }}</td>
                                                 <td class="column-check">{{ item.m }}</td>
                                                 <td> {{((item.m/item.quantity) * 100).toFixed(0)}} %
@@ -368,13 +379,8 @@
                                                 </td>
                                                 
                                                 <td class="column-check"  *ngIf="checkOutValues && checkOutValues[item.position] && checkOutValues[item.position][item.hourFrom] !== undefined">{{ checkOutValues[item.position][item.hourFrom] }}</td>
-                                               <!--  <td *ngIf="checkOutValues && checkOutValues[item.position] && checkOutValues[item.position][item.hourFrom] !== undefined">
-                                                    {{((checkOutValues[item.position][item.hourFrom] / checkinValues[item.position][item.hourFrom]) * 100).toFixed(0)}} %
-                                                    <mat-progress-bar mode="determinate" class="progress-round orange-progress"
-                                                                      [value]="(checkOutValues[item.position][item.hourFrom] / checkinValues[item.position][item.hourFrom]) * 100">
-                                                    </mat-progress-bar>
-                                                </td> -->
-                                                <td *ngIf="checkOutValues && checkOutValues[item.position] && checkOutValues[item.position][item.hourFrom] !== undefined">
+                                              
+                                                <td  *ngIf="checkOutValues && checkOutValues[item.position] && checkOutValues[item.position][item.hourFrom] !== undefined">
                                                     <!--{{((checkOutValues[item.position][item.hourFrom] / checkinValues[item.position][item.hourFrom]) * 100).toFixed(0)}} % -->
                                                     {{ checkinValues[item.position] && checkinValues[item.position][item.hourFrom] !== 0 ? ((checkOutValues[item.position][item.hourFrom] / checkinValues[item.position][item.hourFrom]) * 100).toFixed(0) : '0' }} %
                                                     <mat-progress-bar mode="determinate" class="progress-round orange-progress" [value]="(checkOutValues[item.position][item.hourFrom] / checkinValues[item.position][item.hourFrom]) * 100">
@@ -382,8 +388,6 @@
                                                 </td>
                                                 
                                                 <td class="column-check" *ngIf="noShowValues && noShowValues[item.position] && noShowValues[item.position][item.hourFrom] !== undefined">{{ noShowValues[item.position][item.hourFrom] }}</td>
-                                                
-
                                                 
                                             </tr>
                                         </ng-container>

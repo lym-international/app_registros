@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EmployeesService } from './employees.service';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,8 +12,8 @@ import {
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { BehaviorSubject, fromEvent, merge, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, fromEvent, merge, Observable, Subscription } from 'rxjs';
+import { first, map } from 'rxjs/operators';
 import { FormDialogComponent } from './dialogs/form-dialog/form-dialog.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
@@ -31,6 +31,7 @@ import { AuthenticationService } from 'app/_services/authentication.service';
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { ActivatedRoute } from '@angular/router';
+import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
 
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -58,6 +59,7 @@ export class AllemployeesComponent
     'break',
     'totalHours',
     'status',
+    //'actions',
   ];
 
   exampleDatabase?: EmployeesService;
@@ -89,6 +91,9 @@ export class AllemployeesComponent
   totalHoursSum: number;
   updatedHours: number;
   highKeyid: number;
+  public statusOrder!: string;
+  public ShowButtons = true;
+  
   
   
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -112,6 +117,7 @@ export class AllemployeesComponent
     public authenticationService: AuthenticationService,
     //private checkInService: CheckInService,
     private route: ActivatedRoute,
+    private sharingCloseOrderService: SharingCloseOrderService,
     
     
     
@@ -122,13 +128,27 @@ export class AllemployeesComponent
 
   ngOnInit() {
     this.dataEmployees = this.orderDataService.getSelectedOrder();
-    // console.log('Data Order: ', this.dataEmployees);
+
+    this.statusOrder = this.dataEmployees.data.status;  
     this.orderId = this.dataEmployees.id;
+    this.orderDataService.getSelectedOrderObservable().subscribe((selectedOrder) => {
+      console.log('Activa el subscribe en allEmployees')
+      if (selectedOrder) {
+        this.dataEmployees = selectedOrder;
+        this.statusOrder = this.dataEmployees.data.status;  
+        this.orderId = this.dataEmployees.id;  
+      }
+    });
+    console.log('Data Order: ', this.dataEmployees);
+    
+    console.log('Data StatusOrder: ', this.statusOrder);
+    
+    
     this.exactHourPayment = this.dataEmployees.data.exactHourPayment;
     this.getEmployees();
     this.loadData();
     this.dataUser = this.authenticationService.getData();
-    // const storedUserData = localStorage.getItem('currentUserData');
+    
     const storedUserData = localStorage.getItem('currentUserData');
     if (storedUserData) {
       this.dataUser = JSON.parse(storedUserData);
@@ -138,9 +158,25 @@ export class AllemployeesComponent
       // Almacenar los datos en el localStorage
       localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
     }
-    console.log("this.orderId", this.orderId)
+    this.route.queryParams.subscribe(params => {
+      if (params) {
+        // Now you can use the params object directly in Component B
+        //console.log('FormData en AllEmployees:', params);
+      }
+    });
+    
+    this.sharingCloseOrderService.setStatusOrder(this.statusOrder);
+  
+    //Oculta todos los botones de la tabla si la orden es cerrada.
+    if(this.statusOrder === 'closed'){
+      this.ShowButtons = false
+     }
+
+    
   }
   
+  
+  // Función para verificar la visibilidad de los botones al hacer clic en el checkbox
   onCheckboxClick(row: Employees) {
     // console.log('dateCheckin antes IF: ', row.dateCheckin) 
     if ((row.dateCheckin === null || row.dateCheckin === undefined)&&(row.dateCheckout === null || row.dateCheckout === undefined)) {
@@ -172,11 +208,11 @@ export class AllemployeesComponent
   getEmployees() {
     //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`
     //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
-    fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
+    fetch(`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
       .then((response) => response.json())
       .then((data) => {
         this.isTblLoading = false;
-        // console.log("datadelRegistroJR", data);
+        console.log("datadelRegistro: ", data);
   
         this.employeesArray = data.employees.map((employee) => {
           const employeeData = { ...employee.employee.data };
@@ -189,7 +225,28 @@ export class AllemployeesComponent
           const payrollId = employeeData.payrollid || "No data";
           const brake = employee.break || "0";
           const hourFrom = employee.hourFrom || "No data";
+          //console.log('hourFrom: ', hourFrom)
   
+          let hourFromFormatted = "No Data";
+          if (employee.hourFrom) {
+            const hourParts = employee.hourFrom.split(':');
+            if (hourParts.length === 2) {
+              const hours = parseInt(hourParts[0]);
+              const minutes = parseInt(hourParts[1]);
+          
+              // Calcula el período (AM o PM)
+              const period = hours >= 12 ? 'PM' : 'AM';
+          
+              // Convierte las horas al formato de 12 horas
+              const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
+              const formattedMinutes = minutes.toString().padStart(2, '0');
+          
+              // Formatea la hora en un string
+              hourFromFormatted = `${formattedHours}:${formattedMinutes} ${period}`;
+            //console.log('hourFromFormatted: ',hourFromFormatted)
+            }
+          }
+          
           let checkInTime = "No Data";
           if (employee.dateCheckin && employee.dateCheckin._seconds) {
             const checkIn = employee.dateCheckin._seconds;
@@ -217,6 +274,7 @@ export class AllemployeesComponent
             hours: employee.hours,
             totalHours: totalHours,
             payRollId: payrollId,
+            hourFromFormatted: hourFromFormatted,
             hourFrom: hourFrom,
             in: checkInTime,
             out: checkOutTime,
@@ -224,10 +282,10 @@ export class AllemployeesComponent
           };
         });
 
-        // console.log('---------------------------');
-        // console.log('Array empleados: ');
-        // console.log(this.employeesArray);
-        // console.log('---------------------------');
+         console.log('---------------------------');
+        console.log('Array empleados: ');
+         console.log(this.employeesArray);
+        console.log('---------------------------');
 
         this.dataSource = new ExampleDataSource(
           this.exampleDatabase,
@@ -251,7 +309,8 @@ export class AllemployeesComponent
         this.isTblLoading = false;
       });
   }
-
+  
+  // Reset checkin, checkout y break
   deleteInTime(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {
       // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
@@ -289,7 +348,8 @@ export class AllemployeesComponent
 
       const apiUrl =
       //  `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-       `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+       //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; 
+       `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -343,8 +403,8 @@ export class AllemployeesComponent
       // console.log('updatedEmployees', updatedEmployees);
 
       const apiUrl =
-      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-       `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -521,8 +581,8 @@ export class AllemployeesComponent
       // console.log("updatedEmployees ALLActionsModal: ", updatedEmployees);
   
       const apiUrl = 
-      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
-      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
+      //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -613,8 +673,8 @@ export class AllemployeesComponent
       // console.log("updatedEmployees: ", updatedEmployees);
   
       const apiUrl = 
-      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
-      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
+      //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -750,8 +810,8 @@ export class AllemployeesComponent
       });
 
       const apiUrl =
-      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -1055,8 +1115,8 @@ export class AllemployeesComponent
       // console.log('updatedEmployees', updatedEmployees);
   
       const apiUrl =
-      //  `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-       `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -1550,9 +1610,10 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
 }
 
   async addExistingEmergencyEmployeeModal() {
+    
     const dialogRef = this.dialog.open(AddExistingEmployeeComponent);
     const result = await dialogRef.afterClosed().toPromise();
-
+    
     if (result && result.id) {
         try {
           
@@ -1585,6 +1646,7 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
 
           console.log("tieneConflictos", tieneConflictos)
           if (!tieneConflictos) {
+            this.isTblLoading = true;
             await this.updateEmployee(result);
             this.addEmployeeToArray(result);
             await this.updateEmployeesArray();
@@ -1596,6 +1658,7 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
           }else{
             console.log('El empleado ya está asignado en otra orden durante ese horario.');
           }
+            this.isTblLoading = false;
         } catch (error) {
             console.error('Error:', error);
         }
@@ -1605,8 +1668,10 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
 
 async updateEmployee(result) {
   const employeeId = result.id;
-  const url = `http://127.0.0.1:5001/highkeystaff/us-central1/users/updateEmployee/id?id=${employeeId}`;
-
+  const url = `https://us-central1-highkeystaff.cloudfunctions.net/users/updateEmployee/id?id=${employeeId}`
+  
+  //`http://127.0.0.1:5001/highkeystaff/us-central1/users/updateEmployee/id?id=${employeeId}`;
+  
   const response = await fetch(url, {
       method: 'PUT',
       headers: {
@@ -1650,8 +1715,8 @@ addEmployeeToArray(result) {
 }
 
 async updateEmployeesArray() {
-  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
- // const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+//const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+ const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
   const response = await fetch(apiUrl, {
       method: 'PUT',
       headers: {
@@ -1679,6 +1744,7 @@ async updateEmployeesArray() {
             const highKeyid = lastEmployeeID + 1;
 
             if (result) {
+                this.isTblLoading = true;
                 await this.createEmployee(highKeyid, result);
                 this.addEmployeeToArray2(highKeyid, result);
                 await this.updateEmployeesArray();
@@ -1686,7 +1752,7 @@ async updateEmployeesArray() {
                 this.showNotification('snackbar-success',  `Successful Add Employee with highkeyId : ${highKeyid}`, 'bottom', 'center');
                 this.getEmployees();
                 this.removeSelectedRows();
-
+                this.isTblLoading = false;
 
                 // Actualizar el array de employees en la orden
 
@@ -1698,7 +1764,10 @@ async updateEmployeesArray() {
 }
 
 async getLastEmployeeID() {
-  const response = await fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/users/getLastEmployeeID`);
+  const response = await fetch(
+    `https://us-central1-highkeystaff.cloudfunctions.net/users/getLastEmployeeID`
+    //`http://127.0.0.1:5001/highkeystaff/us-central1/users/getLastEmployeeID`
+  );
   const data = await response.json();
   return data.lastEmployeeID;
 }
@@ -1721,7 +1790,10 @@ async createEmployee(highKeyid, result) {
 };
 console.log('newEmployee: ',addNewEmployee)
 
-  const response = await fetch('http://127.0.0.1:5001/highkeystaff/us-central1/users/addEmployee', {
+  const response = await fetch(
+    `https://us-central1-highkeystaff.cloudfunctions.net/users/addEmployee`,
+    //'http://127.0.0.1:5001/highkeystaff/us-central1/users/addEmployee', 
+    {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -1772,7 +1844,9 @@ addEmployeeToArray2(highKeyid, result) {
 }
 
 async updateOrderWithNewEmployee(result) {
-  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+  const apiUrl = 
+  `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`
+  //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
   
   const response = await fetch(apiUrl, {
     method: 'GET',

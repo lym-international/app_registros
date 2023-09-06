@@ -14,6 +14,8 @@ import { AuthService, Role } from '@core';
 import { RouteInfo } from './sidebar.metadata';
 import { AuthenticationService } from 'app/_services/authentication.service';
 import { Subscription } from 'rxjs';
+import { OrderDataService } from 'app/_services/orderData.service';
+import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -34,6 +36,8 @@ export class SidebarComponent implements OnInit {
   currentRoute?: string;
   routerObj;
   mostrarMenu: boolean = true;
+  dataOrder: any;
+  orderId: any;
 
   
   constructor(
@@ -43,7 +47,8 @@ export class SidebarComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     public authenticationService: AuthenticationService,
-    
+    private orderDataService: OrderDataService,
+    private sharingCloseOrderService: SharingCloseOrderService,
 
   ) {
     this.elementRef.nativeElement.closest('body');
@@ -80,8 +85,6 @@ export class SidebarComponent implements OnInit {
     }
   }
 
-
-
   ngOnInit() {
     
     this.dataUser = this.authenticationService.getData();
@@ -96,8 +99,8 @@ export class SidebarComponent implements OnInit {
       localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
     }
     // Aquí tienes acceso a los datos del usuario en la variable dataUser
-    console.log('Datos en storedUserData desde el sideBar: ', storedUserData);
-    console.log('Datos usuario desde el sideBar: ', this.dataUser)
+    //console.log('Datos en storedUserData desde el sideBar: ', storedUserData);
+    //console.log('Datos usuario desde el sideBar: ', this.dataUser)
     
     //Validación del rol del usuario para la visualización de los items del sidebar
     if (this.dataUser) {
@@ -111,6 +114,44 @@ export class SidebarComponent implements OnInit {
     
     this.initLeftSidebar();
     this.bodyTag = this.document.body;
+
+    this.dataOrder = this.orderDataService.getSelectedOrder();
+    //console.log('Data Order: ', this.dataOrder);
+    this.orderId = this.dataOrder.id;
+    //console.log('this.orderId:', this.orderId)
+    //console.log('this.dataUser.email: ',this.dataUser.email)
+    
+  }
+  
+  //Este método de validación es solo para la opción Close Order del sidebar
+  isUserRoleValid(): boolean {
+    if (this.dataUser && this.dataUser.role) {
+      const userRole = this.dataUser.role;
+      // Verifica si el rol del usuario es "Administrator" o "Client"
+      return userRole === 'Administrator' || userRole === 'Supervisor';//|| userRole === 'Client';
+    }
+    // Si no se proporciona un rol de usuario válido, oculta el botón
+    return false;
+  }
+
+  closeOrder(){
+    
+    const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
+    fetch(apiUrl, {
+      method: 'PUT'
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        //console.log('DATA del method PUT', data);
+        this.orderDataService.setSelectedOrder(data);
+        
+        // Forzar la recarga de la página actual (para actualizar la página de allEmployees y que no se vean los botones)
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error('Error al actualizar:', error);
+      });
+      //console.log('ORDEN CERRADA')
   }
   
   initLeftSidebar() {

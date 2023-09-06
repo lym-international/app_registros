@@ -29,7 +29,15 @@
     //width: 50%;
     color: white;
     font-weight: 500;
-    background: linear-gradient(135deg, #1A202D 60%, rgb(202, 234, 253) 100%);
+    background: linear-gradient(135deg, #1a202d 60%, rgb(202, 234, 253) 100%);
+}
+
+.tarjeta-pequena-2 {
+    margin: 20px 0 20px 0;
+    //width: 50%;
+    color: #1A202D;
+    font-weight: 500;
+    background: linear-gradient(135deg, white 60%, rgb(26, 32, 45) 100%); // #CAEAFD 60%
 }
 
 .tarjeta-indicadores {
@@ -52,7 +60,7 @@
 
 .sub-column {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     //grid-template-columns: 1fr;
     gap: 10px;
     //padding: 10px;
