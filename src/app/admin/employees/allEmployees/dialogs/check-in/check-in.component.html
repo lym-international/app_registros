@@ -22,7 +22,7 @@
                         <mat-error *ngIf="checkInForm.get('startDate')?.hasError('required')">
                             CheckIn is required!
                         </mat-error>
-                        <owl-date-time [hour12Timer]="true" #startDate></owl-date-time>
+                        <owl-date-time [startAt]="null" [hour12Timer]="true" #startDate></owl-date-time>
                         <!--<owl-date-time #startDate></owl-date-time> -->
                     </mat-form-field>
                 </div>
