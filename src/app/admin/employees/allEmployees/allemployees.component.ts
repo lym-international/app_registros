@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, Input } from '@angular/core';
 import { EmployeesService } from './employees.service';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
@@ -105,6 +105,7 @@ export class AllemployeesComponent
 
   dataSource!: ExampleDataSource;
   positions = [];
+  startDate: any;
   
 
   constructor(
@@ -140,7 +141,8 @@ export class AllemployeesComponent
       }
     });
     console.log('Data Order: ', this.dataEmployees);
-    
+    this.startDate = this.dataEmployees.data.startDate;
+
     console.log('Data StatusOrder: ', this.statusOrder);
     
     
@@ -218,6 +220,7 @@ export class AllemployeesComponent
           const employeeData = { ...employee.employee.data };
   
           const firstName = employeeData.firstname || "No data";
+          //console.log('empleado: ',employee)
           const lastName = employeeData.lastname || "No data";
           const highKeyId = employeeData.employeeId || "No data";
           const position = employee.position || "No data";
@@ -225,7 +228,8 @@ export class AllemployeesComponent
           const payrollId = employeeData.payrollid || "No data";
           const brake = employee.break || "0";
           const hourFrom = employee.hourFrom || "No data";
-          //console.log('hourFrom: ', hourFrom)
+          console.log('STARTDATE: ',this.startDate)
+          console.log('hourFrom: ', hourFrom)
   
           let hourFromFormatted = "No Data";
           if (employee.hourFrom) {
@@ -1563,8 +1567,8 @@ export class AllemployeesComponent
 
 async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
   const apiUrl = 
-  // 'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByStartDate?date=${startDate}';
-  `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByStartDate?date=${startDate}`;
+  'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByStartDate?date=${startDate}';
+  //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByStartDate?date=${startDate}`;
     const response = await fetch(apiUrl);
     const ordenes = await response.json();
     console.log("horaInicio", horaInicio)
@@ -1619,7 +1623,9 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
           
           const horaInicio = result.hourFrom // Obtiene la hora de inicio, ajustar según tus necesidades
 
-          const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+          const apiUrl = 
+          `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`
+          //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
             const response = await fetch(apiUrl, {
                 method: 'GET',
                 headers: {

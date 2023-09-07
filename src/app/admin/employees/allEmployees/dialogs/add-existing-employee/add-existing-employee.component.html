@@ -23,7 +23,9 @@
                             <!--BUSCADOR-->
                             <li class="tbl-search-box">
                                 <label for="search-input"><i class="material-icons search-icon">search</i></label>
-                                <input placeholder="Search for Highkey Id" type="text" #filter class="browser-default search-field" aria-label="Search box" (input)="captureInputValue()">
+                                <input placeholder="Highkey Id" type="text" #filter class="browser-default search-field" aria-label="Search box">
+                                <!--(input)="captureInputValue()"-->
+                                <button mat-button type="button" (click)="searchByHighkeyId()" style="background-color: aliceblue; margin-left: 9px;">Search</button>
                             </li>
                         </ul>
                     </div>
@@ -63,7 +65,7 @@
                         <mat-label>Mobile</mat-label>
                         <input matInput formControlName="phone" type="number">
                         <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>phone</mat-icon>
-                       <!--  <mat-error *ngIf="employeesForm.get('phone')?.hasError('required')">
+                        <!--  <mat-error *ngIf="employeesForm.get('phone')?.hasError('required')">
                             Mobile is required
                         </mat-error> -->
                     </mat-form-field>

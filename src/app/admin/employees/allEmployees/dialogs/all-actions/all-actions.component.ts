@@ -64,15 +64,9 @@ export class AllActionsComponent implements OnInit{
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private fb: UntypedFormBuilder
   ) {
-    //this.action = data.action;
-    //if (this.action === 'edit') {
-      //this.showDeleteBtn = true;
-    //} else {
+    
       this.dialogTitle = 'All Actions:';
-      //const blankObject = {} as BreakModel;
-      //this.break = new BreakModel(blankObject);
-      //this.showDeleteBtn = false;
-    //}
+      
     this.allActionsForm = this.createContactForm();
     //console.log('Propiedades modalCheckIn ==>',this.checkInForm.controls)
   }

@@ -14,6 +14,7 @@ import { Employees } from '../../employees.model';
 import { formatDate } from '@angular/common';
 import { NavigationExtras, Router } from '@angular/router';
 
+
 export interface DialogData {
   id: number;
   action: string;
@@ -93,6 +94,54 @@ export class AddExistingEmployeeComponent {
   //Búsqueda del empleado por el highKeyId
   @ViewChild('filter', { static: false }) filterInput!: ElementRef;
   // Captura el valor del input y lo guarda en searchHighKey
+  
+  searchByHighkeyId() {
+    console.log('searchByHighkeyId() se está ejecutando');
+    console.log('Valor del input searchHighKey: ',this.searchHighKey);
+    const highKey = this.filterInput.nativeElement.value;
+    console.log('Valor del input HighKey: ',highKey);
+    if (highKey) {
+      fetch(`https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeById/id?id=${highKey}`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Data desde el searchByHighkeyId():',data)
+          if (data.message === undefined) {
+            this.formData = data.data;
+            this.formData.id = data.id;
+            // Asignar los valores al formulario
+            this.employeesForm.patchValue({
+              firstName: data.data.firstname,
+              lastName: data.data.lastname,
+              phone: data.data.phone,
+              email: data.data.email,
+              // Otros campos si los tienes
+            });
+          } else {
+            // No se encontró un empleado con el Highkey Id proporcionado
+            // Puedes mostrar un mensaje de error al usuario aquí si lo deseas
+            console.log('No se encontró un empleado con el Highkey Id proporcionado');
+            this.clearFormData(); // Limpia el formulario en caso de error
+          }
+        })
+        .catch((error) => {
+          console.error('Error en la solicitud:', error);
+          // Puedes manejar el error de alguna manera aquí si lo deseas
+          this.clearFormData(); // Limpia el formulario en caso de error
+        });
+    }
+    
+  }
+
+  // Método para limpiar el formulario
+  clearFormData() {
+    this.formData = {
+      id: '',
+      // Otras propiedades del formulario
+    };
+    this.employeesForm.reset(); // Restablece el formulario a su estado inicial
+  }
+
+/*
   captureInputValue() {
     this.searchHighKey = this.filterInput.nativeElement.value;
     console.log('Usuario escribió:', this.searchHighKey);
@@ -143,6 +192,7 @@ export class AddExistingEmployeeComponent {
       event.preventDefault(); // Previene la entrada de la tecla no deseada
     }
   }
+  */
 
 
   formControl = new UntypedFormControl('', [
