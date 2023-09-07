@@ -1,6 +1,6 @@
 
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Input } from '@angular/core';
 import {
   UntypedFormControl,
   Validators,
@@ -16,6 +16,7 @@ import {
 import { formatDate } from '@angular/common';
 //import { BreakModel } from './break.model';
 //import { AllActionsModel } from './all-actions.model';
+import { ShareStartDateService } from '../../../../../_services/share-start-date.service';
 
 export interface DialogData {
   id: number;
@@ -32,21 +33,21 @@ export class AllActionsComponent implements OnInit{
   action: string;
   dialogTitle: string;
   allActionsForm: UntypedFormGroup;
-  //checkIn: CheckInModel;
-  //allActions: AllActionsModel;
-  //public dataCheckIn!: any;
   showDeleteBtn = false;
   fechaInicio: FormControl;
   fechaSalida: FormControl;
   breakTime : FormControl;
-  //break: BreakModel;
+  dateStart: Date[];
+  
   
 
   ngOnInit(): void {
+  
     this.allActionsForm.patchValue({
       startDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
       endDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
     });
+    //this.fechaInicio = new FormControl(this.dateStart || formatDate(new Date(), 'yyyy-MM-dd', 'en'));//this.fechaInicio = new FormControl(new Date());
     this.fechaInicio = new FormControl();//this.fechaInicio = new FormControl(new Date());
     this.fechaSalida = new FormControl();//this.fechaSalida = new FormControl(new Date());
     this.breakTime = new FormControl('0');
@@ -57,12 +58,24 @@ export class AllActionsComponent implements OnInit{
     },
     { validators: this.dateValidator }
     );
+    this.dateStart = this.shareStartDateService.getDateStartData()
+    //console.log('DATEStart desde allActions: ',this.dateStart)
+
+    if (this.dateStart && this.dateStart.length > 0) {
+      // Accede a la primera fecha en el arreglo (asumiendo que solo hay una)
+      const firstDate = this.dateStart[0];
+      
+      // Establece la fecha en el FormControl fechaInicio
+      this.fechaInicio.setValue(firstDate);
+      this.fechaSalida.setValue(firstDate);
+    }
   }
 
   constructor(
     public dialogRef: MatDialogRef<AllActionsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private fb: UntypedFormBuilder
+    private fb: UntypedFormBuilder,
+    private shareStartDateService: ShareStartDateService
   ) {
     
       this.dialogTitle = 'All Actions:';
@@ -85,8 +98,8 @@ export class AllActionsComponent implements OnInit{
   dateValidator: ValidatorFn = (formGroup: FormGroup): { [key: string]: any } | null => {
     const startDate = formGroup.get('startDate').value;
     const endDate = formGroup.get('endDate').value;
-    console.log('startDate desde all actions: ',startDate)
-    console.log('endDate  all actions: ',endDate)
+    //console.log('startDate en all actions: ',startDate)
+    //console.log('endDate  en all actions: ',endDate)
   
     // Redondear las fechas a la unidad de minutos
     const roundedStartDate = new Date(startDate);

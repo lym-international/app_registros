@@ -32,6 +32,7 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { ActivatedRoute } from '@angular/router';
 import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
+import { ShareStartDateService } from '../../../_services/share-start-date.service';
 
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -93,8 +94,7 @@ export class AllemployeesComponent
   highKeyid: number;
   public statusOrder!: string;
   public ShowButtons = true;
-  
-  
+  selectedRowsWithoutNoShow: Employees[] = [];
   
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -119,9 +119,7 @@ export class AllemployeesComponent
     //private checkInService: CheckInService,
     private route: ActivatedRoute,
     private sharingCloseOrderService: SharingCloseOrderService,
-    
-    
-    
+    private shareStartDateService: ShareStartDateService
   ) {
     super();
     // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
@@ -228,9 +226,12 @@ export class AllemployeesComponent
           const payrollId = employeeData.payrollid || "No data";
           const brake = employee.break || "0";
           const hourFrom = employee.hourFrom || "No data";
-          console.log('STARTDATE: ',this.startDate)
-          console.log('hourFrom: ', hourFrom)
+          //console.log('STARTDATE: ',this.startDate)
+          //console.log('hourFrom: ', hourFrom)
   
+          const dateStart = new Date(`${this.startDate}T${hourFrom}`);
+          //console.log("dateStart", dateStart)
+    
           let hourFromFormatted = "No Data";
           if (employee.hourFrom) {
             const hourParts = employee.hourFrom.split(':');
@@ -283,6 +284,7 @@ export class AllemployeesComponent
             in: checkInTime,
             out: checkOutTime,
             break: brake,
+            dateStart: dateStart,
           };
         });
 
@@ -482,15 +484,11 @@ export class AllemployeesComponent
 
   async allActionsModal(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {
-      
+      const dateStartData = selectedRows.map((row) => row.dateStart);
+      //console.log('dateStartData: ', dateStartData);
+      this.shareStartDateService.setDateStartData(dateStartData)
+
       const dialogRef = this.dialog.open(AllActionsComponent)
-      
-      /*const dialogRef = this.dialog.open(AllActionsComponent, {
-        data: {
-          employees: this.employees,
-          action: 'add',
-        },
-      });*/
 
       const result = await dialogRef.afterClosed().toPromise();
       
@@ -624,7 +622,10 @@ export class AllemployeesComponent
           action: 'add',
         },
       });
-
+      const dateStartData = selectedRows.map((row) => row.dateStart);
+      //console.log('dateStartData: ', dateStartData);
+      this.shareStartDateService.setDateStartData(dateStartData)
+      
       const result = await dialogRef.afterClosed().toPromise();
 
       const timestamp = Timestamp.fromDate(new Date(result));
@@ -867,6 +868,7 @@ export class AllemployeesComponent
      
       const apiUrl =
       `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      // `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; 
       //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; 
       fetch(apiUrl, {
         method: 'PUT',
@@ -1567,8 +1569,9 @@ export class AllemployeesComponent
 
 async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
   const apiUrl = 
-  'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByStartDate?date=${startDate}';
+  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByStartDate?date=${startDate}`;
   //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByStartDate?date=${startDate}`;
+  // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByStartDate?date=${startDate}`;
     const response = await fetch(apiUrl);
     const ordenes = await response.json();
     console.log("horaInicio", horaInicio)
@@ -1626,6 +1629,7 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
           const apiUrl = 
           `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`
           //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+          // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
             const response = await fetch(apiUrl, {
                 method: 'GET',
                 headers: {
@@ -1986,21 +1990,33 @@ async updateOrderWithNewEmployee(result) {
     this.paginator._changePageSize(this.paginator.pageSize);
   }
   /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
+ /*  isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.renderedData.length;
     return numSelected === numRows;
+  } */
+  isAllSelected() {
+    const numSelected = this.selection.selected.filter(row => row.status !== 'No show').length;
+    const numRows = this.dataSource.renderedData.filter(row => row.status !== 'No show').length;
+    return numSelected === numRows;
   }
+  
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
-      : this.dataSource.renderedData.forEach((row) =>
-          this.selection.select(row)
-        );
+      : this.dataSource.renderedData.forEach((row) =>{
+          // this.selection.select(row)
+          if (row.status !== 'No show') {
+            this.selection.select(row);
+          }
+        });
   }
-
+ 
+  
+  
+  
   removeSelectedRows() {
     const totalSelect = this.selection.selected.length;
     this.selection.selected.forEach((item) => {
@@ -2155,16 +2171,27 @@ export class ExampleDataSource extends DataSource<Employees> {
         const sortedData = this.sortData(this.filteredData.slice());
         // Grab the page's slice of the filtered sorted data.
 
+        this.renderedData = sortedData.map((employee) => {
+          const empExactHours = employee.empExactHours;
+          // Define un estilo condicional para cambiar el color de fondo si empExactHours es true
+          const rowStyle = empExactHours ? { 'background-color': 'red' } : {};
+          return {
+            ...employee,
+            rowStyle: rowStyle, // Agrega el estilo condicional a cada objeto de empleado
+          };
+        });
+
         const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
         this.renderedData = sortedData.splice(
           startIndex,
           this.paginator.pageSize
         );
+
         // console.log("startIndex", startIndex)
         // console.log("this.paginator.pageSize", this.paginator.pageSize)
         // console.log("antesdel renderr", this.employeesArray)
         // this.renderedData = this.employeesArray.slice(startIndex, this.paginator.pageSize);
-        // console.log("this.renderedData", this.renderedData)
+        console.log("this.renderedData", this.renderedData)
 
         return this.renderedData;
       })

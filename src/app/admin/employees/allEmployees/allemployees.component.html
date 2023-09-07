@@ -181,8 +181,6 @@
                     <div class="body overflow-auto">
                         <div class="responsive_table">
                             <table mat-table [dataSource]="dataSource" matSort class="mat-cell">
-                               
-
                                 <ng-container matColumnDef="select">
                                     <mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-7'">
                                         <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [ngClass]="'tbl-checkbox'">
@@ -251,9 +249,12 @@
                                 </ng-container>
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                 
-                                <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'" matRipple>
-                                    <!--(click)="editCall(row)"-->
+                                
+                                <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'" matRipple [ngStyle]="{'background-color': row.empExactHours ? '#FCF3CF' : ''}" >
+                                    <!--(click)="editCall(row)"-->                     
                                 </mat-row>
+                                
+
                             </table>
                             <!-- Loading spinner -->
                             <div *ngIf="isTblLoading" class="tbl-spinner">

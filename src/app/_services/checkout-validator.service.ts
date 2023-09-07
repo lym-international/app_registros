@@ -36,9 +36,9 @@ export class CheckoutValidatorService {
   }
 
   validateDates(): boolean {
-    console.log('Datos para comparación')
-    console.log('CheckIn: ', this.roundedCheckIn)
-    console.log('CheckOut: ', this.roundedCheckOut)
+    //console.log('Datos para comparación')
+    //console.log('CheckIn: ', this.roundedCheckIn)
+    //console.log('CheckOut: ', this.roundedCheckOut)
     return this.roundedCheckOut > this.roundedCheckIn;
   }
 }

@@ -40,6 +40,9 @@ export class Employees {
     status: string;
     // Otras propiedades de 'employee' si es necesario
   };
+  empExactHours:boolean;
+  status: string;
+  dateStart: string;
   // id: number;  //Plantilla
   // img: string;  //Plantilla
   // highKeyID: string; //Diego
@@ -58,7 +61,7 @@ export class Employees {
   // degree: string;  //Plantilla
   constructor(employees: Employees) {
     {
-      this.id = employees.id || this.getRandomID();
+      // this.id = employees.id || this.getRandomID();
       this.firstName = employees.firstName || '';
       this.lastName = employees.lastName || '',
       this.highKeyId = employees.highKeyId || '',
@@ -68,12 +71,15 @@ export class Employees {
       this.hourFrom = employees.hourFrom || '',
       this.in = employees.in || '',
       this.dateCheckin = employees.dateCheckin ,
+      this.empExactHours=employees.empExactHours || false;
+      this.status=employees.status || '';
       this.out = employees.out || '';
       this.break = employees.break || '';
       this.orderId=employees.orderId || '';
       this.hours=employees.hours || 0;
       this.phone = employees.phone ;
       this.mail = employees.mail || '';
+      this.dateStart = employees.dateStart || '';
 
      /*  this.id = employees.id || this.getRandomID();
       this.img = employees.img || 'assets/images/user/user1.jpg';
@@ -93,10 +99,5 @@ export class Employees {
       this.degree = employees.degree || ''; */
     }
   }
-  public getRandomID(): number {
-    const S4 = () => {
-      return ((1 + Math.random()) * 0x10000) | 0;
-    };
-    return S4() + S4();
-  }
+ 
 }
