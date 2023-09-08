@@ -94,7 +94,22 @@ export class AddExistingEmployeeComponent {
   //Búsqueda del empleado por el highKeyId
   @ViewChild('filter', { static: false }) filterInput!: ElementRef;
   // Captura el valor del input y lo guarda en searchHighKey
+
+  formatTimeTo12HourFormat(time: string): string {
+    const [hour, minute] = time.split(':').map(Number);
+    const period = hour < 12 ? 'AM' : 'PM';
+    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+    return `${formattedHour}:${minute < 10 ? '0' : ''}${minute} ${period}`;
+  }
+  formatHourForDisplay(key: any): string {
+    if (typeof key === 'string') {
+      return this.formatTimeTo12HourFormat(key);
+    }
+    // Si el tipo no es una cadena, puedes manejarlo de manera adecuada, por ejemplo, devolver un valor predeterminado.
+    return 'N/A';
+  }
   
+
   searchByHighkeyId() {
     console.log('searchByHighkeyId() se está ejecutando');
     console.log('Valor del input searchHighKey: ',this.searchHighKey);

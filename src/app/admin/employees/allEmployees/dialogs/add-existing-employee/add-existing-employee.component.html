@@ -111,8 +111,8 @@
                                                             <!--<input type="checkbox" class="check_box" [checked]="isRowSelected(position, hour)" (change)="handleCheckboxChange($event, position, hour)" /> -->
                                                             <input type="checkbox" class="check_box" [checked]="position.key === selectedPosition && hour.key === selectedHour" (change)="handleCheckboxChange($event, position, hour)" />
                                                         </td>
-                                                        <td class="center "> {{ position.key }}</td>
-                                                        <td class="center "> {{ hour.key }} </td>
+                                                        <td class="center"> {{ position.key }}</td>
+                                                        <td class="center"> {{ formatHourForDisplay(hour.key) }} </td>
                                                     </tr>
                                                 </ng-container>
                                             </ng-container>
