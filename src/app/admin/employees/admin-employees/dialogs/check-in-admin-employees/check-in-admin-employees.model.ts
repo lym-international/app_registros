@@ -1,3 +1,4 @@
+/*
 import { formatDate } from '@angular/common';
 export class CheckInAdminEmployeesModel {
   id: string;
@@ -24,3 +25,4 @@ export class CheckInAdminEmployeesModel {
     return S4() + S4();
   }
 }
+*/

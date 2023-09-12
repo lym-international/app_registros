@@ -758,6 +758,9 @@ export class AllemployeesComponent
           action: 'add',
         },
       });
+      const dateStartData = selectedRows.map((row) => row.dateStart);
+      //console.log('dateStartData: ', dateStartData);
+      this.shareStartDateService.setDateStartData(dateStartData)
 
       const result = await dialogRef.afterClosed().toPromise();
 
@@ -881,7 +884,7 @@ export class AllemployeesComponent
         .then((data) => {
           this.showNotification(
             'snackbar-success',
-            'Successful employee noted...!!!',
+            'Employee marked successfully...!!!',
             'bottom',
             'center'
           );
@@ -1661,11 +1664,20 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
             this.addEmployeeToArray(result);
             await this.updateEmployeesArray();
             await this.updateOrderWithNewEmployee(result);
-            this.showNotification('snackbar-success', 'Successful Add Employee...!!!', 'bottom', 'center');
+            this.showNotification(
+              'snackbar-success', 
+              'Successful Add Employee...!!!', 
+              'bottom', 
+              'center');
             this.getEmployees();
             this.removeSelectedRows();
 
           }else{
+            this.showNotification(
+              'snackbar-danger', 
+              'Employee is already assigned in another order at this time.', 
+              'top', 
+              'center')
             console.log('El empleado ya está asignado en otra orden durante ese horario.');
           }
             this.isTblLoading = false;
@@ -1759,7 +1771,11 @@ async updateEmployeesArray() {
                 this.addEmployeeToArray2(highKeyid, result);
                 await this.updateEmployeesArray();
                 await this.updateOrderWithNewEmployee(result);
-                this.showNotification('snackbar-success',  `Successful Add Employee with highkeyId : ${highKeyid}`, 'bottom', 'center');
+                this.showNotification(
+                  'snackbar-success',  
+                  `Successful Add Employee with highkeyId : ${highKeyid}`, 
+                  'bottom', 
+                  'center');
                 this.getEmployees();
                 this.removeSelectedRows();
                 this.isTblLoading = false;
@@ -2079,11 +2095,13 @@ async updateOrderWithNewEmployee(result) {
     colorName: string,
     text: string,
     placementFrom: MatSnackBarVerticalPosition,
+    //customVerticalPosition: any,
     placementAlign: MatSnackBarHorizontalPosition
   ) {
     this.snackBar.open(text, '', {
-      duration: 2000,
+      duration: 5000,
       verticalPosition: placementFrom,
+      //verticalPosition: customVerticalPosition,
       horizontalPosition: placementAlign,
       panelClass: colorName,
     });

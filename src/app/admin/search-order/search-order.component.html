@@ -28,7 +28,7 @@
                     <div>
                         <mat-form-field style="display: inline-flex; width: 30%;" class="col-sm-12 col-md-6 col-lg-6">
                             <mat-label>Input</mat-label>
-                            <input matInput [(ngModel)]="orderNumber" (ngModelChange)="searchOrder()">
+                            <input matInput [(ngModel)]="orderNumber" (ngModelChange)="searchOrder()" #orderInput>
                             <!--(keyup.enter)="searchOrder()"-->
                             <!--(ngModelChange)="searchOrder()"-->
                         </mat-form-field>
