@@ -400,11 +400,14 @@ implements OnInit
             in: 'No Data',
             out: 'No Data',
             totalHours:0,
-            latitude: '-', 
-            longitude: '-',
-            latitudeOut: '-', 
-            longitudeOut: '-',
-
+            checkinCoordinates:{
+              latitude: '-',
+              longitude: '-',
+            },
+            checkOutCoordinates:{
+              latitudeOut: '-',
+              longitudeOut: '-',
+            },
           };
         }
         return employee;
@@ -502,8 +505,9 @@ implements OnInit
       //console.log('TimeStamp: ', timestamp);
       const checkInTimestamp = timestamp?.seconds || 0;
       const  rounded = this.roundDate(result);
-    const timestampCheckinRounded= Timestamp.fromDate(new Date(rounded));
-    const dateCheckinRounded = timestampCheckinRounded?.seconds || 0;
+      const timestampCheckinRounded= Timestamp.fromDate(new Date(rounded));
+      const dateCheckinRounded = timestampCheckinRounded?.seconds || 0;
+      
 
       // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
       const updatedEmployees = this.employeesArray.map((employee) => {
@@ -538,8 +542,12 @@ implements OnInit
               _seconds: dateCheckinRounded,
               _nanoseconds: 0,
             },
-            latitude: this.latitude,
-            longitude: this.longitude,
+            checkinCoordinates: {
+              latitude: this.latitude,
+              longitude: this.longitude,
+            },
+            
+            
             // updateUser:this.dataUser.email
             // updateUser: [...updatedUser, this.dataUser.email],
             // updateUser: 
@@ -641,6 +649,7 @@ implements OnInit
       const rounded = this.roundDate(result);
       const timestampCheckoutRounded = Timestamp.fromDate(new Date(rounded));
       const dateCheckoutRounded = timestampCheckoutRounded?.seconds || 0;
+      
       // Filtrar y actualizar solo los empleados seleccionados con sus datos actualizados
       const updatedEmployees = this.employeesArray.map((employee) => {
         if (
@@ -667,8 +676,11 @@ implements OnInit
               _seconds: dateCheckoutRounded,
               _nanoseconds: 0,
             },
-            latitudeOut: this.latitude,
-            longitudeOut: this.longitude,
+            checkOutCoordinates:{
+              latitudeOut: this.latitude,
+              longitudeOut: this.longitude,
+            },
+            
 
             updateUser:this.dataUser.email,
             status: 'Checked Out',

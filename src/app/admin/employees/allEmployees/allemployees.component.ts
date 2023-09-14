@@ -1627,7 +1627,7 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
     if (result && result.id) {
         try {
           
-          const horaInicio = result.hourFrom // Obtiene la hora de inicio, ajustar según tus necesidades
+          const horaInicio = result.data.hourFrom // Obtiene la hora de inicio, ajustar según tus necesidades
 
           const apiUrl = 
           `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`
@@ -1645,8 +1645,12 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
             }
             
             const orderData = await response.json();
+            
             console.log("orderData", orderData)
-            const positionData = orderData.data.items.find(item => item.position === result.position);
+            console.log("orderData.data.items => ", orderData.data.items)
+            console.log("result => ", result)
+            console.log("result.position => ", result.data.position)
+            const positionData = orderData.data.items.find(item => item.position === result.data.position);
             
             if (!positionData) {
                 throw new Error('Position data not found.');
@@ -1661,9 +1665,9 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
           if (!tieneConflictos) {
             this.isTblLoading = true;
             await this.updateEmployee(result);
-            this.addEmployeeToArray(result);
+            this.addEmployeeToArray(result.data);
             await this.updateEmployeesArray();
-            await this.updateOrderWithNewEmployee(result);
+            await this.updateOrderWithNewEmployee(result.data);
             this.showNotification(
               'snackbar-success', 
               'Successful Add Employee...!!!', 
