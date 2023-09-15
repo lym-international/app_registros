@@ -479,13 +479,6 @@ export class AllemployeesComponent
     if (selectedRows.length > 0) {
       
       const dialogRef = this.dialog.open(AllActionsComponent)
-      
-      /*const dialogRef = this.dialog.open(AllActionsComponent, {
-        data: {
-          employees: this.employees,
-          action: 'add',
-        },
-      });*/
 
       const result = await dialogRef.afterClosed().toPromise();
       
@@ -1563,7 +1556,7 @@ export class AllemployeesComponent
 
 async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
   const apiUrl = 
-  'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByStartDate?date=${startDate}';
+  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByStartDate?date=${startDate}`;
   // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByStartDate?date=${startDate}`;
     const response = await fetch(apiUrl);
     const ordenes = await response.json();
@@ -1613,13 +1606,13 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
     
     const dialogRef = this.dialog.open(AddExistingEmployeeComponent);
     const result = await dialogRef.afterClosed().toPromise();
-    
+    console.log("resulbt", result)
     if (result && result.id) {
         try {
           
           const horaInicio = result.hourFrom // Obtiene la hora de inicio, ajustar según tus necesidades
 
-          // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+                      // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
           const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`;
             const response = await fetch(apiUrl, {
                 method: 'GET',
@@ -2166,9 +2159,9 @@ export class ExampleDataSource extends DataSource<Employees> {
           const empExactHours = employee.empExactHours;
           // Define un estilo condicional para cambiar el color de fondo si empExactHours es true
           const rowStyle = empExactHours ? { 'background-color': 'red' } : {};
-          console.log( this.renderedData)
-          console.log("employee", employee)
-          console.log("rowStyle",rowStyle)
+          // console.log( this.renderedData)
+          // console.log("employee", employee)
+          // console.log("rowStyle",rowStyle)
     
           return {
             ...employee,

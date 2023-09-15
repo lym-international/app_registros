@@ -179,7 +179,8 @@ export class SearchOrderComponent{
     });
   }
   
-  searchOrder(): void {
+  
+  searchOrder() {
     //console.log('Ordenes desde el getSearchOrders2: ', this.ordenes )
     this.foundOrder = null;
     for (const order of this.ordenes) {
