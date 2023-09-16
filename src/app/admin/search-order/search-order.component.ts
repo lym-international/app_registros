@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,  ElementRef, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthenticationService } from 'app/_services/authentication.service';
 import { OrderDataService } from 'app/_services/orderData.service';
@@ -28,7 +28,7 @@ export class SearchOrderComponent{
   public orderNumber: string;
   public foundOrder: any | null = null;
   public dataUser!: any;
-  
+  @ViewChild('orderInput') orderInput: ElementRef;
 
   constructor(private http: HttpClient, 
               private authenticationService: AuthenticationService,
@@ -179,8 +179,21 @@ export class SearchOrderComponent{
     });
   }
   
+  searchOrder(): void {
+    // Obtén el valor actual del campo de entrada
+  let inputValue: string = this.orderNumber;
+
+  // Elimina todos los guiones existentes para evitar duplicados
+  inputValue = inputValue.replace(/-/g, '');
+
+  // Agrega un guión después de los primeros cuatro dígitos
+  if (inputValue.length >= 4) {
+    inputValue = inputValue.substring(0, 4) + '-' + inputValue.substring(4);
+  }
+
+  // Actualiza el valor del campo de entrada
+  this.orderNumber = inputValue;
   
-  searchOrder() {
     //console.log('Ordenes desde el getSearchOrders2: ', this.ordenes )
     this.foundOrder = null;
     for (const order of this.ordenes) {

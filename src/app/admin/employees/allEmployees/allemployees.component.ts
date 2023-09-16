@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, Input } from '@angular/core';
 import { EmployeesService } from './employees.service';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
@@ -32,6 +32,7 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { ActivatedRoute } from '@angular/router';
 import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
+import { ShareStartDateService } from '../../../_services/share-start-date.service';
 
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -104,6 +105,7 @@ export class AllemployeesComponent
 
   dataSource!: ExampleDataSource;
   positions = [];
+  startDate: any;
   
 
   constructor(
@@ -117,9 +119,7 @@ export class AllemployeesComponent
     //private checkInService: CheckInService,
     private route: ActivatedRoute,
     private sharingCloseOrderService: SharingCloseOrderService,
-    
-    
-    
+    private shareStartDateService: ShareStartDateService
   ) {
     super();
     // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
@@ -139,7 +139,8 @@ export class AllemployeesComponent
       }
     });
     console.log('Data Order: ', this.dataEmployees);
-    
+    this.startDate = this.dataEmployees.data.startDate;
+
     console.log('Data StatusOrder: ', this.statusOrder);
     
     
@@ -217,6 +218,7 @@ export class AllemployeesComponent
           const employeeData = { ...employee.employee.data };
   
           const firstName = employeeData.firstname || "No data";
+          //console.log('empleado: ',employee)
           const lastName = employeeData.lastname || "No data";
           const highKeyId = employeeData.employeeId || "No data";
           const position = employee.position || "No data";
@@ -224,8 +226,12 @@ export class AllemployeesComponent
           const payrollId = employeeData.payrollid || "No data";
           const brake = employee.break || "0";
           const hourFrom = employee.hourFrom || "No data";
+          //console.log('STARTDATE: ',this.startDate)
           //console.log('hourFrom: ', hourFrom)
   
+          const dateStart = new Date(`${this.startDate}T${hourFrom}`);
+          //console.log("dateStart", dateStart)
+    
           let hourFromFormatted = "No Data";
           if (employee.hourFrom) {
             const hourParts = employee.hourFrom.split(':');
@@ -278,6 +284,7 @@ export class AllemployeesComponent
             in: checkInTime,
             out: checkOutTime,
             break: brake,
+            dateStart: dateStart,
           };
         });
 
@@ -477,7 +484,10 @@ export class AllemployeesComponent
 
   async allActionsModal(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {
-      
+      const dateStartData = selectedRows.map((row) => row.dateStart);
+      //console.log('dateStartData: ', dateStartData);
+      this.shareStartDateService.setDateStartData(dateStartData)
+
       const dialogRef = this.dialog.open(AllActionsComponent)
 
       const result = await dialogRef.afterClosed().toPromise();
@@ -612,7 +622,10 @@ export class AllemployeesComponent
           action: 'add',
         },
       });
-
+      const dateStartData = selectedRows.map((row) => row.dateStart);
+      //console.log('dateStartData: ', dateStartData);
+      this.shareStartDateService.setDateStartData(dateStartData)
+      
       const result = await dialogRef.afterClosed().toPromise();
 
       const timestamp = Timestamp.fromDate(new Date(result));
@@ -745,6 +758,9 @@ export class AllemployeesComponent
           action: 'add',
         },
       });
+      const dateStartData = selectedRows.map((row) => row.dateStart);
+      //console.log('dateStartData: ', dateStartData);
+      this.shareStartDateService.setDateStartData(dateStartData)
 
       const result = await dialogRef.afterClosed().toPromise();
 
@@ -868,7 +884,7 @@ export class AllemployeesComponent
         .then((data) => {
           this.showNotification(
             'snackbar-success',
-            'Successful employee noted...!!!',
+            'Employee marked successfully...!!!',
             'bottom',
             'center'
           );
@@ -1557,6 +1573,7 @@ export class AllemployeesComponent
 async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
   const apiUrl = 
   `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByStartDate?date=${startDate}`;
+  //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByStartDate?date=${startDate}`;
   // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByStartDate?date=${startDate}`;
     const response = await fetch(apiUrl);
     const ordenes = await response.json();
@@ -1607,13 +1624,17 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
     const dialogRef = this.dialog.open(AddExistingEmployeeComponent);
     const result = await dialogRef.afterClosed().toPromise();
     console.log("resulbt", result)
-    if (result && result.id) {
+
+    
+     if (result && result.id) {
         try {
           
           const horaInicio = result.hourFrom // Obtiene la hora de inicio, ajustar según tus necesidades
 
-                      // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
-          const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`;
+          const apiUrl = 
+          `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`
+          //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+          // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
             const response = await fetch(apiUrl, {
                 method: 'GET',
                 headers: {
@@ -1626,7 +1647,11 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
             }
             
             const orderData = await response.json();
+            
             console.log("orderData", orderData)
+            console.log("orderData.data.items => ", orderData.data.items)
+            console.log("result => ", result)
+            console.log("result.position => ", result.position)
             const positionData = orderData.data.items.find(item => item.position === result.position);
             
             if (!positionData) {
@@ -1642,25 +1667,68 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
           if (!tieneConflictos) {
             this.isTblLoading = true;
             await this.updateEmployee(result);
-            this.addEmployeeToArray(result);
-            await this.updateEmployeesArray();
-            await this.updateOrderWithNewEmployee(result);
-            this.showNotification('snackbar-success', 'Successful Add Employee...!!!', 'bottom', 'center');
+             this.addEmployeeToArray(result);
+             await this.updateEmployeesArray();
+             await this.updateOrderWithNewEmployee(result);
+             this.showNotification(
+              'snackbar-success', 
+              'Successful Add Employee...!!!', 
+              'bottom', 
+              'center'); 
             this.getEmployees();
             this.removeSelectedRows();
 
           }else{
+            this.showNotification(
+              'snackbar-danger', 
+              'Employee is already assigned in another order at this time.', 
+              'top', 
+              'center')
             console.log('El empleado ya está asignado en otra orden durante ese horario.');
           }
             this.isTblLoading = false;
         } catch (error) {
             console.error('Error:', error);
         }
-    }
+    } 
+    
 }
 
-
 async updateEmployee(result) {
+  // Crear un nuevo objeto con los campos deseados
+  const employeeData = {
+    company: result.company || '',
+    email: result.email || '', 
+    employeeId: result.employeeId || '',
+    firstname: result.firstname || '',
+    gender: result.gender || '',
+    id : result.id || '',
+    lastname:result.lastname || '',
+    phone: result.phone || '',
+    positions: result.positions || [],
+    status: result.status || ''
+    // Agregar otros campos que quieras incluir
+  };
+
+  const employeeId = result.id;
+  const url = `https://us-central1-highkeystaff.cloudfunctions.net/users/updateEmployee/id?id=${employeeId}`;
+
+  const response = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(employeeData), 
+  });
+  if (!response.ok) {
+    throw new Error('Fallo al actualizar el empleado.');
+  }
+ 
+}
+
+async updateEmployee1(result) {
+  console.log("result dd emplouts", result)
+  /* 
   const employeeId = result.id;
   const url = `https://us-central1-highkeystaff.cloudfunctions.net/users/updateEmployee/id?id=${employeeId}`
   
@@ -1677,6 +1745,7 @@ async updateEmployee(result) {
   if (!response.ok) {
       throw new Error('Failed to update employee.');
   }
+   */
 }
 addEmployeeToArray(result) {
   const addEmployeeRegist = {
@@ -1743,7 +1812,11 @@ async updateEmployeesArray() {
                 this.addEmployeeToArray2(highKeyid, result);
                 await this.updateEmployeesArray();
                 await this.updateOrderWithNewEmployee(result);
-                this.showNotification('snackbar-success',  `Successful Add Employee with highkeyId : ${highKeyid}`, 'bottom', 'center');
+                this.showNotification(
+                  'snackbar-success',  
+                  `Successful Add Employee with highkeyId : ${highKeyid}`, 
+                  'bottom', 
+                  'center');
                 this.getEmployees();
                 this.removeSelectedRows();
                 this.isTblLoading = false;
@@ -2063,11 +2136,13 @@ async updateOrderWithNewEmployee(result) {
     colorName: string,
     text: string,
     placementFrom: MatSnackBarVerticalPosition,
+    //customVerticalPosition: any,
     placementAlign: MatSnackBarHorizontalPosition
   ) {
     this.snackBar.open(text, '', {
-      duration: 2000,
+      duration: 5000,
       verticalPosition: placementFrom,
+      //verticalPosition: customVerticalPosition,
       horizontalPosition: placementAlign,
       panelClass: colorName,
     });

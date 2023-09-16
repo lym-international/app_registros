@@ -12,6 +12,7 @@ import {
 import { Employees } from '../../employees.model';
 import { formatDate } from '@angular/common';
 import { CheckoutValidatorService } from 'app/_services/checkout-validator.service';
+import { ShareStartDateService } from 'app/_services/share-start-date.service';
 //import { CheckOutModel } from './check-out.model';
 export interface DialogData {
   id: number;
@@ -34,6 +35,7 @@ export class CheckOutComponent implements OnInit{
   fechaSalida: FormControl;
   showError = false; 
   private isValidationInProgress = false;
+  dateStart: Date[];
   
   ngOnInit(): void {
     this.checkOutForm.patchValue({
@@ -50,6 +52,17 @@ export class CheckOutComponent implements OnInit{
   //this.fechaSalida.valueChanges.subscribe(() => {
     //this.validateCheckOut();
   //});
+
+  this.dateStart = this.shareStartDateService.getDateStartData()
+    console.log('DATEStart desde Modal Checkin: ',this.dateStart)
+
+    if (this.dateStart && this.dateStart.length > 0) {
+      // Accede a la primera fecha en el arreglo (asumiendo que solo hay una)
+      const firstDate = this.dateStart[0];
+      
+      // Establece la fecha en el FormControl fechaInicio
+      this.fechaSalida.setValue(firstDate);
+    }
   }
 
   constructor(
@@ -58,6 +71,7 @@ export class CheckOutComponent implements OnInit{
     //public calendarService: CalendarService,
     private fb: UntypedFormBuilder,
     private checkoutValidatorService: CheckoutValidatorService,
+    private shareStartDateService: ShareStartDateService
   ) {
     // Set the defaults
     this.action = data.action;

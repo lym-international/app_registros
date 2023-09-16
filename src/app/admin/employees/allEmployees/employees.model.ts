@@ -42,6 +42,7 @@ export class Employees {
   };
   empExactHours:boolean;
   status: string;
+  dateStart: string;
   // id: number;  //Plantilla
   // img: string;  //Plantilla
   // highKeyID: string; //Diego
@@ -78,6 +79,7 @@ export class Employees {
       this.hours=employees.hours || 0;
       this.phone = employees.phone ;
       this.mail = employees.mail || '';
+      this.dateStart = employees.dateStart || '';
 
      /*  this.id = employees.id || this.getRandomID();
       this.img = employees.img || 'assets/images/user/user1.jpg';

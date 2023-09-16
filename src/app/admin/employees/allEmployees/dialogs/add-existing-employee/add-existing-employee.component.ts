@@ -14,6 +14,7 @@ import { Employees } from '../../employees.model';
 import { formatDate } from '@angular/common';
 import { NavigationExtras, Router } from '@angular/router';
 
+
 export interface DialogData {
   id: number;
   action: string;
@@ -45,7 +46,13 @@ export class AddExistingEmployeeComponent {
   selectedRows: { [key: string]: boolean } = {};
   isTableSelected = false;
   searchHighKey = '';
+  selectedRowIndex: number = -1;
 
+  
+  @ViewChild('highKeyIdInput') highKeyIdInput;
+  @ViewChild('payrollInput') payrollInput;
+  @ViewChild('firstNameInput') firstNameInput;
+  @ViewChild('lastNameInput') lastNameInput;
 
   constructor(
     
@@ -58,13 +65,14 @@ export class AddExistingEmployeeComponent {
     this.dialogTitle = 'Add existing emergency employee';
 
     this.employeesForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      //firstName: ['', Validators.required],
+      //lastName: ['', Validators.required],
       // phone: ['', Validators.required],
       // email: ['', Validators.required],
-      phone: [''],
-      email: [''],
+      //phone: [''],
+      //email: [''],
       // Otros campos del formulario si los tienes
+      selected: false,
     });
   }
 
@@ -93,57 +101,147 @@ export class AddExistingEmployeeComponent {
   //Búsqueda del empleado por el highKeyId
   @ViewChild('filter', { static: false }) filterInput!: ElementRef;
   // Captura el valor del input y lo guarda en searchHighKey
-  captureInputValue() {
-    this.searchHighKey = this.filterInput.nativeElement.value;
-    console.log('Usuario escribió:', this.searchHighKey);
-    fetch(
-      // `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeeById/id?id=${this.searchHighKey}`
-      //`http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeeById/id?id=${this.searchHighKey}`
-      `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeById/id?id=${this.searchHighKey}`
-      )
+
+  formatTimeTo12HourFormat(time: string): string {
+    const [hour, minute] = time.split(':').map(Number);
+    const period = hour < 12 ? 'AM' : 'PM';
+    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+    return `${formattedHour}:${minute < 10 ? '0' : ''}${minute} ${period}`;
+  }
+  formatHourForDisplay(key: any): string {
+    if (typeof key === 'string') {
+      return this.formatTimeTo12HourFormat(key);
+    }
+    // Si el tipo no es una cadena, puedes manejarlo de manera adecuada, por ejemplo, devolver un valor predeterminado.
+    return 'N/A';
+  }
+  searchBy() {
+    console.log('searchByHighkeyId() se está ejecutando');
+  
+    const inputValues = {
+      highKeyId: this.highKeyIdInput.nativeElement.value,
+      payroll: this.payrollInput.nativeElement.value,
+      firstName: this.firstNameInput.nativeElement.value,
+      lastName: this.lastNameInput.nativeElement.value,
+    };
+  
+    const searchType = Object.keys(inputValues).find((key) => inputValues[key]);
+    
+    if (!searchType) {
+      console.log('No se proporcionaron valores de búsqueda');
+      this.clearFormData();
+      return;
+    }
+  
+    const endpointMap = {
+      highKeyId: `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeById/id?id=${inputValues.highKeyId}`,
+      payroll: `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeByPayroll/payroll?payroll=${inputValues.payroll}`,
+      firstName: `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeesByFN/firstName?firstName=${inputValues.firstName}`,
+      lastName: `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeesByLN/lastName?lastName=${inputValues.lastName}`,
+    };
+  
+    fetch(endpointMap[searchType])
       .then((response) => response.json())
       .then((data) => {
-        console.log('DATA: ',data)
-        console.log('DATA message: ',data.message)
-        if(data.message === undefined){
-          console.log('ENTRO AL if')
-          this.formData = data.data;
-          this.formData.id = data.id
-          // Asignar los valores al formulario
-          this.employeesForm.patchValue({
-            firstName: data.data.firstname,
-            lastName: data.data.lastname,
-            phone: data.data.phone,
-            email: data.data.email,
-
-            // Otros campos si los tienes
-          });
-        } else {
-          console.log('ENTRO AL ELSE')
-          
-            this.formData = '';
-          this.formData.id = ''
-          // Asignar los valores al formulario
-          this.employeesForm.patchValue({
-            firstName: '',
-            lastName: '',
-            phone: '',
-            email: '',
-          });
-        }
+        console.log(`Data desde el searchBy() en ${searchType}:`, data);
+        if (data.message === undefined) {
+          if (searchType === 'highKeyId') {
+          console.log("dataq", [data])
+            this.formData = [data];
+          } else {
+            const employees = data.map((emp) => {
+              console.log('EMP: ', emp);
+              return emp;
+            });
+            console.log("employessq", employees)
+            this.formData = employees;
+          }
+          //this.formData = this.formData.map((item) => ({ data: item, selected: false }));
+          console.log(`this.formData ${searchType}: `, this.formData);
+        } 
         
+        else {
+          console.log('No se encontró un empleado con el valor proporcionado');
+          this.clearFormData();
+        }
       })
-    }
-  @HostListener('keydown', ['$event'])
-  onKeydown(event: KeyboardEvent) {
-    const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'End', 'Home'];
+      .catch((error) => {
+        console.error('Error en la solicitud:', error);
+        this.clearFormData();
+      });
+  }
+  
+  handleRowClickEMP(event, selectedIndex) {
+    // Prevenir que el clic en el checkbox propague al hacer clic en la fila
+    event.stopPropagation();
+    //console.log('selectedIndex: ',selectedIndex)
+    //console.log('selectedIndex que cambia: ',this.selectedRowIndex)
     
-    // Verifica si la tecla presionada no es un número ni una tecla de control
-    if (!/^\d$/.test(event.key) && !allowedKeys.includes(event.key)) {
-      event.preventDefault(); // Previene la entrada de la tecla no deseada
+    if(this.formData.length > 1){
+      if (this.selectedRowIndex !== -1) {
+        this.formData[this.selectedRowIndex].selected = false; 
+      }
     }
+    
+    // Marca la fila seleccionada
+    this.selectedRowIndex = selectedIndex;
+    this.formData[selectedIndex].selected = true;
+
+    this.formData.forEach((employee, index) => {
+      if (index === selectedIndex) {
+        
+        console.log('EMPLOYEE: ',employee,index)
+      }
+    });
   }
 
+  //BUSQUEDA SOLO CON EL HIGHKEYID
+  /*
+  searchByHighkeyId() {
+    console.log('searchByHighkeyId() se está ejecutando');
+    //console.log('Valor del input searchHighKey: ',this.searchHighKey);
+    const highKey = this.filterInput.nativeElement.value;
+    console.log('Valor del input HighKey: ',highKey);
+    if (highKey) {
+      fetch(`https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeById/id?id=${highKey}`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Data desde el searchByHighkeyId():',data)
+          if (data.message === undefined) {
+            this.formData = data.data;
+            this.formData.id = data.id;
+            // Asignar los valores al formulario
+            this.employeesForm.patchValue({
+              firstName: data.data.firstname,
+              lastName: data.data.lastname,
+              phone: data.data.phone,
+              email: data.data.email,
+              // Otros campos si los tienes
+            });
+          } else {
+            // No se encontró un empleado con el Highkey Id proporcionado
+            // Puedes mostrar un mensaje de error al usuario aquí si lo deseas
+            console.log('No se encontró un empleado con el Highkey Id proporcionado');
+            this.clearFormData(); // Limpia el formulario en caso de error
+          }
+        })
+        .catch((error) => {
+          console.error('Error en la solicitud:', error);
+          // Puedes manejar el error de alguna manera aquí si lo deseas
+          this.clearFormData(); // Limpia el formulario en caso de error
+        });
+    } 
+  }
+*/
+
+  // Método para limpiar el formulario
+  clearFormData() {
+    this.formData = {
+      id: '',
+      // Otras propiedades del formulario
+    };
+    this.employeesForm.reset(); // Restablece el formulario a su estado inicial
+  }
 
   formControl = new UntypedFormControl('', [
     Validators.required,
@@ -207,9 +305,14 @@ export class AddExistingEmployeeComponent {
       //this.formData = this.employeesForm.value;
       
       const newPositionName = this.selectedPosition;
-
+      const objetoSeleccionado = this.formData.find(item => item.selected === true);
+      // Ahora objetoSeleccionado contiene el objeto con selected: true
+      const posicionSeleccionada = this.formData.indexOf(objetoSeleccionado);
+      // Ahora posicionSeleccionada contiene la posición del objeto seleccionado
+      console.log('Empleado seleccionado:',objetoSeleccionado);  
+      //console.log('this.formData.positions: ', this.formData[posicionSeleccionada].data.positions)
       // Verifica si el nombre de la posición ya existe en formData.positions
-      const positionExists = this.formData.positions.some(position => position.name === newPositionName);
+      const positionExists = this.formData[posicionSeleccionada].data.positions.some(position => position.name === newPositionName);
       
       if (!positionExists) {
         // Si la posición no existe, crea un nuevo objeto de posición y agrégalo al array
@@ -217,21 +320,16 @@ export class AddExistingEmployeeComponent {
           rate: this.selectedRate , // Define el valor que corresponda a la tasa de la nueva posición
           name: newPositionName
         };
-      
-        this.formData.positions.push(newPosition);
+        objetoSeleccionado.data.positions.push(newPosition);
       }
-      
       // Asegúrate de que this.formData.position y this.formData.hourFrom estén actualizados según los valores del formulario
-      this.formData.position = this.selectedPosition;
-      this.formData.hourFrom = this.selectedHour;
-      this.formData.rate = this.selectedRate;
-      
+      objetoSeleccionado.data.position = this.selectedPosition;
+      objetoSeleccionado.data.hourFrom = this.selectedHour;
+      objetoSeleccionado.data.rate = this.selectedRate;
       // Puedes imprimir el array actualizado para verificarlo
-      console.log('formData.positions:', this.formData.positions);
-  
-      console.log('FormData en form-dialog: ', this.formData);
-  
-      this.dialogRef.close(this.formData);
+     //console.log('formData.positions:', objetoSeleccionado.data.position);
+      console.log('Objeto Seleccionado=> ', objetoSeleccionado.data);
+      this.dialogRef.close(objetoSeleccionado.data);
     } else {
       // Si no hay fila seleccionada, muestra un mensaje de error o toma la acción apropiada
       console.log('No se ha seleccionado ninguna fila');

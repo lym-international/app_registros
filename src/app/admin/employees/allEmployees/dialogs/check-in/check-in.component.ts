@@ -11,6 +11,7 @@ import {
 //import { CheckInModel } from './check-in.model';
 import { formatDate } from '@angular/common';
 import { CheckoutValidatorService } from 'app/_services/checkout-validator.service';
+import { ShareStartDateService } from 'app/_services/share-start-date.service';
 
 
 export interface DialogData {
@@ -30,7 +31,7 @@ export class CheckInComponent implements OnInit {
   fechaInicio: FormControl;
   roundedCheckIn: Date;
   localStorageCheckIn: any;
-  
+  dateStart: Date[];
 
 
   //private owlDateTime: OwlDateTime;
@@ -47,7 +48,17 @@ export class CheckInComponent implements OnInit {
     startDate: this.fechaInicio
     });
     //this.dataCheckIn = this.checkInService.setCheckIn();
-    
+
+    this.dateStart = this.shareStartDateService.getDateStartData()
+    console.log('DATEStart desde Modal Checkin: ',this.dateStart)
+
+    if (this.dateStart && this.dateStart.length > 0) {
+      // Accede a la primera fecha en el arreglo (asumiendo que solo hay una)
+      const firstDate = this.dateStart[0];
+      
+      // Establece la fecha en el FormControl fechaInicio
+      this.fechaInicio.setValue(firstDate);
+    }
     
   }
 
@@ -56,7 +67,8 @@ export class CheckInComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private fb: UntypedFormBuilder,
     private checkoutValidatorService: CheckoutValidatorService,
-    private readonly el: ElementRef
+    private readonly el: ElementRef,
+    private shareStartDateService: ShareStartDateService
   ) {
     // this.action = data.action;
     if (this.action === 'edit') {

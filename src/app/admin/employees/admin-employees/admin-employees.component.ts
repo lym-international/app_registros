@@ -48,6 +48,7 @@ import { Position } from 'app/interfaces/position.interface';
 import { CheckInAdminEmployeesComponent } from './dialogs/check-in-admin-employees/check-in-admin-employees.component';
 import { CheckOutAdminEmployeesComponent } from './dialogs/check-out-admin-employees/check-out-admin-employees.component';
 import { BreakAdminEmployeesComponent } from './dialogs/break-admin-employees/break-admin-employees.component';
+import { GeolocationService } from 'app/_services/geolocation.service';
 //import { HeaderComponent } from '../../../layout/header/header.component';
 
 
@@ -128,11 +129,9 @@ implements OnInit
   public pdfEmployees = [];
   employeeArray: any[] = [];
   totalHoursArray: number[] = [];
-  totalHoursSum: number
+  totalHoursSum: number;
+  //geolocationService: any;
 
-
-  
-  
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
@@ -142,6 +141,9 @@ implements OnInit
 
   dataSource!: ExampleDataSource;
   HeaderComponent: any;
+  latitude: number;
+  longitude: number;
+  
 
   constructor(
     private datePipe: DatePipe,
@@ -151,6 +153,7 @@ implements OnInit
     private snackBar: MatSnackBar,
     private orderDataService: OrderDataService,
     public authenticationService: AuthenticationService,
+    private geolocationService: GeolocationService,
     //private checkInService: CheckInService,
     
     
@@ -182,6 +185,19 @@ implements OnInit
     console.log('Datos traídos desde el header: ', this.dataUser)
     
     
+    this.geolocationService.getCoordinatesObservable().subscribe((coordinates) => {
+      this.latitude = coordinates.latitude;
+      this.longitude = coordinates.longitude;
+      
+      console.log('LATITUD en AdminEmployees:', this.latitude);
+      console.log('LONGITUD en AdminEmployees:', this.longitude);
+
+      //this.getEmployees();
+      // Haz lo que necesites con las coordenadas en este componente
+      
+    }, (error) => {
+      console.error('Error al obtener la ubicación:', error);
+    });
   }
   
   // Función para controlar la visibilidad de los botones al hacer clic en el checkbox
@@ -193,38 +209,38 @@ implements OnInit
       this.showCheckOutButton = false;
       this.showBreakButton = false;
       this.showNoShowButton = true;
-      console.log('Si no hay checkIN: ')
-      console.log('CheckIn button: ',this.showCheckInButton)
-      console.log('NoShow button: ',this.showNoShowButton)
+      //console.log('Si no hay checkIN: ')
+      //console.log('CheckIn button: ',this.showCheckInButton)
+      //console.log('NoShow button: ',this.showNoShowButton)
       //console.log('CheckOut button: ',this.showCheckOutButton )
-      console.log('---------------------------------')
+      //console.log('---------------------------------')
     }
     else if((row.dateCheckin !== null || row.dateCheckin !== undefined)&&(row.dateCheckout === null || row.dateCheckout === undefined)) {
       this.showCheckInButton = false;
       this.showCheckOutButton = true;
       this.showBreakButton = true;
       this.showNoShowButton = false;
-      console.log('Si hay checkIN y no hay checkOut: ')
-      console.log('CheckOut button: ',this.showCheckOutButton )
-      console.log('Break button: ',this.showBreakButton )
-      console.log('---------------------------------')
+      //console.log('Si hay checkIN y no hay checkOut: ')
+      //console.log('CheckOut button: ',this.showCheckOutButton )
+      //console.log('Break button: ',this.showBreakButton )
+      //console.log('---------------------------------')
     }  
     else if ((row.dateCheckout !== null || row.dateCheckout !== undefined)&&(row.break === null || row.break === undefined || row.break === "0")){
       this.showCheckInButton = false;
       this.showCheckOutButton = false;
       this.showBreakButton = true;
       this.showNoShowButton = false;
-      console.log('Si hay checkIN y hay checkOut: ')
-      console.log('Break button: ',this.showBreakButton )
-      console.log('---------------------------------')
+      //console.log('Si hay checkIN y hay checkOut: ')
+      //console.log('Break button: ',this.showBreakButton )
+      //console.log('---------------------------------')
     }
     else {
       this.showCheckInButton = false;
       this.showCheckOutButton = false;
       this.showBreakButton = false;
       this.showNoShowButton = false;
-      console.log('Si hay checkIN, checkOut y Break: Botones no visibles')
-      console.log('---------------------------------')
+      //console.log('Si hay checkIN, checkOut y Break: Botones no visibles')
+      //console.log('---------------------------------')
     }
   }  
   getEmployees() {
@@ -248,6 +264,26 @@ implements OnInit
           const hourFrom = employee.hourFrom || "No data";
           //const uniform = employee.hourFrom || "No data";
           //console.log('HORAS TRABAJADAS: ',totalHours)
+          
+          let hourFromFormatted = "No Data";
+          if (employee.hourFrom) {
+            const hourParts = employee.hourFrom.split(':');
+            if (hourParts.length === 2) {
+              const hours = parseInt(hourParts[0]);
+              const minutes = parseInt(hourParts[1]);
+          
+              // Calcula el período (AM o PM)
+              const period = hours >= 12 ? 'PM' : 'AM';
+          
+              // Convierte las horas al formato de 12 horas
+              const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
+              const formattedMinutes = minutes.toString().padStart(2, '0');
+          
+              // Formatea la hora en un string
+              hourFromFormatted = `${formattedHours}:${formattedMinutes} ${period}`;
+            //console.log('hourFromFormatted: ',hourFromFormatted)
+            }
+          }
 
           let checkInTime = "No Data";
           if (employee.dateCheckin && employee.dateCheckin._seconds) {
@@ -276,6 +312,7 @@ implements OnInit
             hours: employee.hours,
             totalHours: totalHours,
             payRollId: payrollId,
+            hourFromFormatted: hourFromFormatted,
             hourFrom: hourFrom,
             in: checkInTime,
             out: checkOutTime,
@@ -296,7 +333,7 @@ implements OnInit
           return employee.highKeyId === Number(hkId); // Usar hkId en lugar de this.dataUser.highkeyId
           });
 
-      console.log('employeeArray: ', this.employeeArray);
+      //console.log('employeeArray: ', this.employeeArray);
         
         this.dataSource = new ExampleDataSource(
           this.exampleDatabase,
@@ -313,7 +350,7 @@ implements OnInit
         for (const item of this.employeeArray) {
           this.totalHoursArray.push(item.hours);
         }
-        console.log('Horas ARRAY: ', this.totalHoursArray)
+       // console.log('Horas ARRAY: ', this.totalHoursArray)
         
         //convirtiendo los valores de totalHoursArray a tipo number
         const numberArray = this.totalHoursArray.map((stringValue) => {
@@ -325,7 +362,7 @@ implements OnInit
           return accumulator + currentValue;
         }, 0);
         
-        console.log('Suma Total Horas: ', this.totalHoursSum);
+       // console.log('Suma Total Horas: ', this.totalHoursSum);
         
         
       })
@@ -363,7 +400,14 @@ implements OnInit
             in: 'No Data',
             out: 'No Data',
             totalHours:0,
-
+            checkinCoordinates:{
+              latitude: '-',
+              longitude: '-',
+            },
+            checkOutCoordinates:{
+              latitudeOut: '-',
+              longitudeOut: '-',
+            },
           };
         }
         return employee;
@@ -461,8 +505,9 @@ implements OnInit
       //console.log('TimeStamp: ', timestamp);
       const checkInTimestamp = timestamp?.seconds || 0;
       const  rounded = this.roundDate(result);
-    const timestampCheckinRounded= Timestamp.fromDate(new Date(rounded));
-    const dateCheckinRounded = timestampCheckinRounded?.seconds || 0;
+      const timestampCheckinRounded= Timestamp.fromDate(new Date(rounded));
+      const dateCheckinRounded = timestampCheckinRounded?.seconds || 0;
+      
 
       // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
       const updatedEmployees = this.employeesArray.map((employee) => {
@@ -497,6 +542,12 @@ implements OnInit
               _seconds: dateCheckinRounded,
               _nanoseconds: 0,
             },
+            checkinCoordinates: {
+              latitude: this.latitude,
+              longitude: this.longitude,
+            },
+            
+            
             // updateUser:this.dataUser.email
             // updateUser: [...updatedUser, this.dataUser.email],
             // updateUser: 
@@ -598,6 +649,7 @@ implements OnInit
       const rounded = this.roundDate(result);
       const timestampCheckoutRounded = Timestamp.fromDate(new Date(rounded));
       const dateCheckoutRounded = timestampCheckoutRounded?.seconds || 0;
+      
       // Filtrar y actualizar solo los empleados seleccionados con sus datos actualizados
       const updatedEmployees = this.employeesArray.map((employee) => {
         if (
@@ -624,11 +676,19 @@ implements OnInit
               _seconds: dateCheckoutRounded,
               _nanoseconds: 0,
             },
+            checkOutCoordinates:{
+              latitudeOut: this.latitude,
+              longitudeOut: this.longitude,
+            },
+            
+
             updateUser:this.dataUser.email,
             status: 'Checked Out',
             hours: roundedHours.toFixed(2),
             break: 0,
+
           };
+          
         }
         return employee;
       });

@@ -9,8 +9,9 @@ import {
   FormControl,
   FormGroup,
 } from '@angular/forms';
-import { CheckInAdminEmployeesModel } from './check-in-admin-employees.model';
+//import { CheckInAdminEmployeesModel } from './check-in-admin-employees.model';
 import { formatDate } from '@angular/common';
+import { GeolocationService } from 'app/_services/geolocation.service';
 
 export interface DialogData {
   id: number;
@@ -26,11 +27,13 @@ export class CheckInAdminEmployeesComponent implements OnInit{
   action: string;
   dialogTitle: string;
   checkInForm: UntypedFormGroup;
-  checkIn: CheckInAdminEmployeesModel;
+  //checkIn: CheckInAdminEmployeesModel;
   showDeleteBtn = false;
   fechaInicio: FormControl;
   public dataCheckIn!: any;
   inputDisabled = true;
+  latitud: number;
+  longitud: number;
   
   ngOnInit(): void {
     this.checkInForm.patchValue({
@@ -53,15 +56,16 @@ export class CheckInAdminEmployeesComponent implements OnInit{
   constructor(
     public dialogRef: MatDialogRef<CheckInAdminEmployeesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private fb: UntypedFormBuilder
+    private fb: UntypedFormBuilder,
+    private geolocationService: GeolocationService
   ) {
     this.action = data.action;
     if (this.action === 'edit') {
       this.showDeleteBtn = true;
     } else {
       this.dialogTitle = 'CheckIn date:';
-      const blankObject = {} as CheckInAdminEmployeesModel;
-      this.checkIn = new CheckInAdminEmployeesModel(blankObject);
+      //const blankObject = {} as CheckInAdminEmployeesModel;
+      //this.checkIn = new CheckInAdminEmployeesModel(blankObject);
       this.showDeleteBtn = false;
     }
     this.checkInForm = this.createContactForm();
@@ -92,7 +96,7 @@ export class CheckInAdminEmployeesComponent implements OnInit{
       //id: [this.checkIn.id],
       //title: [this.checkIn.title],
       //category: [this.checkIn.category],
-      startDate: [this.checkIn.startDate, [Validators.required]],
+      //startDate: [this.checkIn.startDate, [Validators.required]],
       //endDate: [this.checkIn.endDate],
       //details: [this.checkIn.details],
     });
@@ -113,5 +117,8 @@ export class CheckInAdminEmployeesComponent implements OnInit{
   public confirmAdd(): void {
     const startDate = this.fechaInicio.value;
     this.dialogRef.close(startDate);
+    
+    this.geolocationService.getCurrentLocation();
   }
+  
 }

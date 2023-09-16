@@ -12,6 +12,7 @@ import {
 import { formatDate } from '@angular/common';
 import { CheckOutAdminEmployeesModel } from './check-out-admin-employees.model';
 import { Employees } from 'app/admin/employees/allEmployees/employees.model';
+import { GeolocationService } from 'app/_services/geolocation.service';
 export interface DialogData {
   id: number;
   action: string;
@@ -47,7 +48,8 @@ export class CheckOutAdminEmployeesComponent implements OnInit{
     public dialogRef: MatDialogRef<CheckOutAdminEmployeesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     //public calendarService: CalendarService,
-    private fb: UntypedFormBuilder
+    private fb: UntypedFormBuilder,
+    private geolocationService: GeolocationService
   ) {
     // Set the defaults
     this.action = data.action;
@@ -101,5 +103,6 @@ export class CheckOutAdminEmployeesComponent implements OnInit{
   public confirmAdd(): void {
     const endDate = this.fechaSalida.value;
     this.dialogRef.close(endDate);
+    this.geolocationService.getCurrentLocation();
   }
 }

@@ -83,6 +83,21 @@ export class FormDialogComponent {
     Validators.required,
     // Validators.email,
   ]);
+
+  formatTimeTo12HourFormat(time: string): string {
+    const [hour, minute] = time.split(':').map(Number);
+    const period = hour < 12 ? 'AM' : 'PM';
+    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+    return `${formattedHour}:${minute < 10 ? '0' : ''}${minute} ${period}`;
+  }
+  formatHourForDisplay(key: any): string {
+    if (typeof key === 'string') {
+      return this.formatTimeTo12HourFormat(key);
+    }
+    // Si el tipo no es una cadena, puedes manejarlo de manera adecuada, por ejemplo, devolver un valor predeterminado.
+    return 'N/A';
+  }
+  
   getErrorMessage() {
     return this.formControl.hasError('required')
       ? 'Required field'
