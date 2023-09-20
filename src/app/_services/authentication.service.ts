@@ -12,6 +12,8 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/comp
 import { catchError } from 'rxjs/operators'; //Diego
 import { throwError } from 'rxjs'; //Diego
 
+//import { Auth } from "firebase/auth";
+
 
 
 @Injectable({
@@ -32,7 +34,7 @@ export class AuthenticationService {
   messageService: any; //Diego
   private data: any;
   public currentUserData: any; // Nueva variable para almacenar los datos del usuario
-
+  //private authentication: Auth;
 
 
   constructor(
@@ -55,6 +57,9 @@ export class AuthenticationService {
           sessionStorage.setItem('currentUser', '');
         }
       });
+
+      //const authen = new Auth();
+      //this.authentication = authen;
     }
     
     login(username: string, password: string ) {
@@ -123,9 +128,11 @@ export class AuthenticationService {
     }
 
   changePassword(email: string) {
+    console.log("e-mail:",email)
     this.auth.sendPasswordResetEmail(email).then((user) => {
       console.log('OK', 'You can recieve the instruction to reset password to ' + email)
-        // this.messageService.messageSuccess('OK', 'You can recieve the instruction to reset password to ' + email );
+      console.log('USER: ',user)  
+      // this.messageService.messageSuccess('OK', 'You can recieve the instruction to reset password to ' + email );
         return true;
       }).catch((error) => {
         console.log("Warning",error.message)
@@ -133,6 +140,7 @@ export class AuthenticationService {
     })
     return false;
 }
+
 
   logout() {
     this.auth.signOut().then(() => {

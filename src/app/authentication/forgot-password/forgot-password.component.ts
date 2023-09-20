@@ -5,6 +5,9 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+import { AuthenticationService } from 'app/_services/authentication.service';
+
+
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
@@ -17,7 +20,8 @@ export class ForgotPasswordComponent implements OnInit {
   constructor(
     private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private authenticationService: AuthenticationService,
   ) {}
   ngOnInit() {
     this.authForm = this.formBuilder.group({
@@ -32,13 +36,17 @@ export class ForgotPasswordComponent implements OnInit {
   get f() {
     return this.authForm.controls;
   }
+
   onSubmit() {
     this.submitted = true;
-    // stop here if form is invalid
     if (this.authForm.invalid) {
       return;
     } else {
-      this.router.navigate(['/dashboard/main']);
+      const email = this.authForm.value.email; // Obtener el correo electrónico del formulario
+      
+      console.log('EMAIL: ',email)
+
+      this.authenticationService.changePassword(email)
     }
   }
 }
