@@ -6,6 +6,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthenticationService } from 'app/_services/authentication.service';
+import { NotificationResetPassService } from 'app/_services/notification-reset-pass.service';
+//import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -21,7 +23,9 @@ export class ForgotPasswordComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
     private router: Router,
+    //private snackBar: MatSnackBar,
     private authenticationService: AuthenticationService,
+    private notificationResetPassService: NotificationResetPassService,
   ) {}
   ngOnInit() {
     this.authForm = this.formBuilder.group({
@@ -46,7 +50,18 @@ export class ForgotPasswordComponent implements OnInit {
       
       console.log('EMAIL: ',email)
 
-      this.authenticationService.changePassword(email)
+      //this.authenticationService.changePassword(email)
+      
+      this.authenticationService.changePassword(email).then((success) => {
+        if (success) {
+          this.notificationResetPassService.showSuccess(
+            `You can receive instructions to reset your password to ${email}`
+          );
+        } else {
+          this.notificationResetPassService.showError('An error occurred while changing the password.');
+        }
+      });
+      
     }
   }
 }

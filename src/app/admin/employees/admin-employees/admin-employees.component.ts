@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { EmployeesService } from '../allEmployees/employees.service';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
@@ -49,6 +49,7 @@ import { CheckInAdminEmployeesComponent } from './dialogs/check-in-admin-employe
 import { CheckOutAdminEmployeesComponent } from './dialogs/check-out-admin-employees/check-out-admin-employees.component';
 import { BreakAdminEmployeesComponent } from './dialogs/break-admin-employees/break-admin-employees.component';
 import { GeolocationService } from 'app/_services/geolocation.service';
+import { ShareScheduledTimeService } from 'app/_services/share-scheduled-time.service';
 //import { HeaderComponent } from '../../../layout/header/header.component';
 
 
@@ -101,6 +102,7 @@ implements OnInit
     //'date',
     //'actions',
   ];
+  
 
   exampleDatabase?: EmployeesService;
   selection = new SelectionModel<AdminEmployees>(true, []);
@@ -122,7 +124,7 @@ implements OnInit
   showCheckOutButton = false;
   showBreakButton = false;
   showNoShowButton = false;
-  public dataUser!: any; 
+  public dataUser!: any;
   groupEmployees = [];
   public timeSheet: any = {};
   public outEmployees = [];
@@ -143,6 +145,7 @@ implements OnInit
   HeaderComponent: any;
   latitude: number;
   longitude: number;
+  startDate: any;
   
 
   constructor(
@@ -154,6 +157,7 @@ implements OnInit
     private orderDataService: OrderDataService,
     public authenticationService: AuthenticationService,
     private geolocationService: GeolocationService,
+    private shareScheduledTimeService : ShareScheduledTimeService,
     //private checkInService: CheckInService,
     
     
@@ -165,10 +169,12 @@ implements OnInit
   //@Input() datosUsuario: any; // Trae los datos del usaurio desde el headerComponent
   
   ngOnInit() {
+    
     this.dataEmployees = this.orderDataService.getSelectedOrder();
     console.log('Data Order: ', this.dataEmployees);
     this.orderId = this.dataEmployees.id;
     this.exactHourPayment = this.dataEmployees.data.exactHourPayment;
+    this.startDate = this.dataEmployees.data.startDate;
     this.getEmployees();
     this.loadData();
     this.dataUser = this.authenticationService.getData(); //Persistencia de datos
@@ -183,18 +189,10 @@ implements OnInit
     }
 
     console.log('Datos traídos desde el header: ', this.dataUser)
-    
-    
+
     this.geolocationService.getCoordinatesObservable().subscribe((coordinates) => {
       this.latitude = coordinates.latitude;
-      this.longitude = coordinates.longitude;
-      
-      console.log('LATITUD en AdminEmployees:', this.latitude);
-      console.log('LONGITUD en AdminEmployees:', this.longitude);
-
-      //this.getEmployees();
-      // Haz lo que necesites con las coordenadas en este componente
-      
+      this.longitude = coordinates.longitude;      
     }, (error) => {
       console.error('Error al obtener la ubicación:', error);
     });
@@ -262,8 +260,6 @@ implements OnInit
           const payrollId = employeeData.payrollid || "No data";
           const brake = employee.break || "0";
           const hourFrom = employee.hourFrom || "No data";
-          //const uniform = employee.hourFrom || "No data";
-          //console.log('HORAS TRABAJADAS: ',totalHours)
           
           let hourFromFormatted = "No Data";
           if (employee.hourFrom) {
@@ -281,10 +277,15 @@ implements OnInit
           
               // Formatea la hora en un string
               hourFromFormatted = `${formattedHours}:${formattedMinutes} ${period}`;
-            //console.log('hourFromFormatted: ',hourFromFormatted)
             }
           }
-
+  
+          //envío del scheduleTime (hourFromFormatted) al servicio shareScheduledTimeService
+        
+          const dateStart = new Date(`${this.startDate}T${hourFrom}`);
+          
+          this.shareScheduledTimeService.shareHourFormatted(dateStart);
+          
           let checkInTime = "No Data";
           if (employee.dateCheckin && employee.dateCheckin._seconds) {
             const checkIn = employee.dateCheckin._seconds;
@@ -1104,12 +1105,14 @@ export class ExampleDataSource extends DataSource<AdminEmployees> {
     public exampleDatabase: EmployeesService,
     public paginator: MatPaginator,
     public _sort: MatSort,
-
     public employeesArray: any[]
   ) {
     super();
     // Reset to the first page when the user changes the filter.
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
+    // Establece la columna 'hourFrom' como la columna activa para el ordenamiento predeterminado.
+    this._sort.active = 'hourFrom';
+    this._sort.direction = 'asc'; // Orden ascendente
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
   connect(): Observable<AdminEmployees[]> {
@@ -1170,6 +1173,7 @@ export class ExampleDataSource extends DataSource<AdminEmployees> {
   disconnect() {
     // disconnect
   }
+  
   /** Returns a sorted copy of the database data. */
   sortData(data: AdminEmployees[]): AdminEmployees[] {
     if (!this._sort.active || this._sort.direction === '') {
@@ -1212,7 +1216,9 @@ export class ExampleDataSource extends DataSource<AdminEmployees> {
       return (
         (valueA < valueB ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1)
       );
+      
     });
+    
   }
 }
       

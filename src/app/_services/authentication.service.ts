@@ -12,7 +12,6 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/comp
 import { catchError } from 'rxjs/operators'; //Diego
 import { throwError } from 'rxjs'; //Diego
 
-//import { Auth } from "firebase/auth";
 
 
 
@@ -46,6 +45,7 @@ export class AuthenticationService {
       //private messageService: MessageService,
       private route: ActivatedRoute,
       // private notifSvc: NotificationsService,
+      
       ) {
       this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
       this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(sessionStorage.getItem('currentUser') || 'null'));
@@ -127,11 +127,22 @@ export class AuthenticationService {
       return this.currentUserData;
     }
 
+    changePassword(email: string): Promise<boolean> {
+      return new Promise((resolve, reject) => {
+        this.auth.sendPasswordResetEmail(email).then((user) => {
+          console.log('OK', 'You can receive the instruction to reset password to ' + email);
+          resolve(true);
+        }).catch((error) => {
+          console.log("Warning", error.message);
+          reject(false);
+        });
+      });
+    }
+/*
   changePassword(email: string) {
     console.log("e-mail:",email)
     this.auth.sendPasswordResetEmail(email).then((user) => {
       console.log('OK', 'You can recieve the instruction to reset password to ' + email)
-      console.log('USER: ',user)  
       // this.messageService.messageSuccess('OK', 'You can recieve the instruction to reset password to ' + email );
         return true;
       }).catch((error) => {
@@ -140,7 +151,7 @@ export class AuthenticationService {
     })
     return false;
 }
-
+*/
 
   logout() {
     this.auth.signOut().then(() => {
