@@ -12,6 +12,7 @@ import {
 //import { CheckInAdminEmployeesModel } from './check-in-admin-employees.model';
 import { formatDate } from '@angular/common';
 import { GeolocationService } from 'app/_services/geolocation.service';
+import { ShareScheduledTimeService } from 'app/_services/share-schedule-time.service';
 
 export interface DialogData {
   id: number;
@@ -34,16 +35,44 @@ export class CheckInAdminEmployeesComponent implements OnInit{
   inputDisabled = true;
   latitud: number;
   longitud: number;
+  shareHourFromFormatted: string;
+
   
   ngOnInit(): void {
+    const actualTime = new Date();
+
     this.checkInForm.patchValue({
       startDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
     });
+    
+    this.shareScheduledTimeService.hourFormatted$.subscribe((formattedHour) => {
+      this.shareHourFromFormatted = formattedHour;
+      console.log("shareHourFromFormatted (scheduleTime) in checkInAdminEmployees: ", this.shareHourFromFormatted)
+    
+      // Convertir shareHourFromFormatted (scheduleTime) a un objeto de fecha
+      const scheduleTime = new Date(formattedHour);
+  
+      // Calcular la diferencia en minutos
+      const timeDifferenceInMinutes = (scheduleTime.getTime() - actualTime.getTime()) / (1000 * 60);
+      console.log('Diferencia entre scheduleTime y la actualTime en mins: ',timeDifferenceInMinutes)
+
+      if (timeDifferenceInMinutes >= 20) {
+        console.log("La hora actual es menor o igual que el scheduleTime en 20 mins.");
+        console.log("scheduleTime:", formattedHour);
+        this.checkInForm.patchValue({ startDate: formattedHour });
+      } else {
+        console.log("La hora actual es mayor que el scheduleTime (comparando scheduleTime desde -20 mins).");
+        console.log("Hora actual:", actualTime);
+        console.log("Hora scheduleTime:", scheduleTime);
+      }
+    });
+    
     this.fechaInicio = new FormControl(new Date());
     this.checkInForm = new FormGroup({
     startDate: this.fechaInicio
     });
     //this.dataCheckIn = this.checkInService.setCheckIn();
+    
     
   }
 
@@ -57,7 +86,8 @@ export class CheckInAdminEmployeesComponent implements OnInit{
     public dialogRef: MatDialogRef<CheckInAdminEmployeesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private fb: UntypedFormBuilder,
-    private geolocationService: GeolocationService
+    private geolocationService: GeolocationService,
+    private shareScheduledTimeService : ShareScheduledTimeService
   ) {
     this.action = data.action;
     if (this.action === 'edit') {

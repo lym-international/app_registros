@@ -49,6 +49,7 @@ import { CheckInAdminEmployeesComponent } from './dialogs/check-in-admin-employe
 import { CheckOutAdminEmployeesComponent } from './dialogs/check-out-admin-employees/check-out-admin-employees.component';
 import { BreakAdminEmployeesComponent } from './dialogs/break-admin-employees/break-admin-employees.component';
 import { GeolocationService } from 'app/_services/geolocation.service';
+import { ShareScheduledTimeService } from 'app/_services/share-schedule-time.service';
 //import { HeaderComponent } from '../../../layout/header/header.component';
 
 
@@ -131,6 +132,7 @@ implements OnInit
   totalHoursArray: number[] = [];
   totalHoursSum: number;
   //geolocationService: any;
+  startDate: any;
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -155,6 +157,7 @@ implements OnInit
     public authenticationService: AuthenticationService,
     private geolocationService: GeolocationService,
     //private checkInService: CheckInService,
+    private shareScheduledTimeService : ShareScheduledTimeService
     
     
   ) {
@@ -169,6 +172,7 @@ implements OnInit
     console.log('Data Order: ', this.dataEmployees);
     this.orderId = this.dataEmployees.id;
     this.exactHourPayment = this.dataEmployees.data.exactHourPayment;
+    this.startDate = this.dataEmployees.data.startDate;
     this.getEmployees();
     this.loadData();
     this.dataUser = this.authenticationService.getData(); //Persistencia de datos
@@ -284,6 +288,9 @@ implements OnInit
             //console.log('hourFromFormatted: ',hourFromFormatted)
             }
           }
+          //envío del scheduleTime (hourFromFormatted) al servicio shareScheduledTimeService       
+          const dateStart = new Date(`${this.startDate}T${hourFrom}`);          
+          this.shareScheduledTimeService.shareHourFormatted(dateStart);
 
           let checkInTime = "No Data";
           if (employee.dateCheckin && employee.dateCheckin._seconds) {

@@ -134,10 +134,14 @@ export class AddExistingEmployeeComponent {
     }
   
     const endpointMap = {
-      highKeyId: `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeById/id?id=${inputValues.highKeyId}`,
-      payroll: `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeByPayroll/payroll?payroll=${inputValues.payroll}`,
-      firstName: `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeesByFN/firstName?firstName=${inputValues.firstName}`,
-      lastName: `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeesByLN/lastName?lastName=${inputValues.lastName}`,
+      highKeyId: `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeeById/id?id=${inputValues.highKeyId}`,
+      // `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeById/id?id=${inputValues.highKeyId}`,
+      payroll: `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeeByPayroll/payroll?payroll=${inputValues.payroll}`,
+      // `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeByPayroll/payroll?payroll=${inputValues.payroll}`,
+      firstName: `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeesByFN/firstName?firstName=${inputValues.firstName}`,
+      // `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeesByFN/firstName?firstName=${inputValues.firstName}`,
+      lastName: `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeesByLN/lastName?lastName=${inputValues.lastName}`,
+      // `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeesByLN/lastName?lastName=${inputValues.lastName}`,
     };
   
     fetch(endpointMap[searchType])
@@ -303,7 +307,7 @@ export class AddExistingEmployeeComponent {
     if (this.selectedPosition && this.selectedHour) {
       // Si hay una fila seleccionada, agrega la posición y la hora al objeto formData
       //this.formData = this.employeesForm.value;
-      
+     
       const newPositionName = this.selectedPosition;
       const objetoSeleccionado = this.formData.find(item => item.selected === true);
       // Ahora objetoSeleccionado contiene el objeto con selected: true
@@ -326,6 +330,7 @@ export class AddExistingEmployeeComponent {
       objetoSeleccionado.data.position = this.selectedPosition;
       objetoSeleccionado.data.hourFrom = this.selectedHour;
       objetoSeleccionado.data.rate = this.selectedRate;
+      objetoSeleccionado.data.id= objetoSeleccionado.id
       // Puedes imprimir el array actualizado para verificarlo
      //console.log('formData.positions:', objetoSeleccionado.data.position);
       console.log('Objeto Seleccionado=> ', objetoSeleccionado.data);
