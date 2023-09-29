@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { EmployeesService } from '../allEmployees/employees.service';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
@@ -49,7 +49,7 @@ import { CheckInAdminEmployeesComponent } from './dialogs/check-in-admin-employe
 import { CheckOutAdminEmployeesComponent } from './dialogs/check-out-admin-employees/check-out-admin-employees.component';
 import { BreakAdminEmployeesComponent } from './dialogs/break-admin-employees/break-admin-employees.component';
 import { GeolocationService } from 'app/_services/geolocation.service';
-import { ShareScheduledTimeService } from 'app/_services/share-schedule-time.service';
+import { ShareScheduledTimeService } from 'app/_services/share-scheduled-time.service';
 //import { HeaderComponent } from '../../../layout/header/header.component';
 
 
@@ -102,6 +102,7 @@ implements OnInit
     //'date',
     //'actions',
   ];
+  
 
   exampleDatabase?: EmployeesService;
   selection = new SelectionModel<AdminEmployees>(true, []);
@@ -123,7 +124,7 @@ implements OnInit
   showCheckOutButton = false;
   showBreakButton = false;
   showNoShowButton = false;
-  public dataUser!: any; 
+  public dataUser!: any;
   groupEmployees = [];
   public timeSheet: any = {};
   public outEmployees = [];
@@ -146,6 +147,7 @@ implements OnInit
   latitude: number;
   longitude: number;
   
+  
 
   constructor(
     private datePipe: DatePipe,
@@ -156,8 +158,8 @@ implements OnInit
     private orderDataService: OrderDataService,
     public authenticationService: AuthenticationService,
     private geolocationService: GeolocationService,
+    private shareScheduledTimeService : ShareScheduledTimeService,
     //private checkInService: CheckInService,
-    private shareScheduledTimeService : ShareScheduledTimeService
     
     
   ) {
@@ -168,6 +170,7 @@ implements OnInit
   //@Input() datosUsuario: any; // Trae los datos del usaurio desde el headerComponent
   
   ngOnInit() {
+    
     this.dataEmployees = this.orderDataService.getSelectedOrder();
     console.log('Data Order: ', this.dataEmployees);
     this.orderId = this.dataEmployees.id;
@@ -187,69 +190,21 @@ implements OnInit
     }
 
     console.log('Datos traídos desde el header: ', this.dataUser)
-    
-    
+
     this.geolocationService.getCoordinatesObservable().subscribe((coordinates) => {
       this.latitude = coordinates.latitude;
-      this.longitude = coordinates.longitude;
-      
-      console.log('LATITUD en AdminEmployees:', this.latitude);
-      console.log('LONGITUD en AdminEmployees:', this.longitude);
-
-      //this.getEmployees();
-      // Haz lo que necesites con las coordenadas en este componente
-      
+      this.longitude = coordinates.longitude;      
     }, (error) => {
       console.error('Error al obtener la ubicación:', error);
     });
   }
   
   // Función para controlar la visibilidad de los botones al hacer clic en el checkbox
-  onCheckboxClick(row: AdminEmployees) {
-    console.log('dateCheckin antes IF: ', row.dateCheckin) 
-    if ((row.dateCheckin === null || row.dateCheckin === undefined)&&(row.dateCheckout === null || row.dateCheckout === undefined)) {
-      console.log('dateCheckin', row.dateCheckin) 
-      this.showCheckInButton = true;
-      this.showCheckOutButton = false;
-      this.showBreakButton = false;
-      this.showNoShowButton = true;
-      //console.log('Si no hay checkIN: ')
-      //console.log('CheckIn button: ',this.showCheckInButton)
-      //console.log('NoShow button: ',this.showNoShowButton)
-      //console.log('CheckOut button: ',this.showCheckOutButton )
-      //console.log('---------------------------------')
-    }
-    else if((row.dateCheckin !== null || row.dateCheckin !== undefined)&&(row.dateCheckout === null || row.dateCheckout === undefined)) {
-      this.showCheckInButton = false;
-      this.showCheckOutButton = true;
-      this.showBreakButton = true;
-      this.showNoShowButton = false;
-      //console.log('Si hay checkIN y no hay checkOut: ')
-      //console.log('CheckOut button: ',this.showCheckOutButton )
-      //console.log('Break button: ',this.showBreakButton )
-      //console.log('---------------------------------')
-    }  
-    else if ((row.dateCheckout !== null || row.dateCheckout !== undefined)&&(row.break === null || row.break === undefined || row.break === "0")){
-      this.showCheckInButton = false;
-      this.showCheckOutButton = false;
-      this.showBreakButton = true;
-      this.showNoShowButton = false;
-      //console.log('Si hay checkIN y hay checkOut: ')
-      //console.log('Break button: ',this.showBreakButton )
-      //console.log('---------------------------------')
-    }
-    else {
-      this.showCheckInButton = false;
-      this.showCheckOutButton = false;
-      this.showBreakButton = false;
-      this.showNoShowButton = false;
-      //console.log('Si hay checkIN, checkOut y Break: Botones no visibles')
-      //console.log('---------------------------------')
-    }
-  }  
+  
   getEmployees() {
     //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`
-    fetch(`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
+    // fetch(`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
+    fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
       .then((response) => response.json())
       .then((data) => {
         this.isTblLoading = false;
@@ -266,8 +221,6 @@ implements OnInit
           const payrollId = employeeData.payrollid || "No data";
           const brake = employee.break || "0";
           const hourFrom = employee.hourFrom || "No data";
-          //const uniform = employee.hourFrom || "No data";
-          //console.log('HORAS TRABAJADAS: ',totalHours)
           
           let hourFromFormatted = "No Data";
           if (employee.hourFrom) {
@@ -285,13 +238,8 @@ implements OnInit
           
               // Formatea la hora en un string
               hourFromFormatted = `${formattedHours}:${formattedMinutes} ${period}`;
-            //console.log('hourFromFormatted: ',hourFromFormatted)
             }
-          }
-          //envío del scheduleTime (hourFromFormatted) al servicio shareScheduledTimeService       
-          const dateStart = new Date(`${this.startDate}T${hourFrom}`);          
-          this.shareScheduledTimeService.shareHourFormatted(dateStart);
-
+          }  
           let checkInTime = "No Data";
           if (employee.dateCheckin && employee.dateCheckin._seconds) {
             const checkIn = employee.dateCheckin._seconds;
@@ -379,6 +327,52 @@ implements OnInit
       });
   }
 
+  onCheckboxClick(row: AdminEmployees) {
+    // console.log('dateCheckin antes IF: ', row.dateCheckin) 
+    const dateStart = new Date(`${this.startDate}T${row.hourFrom}`);   
+    console.log("gdateStart", dateStart)       
+    this.shareScheduledTimeService.setScheduleDate(dateStart);
+    if ((row.dateCheckin === null || row.dateCheckin === undefined)&&(row.dateCheckout === null || row.dateCheckout === undefined)) {
+      console.log('dateCheckin', row.dateCheckin) 
+      this.showCheckInButton = true;
+      this.showCheckOutButton = false;
+      this.showBreakButton = false;
+      this.showNoShowButton = true;
+      //console.log('Si no hay checkIN: ')
+      //console.log('CheckIn button: ',this.showCheckInButton)
+      //console.log('NoShow button: ',this.showNoShowButton)
+      //console.log('CheckOut button: ',this.showCheckOutButton )
+      //console.log('---------------------------------')
+    }
+    else if((row.dateCheckin !== null || row.dateCheckin !== undefined)&&(row.dateCheckout === null || row.dateCheckout === undefined)) {
+      this.showCheckInButton = false;
+      this.showCheckOutButton = true;
+      this.showBreakButton = true;
+      this.showNoShowButton = false;
+      //console.log('Si hay checkIN y no hay checkOut: ')
+      //console.log('CheckOut button: ',this.showCheckOutButton )
+      //console.log('Break button: ',this.showBreakButton )
+      //console.log('---------------------------------')
+    }  
+    else if ((row.dateCheckout !== null || row.dateCheckout !== undefined)&&(row.break === null || row.break === undefined || row.break === "0")){
+      this.showCheckInButton = false;
+      this.showCheckOutButton = false;
+      this.showBreakButton = true;
+      this.showNoShowButton = false;
+      //console.log('Si hay checkIN y hay checkOut: ')
+      //console.log('Break button: ',this.showBreakButton )
+      //console.log('---------------------------------')
+    }
+    else {
+      this.showCheckInButton = false;
+      this.showCheckOutButton = false;
+      this.showBreakButton = false;
+      this.showNoShowButton = false;
+      //console.log('Si hay checkIN, checkOut y Break: Botones no visibles')
+      //console.log('---------------------------------')
+    }
+  } 
+
 //Borra checkIn, CheckOut y break.
   deleteInTime(selectedRows: AdminEmployees[]) {
     if (selectedRows.length > 0) {
@@ -422,7 +416,9 @@ implements OnInit
 
       console.log('updatedEmployees', updatedEmployees);
 
-      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      const apiUrl = 
+      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+       `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -519,16 +515,14 @@ implements OnInit
       // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
       const updatedEmployees = this.employeesArray.map((employee) => {
         
-        if (
-          selectedRows.some(
-            (row) =>
-            row.employee.data.employeeId === employee.employee.data.employeeId && 
+        if (selectedRows.some((row) =>row.employee.data.employeeId === employee.employee.data.employeeId && 
             row.hourFrom === employee.hourFrom,
             //console.log('row.employee.data: ',row.employee.data),
             //console.log('employee.employee.data',employee.hourFrom),
-            //console.log('HOURFROM: ', row)
+            
             )
             ) {
+              
               // Si updateUser es null o undefined, inicializarlo como un arreglo vacío
               // const updatedUser = [...(employee.updateUser || []), this.dataUser.email];
               // const emailAlreadyExists = updatedUser.includes(this.dataUser.email);
@@ -568,7 +562,9 @@ implements OnInit
   
       console.log("updatedEmployees: ", updatedEmployees);
   
-      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`//`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      const apiUrl = 
+      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
+      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -596,7 +592,7 @@ implements OnInit
     }
   }
 
-  roundDate(date: Date) {
+  roundDate1(date: Date) {
     let roundedDate = date;
     roundedDate.setSeconds(0, 0);
     let minutes = roundedDate.getMinutes();
@@ -616,6 +612,34 @@ implements OnInit
     roundedDate.setMinutes(sum);
     return roundedDate;
   }
+  roundDate(date: Date) {
+    // Verificar si 'date' es una instancia válida de Date
+    if (date instanceof Date && !isNaN(date.getTime())) {
+      let roundedDate = new Date(date); // Crear una copia de 'date'
+      roundedDate.setSeconds(0, 0);
+      let minutes = roundedDate.getMinutes();
+      let sum = 0;
+      roundedDate.setMinutes(0);
+      if (minutes >= 0 && minutes <= 7) {
+        sum = 0;
+      } else if (minutes >= 8 && minutes <= 22) {
+        sum = 15;
+      } else if (minutes >= 23 && minutes <= 37) {
+        sum = 30;
+      } else if (minutes >= 38 && minutes <= 52) {
+        sum = 45;
+      } else {
+        sum = 60;
+      }
+      roundedDate.setMinutes(sum);
+      return roundedDate;
+    } else {
+      // En caso de que 'date' no sea una instancia válida de Date, maneja el error aquí
+      // console.error('La variable "date" no es una instancia válida de Date.', date);
+      return null; // O devuelve un valor predeterminado o maneja el error de otra manera
+    }
+  }
+  
 
   roundHours(hour: number) {
     let decimal = hour - Math.floor(hour);
@@ -702,7 +726,9 @@ implements OnInit
 
       console.log('updatedEmployees', updatedEmployees);
 
-      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      const apiUrl =
+      //  `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+        `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -900,7 +926,9 @@ implements OnInit
 
       console.log('updatedEmployees', updatedEmployees);
   
-      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      const apiUrl = 
+      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+       `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -1111,12 +1139,14 @@ export class ExampleDataSource extends DataSource<AdminEmployees> {
     public exampleDatabase: EmployeesService,
     public paginator: MatPaginator,
     public _sort: MatSort,
-
     public employeesArray: any[]
   ) {
     super();
     // Reset to the first page when the user changes the filter.
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
+    // Establece la columna 'hourFrom' como la columna activa para el ordenamiento predeterminado.
+    this._sort.active = 'hourFrom';
+    this._sort.direction = 'asc'; // Orden ascendente
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
   connect(): Observable<AdminEmployees[]> {
@@ -1177,6 +1207,7 @@ export class ExampleDataSource extends DataSource<AdminEmployees> {
   disconnect() {
     // disconnect
   }
+  
   /** Returns a sorted copy of the database data. */
   sortData(data: AdminEmployees[]): AdminEmployees[] {
     if (!this._sort.active || this._sort.direction === '') {
@@ -1219,7 +1250,9 @@ export class ExampleDataSource extends DataSource<AdminEmployees> {
       return (
         (valueA < valueB ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1)
       );
+      
     });
+    
   }
 }
       

@@ -9,12 +9,7 @@ import {
 } from '@angular/forms';
 import { Role, AuthService } from '@core';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-
-//import { HttpClient, HttpHeaders } from '@angular/common/http'; //Diego
-
 import { AuthenticationService } from 'app/_services/authentication.service'; //Jairo
-//import { throwError } from 'rxjs'; //Diego
-//import { catchError } from 'rxjs'; //Diego
 
 @Component({
   selector: 'app-signin',
@@ -86,116 +81,6 @@ export class SigninComponent
     
       this.authenticationService.login(username, password); //jairo
       
-      //Diego inicio
-      /*this.authenticationService.login(username, password)
-      .pipe(
-        catchError((error) => {
-        this.error = error.message;
-        this.loading = false;
-        return throwError(error);
-        })
-      )
-      .subscribe(() => {
-        this.loading = false;
-      });*/
-      //Diego final
-      
-      // console.log("response", response)
-      /*this.authenticationService.login(username, password)
-      .then((response) => {
-        if(response){
-          this.router.navigate(['/admin/dashboard/main']);
-          alert("exito!")
-          this.loading = false;
-        }
-        // console.log("respuesta:", response);
-        // Realiza las acciones correspondientes cuando el inicio de sesión sea exitoso
-      })
-      .catch((error) => {
-        console.log("error:", error);
-        this.loading = false;
-        // Realiza las acciones correspondientes cuando haya un error en el inicio de sesión
-      });*/
-
-      /*
-      let formData = {
-        username: "", //username: "jairo@gmail.com",
-        password: "" // password: "jairo123"
-      };
-      
-      fetch(`https://us-central1-highkeystaff.cloudfunctions.net/auth/login`, {
-        method: 'POST',
-        body: JSON.stringify(formData),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-        })
-        .catch(error => console.error(error));
-
-        */
-       //this.subs.sink = this.authService //
-
-       /* .login(this.authForm.get('username')?.value, this.authForm.get('password')?.value)
-        .subscribe(
-          (res) => {
-            if (res) {
-              setTimeout(() => {
-                const role = this.authService.currentUserValue.role;
-                if (role === Role.All || role === Role.Admin) {
-                  this.router.navigate(['/admin/search-order']);
-                } else if (role === Role.Employee) {
-                  this.router.navigate(['/employee/dashboard']);
-                } else if (role === Role.Client) {
-                  this.router.navigate(['/client/dashboard']);
-                } else {
-                  this.router.navigate(['/authentication/signin']);
-                }
-                this.loading = false;
-              }, 1000);
-            } else {
-              this.error = 'Invalid Login';
-            }
-          },
-          (error) => {
-            this.error = error;
-            this.submitted = false;
-            this.loading = false;
-          }
-        ); */
-        
-      //Este código es de la plantilla
-      /* this.subs.sink = this.authService
-        .login(this.f['username'].value, this.f['password'].value)
-        .subscribe(
-          (res) => {
-            if (res) {
-              setTimeout(() => {
-                const role = this.authService.currentUserValue.role;
-                if (role === Role.All || role === Role.Admin) {
-                  this.router.navigate(['/admin/dashboard/main']);
-                } else if (role === Role.Employee) {
-                  this.router.navigate(['/employee/dashboard']);
-                } else if (role === Role.Client) {
-                  this.router.navigate(['/client/dashboard']);
-                } else {
-                  this.router.navigate(['/authentication/signin']);
-                }
-                this.loading = false;
-              }, 1000);
-            } else {
-              this.error = 'Invalid Login';
-            }
-          },
-          (error) => {
-            this.error = error;
-            this.submitted = false;
-            this.loading = false;
-          }
-        );*/
     } 
   }
 }

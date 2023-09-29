@@ -184,7 +184,7 @@ export class SearchOrderComponent{
 
     this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
       this.ordenes = ordenes;
-     console.log('Ordenes desde el getSearchOrders ADMIN: ', this.ordenes )
+    //  console.log('Ordenes desde el getSearchOrders ADMIN: ', this.ordenes )
     });
   }
   

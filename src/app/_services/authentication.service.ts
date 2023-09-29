@@ -14,6 +14,7 @@ import { throwError } from 'rxjs'; //Diego
 
 
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -32,7 +33,7 @@ export class AuthenticationService {
   messageService: any; //Diego
   private data: any;
   public currentUserData: any; // Nueva variable para almacenar los datos del usuario
-
+  //private authentication: Auth;
 
 
   constructor(
@@ -44,6 +45,7 @@ export class AuthenticationService {
       //private messageService: MessageService,
       private route: ActivatedRoute,
       // private notifSvc: NotificationsService,
+      
       ) {
       this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
       this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(sessionStorage.getItem('currentUser') || 'null'));
@@ -55,6 +57,9 @@ export class AuthenticationService {
           sessionStorage.setItem('currentUser', '');
         }
       });
+
+      //const authen = new Auth();
+      //this.authentication = authen;
     }
     
     login(username: string, password: string ) {
@@ -122,10 +127,23 @@ export class AuthenticationService {
       return this.currentUserData;
     }
 
+    changePassword(email: string): Promise<boolean> {
+      return new Promise((resolve, reject) => {
+        this.auth.sendPasswordResetEmail(email).then((user) => {
+          console.log('OK', 'You can receive the instruction to reset password to ' + email);
+          resolve(true);
+        }).catch((error) => {
+          console.log("Warning", error.message);
+          reject(false);
+        });
+      });
+    }
+/*
   changePassword(email: string) {
+    console.log("e-mail:",email)
     this.auth.sendPasswordResetEmail(email).then((user) => {
       console.log('OK', 'You can recieve the instruction to reset password to ' + email)
-        // this.messageService.messageSuccess('OK', 'You can recieve the instruction to reset password to ' + email );
+      // this.messageService.messageSuccess('OK', 'You can recieve the instruction to reset password to ' + email );
         return true;
       }).catch((error) => {
         console.log("Warning",error.message)
@@ -133,6 +151,7 @@ export class AuthenticationService {
     })
     return false;
 }
+*/
 
   logout() {
     this.auth.signOut().then(() => {
