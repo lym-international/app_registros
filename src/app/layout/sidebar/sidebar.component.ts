@@ -35,7 +35,7 @@ export class SidebarComponent implements OnInit {
   headerHeight = 60;
   currentRoute?: string;
   routerObj;
-  mostrarMenu: boolean = true;
+  mostrarMenu: boolean;
   dataOrder: any;
   orderId: any;
 
@@ -136,7 +136,9 @@ export class SidebarComponent implements OnInit {
 
   closeOrder(){
     
-    const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
+    const apiUrl =
+     `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
+    //  `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
     fetch(apiUrl, {
       method: 'PUT'
     })
@@ -146,7 +148,7 @@ export class SidebarComponent implements OnInit {
         this.orderDataService.setSelectedOrder(data);
         
         // Forzar la recarga de la página actual (para actualizar la página de allEmployees y que no se vean los botones)
-        window.location.reload();
+        // window.location.reload();
       })
       .catch((error) => {
         console.error('Error al actualizar:', error);

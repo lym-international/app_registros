@@ -36,8 +36,8 @@ export class CheckInAdminEmployeesComponent implements OnInit{
   inputDisabled = true;
   latitud: number;
   longitud: number;
-  shareHourFromFormatted: string = "No Data";
-  dateStart: Date;
+  shareHourFromFormatted: string;
+  dateStart:Date;
   
   ngOnInit(): void {
     const actualTime = new Date();
@@ -55,6 +55,7 @@ export class CheckInAdminEmployeesComponent implements OnInit{
     
     this.shareTimeDifferenceInMinutesService.setTimeDifference(timeDifferenceInMinutes);
     
+      
       if (timeDifferenceInMinutes >= 20) {
         console.log("La hora actual es menor o igual que el scheduleTime en 20 mins.");
         console.log("scheduleTime:", scheduleTime);

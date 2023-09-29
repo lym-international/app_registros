@@ -133,6 +133,7 @@ implements OnInit
   totalHoursArray: number[] = [];
   totalHoursSum: number;
   //geolocationService: any;
+  startDate: any;
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -145,7 +146,7 @@ implements OnInit
   HeaderComponent: any;
   latitude: number;
   longitude: number;
-  startDate: any;
+  
   
 
   constructor(
@@ -200,9 +201,11 @@ implements OnInit
   
   // Función para controlar la visibilidad de los botones al hacer clic en el checkbox
    
+  
   getEmployees() {
     //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`
     fetch(`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
+    // fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
       .then((response) => response.json())
       .then((data) => {
         this.isTblLoading = false;
@@ -237,14 +240,7 @@ implements OnInit
               // Formatea la hora en un string
               hourFromFormatted = `${formattedHours}:${formattedMinutes} ${period}`;
             }
-          }
-  
-          //envío del scheduleTime (hourFromFormatted) al servicio shareScheduledTimeService
-        
-          //const dateStart = new Date(`${this.startDate}T${hourFrom}`);
-          
-          //this.shareScheduledTimeService.shareHourFormatted(dateStart);
-          
+          }  
           let checkInTime = "No Data";
           if (employee.dateCheckin && employee.dateCheckin._seconds) {
             const checkIn = employee.dateCheckin._seconds;
@@ -333,7 +329,8 @@ implements OnInit
   }
 
   onCheckboxClick(row: AdminEmployees) {
-    console.log('dateCheckin antes IF: ', row.dateCheckin) 
+    
+    // console.log('dateCheckin antes IF: ', row.dateCheckin) 
     const dateStart = new Date(`${this.startDate}T${row.hourFrom}`);   
     console.log("gdateStart", dateStart)       
     this.shareScheduledTimeService.setScheduleDate(dateStart);
@@ -421,7 +418,9 @@ implements OnInit
 
       console.log('updatedEmployees', updatedEmployees);
 
-      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      const apiUrl = 
+      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      //  `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -518,16 +517,14 @@ implements OnInit
       // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
       const updatedEmployees = this.employeesArray.map((employee) => {
         
-        if (
-          selectedRows.some(
-            (row) =>
-            row.employee.data.employeeId === employee.employee.data.employeeId && 
+        if (selectedRows.some((row) =>row.employee.data.employeeId === employee.employee.data.employeeId && 
             row.hourFrom === employee.hourFrom,
             //console.log('row.employee.data: ',row.employee.data),
             //console.log('employee.employee.data',employee.hourFrom),
-            //console.log('HOURFROM: ', row)
+            
             )
             ) {
+              
               // Si updateUser es null o undefined, inicializarlo como un arreglo vacío
               // const updatedUser = [...(employee.updateUser || []), this.dataUser.email];
               // const emailAlreadyExists = updatedUser.includes(this.dataUser.email);
@@ -567,7 +564,9 @@ implements OnInit
   
       console.log("updatedEmployees: ", updatedEmployees);
   
-      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`//`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      const apiUrl = 
+      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
+      // `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -595,6 +594,26 @@ implements OnInit
     }
   }
 
+  roundDate1(date: Date) {
+    let roundedDate = date;
+    roundedDate.setSeconds(0, 0);
+    let minutes = roundedDate.getMinutes();
+    let sum = 0;
+    roundedDate.setMinutes(0);
+    if (minutes >= 0 && minutes <= 7) {
+      sum = 0;
+    } else if (minutes >= 8 && minutes <= 22) {
+      sum = 15;
+    } else if (minutes >= 23 && minutes <= 37) {
+      sum = 30;
+    } else if (minutes >= 38 && minutes <= 52) {
+      sum = 45;
+    } else {
+      // En caso de que 'date' no sea una instancia válida de Date, maneja el error aquí
+      // console.error('La variable "date" no es una instancia válida de Date.', date);
+      return null; // O devuelve un valor predeterminado o maneja el error de otra manera
+    }
+  }
   roundDate(date: Date) {
     // Verificar si 'date' es una instancia válida de Date
     if (date instanceof Date && !isNaN(date.getTime())) {
@@ -622,6 +641,7 @@ implements OnInit
       return null; // O devuelve un valor predeterminado o maneja el error de otra manera
     }
   }
+  
 
   roundHours(hour: number) {
     let decimal = hour - Math.floor(hour);
@@ -708,7 +728,9 @@ implements OnInit
 
       console.log('updatedEmployees', updatedEmployees);
 
-      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      const apiUrl =
+       `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+        // `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -906,7 +928,9 @@ implements OnInit
 
       console.log('updatedEmployees', updatedEmployees);
   
-      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      const apiUrl = 
+      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      //  `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {

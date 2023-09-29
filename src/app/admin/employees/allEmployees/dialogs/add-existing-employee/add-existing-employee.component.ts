@@ -134,10 +134,18 @@ export class AddExistingEmployeeComponent {
     }
   
     const endpointMap = {
-      highKeyId: `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeById/id?id=${inputValues.highKeyId}`,
-      payroll: `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeByPayroll/payroll?payroll=${inputValues.payroll}`,
-      firstName: `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeesByFN/firstName?firstName=${inputValues.firstName}`,
-      lastName: `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeesByLN/lastName?lastName=${inputValues.lastName}`,
+      highKeyId:
+      `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeById/id?id=${inputValues.highKeyId}`,
+      //  `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeeById/id?id=${inputValues.highKeyId}`,
+      payroll: 
+      `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeByPayroll/payroll?payroll=${inputValues.payroll}`,
+      // `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeeByPayroll/payroll?payroll=${inputValues.payroll}`,
+      firstName: 
+      `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeesByFN/firstName?firstName=${inputValues.firstName}`,
+      // `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeesByFN/firstName?firstName=${inputValues.firstName}`,
+      lastName:
+      `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeesByLN/lastName?lastName=${inputValues.lastName}`,
+      //  `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeesByLN/lastName?lastName=${inputValues.lastName}`,
     };
   
     fetch(endpointMap[searchType])
@@ -146,12 +154,14 @@ export class AddExistingEmployeeComponent {
         console.log(`Data desde el searchBy() en ${searchType}:`, data);
         if (data.message === undefined) {
           if (searchType === 'highKeyId') {
+          console.log("dataq", [data])
             this.formData = [data];
           } else {
             const employees = data.map((emp) => {
               console.log('EMP: ', emp);
               return emp;
             });
+            console.log("employessq", employees)
             this.formData = employees;
           }
           //this.formData = this.formData.map((item) => ({ data: item, selected: false }));
@@ -301,7 +311,7 @@ export class AddExistingEmployeeComponent {
     if (this.selectedPosition && this.selectedHour) {
       // Si hay una fila seleccionada, agrega la posición y la hora al objeto formData
       //this.formData = this.employeesForm.value;
-      
+     
       const newPositionName = this.selectedPosition;
       const objetoSeleccionado = this.formData.find(item => item.selected === true);
       // Ahora objetoSeleccionado contiene el objeto con selected: true
@@ -324,10 +334,11 @@ export class AddExistingEmployeeComponent {
       objetoSeleccionado.data.position = this.selectedPosition;
       objetoSeleccionado.data.hourFrom = this.selectedHour;
       objetoSeleccionado.data.rate = this.selectedRate;
+      objetoSeleccionado.data.id= objetoSeleccionado.id
       // Puedes imprimir el array actualizado para verificarlo
      //console.log('formData.positions:', objetoSeleccionado.data.position);
-      console.log('Objeto Seleccionado=> ', objetoSeleccionado);
-      this.dialogRef.close(objetoSeleccionado);
+      console.log('Objeto Seleccionado=> ', objetoSeleccionado.data);
+      this.dialogRef.close(objetoSeleccionado.data);
     } else {
       // Si no hay fila seleccionada, muestra un mensaje de error o toma la acción apropiada
       console.log('No se ha seleccionado ninguna fila');
