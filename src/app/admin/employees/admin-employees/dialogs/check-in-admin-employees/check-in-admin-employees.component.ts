@@ -13,6 +13,7 @@ import {
 import { formatDate } from '@angular/common';
 import { GeolocationService } from 'app/_services/geolocation.service';
 import { ShareScheduledTimeService } from 'app/_services/share-scheduled-time.service';
+import { ShareTimeDifferenceInMinutesService } from 'app/_services/share-time-difference-in-minutes.service';
 
 export interface DialogData {
   id: number;
@@ -36,6 +37,7 @@ export class CheckInAdminEmployeesComponent implements OnInit{
   latitud: number;
   longitud: number;
   shareHourFromFormatted: string = "No Data";
+  dateStart: Date;
   
   ngOnInit(): void {
     const actualTime = new Date();
@@ -44,34 +46,41 @@ export class CheckInAdminEmployeesComponent implements OnInit{
       startDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
     });
     
-    this.shareScheduledTimeService.hourFormatted$.subscribe((formattedHour) => {
-      this.shareHourFromFormatted = formattedHour;
-      console.log("shareHourFromFormatted (scheduleTime) in checkInAdminEmployees: ", this.shareHourFromFormatted)
+    this.dateStart = this.shareScheduledTimeService.getScheduleDate();
+    const scheduleTime = new Date(this.dateStart);
+    console.log("scheduleTime", scheduleTime)
+    console.log("actualTime", actualTime)
+    const timeDifferenceInMinutes = (scheduleTime.getTime() - actualTime.getTime()) / (1000 * 60);
+    console.log('Diferencia entre scheduleTime y la actualTime en mins: ',timeDifferenceInMinutes)
     
-      // Convertir shareHourFromFormatted (scheduleTime) a un objeto de fecha
-      const scheduleTime = new Date(formattedHour);
-  
-      // Calcular la diferencia en minutos
-      const timeDifferenceInMinutes = (scheduleTime.getTime() - actualTime.getTime()) / (1000 * 60);
-      console.log('Diferencia entre scheduleTime y la actualTime en mins: ',timeDifferenceInMinutes)
-
+    this.shareTimeDifferenceInMinutesService.setTimeDifference(timeDifferenceInMinutes);
+    
       if (timeDifferenceInMinutes >= 20) {
         console.log("La hora actual es menor o igual que el scheduleTime en 20 mins.");
-        console.log("scheduleTime:", formattedHour);
-        this.checkInForm.patchValue({ startDate: formattedHour });
+        console.log("scheduleTime:", scheduleTime);
+        // this.checkInForm.patchValue({ startDate: scheduleTime.getTime() });
+
+      this.fechaInicio = new FormControl(scheduleTime);
+      this.checkInForm = new FormGroup({
+      startDate: this.fechaInicio
+      });
+        
       } else {
         console.log("La hora actual es mayor que el scheduleTime (comparando scheduleTime desde -20 mins).");
         console.log("Hora actual:", actualTime);
+        this.fechaInicio = new FormControl(new Date());
+        this.checkInForm = new FormGroup({
+        startDate: this.fechaInicio
+        });
+      }
+
+
+    this.shareScheduledTimeService.getScheduleDateObservable().subscribe((selectedDate) => {
+      console.log('Activa el subscribe en  checkinEmployee')
+      if (selectedDate) {
+        console.log("selectedDate", selectedDate) 
       }
     });
-    
-    this.fechaInicio = new FormControl(new Date());
-    this.checkInForm = new FormGroup({
-    startDate: this.fechaInicio
-    });
-    //this.dataCheckIn = this.checkInService.setCheckIn();
-    
-    
   }
 
   constructor(
@@ -80,6 +89,7 @@ export class CheckInAdminEmployeesComponent implements OnInit{
     private fb: UntypedFormBuilder,
     private geolocationService: GeolocationService,
     private shareScheduledTimeService : ShareScheduledTimeService,
+    private shareTimeDifferenceInMinutesService: ShareTimeDifferenceInMinutesService,
   ) {
     this.action = data.action;
     if (this.action === 'edit') {

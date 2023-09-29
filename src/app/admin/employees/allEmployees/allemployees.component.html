@@ -248,12 +248,17 @@
                                     <!--(contextmenu)="onContextMenu($event, row)"-->
                                 </ng-container>
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                
-                                
-                                <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'" matRipple [ngStyle]="{'background-color': row.empExactHours ? '#FCF3CF' : ''}" >
-                                    <!--(click)="editCall(row)"-->                     
+
+
+                                <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'" matRipple [ngStyle]="{'background-color': row.empExactHours ? '#FCF3CF' : ''}">
+                                    <!--(click)="editCall(row)"-->
                                 </mat-row>
-                                
+                                <!--
+                                <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'" matRipple [ngClass]="getCssClasses(row)">
+                                </mat-row>
+                                -->
+
+
 
                             </table>
                             <!-- Loading spinner -->

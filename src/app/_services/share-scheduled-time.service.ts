@@ -1,16 +1,32 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShareScheduledTimeService {
+ 
+  private startDateSubject = new Subject<any>()
+  private storageKey = 'scheduleTime';
 
-  private hourFormattedSubject = new BehaviorSubject<any>('No Data');
-  hourFormatted$ = this.hourFormattedSubject.asObservable();
-
-  shareHourFormatted(hourFormatted: Date) {
-    this.hourFormattedSubject.next(hourFormatted);
-    //console.log('scheduleTime en el servicio: ', this.hourFormattedSubject)
+  setScheduleDate(scheduleDate: Date) {
+    localStorage.setItem(this.storageKey, scheduleDate.toString()); // Almacena la fecha como cadena directamente
+    this.startDateSubject.next(scheduleDate);
+    // console.log("llamando al servicio", scheduleDate.toString());
+  }
+  
+  getScheduleDate(): Date | null {
+    const scheduleDateStr = localStorage.getItem(this.storageKey);
+    if (scheduleDateStr) {
+      const scheduleDate = new Date(scheduleDateStr);
+      // console.log("scheduleDate en servicio", scheduleDate);
+      return scheduleDate;
+    } else {
+      return null;
+    }
+  }
+  
+  getScheduleDateObservable(): Observable<any> {
+    return this.startDateSubject.asObservable();
   }
 }

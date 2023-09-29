@@ -33,6 +33,7 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 import { ActivatedRoute } from '@angular/router';
 import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
 import { ShareStartDateService } from '../../../_services/share-start-date.service';
+import { ShareTimeDifferenceInMinutesService } from 'app/_services/share-time-difference-in-minutes.service';
 
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -119,7 +120,8 @@ export class AllemployeesComponent
     //private checkInService: CheckInService,
     private route: ActivatedRoute,
     private sharingCloseOrderService: SharingCloseOrderService,
-    private shareStartDateService: ShareStartDateService
+    private shareStartDateService: ShareStartDateService,
+    private shareTimeDifferenceInMinutesService: ShareTimeDifferenceInMinutesService,
   ) {
     super();
     // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
@@ -142,7 +144,6 @@ export class AllemployeesComponent
     this.startDate = this.dataEmployees.data.startDate;
 
     console.log('Data StatusOrder: ', this.statusOrder);
-    
     
     this.exactHourPayment = this.dataEmployees.data.exactHourPayment;
     this.getEmployees();
@@ -171,11 +172,25 @@ export class AllemployeesComponent
     if(this.statusOrder === 'closed'){
       this.ShowButtons = false
      }
-
+  
+    //this.getTimeDifference()
     
   }
   
+  getTimeDifference() {
+    return this.shareTimeDifferenceInMinutesService.getTimeDifference();
+  }
+  /*
+  getCssClasses(row) {
+    const timeDifference = this.getTimeDifference(row);
+    return {
+      'highlighted-row': timeDifference < 20,
+      'normal-row': timeDifference >= 20,
+    };
+  }
+  */
   
+
   // Función para verificar la visibilidad de los botones al hacer clic en el checkbox
   onCheckboxClick(row: Employees) {
     // console.log('dateCheckin antes IF: ', row.dateCheckin) 

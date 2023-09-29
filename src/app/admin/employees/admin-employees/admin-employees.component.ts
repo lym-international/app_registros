@@ -199,48 +199,7 @@ implements OnInit
   }
   
   // Función para controlar la visibilidad de los botones al hacer clic en el checkbox
-  onCheckboxClick(row: AdminEmployees) {
-    console.log('dateCheckin antes IF: ', row.dateCheckin) 
-    if ((row.dateCheckin === null || row.dateCheckin === undefined)&&(row.dateCheckout === null || row.dateCheckout === undefined)) {
-      console.log('dateCheckin', row.dateCheckin) 
-      this.showCheckInButton = true;
-      this.showCheckOutButton = false;
-      this.showBreakButton = false;
-      this.showNoShowButton = true;
-      //console.log('Si no hay checkIN: ')
-      //console.log('CheckIn button: ',this.showCheckInButton)
-      //console.log('NoShow button: ',this.showNoShowButton)
-      //console.log('CheckOut button: ',this.showCheckOutButton )
-      //console.log('---------------------------------')
-    }
-    else if((row.dateCheckin !== null || row.dateCheckin !== undefined)&&(row.dateCheckout === null || row.dateCheckout === undefined)) {
-      this.showCheckInButton = false;
-      this.showCheckOutButton = true;
-      this.showBreakButton = true;
-      this.showNoShowButton = false;
-      //console.log('Si hay checkIN y no hay checkOut: ')
-      //console.log('CheckOut button: ',this.showCheckOutButton )
-      //console.log('Break button: ',this.showBreakButton )
-      //console.log('---------------------------------')
-    }  
-    else if ((row.dateCheckout !== null || row.dateCheckout !== undefined)&&(row.break === null || row.break === undefined || row.break === "0")){
-      this.showCheckInButton = false;
-      this.showCheckOutButton = false;
-      this.showBreakButton = true;
-      this.showNoShowButton = false;
-      //console.log('Si hay checkIN y hay checkOut: ')
-      //console.log('Break button: ',this.showBreakButton )
-      //console.log('---------------------------------')
-    }
-    else {
-      this.showCheckInButton = false;
-      this.showCheckOutButton = false;
-      this.showBreakButton = false;
-      this.showNoShowButton = false;
-      //console.log('Si hay checkIN, checkOut y Break: Botones no visibles')
-      //console.log('---------------------------------')
-    }
-  }  
+   
   getEmployees() {
     //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`
     fetch(`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
@@ -282,9 +241,9 @@ implements OnInit
   
           //envío del scheduleTime (hourFromFormatted) al servicio shareScheduledTimeService
         
-          const dateStart = new Date(`${this.startDate}T${hourFrom}`);
+          //const dateStart = new Date(`${this.startDate}T${hourFrom}`);
           
-          this.shareScheduledTimeService.shareHourFormatted(dateStart);
+          //this.shareScheduledTimeService.shareHourFormatted(dateStart);
           
           let checkInTime = "No Data";
           if (employee.dateCheckin && employee.dateCheckin._seconds) {
@@ -372,6 +331,52 @@ implements OnInit
         this.isTblLoading = false;
       });
   }
+
+  onCheckboxClick(row: AdminEmployees) {
+    console.log('dateCheckin antes IF: ', row.dateCheckin) 
+    const dateStart = new Date(`${this.startDate}T${row.hourFrom}`);   
+    console.log("gdateStart", dateStart)       
+    this.shareScheduledTimeService.setScheduleDate(dateStart);
+    if ((row.dateCheckin === null || row.dateCheckin === undefined)&&(row.dateCheckout === null || row.dateCheckout === undefined)) {
+      console.log('dateCheckin', row.dateCheckin) 
+      this.showCheckInButton = true;
+      this.showCheckOutButton = false;
+      this.showBreakButton = false;
+      this.showNoShowButton = true;
+      //console.log('Si no hay checkIN: ')
+      //console.log('CheckIn button: ',this.showCheckInButton)
+      //console.log('NoShow button: ',this.showNoShowButton)
+      //console.log('CheckOut button: ',this.showCheckOutButton )
+      //console.log('---------------------------------')
+    }
+    else if((row.dateCheckin !== null || row.dateCheckin !== undefined)&&(row.dateCheckout === null || row.dateCheckout === undefined)) {
+      this.showCheckInButton = false;
+      this.showCheckOutButton = true;
+      this.showBreakButton = true;
+      this.showNoShowButton = false;
+      //console.log('Si hay checkIN y no hay checkOut: ')
+      //console.log('CheckOut button: ',this.showCheckOutButton )
+      //console.log('Break button: ',this.showBreakButton )
+      //console.log('---------------------------------')
+    }  
+    else if ((row.dateCheckout !== null || row.dateCheckout !== undefined)&&(row.break === null || row.break === undefined || row.break === "0")){
+      this.showCheckInButton = false;
+      this.showCheckOutButton = false;
+      this.showBreakButton = true;
+      this.showNoShowButton = false;
+      //console.log('Si hay checkIN y hay checkOut: ')
+      //console.log('Break button: ',this.showBreakButton )
+      //console.log('---------------------------------')
+    }
+    else {
+      this.showCheckInButton = false;
+      this.showCheckOutButton = false;
+      this.showBreakButton = false;
+      this.showNoShowButton = false;
+      //console.log('Si hay checkIN, checkOut y Break: Botones no visibles')
+      //console.log('---------------------------------')
+    }
+  } 
 
 //Borra checkIn, CheckOut y break.
   deleteInTime(selectedRows: AdminEmployees[]) {
@@ -591,24 +596,31 @@ implements OnInit
   }
 
   roundDate(date: Date) {
-    let roundedDate = date;
-    roundedDate.setSeconds(0, 0);
-    let minutes = roundedDate.getMinutes();
-    let sum = 0;
-    roundedDate.setMinutes(0);
-    if (minutes >= 0 && minutes <= 7) {
-      sum = 0;
-    } else if (minutes >= 8 && minutes <= 22) {
-      sum = 15;
-    } else if (minutes >= 23 && minutes <= 37) {
-      sum = 30;
-    } else if (minutes >= 38 && minutes <= 52) {
-      sum = 45;
+    // Verificar si 'date' es una instancia válida de Date
+    if (date instanceof Date && !isNaN(date.getTime())) {
+      let roundedDate = new Date(date); // Crear una copia de 'date'
+      roundedDate.setSeconds(0, 0);
+      let minutes = roundedDate.getMinutes();
+      let sum = 0;
+      roundedDate.setMinutes(0);
+      if (minutes >= 0 && minutes <= 7) {
+        sum = 0;
+      } else if (minutes >= 8 && minutes <= 22) {
+        sum = 15;
+      } else if (minutes >= 23 && minutes <= 37) {
+        sum = 30;
+      } else if (minutes >= 38 && minutes <= 52) {
+        sum = 45;
+      } else {
+        sum = 60;
+      }
+      roundedDate.setMinutes(sum);
+      return roundedDate;
     } else {
-      sum = 60;
+      // En caso de que 'date' no sea una instancia válida de Date, maneja el error aquí
+      // console.error('La variable "date" no es una instancia válida de Date.', date);
+      return null; // O devuelve un valor predeterminado o maneja el error de otra manera
     }
-    roundedDate.setMinutes(sum);
-    return roundedDate;
   }
 
   roundHours(hour: number) {

@@ -71,6 +71,22 @@
     padding: 20px;
 }
 
+
+/* Clase para fila normal */
+
+.normal-row {
+    background-color: transparent;
+    /* Color por defecto */
+}
+
+
+/* Clase para fila resaltada */
+
+.highlighted-row {
+    background-color: yellow;
+    /* Color que deseas aplicar cuando timeDifferenceInMinutes < 20 */
+}
+
 @media screen and (min-width: 600px) {
     .container {
         //grid-template-columns: 1fr 1fr;
@@ -86,7 +102,7 @@
 .column-check {
     text-align: center;
 }
+
 .text-red {
     color: red !important;
-  }
-  
+}
