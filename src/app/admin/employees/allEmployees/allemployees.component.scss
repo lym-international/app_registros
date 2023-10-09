@@ -87,6 +87,37 @@
     /* Color que deseas aplicar cuando timeDifferenceInMinutes < 20 */
 }
 
+#mapIn {
+    height: 600px;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+#mapOut {
+    height: 600px;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+.mapButton {
+    width: 90px;
+    border-radius: 7px;
+    margin-right: 5px;
+}
+
+.backgroundMap {
+    margin: 20px 10px 0px 40px;
+    background-color: white;
+    border-radius: 10px;
+    justify-content: center;
+}
+
+.map {
+    height: 500px;
+    width: 500px;
+    border-radius: 7px;
+}
+
 @media screen and (min-width: 600px) {
     .container {
         //grid-template-columns: 1fr 1fr;

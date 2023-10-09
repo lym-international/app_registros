@@ -87,9 +87,7 @@ export class DashboardLmComponent implements OnInit {
     this.getTotalRequest();
     //this.porcentajes();
 
-    this.sharingCloseOrderService
-      .getStatusOrderObservable()
-      .subscribe((status) => {
+    this.sharingCloseOrderService.getStatusOrderObservable().subscribe((status) => {
         this.statusOrder = status;
       });
     console.log('STATUS ORDER en dasboardLm: ', this.statusOrder);

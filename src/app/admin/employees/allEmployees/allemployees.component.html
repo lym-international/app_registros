@@ -268,11 +268,26 @@
                             </div>
                             <mat-paginator #paginator [length]="dataSource.filteredData?.length || 0" [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
                             </mat-paginator>
-
                         </div>
                     </div>
                 </div>
+                <!--<div class="row" style="margin: auto auto 10px 10px;">
+                    <button class="mapButton" style=" border: none; background-color: #1A202D; color: white;" (click)="createEmployeeMapCheckIn(getSelectedRows())">CheckIn map</button>
+                    <button class="mapButton" (click)="createEmployeeMapCheckOut(getSelectedRows())">CheckOut map</button>
+                </div>
+                -->
             </div>
         </div>
     </div>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+    <!--
+        <div class="row backgroundMap">
+            <div class="map">
+                <div id="mapIn" style="height: 400px;"></div>
+            </div>
+            <div class="map">
+                <div id="mapOut" style="height: 400px;"></div>
+        </div>
+    </div>
+    -->
 </section>

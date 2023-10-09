@@ -38,9 +38,11 @@ export class CheckInAdminEmployeesComponent implements OnInit{
   longitud: number;
   shareHourFromFormatted: string;
   dateStart:Date;
+  actualTime: Date;
+  schedule: any;
   
   ngOnInit(): void {
-    const actualTime = new Date();
+    this.actualTime = new Date();
 
     this.checkInForm.patchValue({
       startDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
@@ -49,8 +51,8 @@ export class CheckInAdminEmployeesComponent implements OnInit{
     this.dateStart = this.shareScheduledTimeService.getScheduleDate();
     const scheduleTime = new Date(this.dateStart);
     console.log("scheduleTime", scheduleTime)
-    console.log("actualTime", actualTime)
-    const timeDifferenceInMinutes = (scheduleTime.getTime() - actualTime.getTime()) / (1000 * 60);
+    console.log("actualTime", this.actualTime)
+    const timeDifferenceInMinutes = (scheduleTime.getTime() - this.actualTime.getTime()) / (1000 * 60);
     console.log('Diferencia entre scheduleTime y la actualTime en mins: ',timeDifferenceInMinutes)
     
     this.shareTimeDifferenceInMinutesService.setTimeDifference(timeDifferenceInMinutes);
@@ -68,7 +70,7 @@ export class CheckInAdminEmployeesComponent implements OnInit{
         
       } else {
         console.log("La hora actual es mayor que el scheduleTime (comparando scheduleTime desde -20 mins).");
-        console.log("Hora actual:", actualTime);
+        console.log("Hora actual:", this.actualTime);
         this.fechaInicio = new FormControl(new Date());
         this.checkInForm = new FormGroup({
         startDate: this.fechaInicio
@@ -149,7 +151,13 @@ export class CheckInAdminEmployeesComponent implements OnInit{
 
   public confirmAdd(): void {
     const startDate = this.fechaInicio.value;
-    this.dialogRef.close(startDate);
+    this.schedule= {
+      startDate: startDate,
+      actualTime:this.actualTime
+    }
+    startDate.actualTime = this.actualTime
+    console.log("schedule", this.schedule)
+     this.dialogRef.close(this.schedule);
     
     this.geolocationService.getCurrentLocation();
   }

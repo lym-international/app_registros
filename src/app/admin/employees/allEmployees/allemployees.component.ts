@@ -35,6 +35,10 @@ import { SharingCloseOrderService } from 'app/_services/sharing-close-order.serv
 import { ShareStartDateService } from '../../../_services/share-start-date.service';
 import { ShareTimeDifferenceInMinutesService } from 'app/_services/share-time-difference-in-minutes.service';
 
+import * as L from 'leaflet';
+import {Map, marker, tileLayer} from 'leaflet';
+
+//import 'leaflet/dist/leaflet.css';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -107,6 +111,7 @@ export class AllemployeesComponent
   dataSource!: ExampleDataSource;
   positions = [];
   startDate: any;
+  map: L.Map;  
   
 
   constructor(
@@ -138,6 +143,11 @@ export class AllemployeesComponent
         this.dataEmployees = selectedOrder;
         this.statusOrder = this.dataEmployees.data.status;  
         this.orderId = this.dataEmployees.id;  
+        if(this.statusOrder === 'closed'){
+          this.ShowButtons = false
+         }else{
+          this.ShowButtons = true
+         }
       }
     });
     console.log('Data Order: ', this.dataEmployees);
@@ -166,15 +176,12 @@ export class AllemployeesComponent
       }
     });
     
-    this.sharingCloseOrderService.setStatusOrder(this.statusOrder);
+    //this.sharingCloseOrderService.setStatusOrder(this.statusOrder);
   
     //Oculta todos los botones de la tabla si la orden es cerrada.
     if(this.statusOrder === 'closed'){
       this.ShowButtons = false
      }
-  
-    //this.getTimeDifference()
-    
   }
   
   getTimeDifference() {
@@ -316,9 +323,9 @@ export class AllemployeesComponent
         }).filter((employee) => employee !== null); // Filtrar elementos nulos
 
          console.log('---------------------------');
-        console.log('Array empleados: ');
+         console.log('Array empleados: ');
          console.log(this.employeesArray);
-        console.log('---------------------------');
+         console.log('---------------------------');
 
         this.dataSource = new ExampleDataSource(
           this.exampleDatabase,
@@ -379,7 +386,14 @@ export class AllemployeesComponent
             in: 'No Data',
             out: 'No Data',
             totalHours:0,
-
+            checkinCoordinates:{
+              latitude: '-',
+              longitude: '-',
+            },
+            checkOutCoordinates:{
+              latitudeOut: '-',
+              longitudeOut: '-',
+            },
           };
         }
         return employee;
@@ -647,7 +661,7 @@ export class AllemployeesComponent
       // console.log('Ningún empleado seleccionado para check-in.');
     }
   }
-  
+
   async checkInModal(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {
       // console.log('Empleados seleccionados para check-in:', selectedRows);
@@ -1991,7 +2005,76 @@ async updateOrderWithNewEmployee(result) {
   }
 }
 
+createEmployeeMapCheckIn(selectedRows: Employees[]){
+  if (selectedRows.length > 0) {
+    const coordinatesCheckin = selectedRows.map((row) => row.checkinCoordinates);
+    coordinatesCheckin.map((coordenadas)=> {
+      const coordLat = coordenadas.latitude
+      const coordLong = coordenadas.longitude
+      console.log('coordLat CheckIn:', coordLat)
+      console.log('coordLong CheckIn:', coordLong)
+      this.mostrarCoordenadasEnMapaCheckIn(coordLat,coordLong)
+    })
 
+    console.log('coordinatesCheckin: ',coordinatesCheckin)
+    //this.mostrarCoordenadasEnMapa(checkinLatitude, checkinLongitude, checkoutLatitude, checkoutLongitude);
+    console.log('selectedRows: ', selectedRows)
+  } else{
+    console.log('no se seleccionó ninguna fila')
+  }
+}
+createEmployeeMapCheckOut(selectedRows: Employees[]){
+  if (selectedRows.length > 0) {
+    const coordinatesCheckOut = selectedRows.map((row) => row.checkOutCoordinates
+    );
+    coordinatesCheckOut.map((coordenadas)=> {
+      //const coordLat = coordenadas.latitudeOut
+      //const coordLong = coordenadas.longitudeOut
+      const coordLat = 4.517165
+      const coordLong = -75.715003
+      console.log('coordLat CheckOut:', coordLat)
+      console.log('coordLong CheckOut:', coordLong)
+      this.mostrarCoordenadasEnMapaCheckOut(coordLat,coordLong)
+    })
+
+    console.log('coordinatesCheckin: ',coordinatesCheckOut)
+    //this.mostrarCoordenadasEnMapa(checkinLatitude, checkinLongitude, checkoutLatitude, checkoutLongitude);
+    console.log('selectedRows: ', selectedRows)
+  } else{
+    console.log('no se seleccionó ninguna fila')
+  }
+}
+
+mostrarCoordenadasEnMapaCheckIn(coordLat: number, coordLong: number) {
+
+    const map = new Map('mapIn').setView([coordLat, coordLong], 13);
+    tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom:20,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    const markerItem = marker([coordLat, coordLong]).addTo(map).bindPopup("Checkin employee"); //
+
+    /*
+    map.fitBounds([
+      [markerItem.getLatLng().lat, markerItem.getLatLng().lng]
+    ]);
+    */
+}
+mostrarCoordenadasEnMapaCheckOut(coordLat: number, coordLong: number) {
+
+  const map = new Map('mapOut').setView([coordLat, coordLong], 13);
+  tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom:20,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+  const markerItem = marker([coordLat, coordLong]).addTo(map).bindPopup("CheckOut employee"); //
+
+  /*
+  map.fitBounds([
+    [markerItem.getLatLng().lat, markerItem.getLatLng().lng]
+  ]);
+  */
+}
 
  //Abre el modal FormDialogComponent para editar los datos.
   editCall(row: Employees) {
