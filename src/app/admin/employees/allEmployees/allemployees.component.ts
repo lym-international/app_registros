@@ -136,9 +136,15 @@ export class AllemployeesComponent
         this.dataEmployees = selectedOrder;
         this.statusOrder = this.dataEmployees.data.status;  
         this.orderId = this.dataEmployees.id;  
+        if(this.statusOrder === 'closed'){
+          this.ShowButtons = false
+         }else{
+          this.ShowButtons = true
+         }
       }
     });
     console.log('Data Order: ', this.dataEmployees);
+    
     this.startDate = this.dataEmployees.data.startDate;
 
     console.log('Data StatusOrder: ', this.statusOrder);
@@ -172,6 +178,7 @@ export class AllemployeesComponent
       this.ShowButtons = false
      }
 
+   this.getEventLocation()
     
   }
   
@@ -336,6 +343,20 @@ export class AllemployeesComponent
       });
   }
   
+  getEventLocation(){
+    console.log("Ubicacion del evento", this.dataEmployees.data.mapLink)
+    const url = new URL(this.dataEmployees.data.mapLink);
+
+    // Obtener los parámetros de la URL
+    const searchParams = new URLSearchParams(url.search);
+
+    // Extraer la latitud y longitud
+    const latitude = searchParams.get("query").split(",")[0];
+    const longitude = searchParams.get("query").split(",")[1];
+
+    console.log("Latitud:", latitude);
+    console.log("Longitud:", longitude);
+  }
   // Reset checkin, checkout y break
   deleteInTime(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {

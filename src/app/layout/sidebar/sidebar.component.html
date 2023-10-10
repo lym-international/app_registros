@@ -59,7 +59,8 @@
                         <li *ngIf="currentRoute === '/admin/employees/allEmployees'">
                             <a (click)="closeOrder()" *ngIf="isUserRoleValid()" class="menu-top">
                                 <i-feather name="x-circle" class="sidebarIcon"></i-feather>
-                                <span class="hide-menu">Close order</span>
+                                <!-- <span class="hide-menu">Close order</span> -->
+                                <span class="hide-menu">{{ orderStatus === 'Booking' ? 'Close order' : 'Booking' }}</span>
                             </a>
                         </li>
                     </ng-container>

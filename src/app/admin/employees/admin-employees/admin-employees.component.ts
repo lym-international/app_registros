@@ -400,6 +400,7 @@ implements OnInit
             break: 0,
             in: 'No Data',
             out: 'No Data',
+            realInTime:'No Data',
             totalHours:0,
             checkinCoordinates:{
               latitude: '-',
@@ -503,11 +504,11 @@ implements OnInit
       });
 
       const result = await dialogRef.afterClosed().toPromise();
-
-      const timestamp = Timestamp.fromDate(new Date(result));
+     
+      const timestamp = Timestamp.fromDate(new Date(result.startDate));
       //console.log('TimeStamp: ', timestamp);
       const checkInTimestamp = timestamp?.seconds || 0;
-      const  rounded = this.roundDate(result);
+      const  rounded = this.roundDate(result.startDate);
       const timestampCheckinRounded= Timestamp.fromDate(new Date(rounded));
       const dateCheckinRounded = timestampCheckinRounded?.seconds || 0;
       
@@ -547,7 +548,8 @@ implements OnInit
               latitude: this.latitude,
               longitude: this.longitude,
             },
-            
+            // realInTime = fecha resultado del checkin despues de validar con schedule time
+            realInTime: result.actualTime,
             
             // updateUser:this.dataUser.email
             // updateUser: [...updatedUser, this.dataUser.email],

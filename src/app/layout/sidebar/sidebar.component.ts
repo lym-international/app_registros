@@ -38,6 +38,7 @@ export class SidebarComponent implements OnInit {
   mostrarMenu: boolean;
   dataOrder: any;
   orderId: any;
+  orderStatus: any;
 
   
   constructor(
@@ -117,6 +118,8 @@ export class SidebarComponent implements OnInit {
 
     this.dataOrder = this.orderDataService.getSelectedOrder();
     //console.log('Data Order: ', this.dataOrder);
+    this.orderStatus = this.dataOrder.data.status;
+  
     this.orderId = this.dataOrder.id;
     //console.log('this.orderId:', this.orderId)
     //console.log('this.dataUser.email: ',this.dataUser.email)
@@ -144,7 +147,8 @@ export class SidebarComponent implements OnInit {
     })
       .then((response) => response.json())
       .then((data) => {
-        //console.log('DATA del method PUT', data);
+        console.log('DATA del method PUT', data.data.status);
+        this.orderStatus = data.data.status;
         this.orderDataService.setSelectedOrder(data);
         
         // Forzar la recarga de la página actual (para actualizar la página de allEmployees y que no se vean los botones)
