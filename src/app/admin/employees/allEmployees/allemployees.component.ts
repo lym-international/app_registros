@@ -65,7 +65,7 @@ export class AllemployeesComponent
     'break',
     'totalHours',
     'status',
-    //'actions',
+    'map',
   ];
 
   exampleDatabase?: EmployeesService;
@@ -2005,7 +2005,30 @@ async updateOrderWithNewEmployee(result) {
   }
 }
 
-createEmployeeMapCheckIn(selectedRows: Employees[]){
+//INICIO MAPA
+
+// Abre el modal del mapa
+openMapModal() {
+  const modal = document.getElementById('mapModal');
+  modal.style.display = 'block';
+  this.createEventMap(this.getSelectedRows());
+
+  // Agrega un evento click para cerrar el modal al hacer clic en el fondo semitransparente
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) {
+        this.closeMapModal();
+    }
+  });
+}
+
+// Cierra el modal del mapa
+closeMapModal() {
+  const modal = document.getElementById('mapModal');
+  modal.style.display = 'none';
+}
+
+
+createEventMap(selectedRows: Employees[]){
   if (selectedRows.length > 0) {
     const coordinatesCheckin = selectedRows.map((row) => row.checkinCoordinates);
     coordinatesCheckin.map((coordenadas)=> {
@@ -2013,7 +2036,7 @@ createEmployeeMapCheckIn(selectedRows: Employees[]){
       const coordLong = coordenadas.longitude
       console.log('coordLat CheckIn:', coordLat)
       console.log('coordLong CheckIn:', coordLong)
-      this.mostrarCoordenadasEnMapaCheckIn(coordLat,coordLong)
+      this.mostrarCoordenadasEnMapaModal(coordLat,coordLong)
     })
 
     console.log('coordinatesCheckin: ',coordinatesCheckin)
@@ -2023,33 +2046,12 @@ createEmployeeMapCheckIn(selectedRows: Employees[]){
     console.log('no se seleccionó ninguna fila')
   }
 }
-createEmployeeMapCheckOut(selectedRows: Employees[]){
-  if (selectedRows.length > 0) {
-    const coordinatesCheckOut = selectedRows.map((row) => row.checkOutCoordinates
-    );
-    coordinatesCheckOut.map((coordenadas)=> {
-      //const coordLat = coordenadas.latitudeOut
-      //const coordLong = coordenadas.longitudeOut
-      const coordLat = 4.517165
-      const coordLong = -75.715003
-      console.log('coordLat CheckOut:', coordLat)
-      console.log('coordLong CheckOut:', coordLong)
-      this.mostrarCoordenadasEnMapaCheckOut(coordLat,coordLong)
-    })
 
-    console.log('coordinatesCheckin: ',coordinatesCheckOut)
-    //this.mostrarCoordenadasEnMapa(checkinLatitude, checkinLongitude, checkoutLatitude, checkoutLongitude);
-    console.log('selectedRows: ', selectedRows)
-  } else{
-    console.log('no se seleccionó ninguna fila')
-  }
-}
+mostrarCoordenadasEnMapaModal(coordLat: number, coordLong: number) {
 
-mostrarCoordenadasEnMapaCheckIn(coordLat: number, coordLong: number) {
-
-    const map = new Map('mapIn').setView([coordLat, coordLong], 13);
+    const map = new Map('mapInModal').setView([coordLat, coordLong], 17);
     tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom:20,
+      maxZoom:40,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
     const markerItem = marker([coordLat, coordLong]).addTo(map).bindPopup("Checkin employee"); //
@@ -2060,21 +2062,8 @@ mostrarCoordenadasEnMapaCheckIn(coordLat: number, coordLong: number) {
     ]);
     */
 }
-mostrarCoordenadasEnMapaCheckOut(coordLat: number, coordLong: number) {
 
-  const map = new Map('mapOut').setView([coordLat, coordLong], 13);
-  tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom:20,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(map);
-  const markerItem = marker([coordLat, coordLong]).addTo(map).bindPopup("CheckOut employee"); //
-
-  /*
-  map.fitBounds([
-    [markerItem.getLatLng().lat, markerItem.getLatLng().lng]
-  ]);
-  */
-}
+//FIN MAPA
 
  //Abre el modal FormDialogComponent para editar los datos.
   editCall(row: Employees) {
@@ -2366,6 +2355,11 @@ export class ExampleDataSource extends DataSource<Employees> {
       })
     );
   }
+
+  mapEvent(){
+    
+  }
+
   disconnect() {
     // disconnect
   }

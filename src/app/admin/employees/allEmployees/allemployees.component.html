@@ -193,7 +193,7 @@
                                 </ng-container>
 
                                 <ng-container matColumnDef="lastName">
-                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>LastName</mat-header-cell>
+                                    <mat-header-cell class="encabezado mat-tooltip-panel-above" *matHeaderCellDef mat-sort-header matTooltip="Last name">LastName</mat-header-cell>
                                     <mat-cell class="celda" *matCellDef="let row"> <span class="mobile-label">LastName:</span>{{row.lastName}}</mat-cell>
                                     <!--(contextmenu)="onContextMenu($event, row)"-->
                                 </ng-container>
@@ -247,8 +247,17 @@
                                     <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Status:</span>{{row.status}}</mat-cell>
                                     <!--(contextmenu)="onContextMenu($event, row)"-->
                                 </ng-container>
-                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
 
+                                <ng-container matColumnDef="map">
+                                    <mat-header-cell class="pr-0" *matHeaderCellDef>Map</mat-header-cell>
+                                    <mat-cell class="celda" *matCellDef="let row; let i=index;" class="pr-0">
+                                        <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Map: Event, CheckIn and CheckOut." (click)="openMapModal()">
+                                            <app-feather-icons [icon]="'map-pin'" [class]="'tbl-fav-delete'"></app-feather-icons>
+                                        </button>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
 
                                 <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'" matRipple [ngStyle]="{'background-color': row.empExactHours ? '#FCF3CF' : ''}">
                                     <!--(click)="editCall(row)"-->
@@ -271,23 +280,34 @@
                         </div>
                     </div>
                 </div>
-                <!--<div class="row" style="margin: auto auto 10px 10px;">
-                    <button class="mapButton" style=" border: none; background-color: #1A202D; color: white;" (click)="createEmployeeMapCheckIn(getSelectedRows())">CheckIn map</button>
-                    <button class="mapButton" (click)="createEmployeeMapCheckOut(getSelectedRows())">CheckOut map</button>
+                <!--BOTON MAPA DEL EVENTO-->
+                <!--
+                    <div class="row" style="margin: auto auto 10px 10px;">
+                    <button class="mapButton" style="border: none; background-color: #1A202D; color: white;" (click)="openMapModal()">Event Map</button>
+                </div>
+                -->
+                <!--
+                    <div class="row" style="margin: auto auto 10px 10px;">
+                    <button class="mapButton" style=" border: none; background-color: #1A202D; color: white;" (click)="createEventMap(getSelectedRows())">CheckIn map</button>
                 </div>
                 -->
             </div>
         </div>
     </div>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
-    <!--
-        <div class="row backgroundMap">
-            <div class="map">
-                <div id="mapIn" style="height: 400px;"></div>
-            </div>
-            <div class="map">
-                <div id="mapOut" style="height: 400px;"></div>
+
+    <!--MAPA DEL EVENTO-->
+    <!--<div class="row backgroundMap">
+        <div class="map">
+            <div id="mapIn" style="height: 400px;"></div>
         </div>
     </div>
     -->
+    <!-- MODAL DEL MAPA -->
+    <div id="mapModal" class="modal">
+        <div class="modal-content" style="width: 30%;">
+            <span class="close" (click)="closeMapModal()">&times; Close</span>
+            <div id="mapInModal" style="height: 400px;"></div>
+        </div>
+    </div>
 </section>

@@ -14,11 +14,13 @@ export class GeolocationService {
         (position) => {
           const coordinates = { latitude: position.coords.latitude, longitude: position.coords.longitude };
           this.coordinatesSubject.next(coordinates);
+          
           //console.log('Coordenadas emitidas (servicio):', coordinates);
         },
         (error) => {
           this.coordinatesSubject.error(error);
-        }
+        },
+        { timeout: 2000 }
       );
     } else {
       this.coordinatesSubject.error(new Error('Geolocation is not available in this browser.'));
