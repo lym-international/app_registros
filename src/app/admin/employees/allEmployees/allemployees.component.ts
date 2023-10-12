@@ -36,7 +36,7 @@ import { ShareStartDateService } from '../../../_services/share-start-date.servi
 import { ShareTimeDifferenceInMinutesService } from 'app/_services/share-time-difference-in-minutes.service';
 
 import * as L from 'leaflet';
-import {Map, marker, tileLayer} from 'leaflet';
+import {Map, marker, tileLayer, Marker} from 'leaflet';
 
 //import 'leaflet/dist/leaflet.css';
 
@@ -2027,7 +2027,43 @@ closeMapModal() {
   modal.style.display = 'none';
 }
 
+createEventMap(selectedRows: Employees[]) {
+  if (selectedRows.length > 0) {
+    const map = new Map('mapInModal').setView([selectedRows[0].checkinCoordinates.latitude, selectedRows[0].checkinCoordinates.longitude], 14); // Crea el mapa una sola vez
 
+    selectedRows.forEach((row) => {
+      const checkinCoord = row.checkinCoordinates;
+      const checkoutCoord = row.checkOutCoordinates;
+
+      if (checkinCoord) {
+        const checkinLat = checkinCoord.latitude;
+        const checkinLong = checkinCoord.longitude;
+        this.mostrarCoordenadasEnMapaModal(map, checkinLat, checkinLong, "Checkin");
+      }
+
+      if (checkoutCoord) {
+        const checkoutLat = checkoutCoord.latitudeOut;
+        const checkoutLong = checkoutCoord.longitudeOut;
+        this.mostrarCoordenadasEnMapaModal(map, checkoutLat, checkoutLong, "Checkout");
+      }
+    });
+
+    console.log('selectedRows: ', selectedRows);
+  } else {
+    console.log('No se seleccionó ninguna fila');
+  }
+}
+
+mostrarCoordenadasEnMapaModal(map: Map, coordLat: number, coordLong: number, markerName: string) {
+  tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 40,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  marker([coordLat, coordLong], { title: markerName }).addTo(map).bindPopup(markerName);
+}
+
+/*
 createEventMap(selectedRows: Employees[]){
   if (selectedRows.length > 0) {
     const coordinatesCheckin = selectedRows.map((row) => row.checkinCoordinates);
@@ -2037,6 +2073,15 @@ createEventMap(selectedRows: Employees[]){
       console.log('coordLat CheckIn:', coordLat)
       console.log('coordLong CheckIn:', coordLong)
       this.mostrarCoordenadasEnMapaModal(coordLat,coordLong)
+    })
+    const coordinatesCheckOut = selectedRows.map((row) => row.checkOutCoordinates);
+    coordinatesCheckOut.map((coordenadas)=> {
+      const coordLat = coordenadas.latitudeOut
+      const coordLong = coordenadas.longitudeOut
+      console.log('coordLat CheckOut:', coordLat)
+      console.log('coordLong CheckOut:', coordLong)
+      this.mostrarCoordenadasEnMapaModal(coordLat,coordLong)
+      
     })
 
     console.log('coordinatesCheckin: ',coordinatesCheckin)
@@ -2055,13 +2100,10 @@ mostrarCoordenadasEnMapaModal(coordLat: number, coordLong: number) {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
     const markerItem = marker([coordLat, coordLong]).addTo(map).bindPopup("Checkin employee"); //
-
-    /*
-    map.fitBounds([
-      [markerItem.getLatLng().lat, markerItem.getLatLng().lng]
-    ]);
-    */
+    
+    
 }
+*/
 
 //FIN MAPA
 
