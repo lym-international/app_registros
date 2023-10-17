@@ -111,7 +111,9 @@ export class AllemployeesComponent
   dataSource!: ExampleDataSource;
   positions = [];
   startDate: any;
-  map: L.Map;  
+  map: L.Map;
+  latitudeEvent: number;
+  longitudeEvent: number;
   
 
   constructor(
@@ -182,6 +184,7 @@ export class AllemployeesComponent
     if(this.statusOrder === 'closed'){
       this.ShowButtons = false
      }
+     this.getEventLocation()
   }
   
   getTimeDifference() {
@@ -358,6 +361,8 @@ export class AllemployeesComponent
       });
   }
   
+  
+
   // Reset checkin, checkout y break
   deleteInTime(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {
@@ -2027,14 +2032,42 @@ closeMapModal() {
   modal.style.display = 'none';
 }
 
+getEventLocation() {
+  console.log("Ubicación del evento", this.dataEmployees.data.mapLink);
+  const url = new URL(this.dataEmployees.data.mapLink);
+
+  // Obtener la cadena de consulta de la URL
+  const queryString = url.search;
+
+  // Buscar las coordenadas en la cadena de consulta
+  //const regex = /query=([\d.-]+),([\d.-]+)/;
+  const regex = /query=([\d.-]+)%2C([\d.-]+)/;
+  const match = queryString.match(regex);
+
+  if (match) {
+    const latitude = parseFloat (match[1]); //parseFloat convierte a número.
+    const longitude = parseFloat(match[2]); //parseFloat convierte a número.
+    this.latitudeEvent = latitude; // Almacenar la latitud en una propiedad
+    this.longitudeEvent = longitude; // Almacenar la longitud en una propiedad
+    console.log("Latitud evento:", this.latitudeEvent);
+    console.log("Longitud evento:", this.longitudeEvent);
+  } else {
+    console.log("No se encontraron las coordenadas en la URL.");
+  }
+}
 createEventMap(selectedRows: Employees[]) {
   if (selectedRows.length > 0) {
     const map = new Map('mapInModal').setView([selectedRows[0].checkinCoordinates.latitude, selectedRows[0].checkinCoordinates.longitude], 14); // Crea el mapa una sola vez
 
+    // Llamar a getEventLocation() para obtener las coordenadas del evento
+    this.getEventLocation();
+    this.mostrarCoordenadasEnMapaModal(map, this.latitudeEvent, this.longitudeEvent, "Event");
+    
     selectedRows.forEach((row) => {
       const checkinCoord = row.checkinCoordinates;
       const checkoutCoord = row.checkOutCoordinates;
-
+      
+      
       if (checkinCoord) {
         const checkinLat = checkinCoord.latitude;
         const checkinLong = checkinCoord.longitude;
