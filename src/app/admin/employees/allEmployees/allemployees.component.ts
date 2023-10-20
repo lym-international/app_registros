@@ -340,52 +340,15 @@ export class AllemployeesComponent
         }, 0);
 
         // console.log("lalalal", (`${startDate}T${horaInicio}`),)
-        this.updateRegistration()
+        
+        if(this.statusOrder != "closed"){         
+          this.updateRegistration()
+        }
       })
       .catch((error) => {
         console.log(error);
         this.isTblLoading = false;
       });
-  }
-
-  updateRegistration1() {
-    // Supongamos que "this.employeesArray" es el arreglo que quieres llenar
-    const employeesArray = this.employeesArray;
-    const items = this.dataEmployees.data.items;
-  
-    items.forEach(item => {
-      const hourFrom = item.hourFrom;
-      const employees = item.employees;
-      // console.log("xhourFrom", hourFrom);
-      // console.log("xemployees", employees);
-      employees.forEach(employee => {
-        const employeeId = employee.data.employeeId;
-        // console.log("xemployeeId", employeeId)
-       /*  const existingEmployeeIndex = employeesArray.findIndex(existingEmployee => existingEmployee.employee.data.employeeId === employeeId && existingEmployee.hourFrom === hourFrom);
-        console.log("xexistingEmployeeIndex", existingEmployeeIndex)
-        console.log("x ...employee",existingEmployee ) */
-        const existingEmployeeIndex = employeesArray.findIndex(existingEmployee => {
-          // console.log("2existingEmployee.hourFrom", existingEmployee.hourFrom)
-          // console.log("1existingEmployee.employee.data.employeeId ", existingEmployee.data.employeeId );
-
-          const condition = existingEmployee.data.employeeId === employeeId && existingEmployee.hourFrom === hourFrom;
-          // console.log("xexistingEmployee:", existingEmployee); // Agregamos el console.log aquí
-          return condition;
-        });        
-        // console.log("existingEmployeeIndex:", existingEmployeeIndex);
-        
-        if (existingEmployeeIndex === -1) {
-          // No se encontró un empleado con el mismo "employeeId" y "hourFrom" en employeesArray, agregarlo.
-          employeesArray.push({ ...employee, hourFrom }); // Mantén la misma estructura.
-        
-        }
-      });
-    });
-  
-    // Imprime el contenido de employeesArray
-    console.log("Contenido de employeesArray después de agregar empleados únicos:");
-    console.log(employeesArray);
-
   }
   
   updateRegistration() {
@@ -458,7 +421,7 @@ export class AllemployeesComponent
         employees.forEach(employee => {
           const employeeId = employee.data.employeeId;
           const existingEmployeeIndex = employeesArray.findIndex(existingEmployee => {
-            console.log("xexistingEmployee", existingEmployee.employee.data)
+            // console.log("xexistingEmployee", existingEmployee.employee.data)
             const condition = existingEmployee.employee.data.employeeId === employeeId && existingEmployee.hourFrom === hourFrom;
             return condition;
           });
@@ -856,6 +819,7 @@ export class AllemployeesComponent
     const timestampCheckinRounded= Timestamp.fromDate(new Date(rounded));
     const dateCheckinRounded = timestampCheckinRounded?.seconds || 0;
 
+   
       // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
       const updatedEmployees = this.employeesArray.map((employee) => {
         if (
@@ -865,6 +829,7 @@ export class AllemployeesComponent
             row.hourFrom === employee.hourFrom,
             )
             ) {
+              this.isTblLoading= true;
               // Si updateUser es null o undefined, inicializarlo como un arreglo vacío
               // const updatedUser = [...(employee.updateUser || []), this.dataUser.email];
               // const emailAlreadyExists = updatedUser.includes(this.dataUser.email);
@@ -910,6 +875,7 @@ export class AllemployeesComponent
       })
         .then((response) => response.json())
         .then((data) => {
+          this.isTblLoading= false;
           this.showNotification(
             'snackbar-success',
             'Successful CheckIn...!!!',
@@ -921,6 +887,7 @@ export class AllemployeesComponent
           this.removeSelectedRows() //Actualiza la tabla para que no duplique el dato en el anterior empleado.
         })
         .catch((error) => {
+          this.isTblLoading= false;
           console.error('Error al actualizar:', error);
         });
     } else {
