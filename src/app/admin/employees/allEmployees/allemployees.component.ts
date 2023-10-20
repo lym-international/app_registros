@@ -139,6 +139,7 @@ export class AllemployeesComponent
 
     this.statusOrder = this.dataEmployees.data.status;  
     this.orderId = this.dataEmployees.id;
+    console.log('orderId:',this.orderId)
     this.orderDataService.getSelectedOrderObservable().subscribe((selectedOrder) => {
       console.log('Activa el subscribe en allEmployees')
       if (selectedOrder) {
@@ -2385,14 +2386,14 @@ mostrarCoordenadasEnMapaModal(coordLat: number, coordLong: number) {
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
   // Verificar si al menos un elemento seleccionado tiene dateCheckin diferente de null o undefined
-  console.log('this.selection.selected 1: ',this.dataSource.renderedData)
+  console.log('this.dataSource.renderedData 1: ',this.dataSource.renderedData)
   //const allSelectedWithNullCheckin = this.selection.selected.every(
   //  row =>  (row.dateCheckin === null || row.dateCheckin === undefined)
   //);
   const allSelectedWithNullCheckin = this.dataSource.renderedData.every(
     row =>  (row.dateCheckin === null || row.dateCheckin === undefined)
   );
-  console.log('this.selection.selected: ',this.selection.selected)
+  console.log('this.dataSource.renderedData 2: ',this.dataSource.renderedData)
   console.log('allSelectedWithNullCheckin: ',allSelectedWithNullCheckin)
 
   if (allSelectedWithNullCheckin) {
