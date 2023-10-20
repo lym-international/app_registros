@@ -508,7 +508,6 @@ implements OnInit
       const result = await dialogRef.afterClosed().toPromise();
 
       const timestamp = Timestamp.fromDate(new Date(result.startDate));
-
       //console.log('TimeStamp: ', timestamp);
       const checkInTimestamp = timestamp?.seconds || 0;
       const  rounded = this.roundDate(result.startDate);
@@ -551,7 +550,7 @@ implements OnInit
               latitude: this.latitude,
               longitude: this.longitude,
             },
-            //realInTime = fecha resultado del checkin despues de validar con schedule time
+            // realInTime = fecha resultado del checkin despues de validar con schedule time
             realInTime: result.actualTime,
             
             // updateUser:this.dataUser.email
