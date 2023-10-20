@@ -69,7 +69,7 @@ export class CheckInAdminEmployeesComponent implements OnInit{
         
       } else {
         console.log("La hora actual es mayor que el scheduleTime (comparando scheduleTime desde -20 mins).");
-        console.log("Hora actual:", this.actualTime);
+        // console.log("Hora actual:", this.actualTime);
         this.fechaInicio = new FormControl(new Date());
         this.checkInForm = new FormGroup({
         startDate: this.fechaInicio

@@ -153,6 +153,7 @@ export class AllemployeesComponent
       }
     });
     console.log('Data Order: ', this.dataEmployees);
+    
     this.startDate = this.dataEmployees.data.startDate;
 
     console.log('Data StatusOrder: ', this.statusOrder);
@@ -254,7 +255,7 @@ export class AllemployeesComponent
           const lastName = employeeData.lastname
           const highKeyId = employeeData.employeeId ;
           const position = employee.position || "No data";
-          const totalHours = employee.hours || 0;
+          const totalHours =  0;//employee.hours ||
           const payrollId = employeeData.payrollid || "No data";
           const brake = employee.break || "0";
           const hourFrom = employee.hourFrom || "No data";
@@ -354,15 +355,164 @@ export class AllemployeesComponent
        this.totalHoursSum = numberArray.reduce((accumulator, currentValue) => {
           return accumulator + currentValue;
         }, 0);
+
+        // console.log("lalalal", (`${startDate}T${horaInicio}`),)
+        
+        if(this.statusOrder != "closed"){         
+          this.updateRegistration()
+        }
       })
       .catch((error) => {
         console.log(error);
         this.isTblLoading = false;
       });
   }
+  updateRegistration() {
+    const employeesArray = this.employeesArray;
+    const items = this.dataEmployees.data.items;
+    const startDate = this.dataEmployees.data.startDate
   
+    if (employeesArray.length === 0) {
+      // Si employeesArray está vacío, agrega todos los empleados directamente.
+      items.forEach(item => {
+        const hourFrom = item.hourFrom;
+        const employees = item.employees;
+        const position =  item.position;
+        employees.forEach(employee => {
+          // let id = employee.id
+          // employeesArray.push({ ...employee, hourFrom }); // Mantén la misma estructura.
+           let hourFromFormatted = "No Data";
+           
+           if (hourFrom) {
+            const hourParts = hourFrom.split(':');
+            if (hourParts.length === 2) {
+              const hours = parseInt(hourParts[0]);
+              const minutes = parseInt(hourParts[1]);          
+              // Calcula el período (AM o PM)
+              const period = hours >= 12 ? 'PM' : 'AM';          
+              // Convierte las horas al formato de 12 horas
+              const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
+              const formattedMinutes = minutes.toString().padStart(2, '0');
+          
+              // Formatea la hora en un string
+              hourFromFormatted = `${formattedHours}:${formattedMinutes} ${period}`;
+             } 
+            }
+          const addEmployeeRegist = {
+              hours: 0,
+              hourFrom: hourFrom,
+              hourFromFormatted:hourFromFormatted,              
+              orderId: this.orderId,
+              position: position,
+              dateStart: new Date(`${startDate}T${hourFrom}`),
+              break : 0,
+              employee: {
+                  ...employee
+                  // agmRate: result.rate,
+                  // booking: "Emergency",
+                  // data: {
+                      // ...result,
+                  // },
+                  // rate: result.rate,
+                  // id: result.id,
+                  // favourite: "Emergency",
+                  // status: "Confirmed"
+              },
+              firstName: employee.data.firstname,
+              highKeyId: employee.data.employeeId,
+              lastName: employee.data.lastname,
+              payRollId: employee.data.payrollid || 'No Data',
+            }; 
+          
+          this.employeesArray.push(addEmployeeRegist);          
+        });
+      });
+    } else {
+      // Si employeesArray no está vacío, aplica la lógica de actualización.
+      items.forEach(item => {
+        const hourFrom = item.hourFrom;
+        const employees = item.employees;
+        const position =  item.position;
   
+        employees.forEach(employee => {
+          const employeeId = employee.data.employeeId;
+          const existingEmployeeIndex = employeesArray.findIndex(existingEmployee => {
+            // console.log("xexistingEmployee", existingEmployee.employee.data)
+            const condition = existingEmployee.employee.data.employeeId === employeeId && existingEmployee.hourFrom === hourFrom;
+            return condition;
+          });
+  
+          if (existingEmployeeIndex === -1) {
+            // No se encontró un empleado con el mismo "employeeId" y "hourFrom" en employeesArray, agregarlo.
+            
+              // employeesArray.push({ ...employee, hourFrom }); // Mantén la misma estructura.
+              let hourFromFormatted = "No Data";
+              if (hourFrom) {
+                const hourParts = hourFrom.split(':');
+                if (hourParts.length === 2) {
+                  const hours = parseInt(hourParts[0]);
+                  const minutes = parseInt(hourParts[1]);          
+                  // Calcula el período (AM o PM)
+                  const period = hours >= 12 ? 'PM' : 'AM';          
+                  // Convierte las horas al formato de 12 horas
+                  const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
+                  const formattedMinutes = minutes.toString().padStart(2, '0');
+              
+                  // Formatea la hora en un string
+                  hourFromFormatted = `${formattedHours}:${formattedMinutes} ${period}`;
+                 } 
+                }
+              const addEmployeeRegist = {
+                hours: 0,
+                hourFrom: hourFrom,
+                hourFromFormatted:hourFromFormatted,              
+                orderId: this.orderId,
+                position: position,
+                dateStart: new Date(`${startDate}T${hourFrom}`),
+                break : 0,
+                employee: {
+                    ...employee
+                    // agmRate: result.rate,
+                    // booking: "Emergency",
+                    // data: {
+                        // ...result,
+                    // },
+                    // rate: result.rate,
+                    // id: result.id,
+                    // favourite: "Emergency",
+                    // status: "Confirmed"
+                },
+                firstName: employee.data.firstname,
+                highKeyId: employee.data.employeeId,
+                lastName: employee.data.lastname,
+                payRollId: employee.data.payrollid || 'No Data',
+              }; 
+            
+            this.employeesArray.push(addEmployeeRegist); 
+          }
+        });
+      });
+    }
+  
+    // Imprime el contenido de employeesArray
+    console.log("Contenido de employeesArray después de agregar empleados únicos:");
+    console.log("x",employeesArray);
+  }
+  
+ /*  getEventLocation(){
+    console.log("Ubicacion del evento", this.dataEmployees.data.mapLink)
+    const url = new URL(this.dataEmployees.data.mapLink);
 
+    // Obtener los parámetros de la URL
+    const searchParams = new URLSearchParams(url.search);
+
+    // Extraer la latitud y longitud
+    const latitude = searchParams.get("query").split(",")[0];
+    const longitude = searchParams.get("query").split(",")[1];
+
+    console.log("Latitud:", latitude);
+    console.log("Longitud:", longitude);
+  } */
   // Reset checkin, checkout y break
   deleteInTime(selectedRows: Employees[]) {
     if (selectedRows.length > 0) {
@@ -689,6 +839,7 @@ export class AllemployeesComponent
     const timestampCheckinRounded= Timestamp.fromDate(new Date(rounded));
     const dateCheckinRounded = timestampCheckinRounded?.seconds || 0;
 
+   
       // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
       const updatedEmployees = this.employeesArray.map((employee) => {
         if (
@@ -698,6 +849,7 @@ export class AllemployeesComponent
             row.hourFrom === employee.hourFrom,
             )
             ) {
+              this.isTblLoading= true;
               // Si updateUser es null o undefined, inicializarlo como un arreglo vacío
               // const updatedUser = [...(employee.updateUser || []), this.dataUser.email];
               // const emailAlreadyExists = updatedUser.includes(this.dataUser.email);
@@ -743,6 +895,7 @@ export class AllemployeesComponent
       })
         .then((response) => response.json())
         .then((data) => {
+          this.isTblLoading= false;
           this.showNotification(
             'snackbar-success',
             'Successful CheckIn...!!!',
@@ -754,6 +907,7 @@ export class AllemployeesComponent
           this.removeSelectedRows() //Actualiza la tabla para que no duplique el dato en el anterior empleado.
         })
         .catch((error) => {
+          this.isTblLoading= false;
           console.error('Error al actualizar:', error);
         });
     } else {
