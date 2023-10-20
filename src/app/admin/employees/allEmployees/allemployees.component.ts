@@ -2228,9 +2228,32 @@ mostrarCoordenadasEnMapaModal(coordLat: number, coordLong: number) {
     return numSelected === numRows;
   }
   
-
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
+  // Verificar si al menos un elemento seleccionado tiene dateCheckin diferente de null o undefined
+  console.log('this.selection.selected 1: ',this.dataSource.renderedData)
+  //const allSelectedWithNullCheckin = this.selection.selected.every(
+  //  row =>  (row.dateCheckin === null || row.dateCheckin === undefined)
+  //);
+  const allSelectedWithNullCheckin = this.dataSource.renderedData.every(
+    row =>  (row.dateCheckin === null || row.dateCheckin === undefined)
+  );
+  console.log('this.selection.selected: ',this.selection.selected)
+  console.log('allSelectedWithNullCheckin: ',allSelectedWithNullCheckin)
+
+  if (allSelectedWithNullCheckin) {
+    console.log('entró al IF')
+    this.showCheckInButton = true;
+    this.showNoShowButton = true;
+    this.showCheckOutButton = false;
+    this.showBreakButton = false;
+  } else {
+    console.log('entró al ELSE')
+    this.showCheckInButton = false;
+    this.showNoShowButton = false;
+    this.showCheckOutButton = false;
+    this.showBreakButton = false;
+  }
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.renderedData.forEach((row) =>{
