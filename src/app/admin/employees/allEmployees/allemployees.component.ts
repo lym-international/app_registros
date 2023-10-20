@@ -177,8 +177,10 @@ export class AllemployeesComponent
     if(this.statusOrder === 'closed'){
       this.ShowButtons = false
      }
-
-   this.getEventLocation()
+  
+    
+    this.getEventLocation()
+   
     
   }
   
@@ -236,7 +238,7 @@ export class AllemployeesComponent
           const lastName = employeeData.lastname
           const highKeyId = employeeData.employeeId ;
           const position = employee.position || "No data";
-          const totalHours = employee.hours || 0;
+          const totalHours =  0;//employee.hours ||
           const payrollId = employeeData.payrollid || "No data";
           const brake = employee.break || "0";
           const hourFrom = employee.hourFrom || "No data";
@@ -336,12 +338,190 @@ export class AllemployeesComponent
        this.totalHoursSum = numberArray.reduce((accumulator, currentValue) => {
           return accumulator + currentValue;
         }, 0);
+
+        // console.log("lalalal", (`${startDate}T${horaInicio}`),)
+        this.updateRegistration()
       })
       .catch((error) => {
         console.log(error);
         this.isTblLoading = false;
       });
   }
+
+  updateRegistration1() {
+    // Supongamos que "this.employeesArray" es el arreglo que quieres llenar
+    const employeesArray = this.employeesArray;
+    const items = this.dataEmployees.data.items;
+  
+    items.forEach(item => {
+      const hourFrom = item.hourFrom;
+      const employees = item.employees;
+      // console.log("xhourFrom", hourFrom);
+      // console.log("xemployees", employees);
+      employees.forEach(employee => {
+        const employeeId = employee.data.employeeId;
+        // console.log("xemployeeId", employeeId)
+       /*  const existingEmployeeIndex = employeesArray.findIndex(existingEmployee => existingEmployee.employee.data.employeeId === employeeId && existingEmployee.hourFrom === hourFrom);
+        console.log("xexistingEmployeeIndex", existingEmployeeIndex)
+        console.log("x ...employee",existingEmployee ) */
+        const existingEmployeeIndex = employeesArray.findIndex(existingEmployee => {
+          // console.log("2existingEmployee.hourFrom", existingEmployee.hourFrom)
+          // console.log("1existingEmployee.employee.data.employeeId ", existingEmployee.data.employeeId );
+
+          const condition = existingEmployee.data.employeeId === employeeId && existingEmployee.hourFrom === hourFrom;
+          // console.log("xexistingEmployee:", existingEmployee); // Agregamos el console.log aquí
+          return condition;
+        });        
+        // console.log("existingEmployeeIndex:", existingEmployeeIndex);
+        
+        if (existingEmployeeIndex === -1) {
+          // No se encontró un empleado con el mismo "employeeId" y "hourFrom" en employeesArray, agregarlo.
+          employeesArray.push({ ...employee, hourFrom }); // Mantén la misma estructura.
+        
+        }
+      });
+    });
+  
+    // Imprime el contenido de employeesArray
+    console.log("Contenido de employeesArray después de agregar empleados únicos:");
+    console.log(employeesArray);
+
+  }
+  
+  updateRegistration() {
+    const employeesArray = this.employeesArray;
+    const items = this.dataEmployees.data.items;
+    const startDate = this.dataEmployees.data.startDate
+  
+    if (employeesArray.length === 0) {
+      // Si employeesArray está vacío, agrega todos los empleados directamente.
+      items.forEach(item => {
+        const hourFrom = item.hourFrom;
+        const employees = item.employees;
+        const position =  item.position;
+        employees.forEach(employee => {
+          // let id = employee.id
+          // employeesArray.push({ ...employee, hourFrom }); // Mantén la misma estructura.
+           let hourFromFormatted = "No Data";
+           
+           if (hourFrom) {
+            const hourParts = hourFrom.split(':');
+            if (hourParts.length === 2) {
+              const hours = parseInt(hourParts[0]);
+              const minutes = parseInt(hourParts[1]);          
+              // Calcula el período (AM o PM)
+              const period = hours >= 12 ? 'PM' : 'AM';          
+              // Convierte las horas al formato de 12 horas
+              const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
+              const formattedMinutes = minutes.toString().padStart(2, '0');
+          
+              // Formatea la hora en un string
+              hourFromFormatted = `${formattedHours}:${formattedMinutes} ${period}`;
+             } 
+            }
+          const addEmployeeRegist = {
+              hours: 0,
+              hourFrom: hourFrom,
+              hourFromFormatted:hourFromFormatted,              
+              orderId: this.orderId,
+              position: position,
+              dateStart: new Date(`${startDate}T${hourFrom}`),
+              break : 0,
+              employee: {
+                  ...employee
+                  // agmRate: result.rate,
+                  // booking: "Emergency",
+                  // data: {
+                      // ...result,
+                  // },
+                  // rate: result.rate,
+                  // id: result.id,
+                  // favourite: "Emergency",
+                  // status: "Confirmed"
+              },
+              firstName: employee.data.firstname,
+              highKeyId: employee.data.employeeId,
+              lastName: employee.data.lastname,
+              payRollId: employee.data.payrollid || 'No Data',
+            }; 
+          
+          this.employeesArray.push(addEmployeeRegist);          
+        });
+      });
+    } else {
+      // Si employeesArray no está vacío, aplica la lógica de actualización.
+      items.forEach(item => {
+        const hourFrom = item.hourFrom;
+        const employees = item.employees;
+        const position =  item.position;
+  
+        employees.forEach(employee => {
+          const employeeId = employee.data.employeeId;
+          const existingEmployeeIndex = employeesArray.findIndex(existingEmployee => {
+            console.log("xexistingEmployee", existingEmployee.employee.data)
+            const condition = existingEmployee.employee.data.employeeId === employeeId && existingEmployee.hourFrom === hourFrom;
+            return condition;
+          });
+  
+          if (existingEmployeeIndex === -1) {
+            // No se encontró un empleado con el mismo "employeeId" y "hourFrom" en employeesArray, agregarlo.
+            
+              // employeesArray.push({ ...employee, hourFrom }); // Mantén la misma estructura.
+              let hourFromFormatted = "No Data";
+              if (hourFrom) {
+                const hourParts = hourFrom.split(':');
+                if (hourParts.length === 2) {
+                  const hours = parseInt(hourParts[0]);
+                  const minutes = parseInt(hourParts[1]);          
+                  // Calcula el período (AM o PM)
+                  const period = hours >= 12 ? 'PM' : 'AM';          
+                  // Convierte las horas al formato de 12 horas
+                  const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
+                  const formattedMinutes = minutes.toString().padStart(2, '0');
+              
+                  // Formatea la hora en un string
+                  hourFromFormatted = `${formattedHours}:${formattedMinutes} ${period}`;
+                 } 
+                }
+              const addEmployeeRegist = {
+                hours: 0,
+                hourFrom: hourFrom,
+                hourFromFormatted:hourFromFormatted,              
+                orderId: this.orderId,
+                position: position,
+                dateStart: new Date(`${startDate}T${hourFrom}`),
+                break : 0,
+                employee: {
+                    ...employee
+                    // agmRate: result.rate,
+                    // booking: "Emergency",
+                    // data: {
+                        // ...result,
+                    // },
+                    // rate: result.rate,
+                    // id: result.id,
+                    // favourite: "Emergency",
+                    // status: "Confirmed"
+                },
+                firstName: employee.data.firstname,
+                highKeyId: employee.data.employeeId,
+                lastName: employee.data.lastname,
+                payRollId: employee.data.payrollid || 'No Data',
+              }; 
+            
+            this.employeesArray.push(addEmployeeRegist); 
+          }
+        });
+      });
+    }
+  
+    // Imprime el contenido de employeesArray
+    console.log("Contenido de employeesArray después de agregar empleados únicos:");
+    console.log("x",employeesArray);
+  }
+  
+
+
   
   getEventLocation(){
     console.log("Ubicacion del evento", this.dataEmployees.data.mapLink)
