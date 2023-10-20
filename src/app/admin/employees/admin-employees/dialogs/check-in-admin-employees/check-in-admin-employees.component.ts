@@ -57,7 +57,6 @@ export class CheckInAdminEmployeesComponent implements OnInit{
     
     this.shareTimeDifferenceInMinutesService.setTimeDifference(timeDifferenceInMinutes);
     
-      
       if (timeDifferenceInMinutes >= 20) {
         console.log("La hora actual es menor o igual que el scheduleTime en 20 mins.");
         console.log("scheduleTime:", scheduleTime);

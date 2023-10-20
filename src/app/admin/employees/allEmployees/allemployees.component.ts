@@ -2454,10 +2454,6 @@ export class ExampleDataSource extends DataSource<Employees> {
     );
   }
 
-  mapEvent(){
-    
-  }
-
   disconnect() {
     // disconnect
   }
