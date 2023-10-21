@@ -114,6 +114,7 @@ export class AllemployeesComponent
   map: L.Map;
   latitudeEvent: number;
   longitudeEvent: number;
+  selected_Rows: any[] = []; // Nueva propiedad para almacenar las selecciones
   
 
   constructor(
@@ -1782,6 +1783,58 @@ export class AllemployeesComponent
 async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
   const apiUrl = 
   `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByStartDate?date=${startDate}`;
+  //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByStartDate?date=${startDate}`;
+  // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByStartDate?date=${startDate}`;
+    const response = await fetch(apiUrl);
+    const ordenes = await response.json();
+    console.log("horaInicio", horaInicio)
+    console.log("duracionHoras", duracionHoras)
+    console.log("startDate", startDate)
+    const dateStart = new Date(`${startDate}T${horaInicio}`);
+    console.log("dateStart", dateStart)
+    const dateEnd = this.addHours(duracionHoras, dateStart);
+    console.log("dateEnd", dateEnd)
+    for (const orden of ordenes) {
+        const ordenItems = orden.data.items;
+        for (const item of ordenItems) {
+            const empleados = item.employees;
+            if (empleados) {             
+            // const empleadoEnOrden = empleados.find(emp => emp.id === empleado.id);
+            const empleadoEnOrden = empleados.find(emp => (emp.id ? emp.id === empleado.id : emp.data.employeeId === empleado.employeeId));
+
+            if (empleadoEnOrden) {
+                const fechaInicioOrden = new Date(`${orden.data.startDate}T${horaInicio}`);
+                const duracionHorasOrden = item.hours;
+                const fechaFinOrden = this.addHours(duracionHorasOrden, fechaInicioOrden);
+
+                const horaInicioStr = horaInicio; //item.hourFrom;
+                const [horas, minutos] = horaInicioStr.split(':');                
+                const [year, month, day] = orden.data.startDate.split('-');
+                const fechaInicioOrden1 = new Date(year, month - 1, day, 0, 0, 0); // Restamos 1 al mes porque en JavaScript los meses van de 0 a 11
+                fechaInicioOrden1.setHours(Number(horas), Number(minutos), 0, 0); // Ajustar la hora y los minutos
+
+                console.log("fechaInicioOrden1", fechaInicioOrden1);
+                
+                console.log("fechaInicioOrden", fechaInicioOrden);
+                console.log("duracionHorasOrden", duracionHorasOrden);
+                console.log("fechaFinOrden", fechaFinOrden);
+                if (
+                    (dateStart >= fechaInicioOrden1 && dateStart < fechaFinOrden) || // Verificar conflicto con hora de inicio
+                    (dateEnd > fechaInicioOrden1 && dateEnd <= fechaFinOrden)         // Verificar conflicto con hora de finalización
+                ) {
+                    return true; // Hay conflicto de horario
+                }
+            }
+          }
+        }
+    }
+
+    return false; // No hay conflicto de horario
+  }
+/*
+async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
+  const apiUrl = 
+  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByStartDate?date=${startDate}`;
   // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByStartDate?date=${startDate}`;
   // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByStartDate?date=${startDate}`;
     const response = await fetch(apiUrl);
@@ -1827,7 +1880,7 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
 
     return false; // No hay conflicto de horario
 }
-
+*/
   async addExistingEmergencyEmployeeModal() {
     
     const dialogRef = this.dialog.open(AddExistingEmployeeComponent);
@@ -2110,6 +2163,66 @@ async updateOrderWithNewEmployee(result) {
   console.log("result en order", result)
   const apiUrl = 
   `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`
+  //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+  
+  const response = await fetch(apiUrl, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch order data.');
+  }
+
+  const orderData = await response.json();
+  const newEmployee = {
+    agmRate: result.rate,
+    booking: 'Emergency',
+    data: {
+      ...result
+    },
+    rate: result.rate,
+    favourite: 'Emergency',
+    status: 'Confirmed',
+    id:result.id,
+  };
+
+  // Busca el índice del elemento en la lista de 'items' que tenga la misma posición que el nuevo empleado.
+  const itemIndex = orderData.data.items.findIndex(item => item.position === result.position && item.hourFrom === result.hourFrom);
+
+  if (itemIndex !== -1) {
+    // Agrega el nuevo empleado al arreglo de empleados dentro del elemento encontrado.
+    const currentPending = orderData.data.items[itemIndex].pending;
+   const currentM = orderData.data.items[itemIndex].m;
+    orderData.data.items[itemIndex].employees.push(newEmployee);
+    orderData.data.items[itemIndex].pending = currentPending - 1;
+    orderData.data.items[itemIndex].m = currentM + 1;
+
+ 
+    // Actualiza la orden en el servidor con el nuevo empleado agregado.
+   
+    const updateOrderResponse = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(orderData.data), // Envía solo el objeto 'data' actualizado
+    });
+
+    if (!updateOrderResponse.ok) {
+      throw new Error('Failed to update order with new employee.');
+    }
+  } else {
+    throw new Error('Item not found in order.');
+  }
+}
+/*
+async updateOrderWithNewEmployee(result) {
+  console.log("result en order", result)
+  const apiUrl = 
+  `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`
   // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
   
   const response = await fetch(apiUrl, {
@@ -2164,6 +2277,7 @@ async updateOrderWithNewEmployee(result) {
     throw new Error('Item not found in order.');
   }
 }
+*/
 
 //INICIO MAPA
 
@@ -2377,46 +2491,82 @@ mostrarCoordenadasEnMapaModal(coordLat: number, coordLong: number) {
     const numRows = this.dataSource.renderedData.length;
     return numSelected === numRows;
   } */
+
+  /*
   isAllSelected() {
     const numSelected = this.selection.selected.filter(row => row.status !== 'No show').length;
     const numRows = this.dataSource.renderedData.filter(row => row.status !== 'No show').length;
     return numSelected === numRows;
   }
+  */
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.filter((row) => row.status !== 'No show').length;
+    const numRows = this.dataSource.filteredData.filter((row) => row.status !== 'No show').length;
+    return numSelected === numRows && numRows > 0;
+  }
   
   /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-  // Verificar si al menos un elemento seleccionado tiene dateCheckin diferente de null o undefined
-  console.log('this.dataSource.renderedData 1: ',this.dataSource.renderedData)
-  //const allSelectedWithNullCheckin = this.selection.selected.every(
-  //  row =>  (row.dateCheckin === null || row.dateCheckin === undefined)
-  //);
-  const allSelectedWithNullCheckin = this.dataSource.renderedData.every(
-    row =>  (row.dateCheckin === null || row.dateCheckin === undefined)
-  );
-  console.log('this.dataSource.renderedData 2: ',this.dataSource.renderedData)
-  console.log('allSelectedWithNullCheckin: ',allSelectedWithNullCheckin)
 
-  if (allSelectedWithNullCheckin) {
-    console.log('entró al IF')
-    this.showCheckInButton = true;
-    this.showNoShowButton = true;
-    this.showCheckOutButton = false;
+  masterToggle() {
+    
+    const verifyIfAllSelected = this.dataSource.renderedData.every(row => this.selection.isSelected(row));
+    console.log('Estado de los checkboxes: ',verifyIfAllSelected)
+
+    // Verificar si todos los elementos seleccionados tienen dateCheckin igual a null o undefined
+    console.log('this.dataSource.renderedData 1: ',this.dataSource.renderedData)
+  
+    const allSelectedWithNullCheckin = this.dataSource.renderedData.every(
+    row =>  (row.dateCheckin === null || row.dateCheckin === undefined)
+    );
+    console.log('this.dataSource.renderedData 2: ',this.dataSource.renderedData)
+    console.log('allSelectedWithNullCheckin: ',allSelectedWithNullCheckin)
+
+    if (allSelectedWithNullCheckin) {
+      console.log('entró al IF')
+      this.showCheckInButton = true;
+      this.showNoShowButton = true;
+      this.showCheckOutButton = false;
     this.showBreakButton = false;
-  } else {
-    console.log('entró al ELSE')
-    this.showCheckInButton = false;
-    this.showNoShowButton = false;
-    this.showCheckOutButton = false;
+    } else {
+      console.log('entró al ELSE')
+      this.showCheckInButton = false;
+      this.showNoShowButton = false;
+      this.showCheckOutButton = false;
     this.showBreakButton = false;
-  }
+    }
+
+    const isChecked = this.isAllSelected();
+    console.log('isChecked: ',isChecked)
+    this.dataSource.filteredData.forEach((row) => {
+      if (row.status !== 'No show') {
+        isChecked ? this.selection.deselect(row) : this.selection.select(row);
+      }
+    });
+  /*  
+  // Vacía la selección actual
+  this.isAllSelected()
+  ? this.selection.clear()
+  // Recorre todas las páginas de datos y selecciona las filas
+  : this.dataSource.filteredData.forEach(row => {
+    if (row.status !== 'No show') {
+      this.selection.select(row);
+    }
+  });
+  */
+  // Asegúrate de que el paginador esté configurado para la primera página.
+  this.paginator.firstPage();
+
+    /*
     this.isAllSelected()
-      ? this.selection.clear()
-      : this.dataSource.renderedData.forEach((row) =>{
-          // this.selection.select(row)
-          if (row.status !== 'No show') {
-            this.selection.select(row);
-          }
-        });
+    ? this.selection.clear()
+    : this.dataSource.renderedData.forEach((row) =>{
+        // this.selection.select(row)
+        if (row.status !== 'No show') {
+          this.selection.select(row);
+        }
+      });
+      */
   }
  
   
