@@ -257,7 +257,7 @@ export class AllemployeesComponent
           const lastName = employeeData.lastname
           const highKeyId = employeeData.employeeId ;
           const position = employee.position || "No data";
-          const totalHours =  0;//employee.hours ||
+          const totalHours = employee.hours || "No data";
           const payrollId = employeeData.payrollid || "No data";
           const brake = employee.break || "0";
           const hourFrom = employee.hourFrom || "No data";
@@ -2485,20 +2485,6 @@ mostrarCoordenadasEnMapaModal(coordLat: number, coordLong: number) {
   private refreshTable() {
     this.paginator._changePageSize(this.paginator.pageSize);
   }
-  /** Whether the number of selected elements matches the total number of rows. */
- /*  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.renderedData.length;
-    return numSelected === numRows;
-  } */
-
-  /*
-  isAllSelected() {
-    const numSelected = this.selection.selected.filter(row => row.status !== 'No show').length;
-    const numRows = this.dataSource.renderedData.filter(row => row.status !== 'No show').length;
-    return numSelected === numRows;
-  }
-  */
 
   isAllSelected() {
     const numSelected = this.selection.selected.filter((row) => row.status !== 'No show').length;
@@ -2507,11 +2493,53 @@ mostrarCoordenadasEnMapaModal(coordLat: number, coordLong: number) {
   }
   
   /** Selects all rows if they are not all selected; otherwise clear selection. */
-
   masterToggle() {
-    
+
+    const allSelectedWithNullCheckin = this.dataSource.renderedData.every(
+      row =>  (row.dateCheckin === null || row.dateCheckin === undefined)
+      );
+      console.log('this.dataSource.renderedData 2: ',this.dataSource.renderedData)
+      console.log('allSelectedWithNullCheckin: ',allSelectedWithNullCheckin)
+  
+      if (allSelectedWithNullCheckin) {
+        console.log('entró al IF')
+        this.showCheckInButton = true;
+        this.showNoShowButton = true;
+        this.showCheckOutButton = false;
+      this.showBreakButton = false;
+      } else {
+        console.log('entró al ELSE')
+        this.showCheckInButton = true;
+        this.showNoShowButton = true;
+        this.showCheckOutButton = true;
+        this.showBreakButton = true;
+      }
+
+
     const verifyIfAllSelected = this.dataSource.renderedData.every(row => this.selection.isSelected(row));
     console.log('Estado de los checkboxes: ',verifyIfAllSelected)
+    const isChecked = this.isAllSelected();
+    this.dataSource.filteredData.forEach((row) => {
+      if (row.status !== 'No show') {
+        isChecked ? this.selection.deselect(row) : this.selection.select(row);
+      }
+    });
+    // La siguiente linea asegura que el paginador esté configurado para la primera página.
+    this.paginator.firstPage();
+    /*  
+    // Vacía la selección actual
+    this.isAllSelected()
+    ? this.selection.clear()
+    // Recorre todas las páginas de datos y selecciona las filas
+    : this.dataSource.filteredData.forEach(row => {
+      if (row.status !== 'No show') {
+        this.selection.select(row);
+      }
+    });
+    */
+  }
+  /*
+  masterToggle() {
 
     // Verificar si todos los elementos seleccionados tienen dateCheckin igual a null o undefined
     console.log('this.dataSource.renderedData 1: ',this.dataSource.renderedData)
@@ -2536,42 +2564,30 @@ mostrarCoordenadasEnMapaModal(coordLat: number, coordLong: number) {
     this.showBreakButton = false;
     }
 
+    const verifyIfAllSelected = this.dataSource.renderedData.every(row => this.selection.isSelected(row));
+    console.log('Estado de los checkboxes: ',verifyIfAllSelected)
     const isChecked = this.isAllSelected();
-    console.log('isChecked: ',isChecked)
     this.dataSource.filteredData.forEach((row) => {
       if (row.status !== 'No show') {
         isChecked ? this.selection.deselect(row) : this.selection.select(row);
       }
     });
-  /*  
-  // Vacía la selección actual
-  this.isAllSelected()
-  ? this.selection.clear()
-  // Recorre todas las páginas de datos y selecciona las filas
-  : this.dataSource.filteredData.forEach(row => {
-    if (row.status !== 'No show') {
-      this.selection.select(row);
-    }
-  });
-  */
-  // Asegúrate de que el paginador esté configurado para la primera página.
-  this.paginator.firstPage();
-
-    /*
-    this.isAllSelected()
-    ? this.selection.clear()
-    : this.dataSource.renderedData.forEach((row) =>{
-        // this.selection.select(row)
-        if (row.status !== 'No show') {
-          this.selection.select(row);
-        }
-      });
-      */
+    // La siguiente linea asegura que el paginador esté configurado para la primera página.
+    this.paginator.firstPage();
+      
+    // Vacía la selección actual
+    //this.isAllSelected()
+    //? this.selection.clear()
+    // Recorre todas las páginas de datos y selecciona las filas
+    //: this.dataSource.filteredData.forEach(row => {
+    //  if (row.status !== 'No show') {
+    //    this.selection.select(row);
+    //  }
+    //});
+    
   }
- 
-  
-  
-  
+  */
+
   removeSelectedRows() {
     const totalSelect = this.selection.selected.length;
     this.selection.selected.forEach((item) => {
