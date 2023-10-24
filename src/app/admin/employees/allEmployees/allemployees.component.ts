@@ -1287,6 +1287,83 @@ export class AllemployeesComponent
   }
 
   async breakModal(selectedRows: Employees[]) {
+    // Deseleccionar a los empleados previamente seleccionados
+    this.employeesArray.forEach((employee) => {
+      employee.selected = false;
+    });
+  
+    if (selectedRows.length > 0) {
+      console.log('Empleados seleccionados para break:', selectedRows);
+      const dialogRef = this.dialog.open(BreakComponent, {
+        data: {
+          employees: this.employees,
+          action: 'add',
+        },
+      });
+  
+      const result = await dialogRef.afterClosed().toPromise();
+      const roundedBreak = this.roundHours(result.break / 60);
+  
+      const updatedEmployees = this.employeesArray.map((employee) => {
+        if (
+          selectedRows.some(
+            (row) =>
+              row.employee.data.employeeId === employee.employee.data.employeeId &&
+              row.hourFrom === employee.hourFrom &&
+              (employee.dateCheckout !== null && employee.dateCheckout !== undefined)
+          )
+        ) {
+          if (employee.hours == 5) {
+            this.updatedHours = employee.hours;
+          } else {
+            this.updatedHours = employee.hours - roundedBreak;
+          }
+  
+          return {
+            ...employee,
+            updateUser: this.dataUser.email,
+            break: result.break,
+            hours: this.updatedHours,
+          };
+        }
+        return employee;
+      });
+  
+      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+  
+      fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ employees: updatedEmployees }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.showNotification(
+            'snackbar-success',
+            'Successful break...!!!',
+            'bottom',
+            'center'
+          );
+          this.getEmployees();
+          this.removeSelectedRows();
+        })
+        .catch((error) => {
+          console.error('Error al actualizar:', error);
+        });
+    } else {
+      // console.log 'Ningún empleado seleccionado para break.'
+    }
+  }
+  
+/*
+  async breakModal(selectedRows: Employees[]) {
+    // Deseleccionar a los empleados previamente seleccionados
+    this.employeesArray.forEach((employee) => {
+      employee.selected = false;
+    });
+
     if (selectedRows.length > 0) {
       console.log('Empleados seleccionados para break:', selectedRows);
       const dialogRef = this.dialog.open(BreakComponent, {
@@ -1306,7 +1383,7 @@ export class AllemployeesComponent
           selectedRows.some(
             (row) =>
               row.employee.data.employeeId === employee.employee.data.employeeId && 
-              row.hourFrom === employee.hourFrom,
+              row.hourFrom === employee.hourFrom && employee.dateCheckout != null || employee.dateCheckout != undefined// Verifica si dateCheckout no es null
           )
         ) {
           // Restar el tiempo de descanso del total de horas trabajadas
@@ -1362,7 +1439,7 @@ export class AllemployeesComponent
       // console.log('Ningún empleado seleccionado para break.');
     }
   }
-
+ */
   async loadTimesheet() {
     this.outEmployees = [];
     this.pdfEmployees = [];
@@ -2028,7 +2105,7 @@ addEmployeeToArray(result, startDate, horaInicio) {
 async updateEmployeesArray() {
 // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
  const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-console.log("modificadito", this.employeesArray)  
+//console.log("modificadito", this.employeesArray)  
 const response = await fetch(apiUrl, {
       method: 'PUT',
       headers: {

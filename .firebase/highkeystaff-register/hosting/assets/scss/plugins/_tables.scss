@@ -536,7 +536,7 @@ tr.group:hover {
     border-top-right-radius: 10px;
     // min-width: 800px;
     .left {
-        flex: 30%;
+        flex: 35%;
         height: 60px;
         display: table-cell;
         vertical-align: middle;
@@ -550,7 +550,7 @@ tr.group:hover {
         text-align: left;
     }
     .right {
-        flex: 60%;
+        flex: 40%;
         height: 60px;
         display: table-cell;
         vertical-align: middle;
