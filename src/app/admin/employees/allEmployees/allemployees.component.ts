@@ -1313,11 +1313,21 @@ export class AllemployeesComponent
               (employee.dateCheckout !== null && employee.dateCheckout !== undefined)
           )
         ) {
+          
+          console.log('Empleados B: ',employee)
+          const roundedHours = employee.empExactHours
+          ? this.calculateRegularHours(employee, employee.dateCheckoutRounded._seconds)
+          : this.calculateHoursWorked(employee, employee.dateCheckout._seconds, employee.dateCheckoutRounded._seconds);
+          const totalHours = roundedHours.toFixed(2);
+          console.log("luntotalHoursRounded: ", employee.dateCheckoutRounded)
+          console.log("luntotalHours", totalHours)
+          
           if (employee.hours == 5) {
             this.updatedHours = employee.hours;
           } else {
-            this.updatedHours = employee.hours - roundedBreak;
+            this.updatedHours =  Number(totalHours) - roundedBreak;            
           }
+          
   
           return {
             ...employee,
