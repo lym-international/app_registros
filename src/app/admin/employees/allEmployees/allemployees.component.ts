@@ -357,6 +357,10 @@ export class AllemployeesComponent
        this.totalHoursSum = numberArray.reduce((accumulator, currentValue) => {
           return accumulator + currentValue;
         }, 0);
+        // Redondear totalHoursSum a dos decimales
+        this.totalHoursSum = Number(this.totalHoursSum.toFixed(2));
+
+        
 
         // console.log("lalalal", (`${startDate}T${horaInicio}`),)
         
