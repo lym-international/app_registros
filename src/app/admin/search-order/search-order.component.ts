@@ -201,14 +201,18 @@ export class SearchOrderComponent{
   } */
 
   //Recargando una vez se carga los datos (ligado al constructor)
+  loading = false;
+
   navegar() {
     if (this.data.role === "Administrator") {
       this.router.navigate(['/admin/dashboard-lm/']);
     } else if (this.data.role === "Employee") {
       this.router.navigate(['/admin/employees/admin-employees/']);
     }
-    // Establecer la bandera para recargar después de hacer clic en "Search"
-    this.shouldReload = true;
+    this.loading = true; // Mostrar la animación de carga
+     setTimeout(() => {
+      this.shouldReload = true;
+     }, 200); // Establecer la bandera para recargar después de un breve retraso
   }
   
   
