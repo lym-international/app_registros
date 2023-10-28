@@ -251,9 +251,8 @@ export class AllemployeesComponent
             employeeData.lastname &&
             employeeData.employeeId 
           ) {
-  
+          console.log('Arreglo de empleados: ',employee)
           const firstName = employeeData.firstname || "No data";
-          //console.log('empleado: ',employee)
           const lastName = employeeData.lastname
           const highKeyId = employeeData.employeeId ;
           const position = employee.position || "No data";
@@ -373,7 +372,7 @@ export class AllemployeesComponent
         this.isTblLoading = false;
       });
   }
-  updateRegistration() {
+  async updateRegistration() {
     const employeesArray = this.employeesArray;
     const items = this.dataEmployees.data.items;
     const startDate = this.dataEmployees.data.startDate
@@ -499,6 +498,42 @@ export class AllemployeesComponent
         });
       });
     }
+
+    const employeeDataArray = [];
+     items.forEach((item) => {
+       const hourFrom = item.hourFrom;
+       item.employees.forEach((employee) => {
+         const employeeData = { ...employee.data, hourFrom };
+         employeeDataArray.push(employeeData);
+       });
+     });
+     this.employeesArray = this.employeesArray.filter((employee) => {
+       const highKeyId = employee.highKeyId;
+       const hourFrom = employee.hourFrom;
+       const employeeExistsInDataArray = employeeDataArray.some(
+         (dataEmployee) =>
+           dataEmployee.employeeId === highKeyId &&
+           dataEmployee.hourFrom === hourFrom
+       );
+       return employeeExistsInDataArray;
+     });
+     console.log(
+       'Contenido de employeesArray después de agregar empleados únicos:'
+     );
+     //const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+     console.log('modific', this.employeesArray);
+     const response = await fetch(apiUrl, {
+       method: 'PUT',
+       headers: {
+         'Content-Type': 'application/json',
+       },
+       body: JSON.stringify({ employees: this.employeesArray }),
+     });
+     // console.log(response)
+     if (!response.ok) {
+       throw new Error('Failed to update employees array.');
+     }
   
     // Imprime el contenido de employeesArray
     console.log("Contenido de employeesArray después de agregar empleados únicos:");
@@ -748,13 +783,17 @@ export class AllemployeesComponent
               dateCheckoutRounded,
               
             );          
-            if(roundedHours==5){
-              this.updatedHours = roundedHours 
-            } else{
-              this.updatedHours =  roundedHours - roundedBreak;
-            }
 
+            const dateCheckin = new Date( dateCheckinRounded * 1000);
+            const late = this.validateCheckout1(employee.hourFrom, dateCheckin);
+            if (late < 8 && roundedHours==5) {
+            this.updatedHours = roundedHours
+            }else{
+            this.updatedHours =  Number(roundedHours) - roundedBreak;
           }
+          
+          }
+          
 
           return {
             ...employee,
@@ -1326,10 +1365,12 @@ export class AllemployeesComponent
           console.log("luntotalHoursRounded: ", employee.dateCheckoutRounded)
           console.log("luntotalHours", totalHours)
           
-          if (employee.hours == 5) {
-            this.updatedHours = employee.hours;
-          } else {
-            this.updatedHours =  Number(totalHours) - roundedBreak;            
+          const dateCheckin = new Date( employee.dateCheckin._seconds * 1000);
+          const late = this.validateCheckout1(employee.hourFrom, dateCheckin);
+          if (late < 8 && employee.hours==5) {
+            this.updatedHours = employee.hours
+          }else{
+            this.updatedHours =  Number(totalHours) - roundedBreak;
           }
           
   

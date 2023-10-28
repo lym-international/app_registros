@@ -251,6 +251,7 @@
                                 <ng-container matColumnDef="map">
                                     <mat-header-cell class="pr-0" *matHeaderCellDef>Map</mat-header-cell>
                                     <mat-cell class="celda" *matCellDef="let row; let i=index;" class="pr-0">
+                                        <span class="mobile-label">Map</span>
                                         <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Map: Event, CheckIn and CheckOut." (click)="openMapModal()">
                                             <app-feather-icons [icon]="'map-pin'" [class]="'tbl-fav-delete'"></app-feather-icons>
                                         </button>

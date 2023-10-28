@@ -47,3 +47,14 @@
         </form>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputElement = document.querySelector('input[formControlName="startDate"]');
+
+        if (inputElement && typeof inputElement.selectionStart === "number") {
+            inputElement.selectionStart = 0;
+            inputElement.selectionEnd = 0;
+        }
+    });
+</script>
