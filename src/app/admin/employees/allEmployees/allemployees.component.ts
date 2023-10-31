@@ -387,6 +387,177 @@ export class AllemployeesComponent
         employees.forEach(employee => {
           // let id = employee.id
           // employeesArray.push({ ...employee, hourFrom }); // Mantén la misma estructura.
+          if (employee.status !== "Rejected") {
+           let hourFromFormatted = "No Data";
+           
+           if (hourFrom) {
+            const hourParts = hourFrom.split(':');
+            if (hourParts.length === 2) {
+              const hours = parseInt(hourParts[0]);
+              const minutes = parseInt(hourParts[1]);          
+              // Calcula el período (AM o PM)
+              const period = hours >= 12 ? 'PM' : 'AM';          
+              // Convierte las horas al formato de 12 horas
+              const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
+              const formattedMinutes = minutes.toString().padStart(2, '0');
+          
+              // Formatea la hora en un string
+              hourFromFormatted = `${formattedHours}:${formattedMinutes} ${period}`;
+             } 
+            }
+          const addEmployeeRegist = {
+              hours: 0,
+              hourFrom: hourFrom,
+              hourFromFormatted:hourFromFormatted,              
+              orderId: this.orderId,
+              position: position,
+              dateStart: new Date(`${startDate}T${hourFrom}`),
+              break : 0,
+              employee: {
+                  ...employee
+                  // agmRate: result.rate,
+                  // booking: "Emergency",
+                  // data: {
+                      // ...result,
+                  // },
+                  // rate: result.rate,
+                  // id: result.id,
+                  // favourite: "Emergency",
+                  // status: "Confirmed"
+              },
+              firstName: employee.data.firstname,
+              highKeyId: employee.data.employeeId,
+              lastName: employee.data.lastname,
+              payRollId: employee.data.payrollid || 'No Data',
+            }; 
+          
+          this.employeesArray.push(addEmployeeRegist);  
+          }        
+        });
+      });
+    } else {
+      // Si employeesArray no está vacío, aplica la lógica de actualización.
+      items.forEach(item => {
+        
+        const hourFrom = item.hourFrom;
+        const employees = item.employees;
+        const position =  item.position;
+  
+        employees.forEach(employee => {
+          const employeeId = employee.data.employeeId;
+          // console.log("aux",employee.status)
+          // : "Rejected" 
+          if (employee.status !== "Rejected") {
+            const existingEmployeeIndex = employeesArray.findIndex(existingEmployee => {
+              // console.log("xexistingEmployee", existingEmployee.employee.data)
+              const condition = existingEmployee.employee.data.employeeId === employeeId && existingEmployee.hourFrom === hourFrom 
+              // && employee.status !== "Rejected";
+              return condition;
+            });
+    
+            if (existingEmployeeIndex === -1) {
+              // No se encontró un empleado con el mismo "employeeId" y "hourFrom" en employeesArray, agregarlo.            
+                // employeesArray.push({ ...employee, hourFrom }); // Mantén la misma estructura.
+                let hourFromFormatted = "No Data";
+                if (hourFrom) {
+                  const hourParts = hourFrom.split(':');
+                  if (hourParts.length === 2) {
+                    const hours = parseInt(hourParts[0]);
+                    const minutes = parseInt(hourParts[1]);          
+                    // Calcula el período (AM o PM)
+                    const period = hours >= 12 ? 'PM' : 'AM';          
+                    // Convierte las horas al formato de 12 horas
+                    const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
+                    const formattedMinutes = minutes.toString().padStart(2, '0');
+                
+                    // Formatea la hora en un string
+                    hourFromFormatted = `${formattedHours}:${formattedMinutes} ${period}`;
+                  } 
+                  }
+                const addEmployeeRegist = {
+                  hours: 0,
+                  hourFrom: hourFrom,
+                  hourFromFormatted:hourFromFormatted,              
+                  orderId: this.orderId,
+                  position: position,
+                  dateStart: new Date(`${startDate}T${hourFrom}`),
+                  break : 0,
+                  employee: {
+                      ...employee
+                      // agmRate: result.rate,
+                      // booking: "Emergency",
+                      // data: {
+                          // ...result,
+                      // },
+                      // rate: result.rate,
+                      // id: result.id,
+                      // favourite: "Emergency",
+                      // status: "Confirmed"
+                  },
+                  firstName: employee.data.firstname,
+                  highKeyId: employee.data.employeeId,
+                  lastName: employee.data.lastname,
+                  payRollId: employee.data.payrollid || 'No Data',
+                }; 
+              
+              this.employeesArray.push(addEmployeeRegist); 
+            }
+          }
+        });
+      }); 
+    }
+     const employeeDataArray = [];
+     items.forEach((item) => {
+       const hourFrom = item.hourFrom;
+       item.employees.forEach((employee) => {
+         const employeeData = { ...employee.data, hourFrom };
+         employeeDataArray.push(employeeData);
+       });
+     });
+     this.employeesArray = this.employeesArray.filter((employee) => {
+       const highKeyId = employee.highKeyId;
+       const hourFrom = employee.hourFrom;
+       const employeeExistsInDataArray = employeeDataArray.some(
+         (dataEmployee) =>
+           dataEmployee.employeeId === highKeyId &&
+           dataEmployee.hourFrom === hourFrom
+       );
+       return employeeExistsInDataArray;
+     });
+     console.log(
+       'Contenido de employeesArray después de agregar empleados únicos:'
+     );
+     //const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+     const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+     console.log('modific', this.employeesArray);
+     const response = await fetch(apiUrl, {
+       method: 'PUT',
+       headers: {
+         'Content-Type': 'application/json',
+       },
+       body: JSON.stringify({ employees: this.employeesArray }),
+     });
+     // console.log(response)
+     if (!response.ok) {
+       throw new Error('Failed to update employees array.');
+     }
+  }
+
+  /*
+  async updateRegistration() {
+    const employeesArray = this.employeesArray;
+    const items = this.dataEmployees.data.items;
+    const startDate = this.dataEmployees.data.startDate
+  
+    if (employeesArray.length === 0) {
+      // Si employeesArray está vacío, agrega todos los empleados directamente.
+      items.forEach(item => {
+        const hourFrom = item.hourFrom;
+        const employees = item.employees;
+        const position =  item.position;
+        employees.forEach(employee => {
+          // let id = employee.id
+          // employeesArray.push({ ...employee, hourFrom }); // Mantén la misma estructura.
            let hourFromFormatted = "No Data";
            
            if (hourFrom) {
@@ -540,7 +711,7 @@ export class AllemployeesComponent
     console.log("Contenido de employeesArray después de agregar empleados únicos:");
     console.log("x",employeesArray);
   }
-  
+  */
  /*  getEventLocation(){
     console.log("Ubicacion del evento", this.dataEmployees.data.mapLink)
     const url = new URL(this.dataEmployees.data.mapLink);
