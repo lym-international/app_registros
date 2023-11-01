@@ -65,8 +65,102 @@
             </mat-card>
         </div>
         <br/>
+        <!--INICIO VISIBILIDAD MOVILES TARJETAS EMPLEADOS-->
+        <div class="row d-flex d-md-none justify-content-center">
+            <div row style="display: flex;">
+                <div class="col-6 col-md-2">
+                    <div class="card l-bg-green-dark" style="margin-right: 10px;">
+                        <div class="card-statistic-3">
+                            <div class="card-icon card-icon-large"><i class="fa fa-briefcase"></i></div>
+                            <div class="card-content" style="padding-bottom: 28px;">
+                                <div style="font-size: 20px;" class="card-title">Requested</div>
+                                <span class="data-1" style="padding-bottom: 50px; font-size: 15px;">{{totalRequest}}</span>
 
-        <div class="row">
+                                <!--<mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow orange-progress mt-2 mb-2" value="40">
+                            </mat-progress-bar> -->
+                                <!--<p class="mb-0 text-sm">
+                                <span class="mr-2"><i class="fa fa-arrow-up"></i> 10%</span>
+                                <span class="text-nowrap"> Since last month</span>
+                            </p> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="card l-bg-cyan-dark" style="margin-left: 10px;">
+                        <div class="card-statistic-3">
+                            <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
+                            <div class="card-content">
+                                <div style="font-size: 20px;" class="card-title">Confirmed</div>
+                                <span style="font-size: 15px;" class="data-1">{{totalConfirmed}}</span>
+                                <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow orange-progress mt-2 mb-2" value={{porcentajeConfirmed}}>
+                                </mat-progress-bar>
+                                <!-- <p class="mb-0 text-sm">
+                                <span class="mr-2"><i class="fa fa-arrow-up"></i> 04%</span>
+                                <span class="text-nowrap"> Since last month</span>
+                            </p> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div row style="display: flex;">
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3 ">
+                    <div class="card l-bg-purple-dark">
+                        <div class="card-statistic-3">
+                            <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
+                            <div class="card-content">
+                                <div style="font-size: 18px;" class="card-title">CheckIn</div>
+                                <span style="font-size: 15px;" class="data-1">{{checkIn}}</span>
+                                <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow green-progress mt-2 mb-2" value={{porcentajeCheckIn}}>
+                                </mat-progress-bar>
+                                <!--<p class="mb-0 text-sm">
+                                <span class="mr-2"><i class="fa fa-arrow-up"></i> 23%</span>
+                                <span class="text-nowrap"> Since last month</span>
+                            </p>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3">
+                    <div class="card l-bg-orange-dark">
+                        <div class="card-statistic-3">
+                            <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
+                            <div class="card-content">
+                                <div style="font-size: 18px;" class="card-title">checkOut</div>
+                                <span style="font-size: 15px;" class="data-1">{{checkOut}}</span>
+                                <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow sky-progress mt-2 mb-2" value={{porcentajeCheckOut}}>
+                                </mat-progress-bar>
+                                <!--<p class="mb-0 text-sm">
+                                <span class="mr-2"><i class="fa fa-arrow-down"></i> 06%</span>
+                                <span class="text-nowrap"> Since last month</span>
+                            </p>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3">
+                    <div class="card l-bg-cyan-dark">
+                        <div class="card-statistic-3">
+                            <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
+                            <div class="card-content">
+                                <div style="font-size: 18px;" class="card-title">NoShow</div>
+                                <span style="font-size: 15px;" class="data-1">{{noShow}}</span>
+                                <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow violet-progress mt-2 mb-2" value={{porcentajeNoshow}}>
+                                </mat-progress-bar>
+                                <!--<p class="mb-0 text-sm">
+                                <span class="mr-2"><i class="fa fa-arrow-down"></i> 06%</span>
+                                <span class="text-nowrap"> Since last month</span>
+                            </p>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--FIN VISIBILIDAD MOVILES TARJETAS EMPLEADOS-->
+        <!--INICIO VISIBILIDAD ESCRITORIO TARJETAS EMPLEADOS-->
+        <div class="row d-none d-md-flex">
             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-2 tarjeta-indicadores">
                 <div class="card l-bg-green-dark">
                     <div class="card-statistic-3" style="padding-bottom: 70px">
@@ -154,6 +248,7 @@
                 </div>
             </div>
         </div>
+        <!--FIN VISIBILIDAD ESCRITORIO TARJETAS EMPLEADOS-->
 
         <!-- <div class="row clearfix">
             

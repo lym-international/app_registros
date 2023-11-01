@@ -115,6 +115,7 @@ export class AllemployeesComponent
   latitudeEvent: number;
   longitudeEvent: number;
   selected_Rows: any[] = []; // Nueva propiedad para almacenar las selecciones
+  updateRegistrationCalled: boolean;
   
 
   constructor(
@@ -132,6 +133,7 @@ export class AllemployeesComponent
     private shareTimeDifferenceInMinutesService: ShareTimeDifferenceInMinutesService,
   ) {
     super();
+    this.updateRegistrationCalled = false;
     // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
   }
 
@@ -339,11 +341,15 @@ export class AllemployeesComponent
           this.sort,
           this.employeesArray
         );
-
+          
        /*  this.totalHoursArray = [];
         for (const item of this.employeesArray) {
           this.totalHoursArray.push(item.hours);
         } */
+        if (this.statusOrder != "closed" && !this.updateRegistrationCalled) {
+          this.updateRegistration();
+          this.updateRegistrationCalled = true; // Marca que la función se ha llamado
+        }
         this.totalHoursArray = [];
         for (const item of this.employeesArray) {
           if (item && item.hours !== null) { 
@@ -359,14 +365,8 @@ export class AllemployeesComponent
         }, 0);
         // Redondear totalHoursSum a dos decimales
         this.totalHoursSum = Number(this.totalHoursSum.toFixed(2));
+       
 
-        
-
-        // console.log("lalalal", (`${startDate}T${horaInicio}`),)
-        
-        if(this.statusOrder != "closed"){         
-          this.updateRegistration()
-        }
       })
       .catch((error) => {
         console.log(error);
