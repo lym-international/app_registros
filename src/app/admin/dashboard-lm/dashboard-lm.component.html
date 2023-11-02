@@ -9,7 +9,7 @@
         <div class="container">
             <!---->
             <div class="column" style="padding-top: 40px;">
-                <div class="card">
+                <div class="card card-large">
                     <div class="card-statistic-3">
                         <div class="card-icon card-icon-large"><i class="fa fa-globe"></i></div>
                         <div class="tarjeta">
@@ -67,96 +67,98 @@
         <br/>
         <!--INICIO VISIBILIDAD MOVILES TARJETAS EMPLEADOS-->
         <div class="row d-flex d-md-none justify-content-center">
-            <div row style="display: flex;">
-                <div class="col-6 col-md-2">
-                    <div class="card l-bg-green-dark" style="margin-right: 10px;">
-                        <div class="card-statistic-3">
-                            <div class="card-icon card-icon-large"><i class="fa fa-briefcase"></i></div>
-                            <div class="card-content" style="padding-bottom: 28px;">
-                                <div style="font-size: 20px;" class="card-title">Requested</div>
-                                <span class="data-1" style="padding-bottom: 50px; font-size: 15px;">{{totalRequest}}</span>
+            <!--<div row style="display: flex;"> -->
+            <!--<div class="col-6 col-md-2">-->
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3 tarjeta-indicadores-movil" matTooltip="Requested" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">
+                <div class="card l-bg-green-dark">
+                    <div class="card-statistic-3">
+                        <div class="card-icon-mobile"><i class="fa fa-briefcase"></i></div>
+                        <div class="card-content">
+                            <div class="card-title-mobile">Req</div>
+                            <span class="data-1" style="font-size: 15px;">{{totalRequest}}</span>
 
-                                <!--<mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow orange-progress mt-2 mb-2" value="40">
+                            <!--<mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow orange-progress mt-2 mb-2" value="40">
                             </mat-progress-bar> -->
-                                <!--<p class="mb-0 text-sm">
+                            <!--<p class="mb-0 text-sm">
                                 <span class="mr-2"><i class="fa fa-arrow-up"></i> 10%</span>
                                 <span class="text-nowrap"> Since last month</span>
                             </p> -->
-                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-6 col-md-2">
-                    <div class="card l-bg-cyan-dark" style="margin-left: 10px;">
-                        <div class="card-statistic-3">
-                            <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
-                            <div class="card-content">
-                                <div style="font-size: 20px;" class="card-title">Confirmed</div>
-                                <span style="font-size: 15px;" class="data-1">{{totalConfirmed}}</span>
-                                <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow orange-progress mt-2 mb-2" value={{porcentajeConfirmed}}>
-                                </mat-progress-bar>
-                                <!-- <p class="mb-0 text-sm">
+            </div>
+            <!--<div class="col-6 col-md-2">-->
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3 tarjeta-indicadores-movil" matTooltip="Confirmed" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">
+                <div class="card l-bg-cyan-dark">
+                    <div class="card-statistic-3">
+                        <div class="card-icon-mobile"><i class="fa fa-check"></i></div>
+                        <div class="card-content">
+                            <div class="card-title-mobile">Con</div>
+                            <span style="font-size: 15px;" class="data-1">{{totalConfirmed}}</span>
+                            <!--<mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow orange-progress mt-2 mb-2" value={{porcentajeConfirmed}}>
+                            </mat-progress-bar> -->
+                            <!-- <p class="mb-0 text-sm">
                                 <span class="mr-2"><i class="fa fa-arrow-up"></i> 04%</span>
                                 <span class="text-nowrap"> Since last month</span>
                             </p> -->
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div row style="display: flex;">
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3 ">
-                    <div class="card l-bg-purple-dark">
-                        <div class="card-statistic-3">
-                            <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
-                            <div class="card-content">
-                                <div style="font-size: 18px;" class="card-title">CheckIn</div>
-                                <span style="font-size: 15px;" class="data-1">{{checkIn}}</span>
-                                <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow green-progress mt-2 mb-2" value={{porcentajeCheckIn}}>
-                                </mat-progress-bar>
-                                <!--<p class="mb-0 text-sm">
+            <!--</div>-->
+            <!--<div row style="display: flex;"> -->
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3 tarjeta-indicadores-movil" matTooltip="CheckIn" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">
+                <div class="card l-bg-purple-dark">
+                    <div class="card-statistic-3">
+                        <div class="card-icon-mobile"><i class="fa fa-check"></i></div>
+                        <div class="card-content">
+                            <div class="card-title-mobile">In</div>
+                            <span style="font-size: 15px;" class="data-1">{{checkIn}}</span>
+                            <!--<mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow green-progress mt-2 mb-2" value={{porcentajeCheckIn}}>
+                            </mat-progress-bar> -->
+                            <!--<p class="mb-0 text-sm">
                                 <span class="mr-2"><i class="fa fa-arrow-up"></i> 23%</span>
                                 <span class="text-nowrap"> Since last month</span>
                             </p>-->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3">
-                    <div class="card l-bg-orange-dark">
-                        <div class="card-statistic-3">
-                            <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
-                            <div class="card-content">
-                                <div style="font-size: 18px;" class="card-title">checkOut</div>
-                                <span style="font-size: 15px;" class="data-1">{{checkOut}}</span>
-                                <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow sky-progress mt-2 mb-2" value={{porcentajeCheckOut}}>
-                                </mat-progress-bar>
-                                <!--<p class="mb-0 text-sm">
-                                <span class="mr-2"><i class="fa fa-arrow-down"></i> 06%</span>
-                                <span class="text-nowrap"> Since last month</span>
-                            </p>-->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3">
-                    <div class="card l-bg-cyan-dark">
-                        <div class="card-statistic-3">
-                            <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
-                            <div class="card-content">
-                                <div style="font-size: 18px;" class="card-title">NoShow</div>
-                                <span style="font-size: 15px;" class="data-1">{{noShow}}</span>
-                                <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow violet-progress mt-2 mb-2" value={{porcentajeNoshow}}>
-                                </mat-progress-bar>
-                                <!--<p class="mb-0 text-sm">
-                                <span class="mr-2"><i class="fa fa-arrow-down"></i> 06%</span>
-                                <span class="text-nowrap"> Since last month</span>
-                            </p>-->
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3 tarjeta-indicadores-movil" matTooltip="CheckOut" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">
+                <div class="card l-bg-orange-dark">
+                    <div class="card-statistic-3">
+                        <div class="card-icon-mobile"><i class="fa fa-check"></i></div>
+                        <div class="card-content">
+                            <div class="card-title-mobile">Out</div>
+                            <span style="font-size: 15px;" class="data-1">{{checkOut}}</span>
+                            <!--<mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow sky-progress mt-2 mb-2" value={{porcentajeCheckOut}}>
+                            </mat-progress-bar> -->
+                            <!--<p class="mb-0 text-sm">
+                                <span class="mr-2"><i class="fa fa-arrow-down"></i> 06%</span>
+                                <span class="text-nowrap"> Since last month</span>
+                            </p>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3 tarjeta-indicadores-movil" matTooltip="NoShow" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">
+                <div class="card l-bg-cyan-dark">
+                    <div class="card-statistic-3">
+                        <div class="card-icon-mobile"><i class="fa fa-check"></i></div>
+                        <div class="card-content">
+                            <div class="card-title-mobile">NSh</div>
+                            <span style="font-size: 15px;" class="data-1">{{noShow}}</span>
+                            <!--<mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow violet-progress mt-2 mb-2" value={{porcentajeNoshow}}>
+                            </mat-progress-bar> -->
+                            <!--<p class="mb-0 text-sm">
+                                <span class="mr-2"><i class="fa fa-arrow-down"></i> 06%</span>
+                                <span class="text-nowrap"> Since last month</span>
+                            </p>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--</div>-->
         </div>
         <!--FIN VISIBILIDAD MOVILES TARJETAS EMPLEADOS-->
         <!--INICIO VISIBILIDAD ESCRITORIO TARJETAS EMPLEADOS-->
@@ -307,7 +309,7 @@
             </div>
         </div> -->
 
-        <hr style="color: #004676; width: 50%; margin: 50px auto 70px auto; " />
+        <!--<hr class="separador" /> -->
 
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" style="padding-right: 0px; text-align: center;">
             <mat-card class="" style="background-color: #1A202E; color: white; font-size: large; border-radius: 8px;">

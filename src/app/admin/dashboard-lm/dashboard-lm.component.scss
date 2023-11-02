@@ -19,6 +19,12 @@
     width: 20%;
 }
 
+.tarjeta-indicadores-movil {
+    margin: 0px;
+    width: 18%;
+    padding: 1px;
+}
+
 .container {
     display: grid;
     grid-template-columns: 1fr;
@@ -27,11 +33,6 @@
     padding-right: 0px;
 }
 
-//.content-block {
-//  width: 100%;
-//padding-left: 25px;
-//padding-right: 25px;
-//}
 .column {
     padding: 10px;
     vertical-align: super;
@@ -87,6 +88,37 @@
     display: none;
 }
 
+.card-icon-mobile {
+    font-size: 40px;
+    width: 110px;
+    height: 50px;
+    text-shadow: 3px 7px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    line-height: 50px;
+    margin-left: 15px;
+    color: #000;
+    position: absolute;
+    right: -5px;
+    top: 20px;
+    opacity: 0.1;
+}
+
+.card-title-mobile {
+    font-size: 16px;
+}
+
+.card-data-mobile {
+    font-size: 15px;
+}
+
+.card-large {
+    margin-top: -50px
+}
+
+.custom-tooltip {
+    margin-top: -10px;
+}
+
 @media (min-width: 767px) {
     .content-block {
         width: 100%;
@@ -110,6 +142,9 @@
         color: #004676;
         width: 50%;
         margin: 50px auto 70px auto;
+    }
+    .card-large {
+        margin-top: -30px
     }
     .noDisplay-in-desktop-device {
         display: none;
