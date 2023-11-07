@@ -8,18 +8,18 @@
 
         <!--INICIO VISIBILIDAD MOVILES DATA-->
 
-        <div class="container d-flex d-md-none">
+        <div class="container d-block d-md-none">
             <!---->
             <div class="column" style="padding-top: 40px;">
                 <div class="card card-large">
                     <div class="card-statistic-3">
-                        <div class="card-icon card-icon-large"><i class="fa fa-globe"></i></div>
+                        <div class="card-icon card-icon-large"><i class="fa fa-info"></i></div>
                         <div class="tarjeta">
-                            <span>Order Id: {{dataEmployees.data.orderId}}</span>
-                            <br/> <br/> <span>Client Name: {{dataEmployees.data.clientName ? dataEmployees.data.clientName : dataEmployees.data.company}}</span>
-                            <br/> <br/> <span>Total hours: {{totalHoursSum}}</span>
-                            <br/> <br/> <span>Event date: {{dataEmployees.data.startDate}}</span>
-                            <br/> <br/> <span class="colorStatus">Status Order: {{statusOrder}}</span>
+                            <span class="title-data-mobile">Order Id: </span> {{dataEmployees.data.orderId}}
+                            <br/> <br/> <span class="title-data-mobile">Client Name: </span>{{dataEmployees.data.clientName ? dataEmployees.data.clientName : dataEmployees.data.company}}
+                            <br/> <br/> <span class="title-data-mobile">Total hours: </span>{{totalHoursSum}}
+                            <br/> <br/> <span class="title-data-mobile">Event date: </span>{{dataEmployees.data.startDate}}
+                            <br/> <br/> <span class="title-data-mobile">Status Order: </span>{{statusOrder}}
                         </div>
                     </div>
                 </div>
