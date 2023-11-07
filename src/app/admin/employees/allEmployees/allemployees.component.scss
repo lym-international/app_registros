@@ -6,6 +6,10 @@
     margin-right: 6px
 }
 
+.colorStatus {
+    color: rgb(255, 145, 0);
+}
+
 .marginButton {
     margin-right: 10px;
     margin-left: 10px;
@@ -40,9 +44,22 @@
     background: linear-gradient(135deg, white 60%, rgb(26, 32, 45) 100%); // #CAEAFD 60%
 }
 
+.tarjeta-pequena-moviles {
+    margin: 20px 0 20px 0;
+    //width: 50%;
+    color: white;
+    font-weight: 500;
+    font-size: xx-small;
+    background: linear-gradient(135deg, #1a202d 60%, rgb(202, 234, 253) 100%);
+}
+
 .tarjeta-indicadores {
     margin: auto;
     width: 20%;
+}
+
+.titulo {
+    font-size: medium;
 }
 
 .container {
@@ -63,6 +80,14 @@
     grid-template-columns: repeat(5, 1fr);
     //grid-template-columns: 1fr;
     gap: 10px;
+    //padding: 10px;
+}
+
+.sub-column-mobile {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    //grid-template-columns: 1fr;
+    //gap: 10px;
     //padding: 10px;
 }
 

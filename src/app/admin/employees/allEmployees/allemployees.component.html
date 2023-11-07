@@ -5,7 +5,30 @@
             <app-breadcrumb [title]="'Workers'" [items]="['Dashboard']" [active_item]="'Workers'">
             </app-breadcrumb>
         </div>
-        <div class="container">
+
+        <!--INICIO VISIBILIDAD MOVILES DATA-->
+
+        <div class="container d-flex d-md-none">
+            <!---->
+            <div class="column" style="padding-top: 40px;">
+                <div class="card card-large">
+                    <div class="card-statistic-3">
+                        <div class="card-icon card-icon-large"><i class="fa fa-globe"></i></div>
+                        <div class="tarjeta">
+                            <span>Order Id: {{dataEmployees.data.orderId}}</span>
+                            <br/> <br/> <span>Client Name: {{dataEmployees.data.clientName ? dataEmployees.data.clientName : dataEmployees.data.company}}</span>
+                            <br/> <br/> <span>Total hours: {{totalHoursSum}}</span>
+                            <br/> <br/> <span>Event date: {{dataEmployees.data.startDate}}</span>
+                            <br/> <br/> <span class="colorStatus">Status Order: {{statusOrder}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--FIN VISIBILIDAD MOVILES DATA-->
+
+        <!--INICIO VISIBILIDAD ESCRITORIO TARJETAS-->
+        <div class="container d-none d-md-flex">
             <div class="column">
                 <div class="sub-column">
                     <div class="sub-sub-column">
@@ -53,6 +76,7 @@
                 </div>
             </div>
         </div>
+        <!--FIN VISIBILIDAD MOVILES TARJETAS-->
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
