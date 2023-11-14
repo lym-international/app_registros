@@ -536,7 +536,8 @@ export class AllemployeesComponent
        const employeeExistsInDataArray = employeeDataArray.some(
          (dataEmployee) =>
            dataEmployee.employeeId === highKeyId &&
-           dataEmployee.hourFrom === hourFrom
+           dataEmployee.hourFrom === hourFrom &&
+           employee.status !== "Rejected"
        );
        return employeeExistsInDataArray;
      });
