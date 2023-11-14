@@ -5,7 +5,30 @@
             <app-breadcrumb [title]="'Workers'" [items]="['Dashboard']" [active_item]="'Workers'">
             </app-breadcrumb>
         </div>
-        <div class="container">
+
+        <!--INICIO VISIBILIDAD MOVILES DATA-->
+
+        <div class="container d-block d-md-none">
+            <!---->
+            <div class="column" style="padding-top: 40px;">
+                <div class="card card-large">
+                    <div class="card-statistic-3">
+                        <div class="card-icon card-icon-large"><i class="fa fa-info"></i></div>
+                        <div class="tarjeta">
+                            <span class="title-data-mobile">Order Id: </span> {{dataEmployees.data.orderId}}
+                            <br/> <br/> <span class="title-data-mobile">Client Name: </span>{{dataEmployees.data.clientName ? dataEmployees.data.clientName : dataEmployees.data.company}}
+                            <br/> <br/> <span class="title-data-mobile">Total hours: </span>{{totalHoursSum}}
+                            <br/> <br/> <span class="title-data-mobile">Event date: </span>{{dataEmployees.data.startDate}}
+                            <br/> <br/> <span class="title-data-mobile">Status Order: </span>{{statusOrder}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--FIN VISIBILIDAD MOVILES DATA-->
+
+        <!--INICIO VISIBILIDAD ESCRITORIO TARJETAS-->
+        <div class="container d-none d-md-flex">
             <div class="column">
                 <div class="sub-column">
                     <div class="sub-sub-column">
@@ -53,6 +76,7 @@
                 </div>
             </div>
         </div>
+        <!--FIN VISIBILIDAD MOVILES TARJETAS-->
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
@@ -68,7 +92,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="right">
+                        <div class="right" style="flex: 60% !important;">
                             <ul class="tbl-export-btn">
                                 <span *ngIf="ShowButtons" class="tbl-export-btn">
                                 <li class="tbl-header-btn">
@@ -251,6 +275,7 @@
                                 <ng-container matColumnDef="map">
                                     <mat-header-cell class="pr-0" *matHeaderCellDef>Map</mat-header-cell>
                                     <mat-cell class="celda" *matCellDef="let row; let i=index;" class="pr-0">
+                                        <span class="mobile-label">Map</span>
                                         <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Map: Event, CheckIn and CheckOut." (click)="openMapModal()">
                                             <app-feather-icons [icon]="'map-pin'" [class]="'tbl-fav-delete'"></app-feather-icons>
                                         </button>
@@ -310,4 +335,5 @@
             <div id="mapInModal" style="height: 400px;"></div>
         </div>
     </div>
+
 </section>

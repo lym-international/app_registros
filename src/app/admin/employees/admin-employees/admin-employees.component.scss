@@ -28,8 +28,9 @@
 }
 
 .column {
-    padding: 10px;
+    //padding: 10px;
     vertical-align: super;
+    margin-top: -20px
 }
 
 .sub-column {
@@ -61,7 +62,7 @@
         padding: 10px;
     }
     .container {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
         padding-left: 20px;
         padding-right: 20px;
     }
@@ -81,5 +82,9 @@
     }
     .ocultarMovil {
         display: none;
+    }
+    .sub-sub-column {
+        display: grid;
+        margin-top: -25px;
     }
 }

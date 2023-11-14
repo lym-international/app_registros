@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, AfterViewInit, Renderer2 } from '@angular/core';
 import { EmployeesService } from '../allEmployees/employees.service';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
@@ -160,8 +160,8 @@ implements OnInit
     private geolocationService: GeolocationService,
     private shareScheduledTimeService : ShareScheduledTimeService,
     //private checkInService: CheckInService,
-    
-    
+    private renderer: Renderer2, 
+    private el: ElementRef
   ) {
     super();
     // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
@@ -373,7 +373,14 @@ implements OnInit
       //console.log('Si hay checkIN, checkOut y Break: Botones no visibles')
       //console.log('---------------------------------')
     }
+    this.scrollToButtons()  
   } 
+  scrollToButtons() {
+    const buttonsSection = this.el.nativeElement.querySelector('#buttonsSection'); // Replace 'buttonsSection' with the actual element ID you want to scroll to
+    if (buttonsSection) {
+      buttonsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
 
 //Borra checkIn, CheckOut y break.
   deleteInTime(selectedRows: AdminEmployees[]) {

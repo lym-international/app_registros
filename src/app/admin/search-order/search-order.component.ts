@@ -107,7 +107,7 @@ export class SearchOrderComponent{
   getOrders(){
     fetch(
       //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getActiveOrders`
-      `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
+       `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
       // `https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`
       // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrders`
     )
@@ -136,7 +136,7 @@ export class SearchOrderComponent{
         // `${this.orderFunctionsURL}/order/getOrdersByUser/user?user=${user}`
         // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
         `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
-        // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
+        //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
       )
       .then((response) => response.json())
       .then((data) => {
@@ -152,8 +152,8 @@ export class SearchOrderComponent{
     else if(user){
       
       fetch(
-        `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?email=${user}`
-        // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?email=${user}`
+         `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?email=${user}`
+        //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?email=${user}`
         
       )
       .then((response) => response.json())
@@ -177,7 +177,7 @@ export class SearchOrderComponent{
   onOrderSelection(selectedOption: any) {
     this.selectedOrder = selectedOption;
   }
-
+  // método como estaba antes
  /*  navegar(){
     if (this.data.role == "Administrator"){
       this.router.navigate(['/admin/dashboard-lm/']);
@@ -186,56 +186,43 @@ export class SearchOrderComponent{
       this.router.navigate(['/admin/employees/admin-employees/']);
     }
   } */
+
+  //método aplicando un retraso en la recarga de la página
 /*   navegar() {
     if (this.data.role === "Administrator") {
       this.router.navigate(['/admin/dashboard-lm/']);
     } else if (this.data.role === "Employee") {
     this.router.  navigate(['/admin/employees/admin-employees/']);
     }
-  
     // Recargar la página después de un pequeño retraso
     setTimeout(() => {
       window.location.reload();
     }, 500); // Ajusta el valor del retraso según tus necesidades
   } */
- 
- /*  navegar() {
+
+  //Recargando una vez se carga los datos (ligado al constructor)
+  loading = false;
+
+  navegar() {
     if (this.data.role === "Administrator") {
       this.router.navigate(['/admin/dashboard-lm/']);
     } else if (this.data.role === "Employee") {
       this.router.navigate(['/admin/employees/admin-employees/']);
     }
-    // Establecer la bandera para recargar después de hacer clic en "Search"
-    this.shouldReload = true;
-  } */
-loading = false;
-
-navegar() {
-  if (this.data.role === "Administrator") {
-    this.router.navigate(['/admin/dashboard-lm/']);
-  } else if (this.data.role === "Employee") {
-    this.router.navigate(['/admin/employees/admin-employees/']);
-  }
-
-  this.loading = true; // Mostrar la animación de carga
-
-  // setTimeout(() => {
-    this.shouldReload = true;
-  // }, 1000); // Establecer la bandera para recargar después de un breve retraso
-}
-
+    this.loading = true; // Mostrar la animación de carga
+     setTimeout(() => {
+      this.shouldReload = true;
+     }, 200); // Establecer la bandera para recargar después de un breve retraso
+  } 
   
   //Diego: Inicio búsqueda de órdenes por el input
-  
-  
-
   getSearchOrders(): void {
     
     const apiUrl =
     //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`  
-    //`https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`;
-      // 'http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrders';
-      'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders';
+    // `https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`;
+    //  'http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrders';
+     'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders';
 
     this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
       this.ordenes = ordenes;
@@ -293,4 +280,3 @@ navegar() {
   
   
 }
-  

@@ -9,7 +9,7 @@
         <div class="container">
             <!---->
             <div class="column" style="padding-top: 40px;">
-                <div class="card">
+                <div class="card card-large">
                     <div class="card-statistic-3">
                         <div class="card-icon card-icon-large"><i class="fa fa-globe"></i></div>
                         <div class="tarjeta">
@@ -65,8 +65,105 @@
             </mat-card>
         </div>
         <br/>
-        <div class="row ">
-            <div class="col-xl-3 col-lg-6 tarjeta-indicadores">
+        <!--INICIO VISIBILIDAD MOVILES TARJETAS EMPLEADOS-->
+        <div class="row d-flex d-md-none justify-content-center">
+            <!--<div row style="display: flex;"> -->
+            <!--<div class="col-6 col-md-2">-->
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3 tarjeta-indicadores-movil" matTooltip="Requested" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">
+                <div class="card l-bg-green-dark">
+                    <div class="card-statistic-3">
+                        <div class="card-icon-mobile"><i class="fa fa-briefcase"></i></div>
+                        <div class="card-content">
+                            <div class="card-title-mobile">Req</div>
+                            <span class="data-1" style="font-size: 15px;">{{totalRequest}}</span>
+
+                            <!--<mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow orange-progress mt-2 mb-2" value="40">
+                            </mat-progress-bar> -->
+                            <!--<p class="mb-0 text-sm">
+                                <span class="mr-2"><i class="fa fa-arrow-up"></i> 10%</span>
+                                <span class="text-nowrap"> Since last month</span>
+                            </p> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="col-6 col-md-2">-->
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3 tarjeta-indicadores-movil" matTooltip="Confirmed" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">
+                <div class="card l-bg-cyan-dark">
+                    <div class="card-statistic-3">
+                        <div class="card-icon-mobile"><i class="fa fa-check"></i></div>
+                        <div class="card-content">
+                            <div class="card-title-mobile">Con</div>
+                            <span style="font-size: 15px;" class="data-1">{{totalConfirmed}}</span>
+                            <!--<mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow orange-progress mt-2 mb-2" value={{porcentajeConfirmed}}>
+                            </mat-progress-bar> -->
+                            <!-- <p class="mb-0 text-sm">
+                                <span class="mr-2"><i class="fa fa-arrow-up"></i> 04%</span>
+                                <span class="text-nowrap"> Since last month</span>
+                            </p> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--</div>-->
+            <!--<div row style="display: flex;"> -->
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3 tarjeta-indicadores-movil" matTooltip="CheckIn" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">
+                <div class="card l-bg-purple-dark">
+                    <div class="card-statistic-3">
+                        <div class="card-icon-mobile"><i class="fa fa-check"></i></div>
+                        <div class="card-content">
+                            <div class="card-title-mobile">In</div>
+                            <span style="font-size: 15px;" class="data-1">{{checkIn}}</span>
+                            <!--<mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow green-progress mt-2 mb-2" value={{porcentajeCheckIn}}>
+                            </mat-progress-bar> -->
+                            <!--<p class="mb-0 text-sm">
+                                <span class="mr-2"><i class="fa fa-arrow-up"></i> 23%</span>
+                                <span class="text-nowrap"> Since last month</span>
+                            </p>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3 tarjeta-indicadores-movil" matTooltip="CheckOut" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">
+                <div class="card l-bg-orange-dark">
+                    <div class="card-statistic-3">
+                        <div class="card-icon-mobile"><i class="fa fa-check"></i></div>
+                        <div class="card-content">
+                            <div class="card-title-mobile">Out</div>
+                            <span style="font-size: 15px;" class="data-1">{{checkOut}}</span>
+                            <!--<mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow sky-progress mt-2 mb-2" value={{porcentajeCheckOut}}>
+                            </mat-progress-bar> -->
+                            <!--<p class="mb-0 text-sm">
+                                <span class="mr-2"><i class="fa fa-arrow-down"></i> 06%</span>
+                                <span class="text-nowrap"> Since last month</span>
+                            </p>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3 tarjeta-indicadores-movil" matTooltip="NoShow" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">
+                <div class="card l-bg-cyan-dark">
+                    <div class="card-statistic-3">
+                        <div class="card-icon-mobile"><i class="fa fa-check"></i></div>
+                        <div class="card-content">
+                            <div class="card-title-mobile">NSh</div>
+                            <span style="font-size: 15px;" class="data-1">{{noShow}}</span>
+                            <!--<mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow violet-progress mt-2 mb-2" value={{porcentajeNoshow}}>
+                            </mat-progress-bar> -->
+                            <!--<p class="mb-0 text-sm">
+                                <span class="mr-2"><i class="fa fa-arrow-down"></i> 06%</span>
+                                <span class="text-nowrap"> Since last month</span>
+                            </p>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--</div>-->
+        </div>
+        <!--FIN VISIBILIDAD MOVILES TARJETAS EMPLEADOS-->
+        <!--INICIO VISIBILIDAD ESCRITORIO TARJETAS EMPLEADOS-->
+        <div class="row d-none d-md-flex">
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-2 tarjeta-indicadores">
                 <div class="card l-bg-green-dark">
                     <div class="card-statistic-3" style="padding-bottom: 70px">
                         <div class="card-icon card-icon-large"><i class="fa fa-briefcase"></i></div>
@@ -84,7 +181,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-6 tarjeta-indicadores">
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-2 tarjeta-indicadores">
                 <div class="card l-bg-cyan-dark">
                     <div class="card-statistic-3">
                         <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
@@ -101,7 +198,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-6 tarjeta-indicadores">
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3 tarjeta-indicadores">
                 <div class="card l-bg-purple-dark">
                     <div class="card-statistic-3">
                         <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
@@ -118,7 +215,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-6 tarjeta-indicadores">
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3 tarjeta-indicadores">
                 <div class="card l-bg-orange-dark">
                     <div class="card-statistic-3">
                         <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
@@ -135,7 +232,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-6 tarjeta-indicadores">
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-3 tarjeta-indicadores">
                 <div class="card l-bg-cyan-dark">
                     <div class="card-statistic-3">
                         <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
@@ -153,6 +250,8 @@
                 </div>
             </div>
         </div>
+        <!--FIN VISIBILIDAD ESCRITORIO TARJETAS EMPLEADOS-->
+
         <!-- <div class="row clearfix">
             
             <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12">
@@ -210,7 +309,7 @@
             </div>
         </div> -->
 
-        <hr style="color: #004676; width: 50%; margin: 50px auto 70px auto; " />
+        <!--<hr class="separador" /> -->
 
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" style="padding-right: 0px; text-align: center;">
             <mat-card class="" style="background-color: #1A202E; color: white; font-size: large; border-radius: 8px;">
@@ -220,12 +319,14 @@
             </mat-card>
         </div>
         <br/>
-        <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12" style="padding-right: 0px; text-align: center;">
-            <mat-card class="" style="background: linear-gradient(135deg, #051e2f 60%, rgb(30, 168, 255) 100%); color: white; font-size: medium; border-radius: 8px;">
-                <mat-card-content>
-                    <mat-card-title>Required: {{totalRequeridos}}</mat-card-title>
-                </mat-card-content>
-            </mat-card>
+        <div class="q-positions">
+            <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12" style="padding-right: 0px; text-align: center;">
+                <mat-card class="" style="background: linear-gradient(135deg, #051e2f 60%, rgb(30, 168, 255) 100%); color: white; font-size: medium; border-radius: 8px;">
+                    <mat-card-content>
+                        <mat-card-title>Required: {{totalRequeridos}}</mat-card-title>
+                    </mat-card-content>
+                </mat-card>
+            </div>
         </div>
         <br/>
         <div class="row clearfix" style="margin-right: 0px; margin-left: 0px">
@@ -332,7 +433,75 @@
                     </div>
                 </div> 
             </div> -->
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+
+            <!--INICIO VISIBILIDAD TABLA EN MOVILES-->
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 d-flex d-md-none">
+                <div class="card">
+                    <div class="header">
+                        <h2 style="color: #1A202E;">Complience by position, hours and employees</h2>
+                    </div>
+                    <!--<ng-scrollbar style="height: 310px" visibility="hover"> -->
+                    <div class="tableBody">
+                        <div class="responsive_table table-container">
+                            <table class="table table-hover ">
+                                <thead>
+                                    <tr>
+                                        <th class="column-check"></th>
+                                        <th class="column-check" matTooltip="Scheduled time" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">T</th>
+                                        <th class="column-check" matTooltip="Required" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">R</th>
+                                        <th class="column-check" matTooltip="Confirmed" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">C</th>
+                                        <th class="column-check" matTooltip="(Confirmed/Required)*100" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">%C</th>
+                                        <th class="column-check" matTooltip="CheckIn" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">In</th>
+                                        <th class="column-check" matTooltip="(CheckIn/Confirmed)*100" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">%In</th>
+                                        <th class="column-check" matTooltip="CheckOut" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">Out</th>
+                                        <th class="column-check" matTooltip="(CheckOut/CheckIn)*100" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">%Out</th>
+                                        <th class="column-check" matTooltip="NoShow" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">NSh</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container *ngFor="let item of dataItems; let i = index">
+                                        <tr *ngIf="item.m !== 0">
+                                            <td class="column-check">{{ item.position }}</td>
+                                            <td class="column-check">{{ formatTimeTo12HourFormat(item.hourFrom) }}</td>
+                                            <td class="column-check">{{ item.quantity }}</td>
+                                            <td class="column-check">{{ item.m }}</td>
+                                            <td> {{((item.m/item.quantity) * 100).toFixed(0)}} %
+                                                <mat-progress-bar mode="determinate" class="progress-round violet-progress" value="{{(item.m/item.quantity) * 100}}">
+                                                </mat-progress-bar>
+                                            </td>
+                                            <!-- <td class="column-check">{{ checkinValues[item.position][item.hourFrom] }}</td> -->
+                                            <!-- <td class="column-check" *ngIf="checkinValues">{{ checkinValues[item.position][item.hourFrom] }}</td> -->
+                                            <td class="column-check" *ngIf="checkinValues && checkinValues[item.position] && checkinValues[item.position][item.hourFrom] !== undefined">{{ checkinValues[item.position][item.hourFrom] }}</td>
+
+
+                                            <td *ngIf="checkinValues && checkinValues[item.position] && checkinValues[item.position][item.hourFrom] !== undefined">
+                                                {{((checkinValues[item.position][item.hourFrom] / item.m) * 100).toFixed(0)}} %
+                                                <mat-progress-bar mode="determinate" class="progress-round green-progress" [value]="(checkinValues[item.position][item.hourFrom] / item.m) * 100">
+                                                </mat-progress-bar>
+                                            </td>
+
+                                            <td class="column-check" *ngIf="checkOutValues && checkOutValues[item.position] && checkOutValues[item.position][item.hourFrom] !== undefined">{{ checkOutValues[item.position][item.hourFrom] }}</td>
+
+                                            <td *ngIf="checkOutValues && checkOutValues[item.position] && checkOutValues[item.position][item.hourFrom] !== undefined">
+                                                <!--{{((checkOutValues[item.position][item.hourFrom] / checkinValues[item.position][item.hourFrom]) * 100).toFixed(0)}} % -->
+                                                {{ checkinValues[item.position] && checkinValues[item.position][item.hourFrom] !== 0 ? ((checkOutValues[item.position][item.hourFrom] / checkinValues[item.position][item.hourFrom]) * 100).toFixed(0) : '0' }} %
+                                                <mat-progress-bar mode="determinate" class="progress-round orange-progress" [value]="(checkOutValues[item.position][item.hourFrom] / checkinValues[item.position][item.hourFrom]) * 100">
+                                                </mat-progress-bar>
+                                            </td>
+
+                                            <td class="column-check" *ngIf="noShowValues && noShowValues[item.position] && noShowValues[item.position][item.hourFrom] !== undefined">{{ noShowValues[item.position][item.hourFrom] }}</td>
+                                        </tr>
+                                    </ng-container>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--</ng-scrollbar>-->
+                </div>
+            </div>
+            <!--FIN VISIBILIDAD TABLA EN MOVILES-->
+            <!--INICIO VISIBILIDAD TABLA EN ESCRITORIO-->
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 d-none d-md-block">
                 <div class="card">
                     <div class="header">
                         <h2 style="color: #1A202E;">Complience by position, hours and employees</h2>
@@ -344,14 +513,14 @@
                                     <thead>
                                         <tr>
                                             <th class="column-check">Position</th>
-                                            <th class="column-check" matTooltip="Scheduled time">Time</th>
+                                            <th class="column-check" matTooltip="Scheduled time" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">Time</th>
                                             <th class="column-check">Required</th>
                                             <th class="column-check">Confirmed</th>
-                                            <th class="column-check" matTooltip="(Confirmed/Required)*100">Confirmed %</th>
+                                            <th class="column-check" matTooltip="(Confirmed/Required)*100" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">Confirmed %</th>
                                             <th class="column-check">CheckIn</th>
-                                            <th class="column-check" matTooltip="(CheckIn/Confirmed)*100">CheckIn %</th>
+                                            <th class="column-check" matTooltip="(CheckIn/Confirmed)*100" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">CheckIn %</th>
                                             <th class="column-check">CheckOut</th>
-                                            <th class="column-check" matTooltip="(CheckOut/CheckIn)*100">CheckOut %</th>
+                                            <th class="column-check" matTooltip="(CheckOut/CheckIn)*100" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">CheckOut %</th>
                                             <th class="column-check">Noshow</th>
                                         </tr>
                                     </thead>
@@ -456,6 +625,7 @@
                     </ng-scrollbar>
                 </div>
             </div>
+            <!--FIN VISIBILIDAD TABLA EN MOVILES-->
 
             <!-- <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                 <div class="card">
