@@ -2,8 +2,9 @@ import { Component, OnInit,  ElementRef, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthenticationService } from 'app/_services/authentication.service';
 import { OrderDataService } from 'app/_services/orderData.service';
-import { Router } from '@angular/router';
+// import { Router } from '@angular/router';
 import { OcultarSidebarService } from 'app/_services/ocultar-sidebar.service';
+import { Router, NavigationEnd } from '@angular/router'
 
 //import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
@@ -29,13 +30,28 @@ export class SearchOrderComponent{
   public foundOrder: any | null = null;
   public dataUser!: any;
   @ViewChild('orderInput') orderInput: ElementRef;
+  shouldReload: boolean;
 
   constructor(private http: HttpClient, 
               private authenticationService: AuthenticationService,
               private orderDataService: OrderDataService,
               private router:Router,
               private ocultarSidebarService: OcultarSidebarService,
-              ) {}
+              
+              ) {
+                this.shouldReload = false;
+
+                // Escuchar el evento NavigationEnd
+                this.router.events.subscribe((event) => {
+                  if (event instanceof NavigationEnd) {
+                    if (this.shouldReload) {
+                      // Recargar la página una vez que la navegación haya finalizado
+                      window.location.reload();
+                      this.shouldReload = false; // Restablecer la bandera
+                    }
+                  }
+                });
+              }
   
   ngOnInit() {
     
@@ -100,6 +116,7 @@ export class SearchOrderComponent{
       //console.log(data)
       this.orders = data;
       this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
+      
       // console.log('Ordenes desde el método getOrders: ', this.orders)
     })
     .catch((error)=> {
@@ -161,14 +178,52 @@ export class SearchOrderComponent{
     this.selectedOrder = selectedOption;
   }
 
-  navegar(){
+ /*  navegar(){
     if (this.data.role == "Administrator"){
       this.router.navigate(['/admin/dashboard-lm/']);
     }
     else if(this.data.role == "Employee"){
       this.router.navigate(['/admin/employees/admin-employees/']);
     }
+  } */
+/*   navegar() {
+    if (this.data.role === "Administrator") {
+      this.router.navigate(['/admin/dashboard-lm/']);
+    } else if (this.data.role === "Employee") {
+    this.router.  navigate(['/admin/employees/admin-employees/']);
+    }
+  
+    // Recargar la página después de un pequeño retraso
+    setTimeout(() => {
+      window.location.reload();
+    }, 500); // Ajusta el valor del retraso según tus necesidades
+  } */
+ 
+ /*  navegar() {
+    if (this.data.role === "Administrator") {
+      this.router.navigate(['/admin/dashboard-lm/']);
+    } else if (this.data.role === "Employee") {
+      this.router.navigate(['/admin/employees/admin-employees/']);
+    }
+    // Establecer la bandera para recargar después de hacer clic en "Search"
+    this.shouldReload = true;
+  } */
+loading = false;
+
+navegar() {
+  if (this.data.role === "Administrator") {
+    this.router.navigate(['/admin/dashboard-lm/']);
+  } else if (this.data.role === "Employee") {
+    this.router.navigate(['/admin/employees/admin-employees/']);
   }
+
+  this.loading = true; // Mostrar la animación de carga
+
+  // setTimeout(() => {
+    this.shouldReload = true;
+  // }, 1000); // Establecer la bandera para recargar después de un breve retraso
+}
+
   
   //Diego: Inicio búsqueda de órdenes por el input
   
