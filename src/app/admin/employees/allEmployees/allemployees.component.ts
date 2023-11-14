@@ -111,11 +111,11 @@ export class AllemployeesComponent
   dataSource!: ExampleDataSource;
   positions = [];
   startDate: any;
-  map: L.Map;
+  updateRegistrationCalled: boolean;
   latitudeEvent: number;
   longitudeEvent: number;
   selected_Rows: any[] = []; // Nueva propiedad para almacenar las selecciones
-  updateRegistrationCalled: boolean;
+  // updateRegistrationCalled: boolean;
   
 
   constructor(
@@ -135,11 +135,11 @@ export class AllemployeesComponent
     super();
     this.updateRegistrationCalled = false;
     // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
+    this.updateRegistrationCalled = false;
   }
 
   ngOnInit() {
     this.dataEmployees = this.orderDataService.getSelectedOrder();
-
     this.statusOrder = this.dataEmployees.data.status;  
     this.orderId = this.dataEmployees.id;
     console.log('orderId:',this.orderId)
@@ -149,6 +149,7 @@ export class AllemployeesComponent
         this.dataEmployees = selectedOrder;
         this.statusOrder = this.dataEmployees.data.status;  
         this.orderId = this.dataEmployees.id;  
+        
         if(this.statusOrder === 'closed'){
           this.ShowButtons = false
          }else{
@@ -189,7 +190,10 @@ export class AllemployeesComponent
     if(this.statusOrder === 'closed'){
       this.ShowButtons = false
      }
-     this.getEventLocation()
+   
+    this.getEventLocation()
+   
+    
   }
   
   getTimeDifference() {
@@ -248,7 +252,7 @@ export class AllemployeesComponent
         this.employeesArray = data.employees.map((employee) => {
           // const employeeData = { ...employee.employee.data };
           const employeeData = employee.employee ? { ...employee.employee.data } : {};
-
+          
           if (
             employeeData.firstname &&
             employeeData.lastname &&
@@ -256,6 +260,7 @@ export class AllemployeesComponent
           ) {
           console.log('Arreglo de empleados: ',employee)
           const firstName = employeeData.firstname || "No data";
+          // console.log('dlnempleado: ',employee)
           const lastName = employeeData.lastname
           const highKeyId = employeeData.employeeId ;
           const position = employee.position || "No data";
@@ -302,7 +307,7 @@ export class AllemployeesComponent
             const checkOutDate = new Date(checkOut * 1000);
             checkOutTime = this.datePipe.transform(checkOutDate, 'hh:mm a');
           }
-
+         
           return {
             ...employee,
             employee: {
@@ -329,7 +334,7 @@ export class AllemployeesComponent
           return null;
         }
         }).filter((employee) => employee !== null); // Filtrar elementos nulos
-
+        
          console.log('---------------------------');
          console.log('Array empleados: ');
          console.log(this.employeesArray);
@@ -342,6 +347,13 @@ export class AllemployeesComponent
           this.employeesArray
         );
           
+        /* if(this.statusOrder != "closed"){         
+          this.updateRegistration()
+        } */
+        /* if (this.statusOrder != "closed" && !this.updateRegistrationCalled) {
+          this.updateRegistration();
+          this.updateRegistrationCalled = true; // Marca que la función se ha llamado
+        } */
        /*  this.totalHoursArray = [];
         for (const item of this.employeesArray) {
           this.totalHoursArray.push(item.hours);
@@ -373,6 +385,7 @@ export class AllemployeesComponent
         this.isTblLoading = false;
       });
   }
+  
   async updateRegistration() {
     const employeesArray = this.employeesArray;
     const items = this.dataEmployees.data.items;
@@ -387,6 +400,7 @@ export class AllemployeesComponent
         employees.forEach(employee => {
           // let id = employee.id
           // employeesArray.push({ ...employee, hourFrom }); // Mantén la misma estructura.
+          if (employee.status !== "Rejected") {
           if (employee.status !== "Rejected") {
            let hourFromFormatted = "No Data";
            
@@ -432,6 +446,8 @@ export class AllemployeesComponent
             }; 
           
           this.employeesArray.push(addEmployeeRegist);  
+          }        
+          // this.employeesArray.push(addEmployeeRegist);  
           }        
         });
       });
@@ -1206,11 +1222,12 @@ export class AllemployeesComponent
       return hoursNumberExact;
     } else {
       const lateThreshold = 8; // Umbral de llegada tarde en horas
+
       const checkInTime = employee.dateCheckinRounded._seconds;
       const checkOutTime = dateCheckoutRounded;
 
-      // console.log("Jr checkInTime", checkInTime)
-      // console.log("Jr checkOutTime", checkOutTime)
+      //  console.log("Jr checkInTime", checkInTime)
+      //  console.log("Jr checkOutTime", checkOutTime)
       const secondsWorked = checkOutTime - checkInTime;
       const hoursWorked = secondsWorked / 3600; //3600000
       // console.log("oursWorked", hoursWorked)
@@ -1244,6 +1261,7 @@ export class AllemployeesComponent
   }
 
   validateCheckout1(hourFrom, checkinDate) {
+    
     const [hour, minute] = hourFrom.split(':');
     const hourLimit = new Date(checkinDate);
     hourLimit.setHours(hour, minute, 0, 0);
@@ -1437,10 +1455,19 @@ export class AllemployeesComponent
           // console.log('employee.hours :',employee.hours)
           // console.log('roundedBreak :',roundedBreak)
 
-          if(employee.hours==5){
+          console.log('Empleados B: ',employee)
+          const roundedHours = employee.empExactHours
+          ? this.calculateRegularHours(employee, employee.dateCheckoutRounded._seconds)
+          : this.calculateHoursWorked(employee, employee.dateCheckout._seconds, employee.dateCheckoutRounded._seconds);
+          const totalHours = roundedHours.toFixed(2);
+          console.log("luntotalHoursRounded: ", employee.dateCheckoutRounded)
+          // console.log("luntotalHours", totalHours)
+          const dateCheckin = new Date( employee.dateCheckin._seconds * 1000);
+          const late = this.validateCheckout1(employee.hourFrom, dateCheckin);
+          if (late < 8 && employee.hours==5) {
             this.updatedHours = employee.hours
-          } else{
-            this.updatedHours =  employee.hours - roundedBreak;
+          }else{
+            this.updatedHours =  Number(totalHours) - roundedBreak;
           }
 
           //const updatedHours = employee.hours - roundedBreak;
@@ -1973,14 +2000,16 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
         const ordenItems = orden.data.items;
         for (const item of ordenItems) {
             const empleados = item.employees;
-            const empleadoEnOrden = empleados.find(emp => emp.id === empleado.id);
-           
+            if (empleados) {             
+            // const empleadoEnOrden = empleados.find(emp => emp.id === empleado.id);
+            const empleadoEnOrden = empleados.find(emp => (emp.id ? emp.id === empleado.id : emp.data.employeeId === empleado.employeeId));
+
             if (empleadoEnOrden) {
-                const fechaInicioOrden = new Date(`${orden.data.startDate}T${item.hourFrom}`);
+                const fechaInicioOrden = new Date(`${orden.data.startDate}T${horaInicio}`);
                 const duracionHorasOrden = item.hours;
                 const fechaFinOrden = this.addHours(duracionHorasOrden, fechaInicioOrden);
 
-                const horaInicioStr = item.hourFrom;
+                const horaInicioStr = horaInicio; //item.hourFrom;
                 const [horas, minutos] = horaInicioStr.split(':');                
                 const [year, month, day] = orden.data.startDate.split('-');
                 const fechaInicioOrden1 = new Date(year, month - 1, day, 0, 0, 0); // Restamos 1 al mes porque en JavaScript los meses van de 0 a 11
@@ -1998,6 +2027,7 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
                     return true; // Hay conflicto de horario
                 }
             }
+          }
         }
     }
 
@@ -2049,9 +2079,9 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
           if (!tieneConflictos) {
             this.isTblLoading = true;
             await this.updateEmployee(result);
-             this.addEmployeeToArray(result, startDate, horaInicio);
-             await this.updateEmployeesArray();
-             await this.updateOrderWithNewEmployee(result);
+            this.addEmployeeToArray(result, startDate, horaInicio);
+            await this.updateEmployeesArray();
+            await this.updateOrderWithNewEmployee(result);
              this.showNotification(
               'snackbar-success', 
               'Successful Add Employee...!!!', 
@@ -2151,7 +2181,7 @@ addEmployeeToArray(result, startDate, horaInicio) {
 async updateEmployeesArray() {
 // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
  const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-//console.log("modificadito", this.employeesArray)  
+
 const response = await fetch(apiUrl, {
       method: 'PUT',
       headers: {
@@ -2369,6 +2399,7 @@ async updateOrderWithNewEmployee(result) {
     rate: result.rate,
     favourite: 'Emergency',
     status: 'Confirmed',
+    id:result.id,
   };
 
   // Busca el índice del elemento en la lista de 'items' que tenga la misma posición que el nuevo empleado.
@@ -2741,6 +2772,7 @@ mostrarCoordenadasEnMapaModal(coordLat: number, coordLong: number) {
           return;
         }
         this.dataSource.filter = this.filter.nativeElement.value;
+        
       }
     );
   }
@@ -2891,6 +2923,7 @@ export class ExampleDataSource extends DataSource<Employees> {
         // console.log("this.paginator.pageSize", this.paginator.pageSize)
         // console.log("antesdel renderr", this.employeesArray)
         // this.renderedData = this.employeesArray.slice(startIndex, this.paginator.pageSize);
+        
         console.log("this.renderedData", this.renderedData)
 
         return this.renderedData;

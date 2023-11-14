@@ -213,13 +213,9 @@ export class SearchOrderComponent{
      setTimeout(() => {
       this.shouldReload = true;
      }, 200); // Establecer la bandera para recargar después de un breve retraso
-  }
-  
+  } 
   
   //Diego: Inicio búsqueda de órdenes por el input
-  
-  
-
   getSearchOrders(): void {
     
     const apiUrl =
