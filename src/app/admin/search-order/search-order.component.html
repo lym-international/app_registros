@@ -39,6 +39,9 @@
                 <div>
                     <button mat-raised-button color="primary" (click)="navegar()" [disabled]="!(selectedOrder || foundOrder)">Search</button>
                 </div>
+
+                
+                  
             </div>
             <div class="ocultarImg col-md-5 col-lg-5" style="text-align: center;">
                 <img src="assets/images/search-order.png" style="height: 300px;" alt="">
@@ -47,3 +50,8 @@
         </div>
     </div>
 </section>
+<!-- spinner -->
+<div *ngIf="loading" class="loading-overlay">
+    <div class="loading-spinner"></div>
+  </div>
+  

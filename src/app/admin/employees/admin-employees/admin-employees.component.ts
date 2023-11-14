@@ -847,8 +847,12 @@ implements OnInit
     const [hour, minute] = hourFrom.split(':');
     const hourLimit = new Date(checkinDate);
     hourLimit.setHours(hour, minute, 0, 0);
-
-    if (checkinDate.getTime() > hourLimit.getTime()) {
+// console.log(checkinDate)
+// console.log(hourLimit.getTime() )
+const dateStart = new Date(`${this.startDate}T${hourFrom}`);
+// console.log(dateStart.getTime())   
+if (checkinDate.getTime() > dateStart.getTime()){ 
+    // if (checkinDate.getTime() > hourLimit.getTime()) {
       const diff = Math.abs(checkinDate.getTime() - hourLimit.getTime());
       const minutes = Math.floor(diff / 60000);
       return minutes;
