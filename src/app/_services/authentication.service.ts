@@ -12,9 +12,6 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/comp
 import { catchError } from 'rxjs/operators'; //Diego
 import { throwError } from 'rxjs'; //Diego
 
-
-
-
 @Injectable({
   providedIn: 'root'
 })
@@ -84,16 +81,18 @@ export class AuthenticationService {
             
             if(this.currentUserData.role=="Employee"){
               console.log("Es Empleado")
-                this.router.navigate(['/admin/search-order']);
+              this.router.navigate(['/admin/search-order']);
             } else if (this.currentUserData.role=="Client"){
-                this.router.navigate(['/client/dashboard']);
+                console.log("Es cliente")
+                this.router.navigate(['/admin/search-order/']);
             } else if (this.currentUserData.role=='Executive'){
-              console.log("Executive")
+                console.log("Executive")
             } else if (this.currentUserData.role == "Supervisor"){
-                console.log("Supervisor")
+                console.log("Es Supervisor")
+                this.router.navigate(['/admin/search-order/']);
             } else if (this.currentUserData.role=="Administrator"){
-              console.log("Es administrador")
-              this.router.navigate(['/admin/search-order/']);
+                console.log("Es administrador")
+                this.router.navigate(['/admin/search-order/']);
             } else {
               this.router.navigate(['/authentication/signin']); 
             }

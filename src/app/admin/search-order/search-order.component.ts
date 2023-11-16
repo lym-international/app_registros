@@ -80,20 +80,22 @@ export class SearchOrderComponent{
       this.data.role == "Administrator" ||
       this.data.role == "Executive"
     ) {
-      this.getOrders();
-      this.getSearchOrders();
-      //this.loadParameters();
+        this.getOrders();
+        this.getSearchOrders();
+        //this.loadParameters();
     } else if (this.data.role == "Supervisor") {
-      //this.loadSupervisorOrders();
-      //this.loadParameters();
-      console.log("thiis.data",this.data)
-      this.getOrderByIdUser(this.data.email, this.data.hkId)
+        //this.loadSupervisorOrders();
+        //this.loadParameters();
+        console.log("thiis.data",this.data)
+        //this.getOrderByIdUser(this.data.email, this.data.hkId)
+        this.getOrders();
+        this.getSearchOrders();
     } else if (
       this.data.role == "Employee"
     ) {
-      this.getOrderByIdUser(this.data.email,this.data.hkId)
-      //this.getSearchOrders()
-      console.log('Orden por usuario: ', this.getOrderByIdUser(this.data.email,this.data.hkId))
+        this.getOrderByIdUser(this.data.email,this.data.hkId)
+        //this.getSearchOrders()
+        console.log('Orden por usuario: ', this.getOrderByIdUser(this.data.email,this.data.hkId))
     }
 
     //Fin validación de rol para la visualización de las órdenes.
