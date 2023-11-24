@@ -76,6 +76,9 @@ export class SearchOrderComponent{
       if (this.data.role == "Client") {
       // this.router.navigate(['orders']);
       //this.loadClientOrders(this.currentUser.client);
+        this.getOrderByIdUser(this.data.email,this.data.hkId)
+        this.getSearchOrders()
+        console.log('Orden por usuario: ', this.getOrderByIdUser(this.data.email,this.data.hkId))
     } else if (
       this.data.role == "Administrator" ||
       this.data.role == "Executive"
@@ -84,17 +87,16 @@ export class SearchOrderComponent{
         this.getSearchOrders();
         //this.loadParameters();
     } else if (this.data.role == "Supervisor") {
-        //this.loadSupervisorOrders();
-        //this.loadParameters();
-        console.log("thiis.data",this.data)
-        //this.getOrderByIdUser(this.data.email, this.data.hkId)
-        this.getOrders();
-        this.getSearchOrders();
+      console.log("thiis.data",this.data)
+      this.getOrdersBySupervisor(this.data.email);
+      this.getSearchOrdersBySuperv(this.data.email);
+      //this.loadParameters();
+      // this.getOrderByIdUser(this.data.email, this.data.hkId)
     } else if (
       this.data.role == "Employee"
     ) {
         this.getOrderByIdUser(this.data.email,this.data.hkId)
-        //this.getSearchOrders()
+        this.getSearchOrders()
         console.log('Orden por usuario: ', this.getOrderByIdUser(this.data.email,this.data.hkId))
     }
 
@@ -130,6 +132,7 @@ export class SearchOrderComponent{
   getOrderByIdUser(user, hkId){
     
     if (hkId){
+
       fetch(
         // `https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`
         // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getActiveOrders`
@@ -171,6 +174,32 @@ export class SearchOrderComponent{
     }   
   }
   
+  getOrdersBySupervisor(user){
+    if(user){
+      
+      fetch(
+        // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?email=${user}`
+        // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?email=${user}`
+
+        //'http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user=paola@paola.com'
+         `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=${user}`
+        // 'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=yenny@stafflm.com'
+        
+      )
+      
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Datos de la orden por supervisor: ', data)
+        this.orders = data;
+        this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
+      })
+      .catch((error)=> {
+        console.log(error)
+      }
+      )
+    }  
+  }
+
   orderOption(order: any){
     this.selectedOrder = order;
     this.orderDataService.setSelectedOrder(order);
@@ -206,7 +235,7 @@ export class SearchOrderComponent{
   loading = false;
 
   navegar() {
-    if (this.data.role === "Administrator") {
+    if (this.data.role === "Administrator" || this.data.role ==="Supervisor" || this.data.role ==="Client") {
       this.router.navigate(['/admin/dashboard-lm/']);
     } else if (this.data.role === "Employee") {
       this.router.navigate(['/admin/employees/admin-employees/']);
@@ -231,7 +260,17 @@ export class SearchOrderComponent{
     //  console.log('Ordenes desde el getSearchOrders ADMIN: ', this.ordenes )
     });
   }
-  
+  getSearchOrdersBySuperv(user): void {
+    
+    const apiUrl =
+    `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=${user}`
+      
+
+    this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
+      this.ordenes = ordenes;
+    //  console.log('Ordenes desde el getSearchOrders ADMIN: ', this.ordenes )
+    });
+  }
   searchOrder(): void {
     // Obtén el valor actual del campo de entrada
   let inputValue: string = this.orderNumber;

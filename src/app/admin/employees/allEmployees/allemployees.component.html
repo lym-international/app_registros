@@ -156,7 +156,7 @@
                                       </button>
                                     </div>
                                 </li>
-                                    <div class="background">
+                                    <div class="background" *ngIf="dataUser && dataUser.role !== 'Client'">
                                         <li class="tbl-header-btn">
                                             <div class=" marginButton" matTooltip="ADD NEW">
                                                 <!--class="m-l-10"-->
