@@ -63,8 +63,10 @@ export class AuthenticationService {
       this.auth.signInWithEmailAndPassword(username, password).then((user) => {
         console.log("usuario autenticado con exito!", user.user?.email)
         this.db.collection('Users',ref => ref.where('email', '==', username)).get().subscribe((usersInfo) => {
+          
           usersInfo.docs.forEach((item:any) => {
             const data = item.data();
+            console.log("DATA ::", item.data())
             sessionStorage.setItem('currentUser', JSON.stringify(data));
             this.currentUserSubject.next(data);
             this.currentUserData = data; // diego 8-7 : Almacenar los datos del usuario en currentUserData

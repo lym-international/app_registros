@@ -285,7 +285,8 @@ implements OnInit
         
         //validación de la propiedad highKeyId del empleado con el highkeyId del usuario
         this.employeeArray = this.employeesArray.filter((employee) => {
-        
+        console.log("hkId:",hkId)
+        console.log("employee.highKeyId: ",employee.highKeyId)
           return employee.highKeyId === Number(hkId); // Usar hkId en lugar de this.dataUser.highkeyId
           });
 
