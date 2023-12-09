@@ -34,6 +34,7 @@ import { ActivatedRoute } from '@angular/router';
 import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
 import { ShareStartDateService } from '../../../_services/share-start-date.service';
 import { ShareTimeDifferenceInMinutesService } from 'app/_services/share-time-difference-in-minutes.service';
+import axios from 'axios';
 
 import * as L from 'leaflet';
 import {Map, marker, tileLayer, Marker} from 'leaflet';
@@ -2079,7 +2080,7 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
           if (!tieneConflictos) {
             this.isTblLoading = true;
             await this.updateEmployee(result);
-            this.addEmployeeToArray(result, startDate, horaInicio);
+            this.addEmployeeToArray(result, startDate, horaInicio);    
             await this.updateEmployeesArray();
             await this.updateOrderWithExistingEmployee(result);
              this.showNotification(
@@ -2181,7 +2182,7 @@ addEmployeeToArray(result, startDate, horaInicio) {
 async updateEmployeesArray() {
 // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
  const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-
+ 
 const response = await fetch(apiUrl, {
       method: 'PUT',
       headers: {
@@ -2384,63 +2385,56 @@ async updateOrderWithNewEmployee(highKeyid,result) {
   }
 }
 async updateOrderWithExistingEmployee(result) {
-  console.log("result en order", result)
-  const apiUrl = 
-  `https:us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`
-  //http:127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId};
-  
-  const response = await fetch(apiUrl, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`;
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch order data.');
-  }
+  fetch(apiUrl)
+    .then(response => response.json())
+    .then(async orderData => {
+      //console.log("Orderdata 1", orderData);
 
-  const orderData = await response.json();
-  const newEmployee = {
-    agmRate: result.rate,
-    booking: 'Emergency',
-    data: {
-      ...result
-    },
-    rate: result.rate,
-    favourite: 'Emergency',
-    status: 'Confirmed',
-    id:result.id,
-  };
+      // Encuentra el índice del elemento en la lista de 'items'
+      const itemIndex = orderData.data.items.findIndex(item => item.position === result.position && item.hourFrom === result.hourFrom);
 
-  // Busca el índice del elemento en la lista de 'items' que tenga la misma posición que el nuevo empleado.
-  const itemIndex = orderData.data.items.findIndex(item => item.position === result.position && item.hourFrom === result.hourFrom);
+      if (itemIndex !== -1) {
+        // Agrega el nuevo empleado al arreglo de empleados dentro del elemento encontrado
+        const newEmployee = {
+          agmRate: result.rate,
+          booking: 'Emergency',
+          data: {
+            ...result
+          },
+          rate: result.rate,
+          favourite: 'Emergency',
+          status: 'Confirmed',
+          id: result.id,
+        };
 
-  if (itemIndex !== -1) {
-    // Agrega el nuevo empleado al arreglo de empleados dentro del elemento encontrado.
-    const currentPending = orderData.data.items[itemIndex].pending;
-   const currentM = orderData.data.items[itemIndex].m;
-    orderData.data.items[itemIndex].employees.push(newEmployee);
-    orderData.data.items[itemIndex].pending = currentPending - 1;
-    orderData.data.items[itemIndex].m = currentM + 1;
+        const currentPending = orderData.data.items[itemIndex].pending;
+        const currentM = orderData.data.items[itemIndex].m;
 
- 
-    // Actualiza la orden en el servidor con el nuevo empleado agregado.
-   
-    const updateOrderResponse = await fetch(apiUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(orderData.data), // Envía solo el objeto 'data' actualizado
-    });
+        orderData.data.items[itemIndex].employees.push(newEmployee);
+        orderData.data.items[itemIndex].pending = currentPending - 1;
+        orderData.data.items[itemIndex].m = currentM + 1;
 
-    if (!updateOrderResponse.ok) {
-      throw new Error('Failed to update order with new employee.');
-    }
-  } else {
-    throw new Error('Item not found in order.');
-  }
+        // Actualiza la orden en el servidor con el nuevo empleado agregado
+        //console.log("order DATA:", orderData);
+
+        const updateOrderResponse = await fetch(apiUrl, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(orderData.data), // Envía solo el objeto 'data' actualizado
+        });
+
+        if (!updateOrderResponse.ok) {
+          throw new Error('Failed to update order with new employee.');
+        }
+      } else {
+        throw new Error('Item not found in order.');
+      }
+    })
+    .catch(error => console.error('Error fetching or updating order data:', error));
 }
 /*
 async updateOrderWithNewEmployee(result) {
