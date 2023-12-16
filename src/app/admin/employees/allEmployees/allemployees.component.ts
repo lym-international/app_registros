@@ -1158,9 +1158,9 @@ export class AllemployeesComponent
     dateCheckoutRounded: number,
     //roundedBreak: number
   ): number {
- 
+ console.log("exactHourPayment", this.exactHourPayment)
     if (this.exactHourPayment) {
-      //console.log('Entró al IF')
+      // console.log('Entró al IF')
       const hoursNumberExact = this.calculateExactHourPaymentAll(
         checkInTimestamp,
         checkOutTimestamp,
@@ -1169,7 +1169,7 @@ export class AllemployeesComponent
       // const hours = hoursNumberExact.toFixed(2);
       return hoursNumberExact;
     } else {
-      //console.log('Entró al else')
+      // console.log('Entró al else')
       const lateThreshold = 8; // Umbral de llegada tarde en horas
       const checkInTime = dateCheckinRounded;
       const checkOutTime = dateCheckoutRounded;
@@ -1928,7 +1928,7 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
             await this.updateEmployee(result);
             this.addEmployeeToArray(result, startDate, horaInicio);
             await this.updateEmployeesArray();
-            await this.updateOrderWithNewEmployee(result);
+            await this.updateOrderWithExistingEmployee(result);
              this.showNotification(
               'snackbar-success', 
               'Successful Add Employee...!!!', 
@@ -2059,7 +2059,7 @@ const response = await fetch(apiUrl, {
                 await this.createEmployee(highKeyid, result);
                 this.addEmployeeToArray2(highKeyid, result);
                 await this.updateEmployeesArray();
-                await this.updateOrderWithNewEmployee(result);
+                await this.updateOrderWithNewEmployee(highKeyid, result);
                 this.showNotification(
                   'snackbar-success',  
                   `Successful Add Employee with highkeyId : ${highKeyid}`, 
@@ -2158,11 +2158,83 @@ addEmployeeToArray2(highKeyid, result) {
   this.employeesArray.push(newEmployeeRegist);
 }
 
-async updateOrderWithNewEmployee(result) {
+async updateOrderWithNewEmployee(highKeyid, result) {
   console.log("result en order", result)
   const apiUrl = 
   // `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`
   `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+  
+  const response = await fetch(apiUrl, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch order data.');
+  }
+
+  const orderData = await response.json();
+  const newEmployee = {
+    agmRate: result.rate,
+    booking: 'Emergency',
+    data: {
+      firstname: result.firstName.toUpperCase(),
+    phone: result.phone,
+    company: "L&M Employee",
+    employeeId: highKeyid,
+    positions: [
+        {
+            rate: result.rate,
+            name: result.position
+        }
+    ],
+    email: result.email,
+    lastname: result.lastName.toUpperCase(),
+    status: "Active"
+    },
+    rate: result.rate,
+    favourite: 'Emergency',
+    status: 'Confirmed',
+    id:result.id,
+  };
+
+  // Busca el índice del elemento en la lista de 'items' que tenga la misma posición que el nuevo empleado.
+  const itemIndex = orderData.data.items.findIndex(item => item.position === result.position && item.hourFrom === result.hourFrom);
+
+  if (itemIndex !== -1) {
+    // Agrega el nuevo empleado al arreglo de empleados dentro del elemento encontrado.
+    const currentPending = orderData.data.items[itemIndex].pending;
+   const currentM = orderData.data.items[itemIndex].m;
+    orderData.data.items[itemIndex].employees.push(newEmployee);
+    orderData.data.items[itemIndex].pending = currentPending - 1;
+    orderData.data.items[itemIndex].m = currentM + 1;
+
+ 
+    // Actualiza la orden en el servidor con el nuevo empleado agregado.
+   
+    const updateOrderResponse = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(orderData.data), // Envía solo el objeto 'data' actualizado
+    });
+
+    if (!updateOrderResponse.ok) {
+      throw new Error('Failed to update order with new employee.');
+    }
+  } else {
+    throw new Error('Item not found in order.');
+  }
+}
+
+async updateOrderWithExistingEmployee(result) {
+  console.log("result en order", result)
+  const apiUrl = 
+  `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`
+  // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
   
   const response = await fetch(apiUrl, {
     method: 'GET',
@@ -2217,7 +2289,6 @@ async updateOrderWithNewEmployee(result) {
     throw new Error('Item not found in order.');
   }
 }
-
 
 
  //Abre el modal FormDialogComponent para editar los datos.

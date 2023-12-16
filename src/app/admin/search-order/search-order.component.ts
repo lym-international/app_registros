@@ -84,10 +84,10 @@ export class SearchOrderComponent{
       this.getSearchOrders();
       //this.loadParameters();
     } else if (this.data.role == "Supervisor") {
-      //this.loadSupervisorOrders();
-      //this.loadParameters();
       console.log("thiis.data",this.data)
-      this.getOrderByIdUser(this.data.email, this.data.hkId)
+      this.getOrdersBySupervisor(this.data.email);
+      this.getSearchOrdersBySuperv(this.data.email);
+      // this.getOrderByIdUser(this.data.email, this.data.hkId)
     } else if (
       this.data.role == "Employee"
     ) {
@@ -168,6 +168,32 @@ export class SearchOrderComponent{
       )
     }   
   }
+
+
+  getOrdersBySupervisor(user){
+    if(user){
+      
+      fetch(
+        // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?email=${user}`
+        // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?email=${user}`
+
+        'http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user=paola@paola.com'
+        // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=${user}`
+        // 'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=paola@paola.com'
+        
+      )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Datos de la orden por supervisor: ', data)
+        this.orders = data;
+        this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
+      })
+      .catch((error)=> {
+        console.log(error)
+      }
+      )
+    }  
+  }
   
   orderOption(order: any){
     this.selectedOrder = order;
@@ -236,6 +262,17 @@ navegar() {
     //`https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`;
       'http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrders';
       //'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders';
+
+    this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
+      this.ordenes = ordenes;
+    //  console.log('Ordenes desde el getSearchOrders ADMIN: ', this.ordenes )
+    });
+  }
+  getSearchOrdersBySuperv(user): void {
+    
+    const apiUrl =
+    `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=${user}`
+      
 
     this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
       this.ordenes = ordenes;

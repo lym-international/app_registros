@@ -65,6 +65,7 @@ export class AuthenticationService {
     login(username: string, password: string ) {
       this.auth.signInWithEmailAndPassword(username, password).then((user) => {
         console.log("usuario autenticado con exito!", user.user?.email)
+        
         this.db.collection('Users',ref => ref.where('email', '==', username)).get().subscribe((usersInfo) => {
           usersInfo.docs.forEach((item:any) => {
             const data = item.data();
