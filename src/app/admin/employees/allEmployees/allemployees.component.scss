@@ -6,6 +6,10 @@
     margin-right: 6px
 }
 
+.colorStatus {
+    color: rgb(255, 145, 0);
+}
+
 .marginButton {
     margin-right: 10px;
     margin-left: 10px;
@@ -40,9 +44,23 @@
     background: linear-gradient(135deg, white 60%, rgb(26, 32, 45) 100%); // #CAEAFD 60%
 }
 
+.tarjeta-pequena-moviles {
+    margin: 20px 0 20px 0;
+    //width: 50%;
+    color: white;
+    font-weight: 500;
+    font-size: xx-small;
+    background: linear-gradient(135deg, #1a202d 60%, rgb(202, 234, 253) 100%);
+}
+
 .tarjeta-indicadores {
     margin: auto;
     width: 20%;
+}
+
+.title-data-mobile {
+    color: rgb(255, 145, 0);
+    font-weight: bold
 }
 
 .container {
@@ -66,9 +84,112 @@
     //padding: 10px;
 }
 
+.sub-column-mobile {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    //grid-template-columns: 1fr;
+    //gap: 10px;
+    //padding: 10px;
+}
+
 .sub-sub-column {
     display: grid;
     padding: 20px;
+}
+
+
+/* Clase para fila normal */
+
+.normal-row {
+    background-color: transparent;
+    /* Color por defecto */
+}
+
+
+/* Clase para fila resaltada */
+
+.highlighted-row {
+    background-color: yellow;
+    /* Color que deseas aplicar cuando timeDifferenceInMinutes < 20 */
+}
+
+#mapIn {
+    height: 600px;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+#mapOut {
+    height: 600px;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+.mapButton {
+    width: 90px;
+    border-radius: 7px;
+    margin-right: 5px;
+}
+
+.backgroundMap {
+    margin: 20px 10px 0px 40px;
+    background-color: white;
+    border-radius: 10px;
+    justify-content: center;
+}
+
+.map {
+    height: 500px;
+    width: 500px;
+    border-radius: 7px;
+}
+
+
+/* Estilos para el modal */
+
+.modal {
+    display: none;
+    /* Oculta el modal por defecto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Fondo semitransparente */
+    z-index: 1;
+}
+
+
+/* Agrega pointer-events: none; para que no bloquee los clics */
+
+.modal::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.modal-content {
+    position: relative;
+    margin: 15% auto;
+    /* Centra verticalmente y establece el margen horizontal */
+    width: 30%;
+    /* Establece el tamaño en 30% */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 7px;
+}
+
+.close {
+    top: 10px;
+    bottom: 5px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
 }
 
 @media screen and (min-width: 600px) {
@@ -86,7 +207,7 @@
 .column-check {
     text-align: center;
 }
+
 .text-red {
     color: red !important;
-  }
-  
+}

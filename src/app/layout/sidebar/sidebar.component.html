@@ -5,6 +5,7 @@
         <div class="menu">
             <ng-scrollbar [style.height]="listMaxHeight + 'px'" visibility="hover">
                 <ul class="list">
+                   <!--
                     <li class="sidebar-user-panel">
                         <div class="user-panel">
                             <div class="image">
@@ -16,9 +17,13 @@
                             <div class="profile-usertitle-job">{{ dataUser.role }}</div>
                         </div>
                     </li>
-
+                    
                     <br/>
-
+                    -->
+                    <br/>
+                    <br/>
+                    <br/>
+                    
                     <!-- Top Most level menu -->
                     <ng-container *ngIf="mostrarMenu && currentRoute !== '/admin/search-order'">
                         <li *ngFor="let sidebarItem of sidebarItems" [routerLinkActive]="sidebarItem.submenu.length !== 0 ? 'active' : 'active-top'">

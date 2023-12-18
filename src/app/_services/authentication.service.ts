@@ -12,9 +12,6 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/comp
 import { catchError } from 'rxjs/operators'; //Diego
 import { throwError } from 'rxjs'; //Diego
 
-
-
-
 @Injectable({
   providedIn: 'root'
 })
@@ -67,8 +64,10 @@ export class AuthenticationService {
         console.log("usuario autenticado con exito!", user.user?.email)
         
         this.db.collection('Users',ref => ref.where('email', '==', username)).get().subscribe((usersInfo) => {
+          
           usersInfo.docs.forEach((item:any) => {
             const data = item.data();
+            console.log("DATA ::", item.data())
             sessionStorage.setItem('currentUser', JSON.stringify(data));
             this.currentUserSubject.next(data);
             this.currentUserData = data; // diego 8-7 : Almacenar los datos del usuario en currentUserData
@@ -85,16 +84,18 @@ export class AuthenticationService {
             
             if(this.currentUserData.role=="Employee"){
               console.log("Es Empleado")
-                this.router.navigate(['/admin/search-order']);
+              this.router.navigate(['/admin/search-order']);
             } else if (this.currentUserData.role=="Client"){
-                this.router.navigate(['/client/dashboard']);
+                console.log("Es cliente")
+                this.router.navigate(['/admin/search-order/']);
             } else if (this.currentUserData.role=='Executive'){
-              console.log("Executive")
+                console.log("Executive")
             } else if (this.currentUserData.role == "Supervisor"){
-                console.log("Supervisor")
+                console.log("Es Supervisor")
+                this.router.navigate(['/admin/search-order/']);
             } else if (this.currentUserData.role=="Administrator"){
-              console.log("Es administrador")
-              this.router.navigate(['/admin/search-order/']);
+                console.log("Es administrador")
+                this.router.navigate(['/admin/search-order/']);
             } else {
               this.router.navigate(['/authentication/signin']); 
             }

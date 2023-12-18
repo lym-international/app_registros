@@ -12,6 +12,8 @@ export class Employees {
   dateCheckinRounded: { _seconds: number; _nanoseconds: number };
   dateCheckout:  { _seconds: number; _nanoseconds: number };   
   dateCheckoutRounded:{ _seconds: number; _nanoseconds: number };
+  checkinCoordinates:{latitude: number; longitude: number};
+  checkOutCoordinates:{latitudeOut: number; longitudeOut: number};
   out:string;
   break:string; 
   totalHours:string;

@@ -76,24 +76,28 @@ export class SearchOrderComponent{
       if (this.data.role == "Client") {
       // this.router.navigate(['orders']);
       //this.loadClientOrders(this.currentUser.client);
+        this.getOrderByIdUser(this.data.email,this.data.hkId)
+        this.getSearchOrders()
+        console.log('Orden por usuario: ', this.getOrderByIdUser(this.data.email,this.data.hkId))
     } else if (
       this.data.role == "Administrator" ||
       this.data.role == "Executive"
     ) {
-      this.getOrders();
-      this.getSearchOrders();
-      //this.loadParameters();
+        this.getOrders();
+        this.getSearchOrders();
+        //this.loadParameters();
     } else if (this.data.role == "Supervisor") {
       console.log("thiis.data",this.data)
       this.getOrdersBySupervisor(this.data.email);
       this.getSearchOrdersBySuperv(this.data.email);
+      //this.loadParameters();
       // this.getOrderByIdUser(this.data.email, this.data.hkId)
     } else if (
       this.data.role == "Employee"
     ) {
-      this.getOrderByIdUser(this.data.email,this.data.hkId)
-      //this.getSearchOrders()
-      console.log('Orden por usuario: ', this.getOrderByIdUser(this.data.email,this.data.hkId))
+        this.getOrderByIdUser(this.data.email,this.data.hkId)
+        this.getSearchOrders()
+        console.log('Orden por usuario: ', this.getOrderByIdUser(this.data.email,this.data.hkId))
     }
 
     //Fin validación de rol para la visualización de las órdenes.
@@ -107,7 +111,7 @@ export class SearchOrderComponent{
   getOrders(){
     fetch(
       //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getActiveOrders`
-      // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
+      //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
       // `https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`
       `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrders`
     )
@@ -128,6 +132,7 @@ export class SearchOrderComponent{
   getOrderByIdUser(user, hkId){
     
     if (hkId){
+
       fetch(
         // `https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`
         // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getActiveOrders`
@@ -152,7 +157,7 @@ export class SearchOrderComponent{
     else if(user){
       
       fetch(
-        // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?email=${user}`
+        //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?email=${user}`
         `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?email=${user}`
         
       )
@@ -169,7 +174,7 @@ export class SearchOrderComponent{
     }   
   }
 
-
+  
   getOrdersBySupervisor(user){
     if(user){
       
@@ -177,11 +182,13 @@ export class SearchOrderComponent{
         // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?email=${user}`
         // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?email=${user}`
 
-        'http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user=paola@paola.com'
-        // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=${user}`
-        // 'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=paola@paola.com'
+        //'http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user=paola@paola.com'
+        //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=${user}`
+         `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user=${user}`
+        // 'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=yenny@stafflm.com'
         
       )
+      
       .then((response) => response.json())
       .then((data) => {
         console.log('Datos de la orden por supervisor: ', data)
@@ -194,7 +201,7 @@ export class SearchOrderComponent{
       )
     }  
   }
-  
+
   orderOption(order: any){
     this.selectedOrder = order;
     this.orderDataService.setSelectedOrder(order);
@@ -203,7 +210,7 @@ export class SearchOrderComponent{
   onOrderSelection(selectedOption: any) {
     this.selectedOrder = selectedOption;
   }
-
+  // método como estaba antes
  /*  navegar(){
     if (this.data.role == "Administrator"){
       this.router.navigate(['/admin/dashboard-lm/']);
@@ -212,56 +219,43 @@ export class SearchOrderComponent{
       this.router.navigate(['/admin/employees/admin-employees/']);
     }
   } */
+
+  //método aplicando un retraso en la recarga de la página
 /*   navegar() {
     if (this.data.role === "Administrator") {
       this.router.navigate(['/admin/dashboard-lm/']);
     } else if (this.data.role === "Employee") {
     this.router.  navigate(['/admin/employees/admin-employees/']);
     }
-  
     // Recargar la página después de un pequeño retraso
     setTimeout(() => {
       window.location.reload();
     }, 500); // Ajusta el valor del retraso según tus necesidades
   } */
- 
- /*  navegar() {
-    if (this.data.role === "Administrator") {
+
+  //Recargando una vez se carga los datos (ligado al constructor)
+  loading = false;
+
+  navegar() {
+    if (this.data.role === "Administrator" || this.data.role ==="Supervisor" || this.data.role ==="Client") {
       this.router.navigate(['/admin/dashboard-lm/']);
     } else if (this.data.role === "Employee") {
       this.router.navigate(['/admin/employees/admin-employees/']);
     }
-    // Establecer la bandera para recargar después de hacer clic en "Search"
-    this.shouldReload = true;
-  } */
-loading = false;
-
-navegar() {
-  if (this.data.role === "Administrator") {
-    this.router.navigate(['/admin/dashboard-lm/']);
-  } else if (this.data.role === "Employee") {
-    this.router.navigate(['/admin/employees/admin-employees/']);
-  }
-
-  this.loading = true; // Mostrar la animación de carga
-
-  // setTimeout(() => {
-    this.shouldReload = true;
-  // }, 1000); // Establecer la bandera para recargar después de un breve retraso
-}
-
+    this.loading = true; // Mostrar la animación de carga
+     setTimeout(() => {
+      this.shouldReload = true;
+     }, 200); // Establecer la bandera para recargar después de un breve retraso
+  } 
   
   //Diego: Inicio búsqueda de órdenes por el input
-  
-  
-
   getSearchOrders(): void {
     
     const apiUrl =
     //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`  
-    //`https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`;
-      'http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrders';
-      //'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders';
+    // `https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`;
+     'http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrders';
+    //  'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders';
 
     this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
       this.ordenes = ordenes;
@@ -271,15 +265,14 @@ navegar() {
   getSearchOrdersBySuperv(user): void {
     
     const apiUrl =
-    `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=${user}`
-      
+    // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=${user}`
+    `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user=${user}`    
 
     this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
       this.ordenes = ordenes;
     //  console.log('Ordenes desde el getSearchOrders ADMIN: ', this.ordenes )
     });
   }
-  
   searchOrder(): void {
     // Obtén el valor actual del campo de entrada
   let inputValue: string = this.orderNumber;
@@ -330,4 +323,3 @@ navegar() {
   
   
 }
-  

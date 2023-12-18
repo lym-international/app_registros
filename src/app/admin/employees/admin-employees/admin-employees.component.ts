@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, AfterViewInit, Renderer2 } from '@angular/core';
 import { EmployeesService } from '../allEmployees/employees.service';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
@@ -160,8 +160,8 @@ implements OnInit
     private geolocationService: GeolocationService,
     private shareScheduledTimeService : ShareScheduledTimeService,
     //private checkInService: CheckInService,
-    
-    
+    private renderer: Renderer2, 
+    private el: ElementRef
   ) {
     super();
     // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
@@ -200,6 +200,7 @@ implements OnInit
   }
   
   // Función para controlar la visibilidad de los botones al hacer clic en el checkbox
+   
   
   getEmployees() {
     //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`
@@ -284,7 +285,8 @@ implements OnInit
         
         //validación de la propiedad highKeyId del empleado con el highkeyId del usuario
         this.employeeArray = this.employeesArray.filter((employee) => {
-        
+        console.log("hkId:",hkId)
+        console.log("employee.highKeyId: ",employee.highKeyId)
           return employee.highKeyId === Number(hkId); // Usar hkId en lugar de this.dataUser.highkeyId
           });
 
@@ -328,6 +330,7 @@ implements OnInit
   }
 
   onCheckboxClick(row: AdminEmployees) {
+    
     // console.log('dateCheckin antes IF: ', row.dateCheckin) 
     const dateStart = new Date(`${this.startDate}T${row.hourFrom}`);   
     console.log("gdateStart", dateStart)       
@@ -371,7 +374,14 @@ implements OnInit
       //console.log('Si hay checkIN, checkOut y Break: Botones no visibles')
       //console.log('---------------------------------')
     }
+    this.scrollToButtons()  
   } 
+  scrollToButtons() {
+    const buttonsSection = this.el.nativeElement.querySelector('#buttonsSection'); // Replace 'buttonsSection' with the actual element ID you want to scroll to
+    if (buttonsSection) {
+      buttonsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
 
 //Borra checkIn, CheckOut y break.
   deleteInTime(selectedRows: AdminEmployees[]) {
@@ -400,7 +410,7 @@ implements OnInit
             break: 0,
             in: 'No Data',
             out: 'No Data',
-            realInTime:'No Data',
+            realInTime: 'No Data',
             totalHours:0,
             checkinCoordinates:{
               latitude: '-',
@@ -504,7 +514,7 @@ implements OnInit
       });
 
       const result = await dialogRef.afterClosed().toPromise();
-     
+
       const timestamp = Timestamp.fromDate(new Date(result.startDate));
       //console.log('TimeStamp: ', timestamp);
       const checkInTimestamp = timestamp?.seconds || 0;
@@ -609,10 +619,10 @@ implements OnInit
     } else if (minutes >= 38 && minutes <= 52) {
       sum = 45;
     } else {
-      sum = 60;
+      // En caso de que 'date' no sea una instancia válida de Date, maneja el error aquí
+      // console.error('La variable "date" no es una instancia válida de Date.', date);
+      return null; // O devuelve un valor predeterminado o maneja el error de otra manera
     }
-    roundedDate.setMinutes(sum);
-    return roundedDate;
   }
   roundDate(date: Date) {
     // Verificar si 'date' es una instancia válida de Date

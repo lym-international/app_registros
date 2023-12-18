@@ -13,6 +13,7 @@ import {
 import { formatDate } from '@angular/common';
 import { GeolocationService } from 'app/_services/geolocation.service';
 import { ShareScheduledTimeService } from 'app/_services/share-scheduled-time.service';
+import { ShareTimeDifferenceInMinutesService } from 'app/_services/share-time-difference-in-minutes.service';
 
 export interface DialogData {
   id: number;
@@ -37,11 +38,11 @@ export class CheckInAdminEmployeesComponent implements OnInit{
   longitud: number;
   shareHourFromFormatted: string;
   dateStart:Date;
-  actualTime:Date;
-  schedule:any
+  actualTime: Date;
+  schedule: any;
   
   ngOnInit(): void {
-     this.actualTime = new Date();
+    this.actualTime = new Date();
 
     this.checkInForm.patchValue({
       startDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
@@ -52,7 +53,10 @@ export class CheckInAdminEmployeesComponent implements OnInit{
     console.log("scheduleTime", scheduleTime)
     console.log("actualTime", this.actualTime)
     const timeDifferenceInMinutes = (scheduleTime.getTime() - this.actualTime.getTime()) / (1000 * 60);
-      console.log('Diferencia entre scheduleTime y la actualTime en mins: ',timeDifferenceInMinutes)
+    console.log('Diferencia entre scheduleTime y la actualTime en mins: ',timeDifferenceInMinutes)
+    
+    this.shareTimeDifferenceInMinutesService.setTimeDifference(timeDifferenceInMinutes);
+    
       if (timeDifferenceInMinutes >= 20) {
         console.log("La hora actual es menor o igual que el scheduleTime en 20 mins.");
         console.log("scheduleTime:", scheduleTime);
@@ -65,7 +69,7 @@ export class CheckInAdminEmployeesComponent implements OnInit{
         
       } else {
         console.log("La hora actual es mayor que el scheduleTime (comparando scheduleTime desde -20 mins).");
-        console.log("Hora actual:",this.actualTime);
+        // console.log("Hora actual:", this.actualTime);
         this.fechaInicio = new FormControl(new Date());
         this.checkInForm = new FormGroup({
         startDate: this.fechaInicio
@@ -87,6 +91,7 @@ export class CheckInAdminEmployeesComponent implements OnInit{
     private fb: UntypedFormBuilder,
     private geolocationService: GeolocationService,
     private shareScheduledTimeService : ShareScheduledTimeService,
+    private shareTimeDifferenceInMinutesService: ShareTimeDifferenceInMinutesService,
   ) {
     this.action = data.action;
     if (this.action === 'edit') {

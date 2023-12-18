@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs';
 import { OrderDataService } from 'app/_services/orderData.service';
 import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
 
+
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -38,6 +39,7 @@ export class SidebarComponent implements OnInit {
   mostrarMenu: boolean;
   dataOrder: any;
   orderId: any;
+  statusOrder: string;
   orderStatus: any;
 
   
@@ -50,7 +52,7 @@ export class SidebarComponent implements OnInit {
     public authenticationService: AuthenticationService,
     private orderDataService: OrderDataService,
     private sharingCloseOrderService: SharingCloseOrderService,
-
+    
   ) {
     this.elementRef.nativeElement.closest('body');
     this.routerObj = this.router.events.subscribe((event) => {
@@ -117,6 +119,7 @@ export class SidebarComponent implements OnInit {
     this.bodyTag = this.document.body;
 
     this.dataOrder = this.orderDataService.getSelectedOrder();
+    this.orderStatus = this.dataOrder.data.status;
     //console.log('Data Order: ', this.dataOrder);
     this.orderStatus = this.dataOrder.data.status;
   
@@ -138,7 +141,6 @@ export class SidebarComponent implements OnInit {
   }
 
   closeOrder(){
-    
     const apiUrl =
     //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
      `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
@@ -147,10 +149,20 @@ export class SidebarComponent implements OnInit {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log('DATA del method PUT', data.data.status);
+  
+        // console.log('DATA del method PUT', data.data.status);
         this.orderStatus = data.data.status;
         this.orderDataService.setSelectedOrder(data);
         
+        /*
+        this.sharingCloseOrderService
+        .getStatusOrderObservable()
+        .subscribe((status) => {
+          this.statusOrder = status;
+        });
+    
+    console.log('statusOrder en sideBarComponent METODO CLOSEORDER: ',this.statusOrder)
+        */
         // Forzar la recarga de la página actual (para actualizar la página de allEmployees y que no se vean los botones)
         // window.location.reload();
       })

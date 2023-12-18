@@ -29,20 +29,13 @@ import { MatButton } from '@angular/material/button';
   styleUrls: ['./break.component.scss']
 })
 export class BreakComponent implements OnInit{ 
-  //action: string;
   dialogTitle: string;
   breakForm: UntypedFormGroup;
   break: BreakModel;
   employees: Employees;
-  //showDeleteBtn = false;
-  //breakTime : FormControl;
   
   ngOnInit(): void {
     
-    //this.breakTime = new FormControl(new Date());
-    //this.breakForm = new FormGroup({
-    //break: this.breakTime
-  //});
   }
 
   constructor(
@@ -50,35 +43,13 @@ export class BreakComponent implements OnInit{
     private fb: UntypedFormBuilder,
     
   ) {
-    // Set the defaults
-    //this.action = data.action;
-    /*if (this.action === 'edit') {
-      //this.dialogTitle = data.checkIn.title;
-      //this.calendar = data.calendar;
-      this.showDeleteBtn = true;
-    } else { */
-      this.dialogTitle = 'Break time:';
-      const blankObject = {} as BreakModel;
-      this.break = new BreakModel(blankObject);
-      //this.showDeleteBtn = false;
-    //}
+    this.dialogTitle = 'Break time:';
+    const blankObject = {} as BreakModel;
+    this.break = new BreakModel(blankObject);
     this.breakForm = this.createContactForm();
     //console.log('Break Time ==>',this.breakForm.controls)
     //console.log('this.break.break: ', this.break.break)
   }
-  
-  /*formControl = new UntypedFormControl('', [
-    Validators.required,
-    // Validators.email,
-  ]); 
-
-  getErrorMessage() {
-    return this.formControl.hasError('required')
-      ? 'Required field'
-      : this.formControl.hasError('email')
-      ? 'Not a valid email'
-      : '';
-  } */
 
   createContactForm(): UntypedFormGroup {
     return this.fb.group({
@@ -118,7 +89,6 @@ export class BreakComponent implements OnInit{
   }
   public confirmAdd(): void {
     const _break = this.breakForm.value;
-    //this._break = this.breakForm.get('break')?.value;
     console.log('El Break es:', _break);
     this.dialogRef.close(_break);
   }
