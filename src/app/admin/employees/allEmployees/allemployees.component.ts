@@ -36,6 +36,7 @@ import { ShareStartDateService } from '../../../_services/share-start-date.servi
 import { ShareTimeDifferenceInMinutesService } from 'app/_services/share-time-difference-in-minutes.service';
 import axios from 'axios';
 
+
 import * as L from 'leaflet';
 import {Map, marker, tileLayer, Marker} from 'leaflet';
 
@@ -101,6 +102,8 @@ export class AllemployeesComponent
   public statusOrder!: string;
   public ShowButtons = true;
   selectedRowsWithoutNoShow: Employees[] = [];
+  coordinates: string | null = null;
+  orderAssigned : string
   
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -132,6 +135,8 @@ export class AllemployeesComponent
     private sharingCloseOrderService: SharingCloseOrderService,
     private shareStartDateService: ShareStartDateService,
     private shareTimeDifferenceInMinutesService: ShareTimeDifferenceInMinutesService,
+    private http: HttpClient
+    
   ) {
     super();
     this.updateRegistrationCalled = false;
@@ -149,7 +154,7 @@ export class AllemployeesComponent
       if (selectedOrder) {
         this.dataEmployees = selectedOrder;
         this.statusOrder = this.dataEmployees.data.status;  
-        this.orderId = this.dataEmployees.id;  
+        this.orderId = this.dataEmployees.id;
         
         if(this.statusOrder === 'closed'){
           this.ShowButtons = false
@@ -193,7 +198,7 @@ export class AllemployeesComponent
      }
    
     this.getEventLocation()
-   
+    this.extractCoordinates()
     
   }
   
@@ -1963,7 +1968,9 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
                 const [year, month, day] = orden.data.startDate.split('-');
                 const fechaInicioOrden1 = new Date(year, month - 1, day, 0, 0, 0); // Restamos 1 al mes porque en JavaScript los meses van de 0 a 11
                 fechaInicioOrden1.setHours(Number(horas), Number(minutos), 0, 0); // Ajustar la hora y los minutos
-
+                
+                console.log("Empleado en orden >> ",orden.data.orderId)
+                this.orderAssigned = orden.data.orderId;
                 console.log("fechaInicioOrden1", fechaInicioOrden1);
                 
                 console.log("fechaInicioOrden", fechaInicioOrden);
@@ -2094,7 +2101,8 @@ async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
           }else{
             this.showNotification(
               'snackbar-danger', 
-              'Employee is already assigned in another order at this time.', 
+              //'Employee is already assigned in another order at this time.',
+              `Employee is already assigned in order number ${this.orderAssigned} at this time.`, 
               'top', 
               'center')
             console.log('El empleado ya está asignado en otra orden durante ese horario.');
@@ -2519,14 +2527,76 @@ closeMapModal() {
   const modal = document.getElementById('mapModal');
   modal.style.display = 'none';
 }
+extractCoordinates() {
+  const placeId = 'CSLyfuMou5vN9gzJ7'; // Reemplaza con el lugar que necesitas
+
+    const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?place_id=${placeId}`;
+
+    this.http.get(apiUrl).subscribe( 
+      (data: any) => {
+        if (data.results.length > 0) {
+          const location = data.results[0].geometry.location;
+          const latitude = location.lat;
+          const longitude = location.lng;
+          console.log('Latitud:', latitude);
+          console.log('Longitud:', longitude);
+        } else {
+          console.error('No se encontraron resultados para el lugar proporcionado.');
+        }
+      },
+      (error) => {
+        console.error('Error al obtener las coordenadas:', error);
+      }
+    );
+}
+
+
 
 getEventLocation() {
   console.log("Ubicación del evento", this.dataEmployees.data.mapLink);
   const url = new URL(this.dataEmployees.data.mapLink);
+  console.log("URL: ", url);
 
+  let latitude, longitude;
+
+  // Intentar extraer las coordenadas directamente de la URL de goo.gl (estructura larga)
+  const gooGlMatch = this.dataEmployees.data.mapLink.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+  if (gooGlMatch) {
+    latitude = parseFloat(gooGlMatch[1]);
+    longitude = parseFloat(gooGlMatch[2]);
+    console.log("lat en gooGlMatch: ",latitude)
+    console.log("long en gooGlMatch: ",longitude)
+  } else {
+    // Intentar extraer las coordenadas de la URL de google.com/maps (estructura corta)
+    const googleMapsMatch = this.dataEmployees.data.mapLink.match(/\/maps\/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+    if (googleMapsMatch) {
+      latitude = parseFloat(googleMapsMatch[1]);
+      longitude = parseFloat(googleMapsMatch[2]);
+      console.log("lat en googleMapsMatch: ",latitude)
+      console.log("long en googleMapsMatch: ",longitude)
+    }
+  }
+
+  if (latitude !== undefined && longitude !== undefined) {
+    this.latitudeEvent = latitude;
+    this.longitudeEvent = longitude;
+    console.log("Latitud evento:", this.latitudeEvent);
+    console.log("Longitud evento:", this.longitudeEvent);
+  } else {
+    console.log("No se encontraron las coordenadas en la URL.");
+  }
+}
+
+
+
+/*
+getEventLocation() {
+  console.log("Ubicación del evento", this.dataEmployees.data.mapLink);
+  const url = new URL(this.dataEmployees.data.mapLink);
+  console.log("URL: ",url)
   // Obtener la cadena de consulta de la URL
-  const queryString = url.search;
-
+  const queryString = url.pathname;
+  console.log("queryString: ",queryString)
   // Buscar las coordenadas en la cadena de consulta
   //const regex = /query=([\d.-]+),([\d.-]+)/;
   const regex = /query=([\d.-]+)%2C([\d.-]+)/;
@@ -2543,6 +2613,7 @@ getEventLocation() {
     console.log("No se encontraron las coordenadas en la URL.");
   }
 }
+*/
 createEventMap(selectedRows: Employees[]) {
   if (selectedRows.length > 0) {
     const map = new Map('mapInModal').setView([selectedRows[0].checkinCoordinates.latitude, selectedRows[0].checkinCoordinates.longitude], 14); // Crea el mapa una sola vez
