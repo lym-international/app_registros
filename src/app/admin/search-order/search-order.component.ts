@@ -119,8 +119,8 @@ export class SearchOrderComponent{
     .then((data) => {
       //console.log(data)
       this.orders = data;
-      this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
-      
+      //this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
+      this.orders.sort((a,b)=>(a.data.orderId < b.data.orderId? 1: -1));
       // console.log('Ordenes desde el método getOrders: ', this.orders)
     })
     .catch((error)=> {
@@ -147,7 +147,8 @@ export class SearchOrderComponent{
       .then((data) => {
         console.log('Datos de la orden por usuario con highKey: ', data)
         this.orders = data;
-        this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
+        //this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
+        this.orders.sort((a,b)=>(a.data.orderId < b.data.orderId? 1: -1));
       })
       .catch((error)=> {
         console.log(error)
@@ -165,7 +166,8 @@ export class SearchOrderComponent{
       .then((data) => {
         console.log('Datos de la orden por usuario por email: ', data)
         this.orders = data;
-        this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
+        //this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
+        this.orders.sort((a,b)=>(a.data.orderId < b.data.orderId? 1: -1));
       })
       .catch((error)=> {
         console.log(error)
@@ -191,7 +193,8 @@ export class SearchOrderComponent{
       .then((data) => {
         console.log('Datos de la orden por supervisor: ', data)
         this.orders = data;
-        this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
+        //this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
+        this.orders.sort((a,b)=>(a.data.orderId < b.data.orderId? 1: -1));
       })
       .catch((error)=> {
         console.log(error)
