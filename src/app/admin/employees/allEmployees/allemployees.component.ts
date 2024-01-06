@@ -198,7 +198,6 @@ export class AllemployeesComponent
      }
    
     this.getEventLocation()
-    this.extractCoordinates()
     
   }
   
@@ -2527,53 +2526,33 @@ closeMapModal() {
   const modal = document.getElementById('mapModal');
   modal.style.display = 'none';
 }
-extractCoordinates() {
-  const placeId = 'CSLyfuMou5vN9gzJ7'; // Reemplaza con el lugar que necesitas
-
-    const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?place_id=${placeId}`;
-
-    this.http.get(apiUrl).subscribe( 
-      (data: any) => {
-        if (data.results.length > 0) {
-          const location = data.results[0].geometry.location;
-          const latitude = location.lat;
-          const longitude = location.lng;
-          console.log('Latitud:', latitude);
-          console.log('Longitud:', longitude);
-        } else {
-          console.error('No se encontraron resultados para el lugar proporcionado.');
-        }
-      },
-      (error) => {
-        console.error('Error al obtener las coordenadas:', error);
-      }
-    );
-}
 
 
 
 getEventLocation() {
   console.log("Ubicación del evento", this.dataEmployees.data.mapLink);
-  const url = new URL(this.dataEmployees.data.mapLink);
+  const url = this.dataEmployees.data.mapLink;
   console.log("URL: ", url);
 
   let latitude, longitude;
 
   // Intentar extraer las coordenadas directamente de la URL de goo.gl (estructura larga)
-  const gooGlMatch = this.dataEmployees.data.mapLink.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+  const gooGlMatch = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+  console.log("gooGlMatch: ", gooGlMatch);
   if (gooGlMatch) {
     latitude = parseFloat(gooGlMatch[1]);
     longitude = parseFloat(gooGlMatch[2]);
-    console.log("lat en gooGlMatch: ",latitude)
-    console.log("long en gooGlMatch: ",longitude)
+    console.log("lat en gooGlMatch: ", latitude);
+    console.log("long en gooGlMatch: ", longitude);
   } else {
     // Intentar extraer las coordenadas de la URL de google.com/maps (estructura corta)
-    const googleMapsMatch = this.dataEmployees.data.mapLink.match(/\/maps\/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+    const googleMapsMatch = url.match(/\/maps\/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+    console.log("googleMapsMatch: ", googleMapsMatch);
     if (googleMapsMatch) {
       latitude = parseFloat(googleMapsMatch[1]);
       longitude = parseFloat(googleMapsMatch[2]);
-      console.log("lat en googleMapsMatch: ",latitude)
-      console.log("long en googleMapsMatch: ",longitude)
+      console.log("lat en googleMapsMatch: ", latitude);
+      console.log("long en googleMapsMatch: ", longitude);
     }
   }
 
@@ -2586,6 +2565,7 @@ getEventLocation() {
     console.log("No se encontraron las coordenadas en la URL.");
   }
 }
+
 
 
 
