@@ -5,6 +5,6 @@ export class User {
     firstname = '';
     midlenam = '';
     lastname = '';
-    rol = '';
+    role = '';
     urlimag = '';
 }
