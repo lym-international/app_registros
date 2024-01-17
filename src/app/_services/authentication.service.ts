@@ -12,6 +12,9 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/comp
 import { catchError } from 'rxjs/operators'; //Diego
 import { throwError } from 'rxjs'; //Diego
 
+import * as CryptoJS from 'crypto-js'; //Jairo
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -32,6 +35,9 @@ export class AuthenticationService {
   public currentUserData: any; // Nueva variable para almacenar los datos del usuario
   //private authentication: Auth;
 
+  private secretKey: 'jairo@adminl&m';
+  private isAuthenticatingSubject = new BehaviorSubject<boolean>(false);
+  public isAuthenticating$ = this.isAuthenticatingSubject.asObservable();
 
   constructor(
       private http: HttpClient,
@@ -59,6 +65,58 @@ export class AuthenticationService {
       //this.authentication = authen;
     }
     
+    decryptData(encryptedData: string): string {
+      try {
+        const decryptedData = CryptoJS.AES.decrypt(
+          encryptedData,
+          this.secretKey
+        ).toString(CryptoJS.enc.Utf8);
+        return decryptedData;
+      } catch (error) {
+        console.error('Error :', error);
+        return null;
+      }
+    }
+  
+    private extractOriginalString(alteredString: string): string {
+      const parts = alteredString.split('_');
+      if (parts.length >= 3) {
+        return parts[1];
+      } else {
+        return alteredString;
+      }
+    }
+    initialize() {
+      this.route.queryParams.subscribe((params) => {
+        const token = params['token'];
+        if (token) {
+          this.isAuthenticatingSubject.next(true);
+          // console.log("token", token);
+          // const tk = token.replace(/["']/g, '');
+          // console.log("cirpted", tk);
+          
+          const receivedToken = token.replace(/-/g, '+').replace(/_/g, '/');
+          const decryptedToken = this.decryptData(receivedToken);
+          // const decryptedToken = this.decryptData(tk);
+          if (decryptedToken) {
+            try {
+              const userData = JSON.parse(decryptedToken);
+              const username = userData.username;
+              const password = userData.pass;
+              const pass = this.extractOriginalString(password);
+             
+              this.login(username, pass);
+              
+            } catch (error) {
+              console.error('Error al analizar la cadena desencriptada:', error);
+            }
+          } else {
+            console.error('La cadena desencriptada es nula o vacía.');
+          }
+        }
+      })
+    }
+
     login(username: string, password: string ) {
       this.auth.signInWithEmailAndPassword(username, password).then((user) => {
         console.log("usuario autenticado con exito!", user.user?.email)
@@ -66,7 +124,6 @@ export class AuthenticationService {
           
           usersInfo.docs.forEach((item:any) => {
             const data = item.data();
-            console.log("DATA ::", item.data())
             sessionStorage.setItem('currentUser', JSON.stringify(data));
             this.currentUserSubject.next(data);
             this.currentUserData = data; // diego 8-7 : Almacenar los datos del usuario en currentUserData
@@ -80,7 +137,9 @@ export class AuthenticationService {
             // this.auxCurrentUser = user;
             // const auxDate = new Date();
             // const date = new Date(auxDate.getTime() - (auxDate.getTimezoneOffset() * 60000));
-            
+            setTimeout(() => {
+              this.isAuthenticatingSubject.next(false);
+            }, 1000);
             if(this.currentUserData.role=="Employee"){
               console.log("Es Empleado")
               this.router.navigate(['/admin/search-order']);
@@ -102,6 +161,7 @@ export class AuthenticationService {
         });
       })
             .catch((error) => {
+              this.isAuthenticatingSubject.next(false);
               switch (error.code) {
                 case "auth/wrong-password":
                   console.log("error1", error.message);
@@ -155,8 +215,10 @@ export class AuthenticationService {
 */
 
   logout() {
+    this.isAuthenticatingSubject.next(false);
     this.auth.signOut().then(() => {
         sessionStorage.removeItem('currentUser');
+        localStorage.removeItem('currentUserData')
         this.currentUserSubject.next(null);
         this.auxCurrentUser = null;
         this.currentUserData = null; // Restablecer currentUserData a null

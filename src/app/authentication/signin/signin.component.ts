@@ -11,6 +11,8 @@ import { Role, AuthService } from '@core';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { AuthenticationService } from 'app/_services/authentication.service'; //Jairo
 
+
+
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
@@ -25,6 +27,7 @@ export class SigninComponent
   loading = false;
   error = '';
   hide = true;
+  isAuthenticating= false;
   constructor(
     private formBuilder: UntypedFormBuilder, //private formBuilder: UntypedFormBuilder,
    private authenticationService: AuthenticationService, //Jairo
@@ -38,7 +41,15 @@ export class SigninComponent
   }
   
   ngOnInit() {
-    
+    if (this.authenticationService) {
+      this.authenticationService.isAuthenticating$.subscribe((isAuthenticating) => {
+        // console.log("aute", isAuthenticating)
+        this.isAuthenticating = isAuthenticating;
+        // console.log("siiiuu", this.isAuthenticating)
+      });
+    } else {
+      console.error('El servicio AuthenticationService no está inyectado correctamente en el componente.');
+    }
     this.authForm = this.formBuilder.group({
       username: ['', Validators.required], //['admin@software.com', Validators.required],
       password: ['', Validators.required], //['admin@123', Validators.required],

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Event, Router, NavigationStart, NavigationEnd } from '@angular/router';
+import { AuthenticationService } from './_services/authentication.service';//Jairo
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -7,7 +8,10 @@ import { Event, Router, NavigationStart, NavigationEnd } from '@angular/router';
 })
 export class AppComponent {
   currentUrl!: string;
-  constructor(public _router: Router) {
+
+  constructor(public _router: Router, private authService: AuthenticationService
+    ) {
+    this.authService.initialize();
     this._router.events.subscribe((routerEvent: Event) => {
       if (routerEvent instanceof NavigationStart) {
         this.currentUrl = routerEvent.url.substring(
