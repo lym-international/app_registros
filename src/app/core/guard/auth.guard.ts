@@ -30,7 +30,7 @@ export class AuthGuard  {
       take(1),
       map((user: User) => {
         if (user) {
-          const userRole = user.role; 
+          const userRole = user.role; // Ajusta esto al nombre correcto de la propiedad en tu User model
           if (route.data['role'] && route.data['role'].indexOf(userRole) === -1) {
             this.router.navigate(['/authentication/signin']);
             return false;
@@ -40,7 +40,7 @@ export class AuthGuard  {
 
         this.router.navigate(['/authentication/signin']);
         return false;
-      })
+       })
     );
   }
 }

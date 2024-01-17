@@ -94,10 +94,10 @@ export class SearchOrderComponent{
     } else if (
       this.data.role == "Employee"
     ) {
-        this.getOrderByIdUser(this.data.email,this.data.highkeyId)
+        this.getOrderByHKid(this.data.highkeyId)  
+        //this.getOrderByIdUser(this.data.email,this.data.highkeyId)
+        
         this.getSearchOrdersByEmp(this.data.highkeyId)
-        // this.getSearchOrders()
-        // console.log('Orden por usuario: ', this.getOrderByIdUser(this.data.email,this.data.hkId))
     }
 
     //Fin validación de rol para la visualización de las órdenes.
@@ -119,9 +119,8 @@ export class SearchOrderComponent{
     .then((data) => {
       //console.log(data)
       this.orders = data;
-      // this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
+      //this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
       this.orders.sort((a,b)=>(a.data.orderId < b.data.orderId? 1: -1));
-      
       // console.log('Ordenes desde el método getOrders: ', this.orders)
     })
     .catch((error)=> {
@@ -129,6 +128,34 @@ export class SearchOrderComponent{
     }
     )
   }
+
+  getOrderByHKid(hkId){
+    if (hkId){
+
+      fetch(
+        // `https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`
+        // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getActiveOrders`
+        // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getActiveOrders`
+        // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user==${user}`
+        // `${this.orderFunctionsURL}/order/getOrdersByUser/user?user=${user}`
+        // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
+        `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
+        //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
+      )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Datos de la orden por usuario con highKey: ', data)
+        this.orders = data;
+        //this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
+        this.orders.sort((a,b)=>(a.data.orderId < b.data.orderId? 1: -1));
+      })
+      .catch((error)=> {
+        console.log(error)
+      }
+      )
+    }
+  }
+
 //Trae las órdenes por usuario desde la url de la API, más arriba se usa solo para los Supervisor.
   getOrderByIdUser(user, hkId){
     if (hkId){
@@ -146,7 +173,7 @@ export class SearchOrderComponent{
       .then((data) => {
         console.log('Datos de la orden por usuario con highKey: ', data)
         this.orders = data;
-        // this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
+        //this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
         this.orders.sort((a,b)=>(a.data.orderId < b.data.orderId? 1: -1));
       })
       .catch((error)=> {
@@ -154,7 +181,8 @@ export class SearchOrderComponent{
       }
       )
     }
-    else if(user){
+    else {
+      
       fetch(
         //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?email=${user}`
         `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?email=${user}`
@@ -164,7 +192,7 @@ export class SearchOrderComponent{
       .then((data) => {
         console.log('Datos de la orden por usuario por email: ', data)
         this.orders = data;
-        // this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
+        //this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
         this.orders.sort((a,b)=>(a.data.orderId < b.data.orderId? 1: -1));
       })
       .catch((error)=> {
@@ -193,7 +221,7 @@ export class SearchOrderComponent{
       .then((data) => {
         console.log('Datos de la orden por supervisor: ', data)
         this.orders = data;
-        // this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
+        //this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
         this.orders.sort((a,b)=>(a.data.orderId < b.data.orderId? 1: -1));
       })
       .catch((error)=> {
@@ -282,6 +310,16 @@ export class SearchOrderComponent{
     //  console.log('Ordenes desde el getSearchOrders ADMIN: ', this.ordenes )
     });
   }
+  
+  getSearchOrdersByEmp1(hkId): void {
+    
+    const apiUrl =`https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
+
+    this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
+      this.ordenes = ordenes;
+    });
+  }
+
   searchOrder(): void {
     // Obtén el valor actual del campo de entrada
   let inputValue: string = this.orderNumber;
