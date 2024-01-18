@@ -7,17 +7,12 @@ import firebase from 'firebase/compat/app';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { User } from 'app/_models/user';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  AngularFirestore,
-  AngularFirestoreCollection,
-} from '@angular/fire/compat/firestore';
+import { AngularFirestore, AngularFirestoreCollection,} from '@angular/fire/compat/firestore';
 import { getAuth, signInWithCustomToken } from 'firebase/auth';
 
 import { catchError } from 'rxjs/operators'; //Diego
 import { throwError } from 'rxjs'; //Diego
 import * as CryptoJS from 'crypto-js'; //Jairo
-import { Subject } from 'rxjs';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -115,6 +110,7 @@ export class AuthenticationService {
             console.error('Error al analizar la cadena desencriptada:', error);
           }
         } else {
+          this.isAuthenticatingSubject.next(false);
           console.error('La cadena desencriptada es nula o vacía.');
         }
       }
