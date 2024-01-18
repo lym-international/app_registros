@@ -111,6 +111,7 @@ export class AuthenticationService {
               console.error('Error al analizar la cadena desencriptada:', error);
             }
           } else {
+            this.isAuthenticatingSubject.next(false);
             console.error('La cadena desencriptada es nula o vacía.');
           }
         }
