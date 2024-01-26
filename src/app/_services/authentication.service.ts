@@ -96,6 +96,7 @@ export class AuthenticationService {
         
         const receivedToken = token.replace(/-/g, '+').replace(/_/g, '/');
         const decryptedToken = this.decryptData(receivedToken);
+        sessionStorage.setItem('accessToken', token);
         // const decryptedToken = this.decryptData(tk);
         if (decryptedToken) {
           try {

@@ -13,6 +13,7 @@ import { ConfigService } from '@config';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { LanguageService, InConfiguration, AuthService } from '@core';
 import { AuthenticationService } from 'app/_services/authentication.service';
+import { FontAwesomeComponent } from 'app/icons/font-awesome/font-awesome.component';
 
 
 interface Notifications {
@@ -54,7 +55,7 @@ export class HeaderComponent
     private authService: AuthService,
     private router: Router,
     public languageService: LanguageService,
-    public authenticationService: AuthenticationService
+    public authenticationService: AuthenticationService,
     
   ) {
     super();
@@ -128,6 +129,27 @@ export class HeaderComponent
       }
     } else {
       this.flagvalue = val.map((element) => element.flag);
+    }
+  }
+
+  hasToken(): boolean {
+    const token = sessionStorage.getItem('accessToken');    
+    return !!token; // Returns true if token is present, false otherwise
+  }
+  
+
+  redirectToExternalUrl() {
+    const token = sessionStorage.getItem('accessToken');
+    if (token) {
+      // Redirige a la URL externa con el token como parámetro
+       //https://register.highkeystaff.com/#/authentication/signin
+      //  https://highkeystaff.web.app/dashboard
+       window.location.href= 'http://localhost:4200/dashboard'
+      // window.location.href = `https://register.highkeystaff.com/#/authentication/signin/?token=${token}`;
+    } else {
+      console.error('Token de acceso no presente en sessionStorage.');
+      // Manejar la ausencia de token (puede redirigir a una página de error)
+      // this.router.navigate(['/error']);
     }
   }
   
