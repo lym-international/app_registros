@@ -43,9 +43,7 @@ export class SigninComponent
   ngOnInit() {
     if (this.authenticationService) {
       this.authenticationService.isAuthenticating$.subscribe((isAuthenticating) => {
-        // console.log("aute", isAuthenticating)
         this.isAuthenticating = isAuthenticating;
-        // console.log("siiiuu", this.isAuthenticating)
       });
     } else {
       console.error('El servicio AuthenticationService no está inyectado correctamente en el componente.');

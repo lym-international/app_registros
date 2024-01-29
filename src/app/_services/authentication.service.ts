@@ -96,6 +96,8 @@ export class AuthenticationService {
         
         const receivedToken = token.replace(/-/g, '+').replace(/_/g, '/');
         const decryptedToken = this.decryptData(receivedToken);
+        sessionStorage.setItem('accessToken', token);
+        
         // const decryptedToken = this.decryptData(tk);
         if (decryptedToken) {
           try {
@@ -186,31 +188,38 @@ export class AuthenticationService {
             console.log('error3', error.message);
             this.messageService.messageWarning('Warning', error.message);
             break;
-         }
-    });
+        }
+      });
   }
 
-    setData(data: any) {
-      this.data = data;
-    }
-  
-    getData() {
-      //return this.data;
-      return this.currentUserData;
-    }
 
-    changePassword(email: string): Promise<boolean> {
-      return new Promise((resolve, reject) => {
-        this.auth.sendPasswordResetEmail(email).then((user) => {
-          console.log('OK', 'You can receive the instruction to reset password to ' + email);
+  setData(data: any) {
+    this.data = data;
+  }
+
+  getData() {
+    //return this.data;
+    return this.currentUserData;
+  }
+
+  changePassword(email: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.auth
+        .sendPasswordResetEmail(email)
+        .then((user) => {
+          console.log(
+            'OK',
+            'You can receive the instruction to reset password to ' + email
+          );
           resolve(true);
-        }).catch((error) => {
-          console.log("Warning", error.message);
+        })
+        .catch((error) => {
+          console.log('Warning', error.message);
           reject(false);
         });
-      });
-    }
-/*
+    });
+  }
+  /*
   changePassword(email: string) {
     console.log("e-mail:",email)
     this.auth.sendPasswordResetEmail(email).then((user) => {
@@ -228,12 +237,13 @@ export class AuthenticationService {
   logout() {
     this.isAuthenticatingSubject.next(false);
     this.auth.signOut().then(() => {
-        sessionStorage.removeItem('currentUser');
-        localStorage.removeItem('currentUserData')
-        this.currentUserSubject.next(null);
-        this.auxCurrentUser = null;
-        this.currentUserData = null; // Restablecer currentUserData a null
-        this.router.navigate(['pages/login']);
-    })
+      sessionStorage.removeItem('currentUser');
+      localStorage.removeItem('currentUserData')
+      this.currentUserSubject.next(null);
+      this.auxCurrentUser = null;
+      this.currentUserData = null; // Restablecer currentUserData a null
+      this.router.navigate(['pages/login']);
+    });
+  }
 }
-} 
+

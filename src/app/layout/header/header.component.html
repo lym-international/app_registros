@@ -9,7 +9,7 @@
             </a> -->
             <a class="navbar-brand">
                 <img src="assets/images/LogoPequeñoLM-fondoBlanco.png" alt="" />
-                <span class="logo-name">L & M</span>
+                <span  *ngIf="!hasToken()" class="logo-name">L & M</span>
             </a>
         </div>
         <div class="collapse navbar-collapse" [ngClass]="isNavbarCollapsed ? '' : 'show'">
@@ -23,6 +23,24 @@
           </button>
                 </li>
             </ul>
+
+            <div class="navbar-header">
+                <a href="#" onClick="return false;" class="navbar-toggle collapsed" (click)="isNavbarCollapsed = !isNavbarCollapsed" aria-expanded="false"></a>
+                <a href="#" onClick="return false;" class="bars" (click)="mobileMenuSidebarOpen($event, 'overlay-open')"></a>
+              
+                <!-- Updated code for the L&M logo with *ngIf -->
+                <ng-container *ngIf="hasToken()">
+                  <a (click)="redirectToExternalUrl()" style="cursor: pointer; margin-left: 10px; font-size: 20px; margin-top: 10px; display: flex; align-items: center;">
+                    <i class="la la-tasks" style="color: red; margin-right: 5px; font-size: 24px;"></i>
+                    <span style="margin-left: 5px; font-size: 18px; color: black;">L</span>
+                    <span style="font-size: 18px; color: red;">&</span>
+                    <span style="font-size: 18px; color: black;">M</span>
+                  </a>
+                </ng-container>
+              </div>
+              
+              
+           
             <ul class="nav navbar-nav navbar-right">
                 <!-- Full Screen Button -->
                 <!--<li class="fullscreen">
