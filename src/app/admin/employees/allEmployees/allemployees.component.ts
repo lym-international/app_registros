@@ -444,6 +444,7 @@ export class AllemployeesComponent
                   // favourite: "Emergency",
                   // status: "Confirmed"
               },
+              favourite: "Emergency",
               firstName: employee.data.firstname,
               highKeyId: employee.data.employeeId,
               lastName: employee.data.lastname,
@@ -515,6 +516,7 @@ export class AllemployeesComponent
                       // favourite: "Emergency",
                       // status: "Confirmed"
                   },
+                  favourite: "Emergency",
                   firstName: employee.data.firstname,
                   highKeyId: employee.data.employeeId,
                   lastName: employee.data.lastname,
@@ -2170,6 +2172,7 @@ addEmployeeToArray(result, startDate, horaInicio) {
           favourite: "Emergency",
           status: "Confirmed"
       },
+      favourite: "Emergency",
       firstName: result.firstname,
       highKeyId: result.employeeId,
       lastName: result.lastname,
