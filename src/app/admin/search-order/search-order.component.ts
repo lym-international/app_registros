@@ -120,8 +120,8 @@ export class SearchOrderComponent{
     .then((data) => {
       //console.log(data)
       this.orders = data;
-      //this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
-      this.orders.sort((a,b)=>(a.data.orderId < b.data.orderId? 1: -1));
+      this.orders.sort((a, b) => b.data.ordNumb - a.data.ordNumb);
+      // this.orders.sort((a,b)=>(a.data.orderId < b.data.orderId? 1: -1));
       // console.log('Ordenes desde el método getOrders: ', this.orders)
     })
     .catch((error)=> {
