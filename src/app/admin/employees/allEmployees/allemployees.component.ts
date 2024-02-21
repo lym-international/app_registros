@@ -1803,6 +1803,19 @@ export class AllemployeesComponent
     };
   }
   generatePdf() {
+    this.employeesArray.sort((a, b) => {
+      const lastNameA = (a.lastName || '').toLowerCase();
+      const lastNameB = (b.lastName || '').toLowerCase();
+      if (lastNameA < lastNameB) return -1;
+      if (lastNameA > lastNameB) return 1;
+    
+      const firstNameA = (a.firstName || '').toLowerCase();
+      const firstNameB = (b.firstName || '').toLowerCase();
+      if (firstNameA < firstNameB) return -1;
+      if (firstNameA > firstNameB) return 1;
+    
+      return 0;
+    });
     this.groupEmployees = [];
     const positions = [];
     function convertTimestampToTime(timestamp: any): string {
