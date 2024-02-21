@@ -1627,6 +1627,25 @@ export class AllemployeesComponent
       });
     }
 
+
+    this.employeesArray.sort((a, b) => {
+      // Ordena por apellido
+      const lastNameA = (a.lastname || '').toLowerCase();
+      const lastNameB = (b.lastname || '').toLowerCase();
+  
+      if (lastNameA < lastNameB) return -1;
+      if (lastNameA > lastNameB) return 1;
+  
+      // Si los apellidos son iguales, ordena por nombre
+      const firstNameA = (a.firstname || '').toLowerCase();
+      const firstNameB = (b.firstname || '').toLowerCase();
+  
+      if (firstNameA < firstNameB) return -1;
+      if (firstNameA > firstNameB) return 1;
+  
+      return 0; // Igual si tanto el apellido como el nombre son iguales
+  });
+    
     let generated = this.datePipe.transform (Date.now(), "MMMM d, y");
     const logoBase64 = await getImageAsBase64('https://firebasestorage.googleapis.com/v0/b/highkeystaff.appspot.com/o/Emails%2Flogolm-min.png?alt=media&token=7f1badc5-9f07-476c-82b0-7a16a3254ff0');
     await this.loadTimesheet();  
