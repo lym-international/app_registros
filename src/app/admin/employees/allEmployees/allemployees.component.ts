@@ -444,10 +444,10 @@ export class AllemployeesComponent
                   // favourite: "Emergency",
                   // status: "Confirmed"
               },
+              favourite: "Emergency",
               firstName: employee.data.firstname,
               highKeyId: employee.data.employeeId,
               lastName: employee.data.lastname,
-              favourite: "Emergency",
               payRollId: employee.data.payrollid || 'No Data',
             }; 
           
@@ -551,7 +551,7 @@ export class AllemployeesComponent
      console.log(
        'Contenido de employeesArray después de agregar empleados únicos:'
      );
-     //const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+    //  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
      console.log('modific', this.employeesArray);
      const response = await fetch(apiUrl, {
@@ -668,8 +668,8 @@ export class AllemployeesComponent
       // console.log('updatedEmployees', updatedEmployees);
 
       const apiUrl =
-      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-      // `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -1139,7 +1139,7 @@ export class AllemployeesComponent
       const apiUrl =
       `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       // `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; 
-      // `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; 
+        
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -1177,9 +1177,9 @@ export class AllemployeesComponent
     dateCheckoutRounded: number,
     //roundedBreak: number
   ): number {
- 
+ console.log("exactHourPayment", this.exactHourPayment)
     if (this.exactHourPayment) {
-      //console.log('Entró al IF')
+      // console.log('Entró al IF')
       const hoursNumberExact = this.calculateExactHourPaymentAll(
         checkInTimestamp,
         checkOutTimestamp,
@@ -1188,7 +1188,7 @@ export class AllemployeesComponent
       // const hours = hoursNumberExact.toFixed(2);
       return hoursNumberExact;
     } else {
-      //console.log('Entró al else')
+      // console.log('Entró al else')
       const lateThreshold = 8; // Umbral de llegada tarde en horas
       const checkInTime = dateCheckinRounded;
       const checkOutTime = dateCheckoutRounded;
@@ -1400,8 +1400,9 @@ export class AllemployeesComponent
         return employee;
       });
   
-      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-  
+      const apiUrl = 
+      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      // `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -1625,6 +1626,22 @@ export class AllemployeesComponent
         reader.readAsDataURL(blob);
       });
     }
+
+    this.employeesArray.sort((a, b) => {
+      const lastNameA = (a.lastname || '').toLowerCase();
+      const lastNameB = (b.lastname || '').toLowerCase();
+      console.log("name", a.lastName)
+      if (lastNameA < lastNameB) return -1;
+      if (lastNameA > lastNameB) return 1;
+  
+      const firstNameA = (a.firstname || '').toLowerCase();
+      const firstNameB = (b.firstname || '').toLowerCase();
+  
+      if (firstNameA < firstNameB) return -1;
+      if (firstNameA > firstNameB) return 1;
+  
+      return 0; 
+  });
 
     let generated = this.datePipe.transform (Date.now(), "MMMM d, y");
     const logoBase64 = await getImageAsBase64('https://firebasestorage.googleapis.com/v0/b/highkeystaff.appspot.com/o/Emails%2Flogolm-min.png?alt=media&token=7f1badc5-9f07-476c-82b0-7a16a3254ff0');
@@ -1940,7 +1957,7 @@ export class AllemployeesComponent
 async verifyConcurrency(empleado, horaInicio, duracionHoras, startDate) {
   const apiUrl = 
   `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByStartDate?date=${startDate}`;
-  //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByStartDate?date=${startDate}`;
+  // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByStartDate?date=${startDate}`;
   // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByStartDate?date=${startDate}`;
     const response = await fetch(apiUrl);
     const ordenes = await response.json();
@@ -2327,7 +2344,7 @@ async updateOrderWithNewEmployee(highKeyid,result) {
   console.log("result en order", result)
   const apiUrl = 
   `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`
-  //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+  // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
   
   const response = await fetch(apiUrl, {
     method: 'GET',
@@ -2395,8 +2412,10 @@ async updateOrderWithNewEmployee(highKeyid,result) {
   }
 }
 async updateOrderWithExistingEmployee(result) {
-  const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`;
-
+  const apiUrl = 
+  `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`;
+  // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+  
   fetch(apiUrl)
     .then(response => response.json())
     .then(async orderData => {
@@ -2448,6 +2467,78 @@ async updateOrderWithExistingEmployee(result) {
 }
 /*
 async updateOrderWithNewEmployee(result) {
+  console.log("result en order", result)
+  const apiUrl = 
+  `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`
+  // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+  
+  const response = await fetch(apiUrl, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch order data.');
+  }
+
+  const orderData = await response.json();
+  const newEmployee = {
+    agmRate: result.rate,
+    booking: 'Emergency',
+    data: {
+      firstname: result.firstName.toUpperCase(),
+    phone: result.phone,
+    company: "L&M Employee",
+    employeeId: highKeyid,
+    positions: [
+        {
+            rate: result.rate,
+            name: result.position
+        }
+    ],
+    email: result.email,
+    lastname: result.lastName.toUpperCase(),
+    status: "Active"
+    },
+    rate: result.rate,
+    favourite: 'Emergency',
+    status: 'Confirmed',
+    id:result.id,
+  };
+
+  // Busca el índice del elemento en la lista de 'items' que tenga la misma posición que el nuevo empleado.
+  const itemIndex = orderData.data.items.findIndex(item => item.position === result.position && item.hourFrom === result.hourFrom);
+
+  if (itemIndex !== -1) {
+    // Agrega el nuevo empleado al arreglo de empleados dentro del elemento encontrado.
+    const currentPending = orderData.data.items[itemIndex].pending;
+   const currentM = orderData.data.items[itemIndex].m;
+    orderData.data.items[itemIndex].employees.push(newEmployee);
+    orderData.data.items[itemIndex].pending = currentPending - 1;
+    orderData.data.items[itemIndex].m = currentM + 1;
+
+ 
+    // Actualiza la orden en el servidor con el nuevo empleado agregado.
+   
+    const updateOrderResponse = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(orderData.data), // Envía solo el objeto 'data' actualizado
+    });
+
+    if (!updateOrderResponse.ok) {
+      throw new Error('Failed to update order with new employee.');
+    }
+  } else {
+    throw new Error('Item not found in order.');
+  }
+}
+
+async updateOrderWithExistingEmployee(result) {
   console.log("result en order", result)
   const apiUrl = 
   `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`
