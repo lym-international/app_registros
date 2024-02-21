@@ -1628,20 +1628,24 @@ export class AllemployeesComponent
     }
 
     this.employeesArray.sort((a, b) => {
-      const lastNameA = (a.lastname || '').toLowerCase();
-      const lastNameB = (b.lastname || '').toLowerCase();
-      console.log("name", a.lastName)
+      const lastNameA = (a.lastName || '').toLowerCase();
+      const lastNameB = (b.lastName || '').toLowerCase();
       if (lastNameA < lastNameB) return -1;
       if (lastNameA > lastNameB) return 1;
-  
-      const firstNameA = (a.firstname || '').toLowerCase();
-      const firstNameB = (b.firstname || '').toLowerCase();
-  
+    
+      const firstNameA = (a.firstName || '').toLowerCase();
+      const firstNameB = (b.firstName || '').toLowerCase();
       if (firstNameA < firstNameB) return -1;
       if (firstNameA > firstNameB) return 1;
+    
+      return 0;
+    });
+    
+    // console.log("Array ordenado:", this.employeesArray);
+    
+    // Resto del código...
+    
   
-      return 0; 
-  });
 
     let generated = this.datePipe.transform (Date.now(), "MMMM d, y");
     const logoBase64 = await getImageAsBase64('https://firebasestorage.googleapis.com/v0/b/highkeystaff.appspot.com/o/Emails%2Flogolm-min.png?alt=media&token=7f1badc5-9f07-476c-82b0-7a16a3254ff0');
