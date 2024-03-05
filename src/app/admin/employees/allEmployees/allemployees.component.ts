@@ -377,12 +377,27 @@ export class AllemployeesComponent
         const numberArray = this.totalHoursArray.map((stringValue) => {
           return Number(stringValue);
         });
-       this.totalHoursSum = numberArray.reduce((accumulator, currentValue) => {
+
+       // Supongamos que numberArray es tu array original que puede contener tanto números como letras.
+
+      // Filtrar solo los elementos numéricos
+      const numericArray = numberArray.filter(value => !isNaN(value));
+
+      // Sumar los elementos numéricos
+      this.totalHoursSum = numericArray.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue;
+      }, 0);
+      
+      // Redondear totalHoursSum a dos decimales
+      this.totalHoursSum = Number(this.totalHoursSum.toFixed(2));
+       
+/*       this.totalHoursSum = numberArray.reduce((accumulator, currentValue) => {
           return accumulator + currentValue;
         }, 0);
+        
         // Redondear totalHoursSum a dos decimales
         this.totalHoursSum = Number(this.totalHoursSum.toFixed(2));
-       
+  */     
 
       })
       .catch((error) => {
@@ -668,8 +683,8 @@ export class AllemployeesComponent
       // console.log('updatedEmployees', updatedEmployees);
 
       const apiUrl =
-      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+       `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
