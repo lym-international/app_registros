@@ -2658,7 +2658,6 @@ closeMapModal() {
 getEventLocation() {
   console.log("Ubicación del evento", this.dataEmployees.data.mapLink);
   const url = this.dataEmployees.data.mapLink;
-  console.log("URL: ", url);
 
   let latitude, longitude;
 
@@ -2726,12 +2725,11 @@ createEventMap(selectedRows: Employees[]) {
 
     // Llamar a getEventLocation() para obtener las coordenadas del evento
     this.getEventLocation();
-    this.mostrarCoordenadasEnMapaModal(map, this.latitudeEvent, this.longitudeEvent, "Event");
-    
+    console.log("latitude , Logitude: ", this.latitudeEvent,  this.longitudeEvent)
+    //this.mostrarCoordenadasEnMapaModal(map, this.latitudeEvent, this.longitudeEvent, "Event");
     selectedRows.forEach((row) => {
       const checkinCoord = row.checkinCoordinates;
       const checkoutCoord = row.checkOutCoordinates;
-      
       
       if (checkinCoord) {
         const checkinLat = checkinCoord.latitude;
@@ -2753,6 +2751,7 @@ createEventMap(selectedRows: Employees[]) {
 }
 
 mostrarCoordenadasEnMapaModal(map: Map, coordLat: number, coordLong: number, markerName: string) {
+  console.log("coordlat, coordlong", coordLat, "+", coordLong)
   tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 40,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

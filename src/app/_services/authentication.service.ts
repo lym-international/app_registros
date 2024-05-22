@@ -238,11 +238,13 @@ export class AuthenticationService {
     this.isAuthenticatingSubject.next(false);
     this.auth.signOut().then(() => {
       sessionStorage.removeItem('currentUser');
-      localStorage.removeItem('currentUserData')
+      localStorage.removeItem('currentUserData');
+      sessionStorage.removeItem('currentOrders'); 
       this.currentUserSubject.next(null);
       this.auxCurrentUser = null;
       this.currentUserData = null; // Restablecer currentUserData a null
-      this.router.navigate(['pages/login']);
+      //this.router.navigate(['pages/login']);
+      this.router.navigate(['/authentication/signin']); 
     });
   }
 }

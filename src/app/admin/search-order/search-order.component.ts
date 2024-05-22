@@ -83,8 +83,15 @@ export class SearchOrderComponent{
       this.data.role == "Administrator" ||
       this.data.role == "Executive"
     ) {
-        this.getOrders();
-        this.getSearchOrders();
+      const storedOrders = sessionStorage.getItem('currentOrders');
+      if (storedOrders) {
+          this.orders = JSON.parse(storedOrders);
+          console.log('Órdenes recuperadas desde sessionStorage: ', this.orders);
+      } else {
+          this.getOrders();
+          this.getSearchOrders();
+          //this.loadParameters();
+        } 
         //this.loadParameters();
     } else if (this.data.role == "Supervisor") {
       this.getOrdersBySupervisor(this.data.email);
@@ -120,6 +127,7 @@ export class SearchOrderComponent{
       //console.log(data)
       this.orders = data;
       this.orders.sort((a, b) => b.data.ordNumb - a.data.ordNumb);
+      sessionStorage.setItem('currentOrders', JSON.stringify(this.orders)); 
       // this.orders.sort((a,b)=>(a.data.orderId < b.data.orderId? 1: -1));
       // console.log('Ordenes desde el método getOrders: ', this.orders)
     })
