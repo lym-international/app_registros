@@ -102,8 +102,6 @@ implements OnInit
     //'date',
     //'actions',
   ];
-  
-
   exampleDatabase?: EmployeesService;
   selection = new SelectionModel<AdminEmployees>(true, []);
   index?: number;
@@ -191,12 +189,25 @@ implements OnInit
 
     console.log('Datos traídos desde el header: ', this.dataUser)
 
-    this.geolocationService.getCoordinatesObservable().subscribe((coordinates) => {
+    /*
+     this.geolocationService.getCoordinatesObservable().subscribe((coordinates) => {
       this.latitude = coordinates.latitude;
       this.longitude = coordinates.longitude;      
     }, (error) => {
       console.error('Error al obtener la ubicación:', error);
     });
+    */
+
+    this.geolocationService.getCoordinatesObservable().subscribe(
+      (coordinates) => {
+        this.latitude = coordinates.latitude;
+        this.longitude = coordinates.longitude;
+        console.log("Coordenadas recibidas: ", coordinates);
+      },
+      (error) => {
+        console.error("Error obteniendo las coordenadas: ", error);
+      }
+    );
   }
   
   // Función para controlar la visibilidad de los botones al hacer clic en el checkbox
@@ -522,7 +533,17 @@ implements OnInit
       const timestampCheckinRounded= Timestamp.fromDate(new Date(rounded));
       const dateCheckinRounded = timestampCheckinRounded?.seconds || 0;
       
-
+      try {
+        const coordinates = await this.getCoordinates();
+        this.latitude = coordinates.latitude;
+        this.longitude = coordinates.longitude;
+      } catch (error) {
+        console.error("Error obteniendo las coordenadas: ", error);
+      }
+      
+      //console.log("Latitud CheckIn Modal", this.latitude)
+      //console.log("Longitud CheckInModal", this.longitude)
+      
       // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
       const updatedEmployees = this.employeesArray.map((employee) => {
         
@@ -602,6 +623,19 @@ implements OnInit
     } else {
       console.log('Ningún empleado seleccionado para check-in.');
     }
+  }
+
+  getCoordinates(): Promise<{ latitude: number; longitude: number }> {
+    return new Promise((resolve, reject) => {
+      this.geolocationService.getCoordinatesObservable().subscribe(
+        (coordinates) => {
+          resolve(coordinates);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
   }
 
   roundDate1(date: Date) {
@@ -693,6 +727,17 @@ implements OnInit
       const timestampCheckoutRounded = Timestamp.fromDate(new Date(rounded));
       const dateCheckoutRounded = timestampCheckoutRounded?.seconds || 0;
       
+      try {
+        const coordinates = await this.getCoordinates();
+        this.latitude = coordinates.latitude;
+        this.longitude = coordinates.longitude;
+      } catch (error) {
+        console.error("Error obteniendo las coordenadas: ", error);
+      }
+      
+      //console.log("Latitud Checkout Modal", this.latitude)
+      //console.log("Longitud Chackout Modal", this.longitude)
+
       // Filtrar y actualizar solo los empleados seleccionados con sus datos actualizados
       const updatedEmployees = this.employeesArray.map((employee) => {
         if (

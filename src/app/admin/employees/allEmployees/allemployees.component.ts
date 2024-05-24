@@ -377,12 +377,27 @@ export class AllemployeesComponent
         const numberArray = this.totalHoursArray.map((stringValue) => {
           return Number(stringValue);
         });
-       this.totalHoursSum = numberArray.reduce((accumulator, currentValue) => {
+
+       // Supongamos que numberArray es tu array original que puede contener tanto números como letras.
+
+      // Filtrar solo los elementos numéricos
+      const numericArray = numberArray.filter(value => !isNaN(value));
+
+      // Sumar los elementos numéricos
+      this.totalHoursSum = numericArray.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue;
+      }, 0);
+      
+      // Redondear totalHoursSum a dos decimales
+      this.totalHoursSum = Number(this.totalHoursSum.toFixed(2));
+       
+/*       this.totalHoursSum = numberArray.reduce((accumulator, currentValue) => {
           return accumulator + currentValue;
         }, 0);
+        
         // Redondear totalHoursSum a dos decimales
         this.totalHoursSum = Number(this.totalHoursSum.toFixed(2));
-       
+  */     
 
       })
       .catch((error) => {
@@ -668,8 +683,8 @@ export class AllemployeesComponent
       // console.log('updatedEmployees', updatedEmployees);
 
       const apiUrl =
-      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+       `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -2643,7 +2658,6 @@ closeMapModal() {
 getEventLocation() {
   console.log("Ubicación del evento", this.dataEmployees.data.mapLink);
   const url = this.dataEmployees.data.mapLink;
-  console.log("URL: ", url);
 
   let latitude, longitude;
 
@@ -2711,12 +2725,11 @@ createEventMap(selectedRows: Employees[]) {
 
     // Llamar a getEventLocation() para obtener las coordenadas del evento
     this.getEventLocation();
-    this.mostrarCoordenadasEnMapaModal(map, this.latitudeEvent, this.longitudeEvent, "Event");
-    
+    console.log("latitude , Logitude: ", this.latitudeEvent,  this.longitudeEvent)
+    //this.mostrarCoordenadasEnMapaModal(map, this.latitudeEvent, this.longitudeEvent, "Event");
     selectedRows.forEach((row) => {
       const checkinCoord = row.checkinCoordinates;
       const checkoutCoord = row.checkOutCoordinates;
-      
       
       if (checkinCoord) {
         const checkinLat = checkinCoord.latitude;
@@ -2738,6 +2751,7 @@ createEventMap(selectedRows: Employees[]) {
 }
 
 mostrarCoordenadasEnMapaModal(map: Map, coordLat: number, coordLong: number, markerName: string) {
+  console.log("coordlat, coordlong", coordLat, "+", coordLong)
   tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 40,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

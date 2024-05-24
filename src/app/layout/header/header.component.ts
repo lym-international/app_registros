@@ -196,10 +196,14 @@ export class HeaderComponent
     }
   }
   logout() {
+    this.authenticationService.logout(); //jairo 
+    
+    /*
     this.subs.sink = this.authService.logout().subscribe((res) => {
       if (!res.success) {
         this.router.navigate(['/authentication/signin']);
       }
     });
+    */
   }
 }
