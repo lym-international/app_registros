@@ -97,7 +97,6 @@ export class AuthenticationService {
         const receivedToken = token.replace(/-/g, '+').replace(/_/g, '/');
         const decryptedToken = this.decryptData(receivedToken);
         sessionStorage.setItem('accessToken', token);
-        
         // const decryptedToken = this.decryptData(tk);
         if (decryptedToken) {
           try {
@@ -106,6 +105,7 @@ export class AuthenticationService {
             const password = userData.pass;
             const pass = this.extractOriginalString(password);
            
+            sessionStorage.removeItem('currentOrders');
             this.login(username, pass);
             
           } catch (error) {
@@ -239,13 +239,12 @@ export class AuthenticationService {
     this.auth.signOut().then(() => {
       sessionStorage.removeItem('currentUser');
       localStorage.removeItem('currentUserData');
-      sessionStorage.removeItem('currentOrders'); 
+      sessionStorage.removeItem('currentOrders');
       this.currentUserSubject.next(null);
       this.auxCurrentUser = null;
       this.currentUserData = null; // Restablecer currentUserData a null
-      //this.router.navigate(['pages/login']);
-      this.router.navigate(['/authentication/signin']); 
+      // this.router.navigate(['pages/login']);
+      this.router.navigate(['/authentication/signin']);
     });
   }
 }
-

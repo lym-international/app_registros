@@ -53,6 +53,7 @@ export class SearchOrderComponent{
                 });
               }
   
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnInit() {
     
     this.ocultarSidebarService.ocultarSidebar();
@@ -69,30 +70,31 @@ export class SearchOrderComponent{
       localStorage.setItem('currentUserData', JSON.stringify(this.data));
     }
     // Aquí se tiene acceso a los datos del usuario en la variable data
-    console.log('Datos en storedUserData desde el SearchOrder: ', storedUserData);
+    // console.log('Datos en storedUserData desde el SearchOrder: ', storedUserData);
 
+    
+   
     //Inicio validación de rol para la visualización de las órdenes.
-
       if (this.data.role == "Client") {
       // this.router.navigate(['orders']);
       //this.loadClientOrders(this.currentUser.client);
         this.getOrderByIdUser(this.data.email,this.data.hkId)
         this.getSearchOrders()
-        console.log('Orden por usuario: ', this.getOrderByIdUser(this.data.email,this.data.hkId))
+        // console.log('Orden por usuario: ', this.getOrderByIdUser(this.data.email,this.data.hkId))
     } else if (
       this.data.role == "Administrator" ||
       this.data.role == "Executive"
     ) {
       const storedOrders = sessionStorage.getItem('currentOrders');
-      if (storedOrders) {
-          this.orders = JSON.parse(storedOrders);
-          console.log('Órdenes recuperadas desde sessionStorage: ', this.orders);
-      } else {
-          this.getOrders();
-          this.getSearchOrders();
-          //this.loadParameters();
-        } 
+    if (storedOrders) {
+        this.orders = JSON.parse(storedOrders);
+        console.log('Órdenes recuperadas desde sessionStorage: ', this.orders);
+    } else {
+        this.getOrders();
+        this.getSearchOrders();
         //this.loadParameters();
+    
+      }
     } else if (this.data.role == "Supervisor") {
       this.getOrdersBySupervisor(this.data.email);
       this.getSearchOrdersBySuperv(this.data.email);
@@ -106,9 +108,8 @@ export class SearchOrderComponent{
         
         this.getSearchOrdersByEmp(this.data.highkeyId)
     }
-
     //Fin validación de rol para la visualización de las órdenes.
-    console.log('Datos usuario: ',this.data);
+    // console.log('Datos usuario: ',this.data);
 
   }
 
@@ -118,18 +119,20 @@ export class SearchOrderComponent{
   getOrders(){
     fetch(
       //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getActiveOrders`
-       `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
+      //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
       // `https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`
-      //  `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrders`
+       `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrders`
     )
     .then((response) => response.json())
     .then((data) => {
       //console.log(data)
       this.orders = data;
       this.orders.sort((a, b) => b.data.ordNumb - a.data.ordNumb);
-      sessionStorage.setItem('currentOrders', JSON.stringify(this.orders)); 
       // this.orders.sort((a,b)=>(a.data.orderId < b.data.orderId? 1: -1));
       // console.log('Ordenes desde el método getOrders: ', this.orders)
+
+      sessionStorage.setItem('currentOrders', JSON.stringify(this.orders));
+      console.log('Órdenes desde el método getOrders: ', this.orders);
     })
     .catch((error)=> {
       console.log(error)
@@ -147,12 +150,12 @@ export class SearchOrderComponent{
         // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user==${user}`
         // `${this.orderFunctionsURL}/order/getOrdersByUser/user?user=${user}`
         // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
-        `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
-        //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
+        // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
+        `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
       )
       .then((response) => response.json())
       .then((data) => {
-        console.log('Datos de la orden por usuario con highKey: ', data)
+        // console.log('Datos de la orden por usuario con highKey: ', data)
         this.orders = data;
         //this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
         this.orders.sort((a, b) => b.data.ordNumb - a.data.ordNumb);
@@ -175,12 +178,12 @@ export class SearchOrderComponent{
         // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user==${user}`
         // `${this.orderFunctionsURL}/order/getOrdersByUser/user?user=${user}`
         // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
-        `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
-        // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
+        // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
+        `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
       )
       .then((response) => response.json())
       .then((data) => {
-        console.log('Datos de la orden por usuario con highKey: ', data)
+        // console.log('Datos de la orden por usuario con highKey: ', data)
         this.orders = data;
         //this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
         this.orders.sort((a, b) => b.data.ordNumb - a.data.ordNumb);
@@ -194,13 +197,13 @@ export class SearchOrderComponent{
     else {
       
       fetch(
-         `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?email=${user}`
-        // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?email=${user}`
+        //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?email=${user}`
+        `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?email=${user}`
         
       )
       .then((response) => response.json())
       .then((data) => {
-        console.log('Datos de la orden por usuario por email: ', data)
+        // console.log('Datos de la orden por usuario por email: ', data)
         this.orders = data;
         //this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
         this.orders.sort((a, b) => b.data.ordNumb - a.data.ordNumb);
@@ -222,15 +225,15 @@ export class SearchOrderComponent{
         // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?email=${user}`
 
         //'http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user=paola@paola.com'
-         `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=${user}`
-        //  `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user=${user}`
+        //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=${user}`
+         `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user=${user}`
         // 'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=yenny@stafflm.com'
         
       )
       
       .then((response) => response.json())
       .then((data) => {
-        console.log('Datos de la orden por supervisor: ', data)
+        // console.log('Datos de la orden por supervisor: ', data)
         this.orders = data;
         //this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
         this.orders.sort((a, b) => b.data.ordNumb - a.data.ordNumb);
@@ -295,8 +298,8 @@ export class SearchOrderComponent{
     const apiUrl =
     //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`  
     // `https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`;
-    //  'http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrders';
-     'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders';
+     'http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrders';
+    //  'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders';
 
     this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
       this.ordenes = ordenes;
@@ -305,7 +308,8 @@ export class SearchOrderComponent{
   }
   getSearchOrdersByEmp(hkId): void {
     
-    const apiUrl =`https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
+    const apiUrl =`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
+    // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
 
     this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
       this.ordenes = ordenes;
@@ -314,8 +318,8 @@ export class SearchOrderComponent{
   getSearchOrdersBySuperv(user): void {
     
     const apiUrl =
-    `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=${user}`
-    // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user=${user}`    
+    // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=${user}`
+    `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user=${user}`    
 
     this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
       this.ordenes = ordenes;
@@ -325,7 +329,8 @@ export class SearchOrderComponent{
   
   getSearchOrdersByEmp1(hkId): void {
     
-    const apiUrl =`https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
+    const apiUrl =`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
+    // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
 
     this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
       this.ordenes = ordenes;
@@ -347,12 +352,19 @@ export class SearchOrderComponent{
   // Actualiza el valor del campo de entrada
   this.orderNumber = inputValue;
   
-    //console.log('Ordenes desde el getSearchOrders2: ', this.ordenes )
+    // console.log('Ordenes desde el getSearchOrders2: ', this.ordenes )
+    const storedOrders = sessionStorage.getItem('currentOrders');
+    if (storedOrders) {
+      this.ordenes = JSON.parse(storedOrders);
+    }  
+     
     this.foundOrder = null;
-    for (const order of this.ordenes) {
-      if (order.data.orderId === this.orderNumber) {
-        this.foundOrder = order;
-        break;
+    if(this.ordenes){
+      for (const order of this.ordenes) {
+        if (order.data.orderId === this.orderNumber) {
+          this.foundOrder = order;
+          break;
+        }
       }
     }
     // Verificar si se encontró un objeto con el orderId especificado

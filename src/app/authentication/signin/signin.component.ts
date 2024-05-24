@@ -85,10 +85,9 @@ export class SigninComponent
         
       const username = this.authForm.get('username')?.value.toLowerCase();
       const password = this.authForm.get('password')?.value;
-      //console.log('Username:', username);
-      //console.log('Password:', password); 
     
       this.authenticationService.login(username, password); //jairo
+      
       
     } 
   }

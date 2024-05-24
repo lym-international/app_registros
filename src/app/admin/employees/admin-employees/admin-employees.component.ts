@@ -215,8 +215,8 @@ implements OnInit
   
   getEmployees() {
     //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`
-    fetch(`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
-    // fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
+    // fetch(`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
+    fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
       .then((response) => response.json())
       .then((data) => {
         this.isTblLoading = false;
@@ -439,8 +439,8 @@ implements OnInit
       console.log('updatedEmployees', updatedEmployees);
 
       const apiUrl = 
-      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-      //  `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+       `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -596,8 +596,8 @@ implements OnInit
       console.log("updatedEmployees: ", updatedEmployees);
   
       const apiUrl = 
-      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
-      // `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
+      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -639,8 +639,10 @@ implements OnInit
   }
 
   roundDate1(date: Date) {
+    // eslint-disable-next-line prefer-const
     let roundedDate = date;
     roundedDate.setSeconds(0, 0);
+    // eslint-disable-next-line prefer-const
     let minutes = roundedDate.getMinutes();
     let sum = 0;
     roundedDate.setMinutes(0);
@@ -661,8 +663,10 @@ implements OnInit
   roundDate(date: Date) {
     // Verificar si 'date' es una instancia válida de Date
     if (date instanceof Date && !isNaN(date.getTime())) {
+      // eslint-disable-next-line prefer-const
       let roundedDate = new Date(date); // Crear una copia de 'date'
       roundedDate.setSeconds(0, 0);
+      // eslint-disable-next-line prefer-const
       let minutes = roundedDate.getMinutes();
       let sum = 0;
       roundedDate.setMinutes(0);
@@ -689,6 +693,7 @@ implements OnInit
 
   roundHours(hour: number) {
     let decimal = hour - Math.floor(hour);
+    // eslint-disable-next-line prefer-const
     let trunc = Math.trunc(hour);
 
     let minutes = decimal * 60;
@@ -704,6 +709,7 @@ implements OnInit
     } else {
       decimal = 1.0;
     }
+    // eslint-disable-next-line prefer-const
     let fixed = trunc + decimal;
     return fixed;
   }
@@ -784,8 +790,8 @@ implements OnInit
       console.log('updatedEmployees', updatedEmployees);
 
       const apiUrl =
-       `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-        // `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      //  `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+        `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -879,6 +885,7 @@ implements OnInit
         // console.log("employee.hourFrom", employee.hourFrom)
         // console.log("employe", dateCheckin);
 
+        // eslint-disable-next-line prefer-const
         let late = this.validateCheckout1(employee.hourFrom, dateCheckin);
         if (late < 8) {
           hoursNumber = 5;
@@ -988,8 +995,8 @@ if (checkinDate.getTime() > dateStart.getTime()){
       console.log('updatedEmployees', updatedEmployees);
   
       const apiUrl = 
-      `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-      //  `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+       `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
