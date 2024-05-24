@@ -103,12 +103,12 @@ export class HeaderComponent
       localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
     }
     // Acceso a los datos del usuario en la variable dataUser
-    console.log('Datos en storedUserData desde el HEADER: ', storedUserData);
-    console.log('dataUser ==> ', this.dataUser)
+    // console.log('Datos en storedUserData desde el HEADER: ', storedUserData);
+    // console.log('dataUser ==> ', this.dataUser)
     
     this.datosUsuario = this.dataUser;
     this.datosUsuarioEmitter.emit(this.datosUsuario);
-    console.log('Datos Usuario EMITER: ',this.datosUsuario)
+    // console.log('Datos Usuario EMITER: ',this.datosUsuario)
     
     /*if (userRole === 'Admin') { 
       this.homePage = 'admin/search-order';
@@ -197,10 +197,13 @@ export class HeaderComponent
     }
   }
   logout() {
-    this.subs.sink = this.authService.logout().subscribe((res) => {
+
+  this.authenticationService.logout(); //jairo
+
+    /* this.subs.sink = this.authService.logout().subscribe((res) => {
       if (!res.success) {
         this.router.navigate(['/authentication/signin']);
       }
-    });
+    }); */
   }
 }

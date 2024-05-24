@@ -42,7 +42,7 @@ import {Map, marker, tileLayer, Marker} from 'leaflet';
 
 //import 'leaflet/dist/leaflet.css';
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+pdfMake.vfs = pdfFonts.pdfMake.vfs;                       
 
 @Component({
   selector: 'app-allemployees',

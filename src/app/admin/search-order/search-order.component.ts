@@ -53,6 +53,7 @@ export class SearchOrderComponent{
                 });
               }
   
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnInit() {
     
     this.ocultarSidebarService.ocultarSidebar();
@@ -69,23 +70,31 @@ export class SearchOrderComponent{
       localStorage.setItem('currentUserData', JSON.stringify(this.data));
     }
     // Aquí se tiene acceso a los datos del usuario en la variable data
-    console.log('Datos en storedUserData desde el SearchOrder: ', storedUserData);
+    // console.log('Datos en storedUserData desde el SearchOrder: ', storedUserData);
 
+    
+   
     //Inicio validación de rol para la visualización de las órdenes.
-
       if (this.data.role == "Client") {
       // this.router.navigate(['orders']);
       //this.loadClientOrders(this.currentUser.client);
         this.getOrderByIdUser(this.data.email,this.data.hkId)
         this.getSearchOrders()
-        console.log('Orden por usuario: ', this.getOrderByIdUser(this.data.email,this.data.hkId))
+        // console.log('Orden por usuario: ', this.getOrderByIdUser(this.data.email,this.data.hkId))
     } else if (
       this.data.role == "Administrator" ||
       this.data.role == "Executive"
     ) {
+      const storedOrders = sessionStorage.getItem('currentOrders');
+    if (storedOrders) {
+        this.orders = JSON.parse(storedOrders);
+        console.log('Órdenes recuperadas desde sessionStorage: ', this.orders);
+    } else {
         this.getOrders();
         this.getSearchOrders();
         //this.loadParameters();
+    
+      }
     } else if (this.data.role == "Supervisor") {
       this.getOrdersBySupervisor(this.data.email);
       this.getSearchOrdersBySuperv(this.data.email);
@@ -99,9 +108,8 @@ export class SearchOrderComponent{
         
         this.getSearchOrdersByEmp(this.data.highkeyId)
     }
-
     //Fin validación de rol para la visualización de las órdenes.
-    console.log('Datos usuario: ',this.data);
+    // console.log('Datos usuario: ',this.data);
 
   }
 
@@ -122,6 +130,9 @@ export class SearchOrderComponent{
       this.orders.sort((a, b) => b.data.ordNumb - a.data.ordNumb);
       // this.orders.sort((a,b)=>(a.data.orderId < b.data.orderId? 1: -1));
       // console.log('Ordenes desde el método getOrders: ', this.orders)
+
+      sessionStorage.setItem('currentOrders', JSON.stringify(this.orders));
+      console.log('Órdenes desde el método getOrders: ', this.orders);
     })
     .catch((error)=> {
       console.log(error)
@@ -144,7 +155,7 @@ export class SearchOrderComponent{
       )
       .then((response) => response.json())
       .then((data) => {
-        console.log('Datos de la orden por usuario con highKey: ', data)
+        // console.log('Datos de la orden por usuario con highKey: ', data)
         this.orders = data;
         //this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
         this.orders.sort((a,b)=>(a.data.orderId < b.data.orderId? 1: -1));
@@ -171,7 +182,7 @@ export class SearchOrderComponent{
       )
       .then((response) => response.json())
       .then((data) => {
-        console.log('Datos de la orden por usuario con highKey: ', data)
+        // console.log('Datos de la orden por usuario con highKey: ', data)
         this.orders = data;
         //this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
         this.orders.sort((a,b)=>(a.data.orderId < b.data.orderId? 1: -1));
@@ -190,7 +201,7 @@ export class SearchOrderComponent{
       )
       .then((response) => response.json())
       .then((data) => {
-        console.log('Datos de la orden por usuario por email: ', data)
+        // console.log('Datos de la orden por usuario por email: ', data)
         this.orders = data;
         //this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
         this.orders.sort((a,b)=>(a.data.orderId < b.data.orderId? 1: -1));
@@ -219,7 +230,7 @@ export class SearchOrderComponent{
       
       .then((response) => response.json())
       .then((data) => {
-        console.log('Datos de la orden por supervisor: ', data)
+        // console.log('Datos de la orden por supervisor: ', data)
         this.orders = data;
         //this.orders.sort((a, b) => b.data.ordNum - a.data.ordNum);
         this.orders.sort((a,b)=>(a.data.orderId < b.data.orderId? 1: -1));
@@ -337,12 +348,19 @@ export class SearchOrderComponent{
   // Actualiza el valor del campo de entrada
   this.orderNumber = inputValue;
   
-    //console.log('Ordenes desde el getSearchOrders2: ', this.ordenes )
+    // console.log('Ordenes desde el getSearchOrders2: ', this.ordenes )
+    const storedOrders = sessionStorage.getItem('currentOrders');
+    if (storedOrders) {
+      this.ordenes = JSON.parse(storedOrders);
+    }  
+     
     this.foundOrder = null;
-    for (const order of this.ordenes) {
-      if (order.data.orderId === this.orderNumber) {
-        this.foundOrder = order;
-        break;
+    if(this.ordenes){
+      for (const order of this.ordenes) {
+        if (order.data.orderId === this.orderNumber) {
+          this.foundOrder = order;
+          break;
+        }
       }
     }
     // Verificar si se encontró un objeto con el orderId especificado
