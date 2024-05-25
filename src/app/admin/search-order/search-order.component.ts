@@ -119,9 +119,9 @@ export class SearchOrderComponent{
   getOrders(){
     fetch(
       //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getActiveOrders`
-      //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
       // `https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`
-       `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrders`
+       `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
+      //  `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrders`
     )
     .then((response) => response.json())
     .then((data) => {
@@ -150,8 +150,8 @@ export class SearchOrderComponent{
         // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user==${user}`
         // `${this.orderFunctionsURL}/order/getOrdersByUser/user?user=${user}`
         // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
-        // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
-        `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
+        `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
+        // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
       )
       .then((response) => response.json())
       .then((data) => {
@@ -178,8 +178,8 @@ export class SearchOrderComponent{
         // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user==${user}`
         // `${this.orderFunctionsURL}/order/getOrdersByUser/user?user=${user}`
         // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
-        // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
-        `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
+        `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
+        // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
       )
       .then((response) => response.json())
       .then((data) => {
@@ -197,8 +197,8 @@ export class SearchOrderComponent{
     else {
       
       fetch(
-        //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?email=${user}`
-        `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?email=${user}`
+         `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?email=${user}`
+        // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?email=${user}`
         
       )
       .then((response) => response.json())
@@ -225,8 +225,8 @@ export class SearchOrderComponent{
         // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?email=${user}`
 
         //'http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user=paola@paola.com'
-        //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=${user}`
-         `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user=${user}`
+         `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=${user}`
+        //  `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user=${user}`
         // 'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=yenny@stafflm.com'
         
       )
@@ -298,8 +298,8 @@ export class SearchOrderComponent{
     const apiUrl =
     //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`  
     // `https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`;
-     'http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrders';
-    //  'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders';
+    //  'http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrders';
+     'https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders';
 
     this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
       this.ordenes = ordenes;
@@ -308,8 +308,8 @@ export class SearchOrderComponent{
   }
   getSearchOrdersByEmp(hkId): void {
     
-    const apiUrl =`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
-    // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
+    // const apiUrl =`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
+    const apiUrl =`https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
 
     this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
       this.ordenes = ordenes;
@@ -318,8 +318,8 @@ export class SearchOrderComponent{
   getSearchOrdersBySuperv(user): void {
     
     const apiUrl =
-    // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=${user}`
-    `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user=${user}`    
+    `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByUser/user?user=${user}`
+    // `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByUser/user?user=${user}`    
 
     this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
       this.ordenes = ordenes;
@@ -329,8 +329,8 @@ export class SearchOrderComponent{
   
   getSearchOrdersByEmp1(hkId): void {
     
-    const apiUrl =`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
-    // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
+    // const apiUrl =`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
+    const apiUrl =`https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
 
     this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
       this.ordenes = ordenes;

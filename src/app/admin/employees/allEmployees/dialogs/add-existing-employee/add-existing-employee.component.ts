@@ -46,7 +46,7 @@ export class AddExistingEmployeeComponent {
   selectedRows: { [key: string]: boolean } = {};
   isTableSelected = false;
   searchHighKey = '';
-  selectedRowIndex: number = -1;
+  selectedRowIndex = -1;
 
   
   @ViewChild('highKeyIdInput') highKeyIdInput;
@@ -76,6 +76,7 @@ export class AddExistingEmployeeComponent {
     });
   }
 
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnInit(): void {
     this.firstName = new FormControl();
     this.lastName = new FormControl();
@@ -135,17 +136,17 @@ export class AddExistingEmployeeComponent {
   
     const endpointMap = {
       highKeyId:
-      // `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeById/id?id=${inputValues.highKeyId}`,
-       `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeeById/id?id=${inputValues.highKeyId}`,
+      `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeById/id?id=${inputValues.highKeyId}`,
+      //  `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeeById/id?id=${inputValues.highKeyId}`,
       payroll: 
-      // `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeByPayroll/payroll?payroll=${inputValues.payroll}`,
-      `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeeByPayroll/payroll?payroll=${inputValues.payroll}`,
+      `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeByPayroll/payroll?payroll=${inputValues.payroll}`,
+      // `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeeByPayroll/payroll?payroll=${inputValues.payroll}`,
       firstName: 
-      // `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeesByFN/firstName?firstName=${inputValues.firstName}`,
-      `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeesByFN/firstName?firstName=${inputValues.firstName}`,
+      `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeesByFN/firstName?firstName=${inputValues.firstName}`,
+      // `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeesByFN/firstName?firstName=${inputValues.firstName}`,
       lastName:
-      // `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeesByLN/lastName?lastName=${inputValues.lastName}`,
-       `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeesByLN/lastName?lastName=${inputValues.lastName}`,
+      `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeesByLN/lastName?lastName=${inputValues.lastName}`,
+      //  `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeesByLN/lastName?lastName=${inputValues.lastName}`,
     };
   
     fetch(endpointMap[searchType])

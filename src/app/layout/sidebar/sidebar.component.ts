@@ -142,8 +142,8 @@ export class SidebarComponent implements OnInit {
 
   closeOrder(){
     const apiUrl =
-    //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
-     `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
+     `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
+    //  `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
     fetch(apiUrl, {
       method: 'PUT'
     })
