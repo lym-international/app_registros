@@ -93,14 +93,19 @@ export class HeaderComponent
     this.setHeaderProperties();
 
     // Intentar recuperar los datos del usuario del localStorage
-    const storedUserData = localStorage.getItem('currentUserData');
+    // const storedUserData = localStorage.getItem('currentUserData');
+    const storedUserData = sessionStorage.getItem('currentUserData');
+
+    
+
     if (storedUserData) {
       this.dataUser = JSON.parse(storedUserData);
     } else {
       // Si no se encuentran los datos en el localStorage, obtenerlos del servicio
       this.dataUser = this.authenticationService.getData();
       // Almacenar los datos en el localStorage
-      localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
+      // localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
+      sessionStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
     }
     // Acceso a los datos del usuario en la variable dataUser
     // console.log('Datos en storedUserData desde el HEADER: ', storedUserData);

@@ -119,8 +119,8 @@ export class AuthService {
   logout() {
     //jairo
     sessionStorage.removeItem('currentUser');
-      localStorage.removeItem('currentUserData');
-      sessionStorage.removeItem('currentOrders');
+    sessionStorage.removeItem('currentUserData');
+    sessionStorage.removeItem('currentOrders');
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(this.currentUserValue);
