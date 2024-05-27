@@ -177,14 +177,17 @@ implements OnInit
     this.getEmployees();
     this.loadData();
     this.dataUser = this.authenticationService.getData(); //Persistencia de datos
-    const storedUserData = localStorage.getItem('currentUserData'); //Persistencia de datos
+    const storedUserData = sessionStorage.getItem('currentUserData');
+
+    
     if (storedUserData) {
       this.dataUser = JSON.parse(storedUserData);
     } else {
       // Si no se encuentran los datos en el localStorage, obtenerlos del servicio
       this.dataUser = this.authenticationService.getData();
       // Almacenar los datos en el localStorage
-      localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
+      // localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
+      sessionStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
     }
 
     console.log('Datos traídos desde el header: ', this.dataUser)

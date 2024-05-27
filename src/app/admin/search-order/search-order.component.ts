@@ -60,14 +60,20 @@ export class SearchOrderComponent{
 
     this.data = this.authenticationService.getData(); // en data obtiene los datos guardados en el servicio authenticationService.
     
-    const storedUserData = localStorage.getItem('currentUserData');
+    // const storedUserData = localStorage.getItem('currentUserData');
+    const storedUserData = sessionStorage.getItem('currentUserData');
+    
+    
     if (storedUserData) {
       this.data = JSON.parse(storedUserData);
     } else {
       // Si no se encuentran los datos en el localStorage, obtenerlos del servicio
       this.data = this.authenticationService.getData();
       // Almacenar los datos en el localStorage
-      localStorage.setItem('currentUserData', JSON.stringify(this.data));
+      // localStorage.setItem('currentUserData', JSON.stringify(this.data));
+      sessionStorage.setItem('currentUserData', JSON.stringify(this.data));
+
+
     }
     // Aquí se tiene acceso a los datos del usuario en la variable data
     // console.log('Datos en storedUserData desde el SearchOrder: ', storedUserData);

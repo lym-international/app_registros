@@ -137,7 +137,8 @@ export class AuthenticationService {
               sessionStorage.setItem('currentUser', JSON.stringify(data));
               this.currentUserSubject.next(data);
               this.currentUserData = data; // diego 8-7 : Almacenar los datos del usuario en currentUserData
-              localStorage.setItem('currentUserData', JSON.stringify(data));
+              // localStorage.setItem('currentUserData', JSON.stringify(data));
+              sessionStorage.setItem('currentUserData', JSON.stringify(data));
 
               this.setData(data);
               setTimeout(() => {
@@ -238,7 +239,7 @@ export class AuthenticationService {
     this.isAuthenticatingSubject.next(false);
     this.auth.signOut().then(() => {
       sessionStorage.removeItem('currentUser');
-      localStorage.removeItem('currentUserData');
+      sessionStorage.removeItem('currentUserData');
       sessionStorage.removeItem('currentOrders');
       this.currentUserSubject.next(null);
       this.auxCurrentUser = null;
