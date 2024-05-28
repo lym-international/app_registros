@@ -270,7 +270,7 @@ export class AllemployeesComponent
             employeeData.lastname &&
             employeeData.employeeId 
           ) {
-          console.log('Arreglo de empleados: ',employee)
+          // console.log('Arreglo de empleados: ',employee)
           const firstName = employeeData.firstname || "No data";
           // console.log('dlnempleado: ',employee)
           const lastName = employeeData.lastname

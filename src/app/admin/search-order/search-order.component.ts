@@ -254,6 +254,7 @@ export class SearchOrderComponent{
 
   orderOption(order: any){
     this.selectedOrder = order;
+    // console.log("orderIdJR", order.id)
     this.orderDataService.setSelectedOrder(order);
   }
 
