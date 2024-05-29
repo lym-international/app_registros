@@ -8,10 +8,10 @@ export class OrderDataService {
   private selectedOrderSubject = new Subject<any>()
   private storageKey = 'selectedOrder';
 
-  setSelectedOrder(order: any) {
+  setSelectedOrder(order: any) {    
     localStorage.setItem(this.storageKey, JSON.stringify(order));
     this.selectedOrderSubject.next(order);
-    //console.log("llamando al servicio", order);
+    // console.log("llamando al servicio", order);
   }
   getSelectedOrder() {
     const order = localStorage.getItem(this.storageKey);

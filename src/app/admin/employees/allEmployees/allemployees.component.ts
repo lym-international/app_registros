@@ -2440,7 +2440,9 @@ async updateOrderWithNewEmployee(highKeyid,result) {
 
  
     // Actualiza la orden en el servidor con el nuevo empleado agregado.
-   
+    this.orderDataService.setSelectedOrder(orderData);
+    sessionStorage.removeItem('currentOrders');
+    this.dataEmployees= orderData;
     const updateOrderResponse = await fetch(apiUrl, {
       method: 'PUT',
       headers: {
@@ -2491,8 +2493,11 @@ async updateOrderWithExistingEmployee(result) {
         orderData.data.items[itemIndex].m = currentM + 1;
 
         // Actualiza la orden en el servidor con el nuevo empleado agregado
-        //console.log("order DATA:", orderData);
-
+        this.orderDataService.setSelectedOrder(orderData);
+        sessionStorage.removeItem('currentOrders');
+        this.dataEmployees= orderData;
+        // console.log("order DATAJR:", orderData);
+        // console.log("solo objeto actualizado", orderData.data)
         const updateOrderResponse = await fetch(apiUrl, {
           method: 'PUT',
           headers: {
