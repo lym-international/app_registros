@@ -3183,7 +3183,7 @@ export class ExampleDataSource extends DataSource<Employees> {
         // console.log("antesdel renderr", this.employeesArray)
         // this.renderedData = this.employeesArray.slice(startIndex, this.paginator.pageSize);
         
-        console.log("this.renderedData", this.renderedData)
+        // console.log("this.renderedData", this.renderedData)
 
         return this.renderedData;
       })
