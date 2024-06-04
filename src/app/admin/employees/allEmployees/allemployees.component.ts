@@ -37,8 +37,10 @@ import { ShareTimeDifferenceInMinutesService } from 'app/_services/share-time-di
 import axios from 'axios';
 
 
+
 import * as L from 'leaflet';
 import {Map, marker, tileLayer, Marker} from 'leaflet';
+import { GeolocationService } from 'app/_services/geolocation.service';
 
 //import 'leaflet/dist/leaflet.css';
 
@@ -119,6 +121,7 @@ export class AllemployeesComponent
   latitudeEvent: number;
   longitudeEvent: number;
   selected_Rows: any[] = []; // Nueva propiedad para almacenar las selecciones
+  coord: { latitude: number; longitude: number; };
   // updateRegistrationCalled: boolean;
   
 
@@ -135,7 +138,8 @@ export class AllemployeesComponent
     private sharingCloseOrderService: SharingCloseOrderService,
     private shareStartDateService: ShareStartDateService,
     private shareTimeDifferenceInMinutesService: ShareTimeDifferenceInMinutesService,
-    private http: HttpClient
+    private http: HttpClient,
+    private locationService: GeolocationService
     
   ) {
     super();
@@ -2649,6 +2653,7 @@ openMapModal() {
 
 // Cierra el modal del mapa
 closeMapModal() {
+  //this.resetMap(); // Llama a la función resetMap() para resetear el mapa
   const modal = document.getElementById('mapModal');
   modal.style.display = 'none';
 }
@@ -2658,6 +2663,7 @@ closeMapModal() {
 getEventLocation() {
   console.log("Ubicación del evento", this.dataEmployees.data.mapLink);
   const url = this.dataEmployees.data.mapLink;
+
 
   let latitude, longitude;
 
@@ -2691,42 +2697,17 @@ getEventLocation() {
   }
 }
 
-
-
-
-/*
-getEventLocation() {
-  console.log("Ubicación del evento", this.dataEmployees.data.mapLink);
-  const url = new URL(this.dataEmployees.data.mapLink);
-  console.log("URL: ",url)
-  // Obtener la cadena de consulta de la URL
-  const queryString = url.pathname;
-  console.log("queryString: ",queryString)
-  // Buscar las coordenadas en la cadena de consulta
-  //const regex = /query=([\d.-]+),([\d.-]+)/;
-  const regex = /query=([\d.-]+)%2C([\d.-]+)/;
-  const match = queryString.match(regex);
-
-  if (match) {
-    const latitude = parseFloat (match[1]); //parseFloat convierte a número.
-    const longitude = parseFloat(match[2]); //parseFloat convierte a número.
-    this.latitudeEvent = latitude; // Almacenar la latitud en una propiedad
-    this.longitudeEvent = longitude; // Almacenar la longitud en una propiedad
-    console.log("Latitud evento:", this.latitudeEvent);
-    console.log("Longitud evento:", this.longitudeEvent);
-  } else {
-    console.log("No se encontraron las coordenadas en la URL.");
-  }
-}
-*/
 createEventMap(selectedRows: Employees[]) {
   if (selectedRows.length > 0) {
+    
+    // Asegúrate de que no haya un mapa existente antes de crear uno nuevo
+    
     const map = new Map('mapInModal').setView([selectedRows[0].checkinCoordinates.latitude, selectedRows[0].checkinCoordinates.longitude], 14); // Crea el mapa una sola vez
 
     // Llamar a getEventLocation() para obtener las coordenadas del evento
     this.getEventLocation();
     console.log("latitude , Logitude: ", this.latitudeEvent,  this.longitudeEvent)
-    //this.mostrarCoordenadasEnMapaModal(map, this.latitudeEvent, this.longitudeEvent, "Event");
+    this.mostrarCoordenadasEnMapaModal(map, this.latitudeEvent, this.longitudeEvent, "Event");
     selectedRows.forEach((row) => {
       const checkinCoord = row.checkinCoordinates;
       const checkoutCoord = row.checkOutCoordinates;

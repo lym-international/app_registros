@@ -1,5 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +8,8 @@ import { Subject } from 'rxjs';
 
 export class GeolocationService {
   public coordinatesSubject = new Subject<{ latitude: number; longitude: number }>();
+
+  constructor(private http: HttpClient) {}
 
   getCurrentLocation(): void {
     if ('geolocation' in navigator) {
