@@ -40,6 +40,7 @@ import axios from 'axios';
 import * as L from 'leaflet';
 import {Map, marker, tileLayer, Marker} from 'leaflet';
 
+
 //import 'leaflet/dist/leaflet.css';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;                       
@@ -120,7 +121,6 @@ export class AllemployeesComponent
   longitudeEvent: number;
   selected_Rows: any[] = []; // Nueva propiedad para almacenar las selecciones
   // updateRegistrationCalled: boolean;
-  
 
   constructor(
     private datePipe: DatePipe,
@@ -427,8 +427,10 @@ export class AllemployeesComponent
         employees.forEach(employee => {
           // let id = employee.id
           // employeesArray.push({ ...employee, hourFrom }); // Mantén la misma estructura.
-          if (employee.status !== "Rejected") {
-          if (employee.status !== "Rejected") {
+          console.log("statusHWS", employee.status)
+          // employee.employee.status !== "SMS Sent"
+          if (employee.status !== "Rejected" && employee.status !== "SMS Sent") {
+          // if (employee.status !== "Rejected") {
            let hourFromFormatted = "No Data";
            
            if (hourFrom) {
@@ -476,7 +478,7 @@ export class AllemployeesComponent
           this.employeesArray.push(addEmployeeRegist);  
           }        
           // this.employeesArray.push(addEmployeeRegist);  
-          }        
+          // }        
         });
       });
     } else {
@@ -489,9 +491,8 @@ export class AllemployeesComponent
   
         employees.forEach(employee => {
           const employeeId = employee.data.employeeId;
-          // console.log("aux",employee.status)
           // : "Rejected" 
-          if (employee.status !== "Rejected") {
+          if (employee.status !== "Rejected" && employee.status !== "SMS Sent") {
             const existingEmployeeIndex = employeesArray.findIndex(existingEmployee => {
               // console.log("xexistingEmployee", existingEmployee.employee.data)
               const condition = existingEmployee.employee.data.employeeId === employeeId && existingEmployee.hourFrom === hourFrom 
@@ -566,13 +567,12 @@ export class AllemployeesComponent
          (dataEmployee) =>
            dataEmployee.employeeId === highKeyId &&
            dataEmployee.hourFrom === hourFrom &&
-           employee.status !== "Rejected"
+           employee.employee.status !== "Rejected" && 
+           employee.employee.status !== "SMS Sent"
        );
        return employeeExistsInDataArray;
      });
-     console.log(
-       'Contenido de employeesArray después de agregar empleados únicos:'
-     );
+    //  console.log('Contenido de employeesArray después de agregar empleados únicos:'     );
     //  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
      const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
      console.log('modific', this.employeesArray);
@@ -2674,6 +2674,11 @@ closeMapModal() {
 
 
 getEventLocation() {
+  if (!this.dataEmployees || !this.dataEmployees.data || !this.dataEmployees.data.mapLink) {
+    console.log("No se encontró mapLink en los datos del empleado.");
+    return;
+  }
+
   console.log("Ubicación del evento", this.dataEmployees.data.mapLink);
   const url = this.dataEmployees.data.mapLink;
 
