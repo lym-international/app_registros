@@ -259,7 +259,8 @@ export class AllemployeesComponent
       .then((response) => response.json())
       .then((data) => {
         this.isTblLoading = false;
-        console.log("datadelRegistro: ", data);
+        console.log("datadelRegistro:", data);
+              
   
         this.employeesArray = data.employees.map((employee) => {
           // const employeeData = { ...employee.employee.data };
@@ -353,7 +354,7 @@ export class AllemployeesComponent
          console.log('---------------------------');
 
         this.dataSource = new ExampleDataSource(
-          this.exampleDatabase,
+          // this.exampleDatabase,
           this.paginator,
           this.sort,
           this.employeesArray
@@ -427,8 +428,10 @@ export class AllemployeesComponent
         employees.forEach(employee => {
           // let id = employee.id
           // employeesArray.push({ ...employee, hourFrom }); // Mantén la misma estructura.
-          if (employee.status !== "Rejected") {
-          if (employee.status !== "Rejected") {
+          console.log("statusHWS", employee.status)
+          // employee.employee.status !== "SMS Sent"
+          if (employee.status !== "Rejected" && employee.status !== "SMS Sent") {
+          // if (employee.status !== "Rejected") {
            let hourFromFormatted = "No Data";
            
            if (hourFrom) {
@@ -476,7 +479,7 @@ export class AllemployeesComponent
           this.employeesArray.push(addEmployeeRegist);  
           }        
           // this.employeesArray.push(addEmployeeRegist);  
-          }        
+          // }        
         });
       });
     } else {
@@ -566,13 +569,12 @@ export class AllemployeesComponent
          (dataEmployee) =>
            dataEmployee.employeeId === highKeyId &&
            dataEmployee.hourFrom === hourFrom &&
-           employee.status !== "Rejected"
+           employee.employee.status !== "Rejected" && 
+           employee.employee.status !== "SMS Sent"
        );
        return employeeExistsInDataArray;
      });
-     console.log(
-       'Contenido de employeesArray después de agregar empleados únicos:'
-     );
+    //  console.log('Contenido de employeesArray después de agregar empleados únicos:'     );
      const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
     //  const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
      console.log('modific', this.employeesArray);
@@ -2678,7 +2680,7 @@ getEventLocation() {
   const url = this.dataEmployees.data.mapLink;
 
   let latitude, longitude;
-
+  // Expresiones Regulares
   // Intentar extraer las coordenadas directamente de la URL de goo.gl (estructura larga)
   const gooGlMatch = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
   console.log("gooGlMatch: ", gooGlMatch);
@@ -3107,7 +3109,7 @@ export class ExampleDataSource extends DataSource<Employees> {
   filteredData: Employees[] = [];
   renderedData: Employees[] = [];
   constructor(
-    public exampleDatabase: EmployeesService,
+    // public exampleDatabase: EmployeesService,
     public paginator: MatPaginator,
     public _sort: MatSort,
 
@@ -3121,16 +3123,17 @@ export class ExampleDataSource extends DataSource<Employees> {
   connect(): Observable<Employees[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.exampleDatabase.dataChange,
+      // this.exampleDatabase.dataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
 
-    this.exampleDatabase.getAllEmployeess();
+    // this.exampleDatabase.getAllEmployeess();
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
+        console.log(" this.employeesArrayJJr",  this.employeesArray)
         this.filteredData = this.employeesArray
           .slice()
           .filter((employees: Employees) => {

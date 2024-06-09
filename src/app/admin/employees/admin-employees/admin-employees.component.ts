@@ -1229,7 +1229,7 @@ export class ExampleDataSource extends DataSource<AdminEmployees> {
       this.paginator.page,
     ];
 
-    this.exampleDatabase.getAllEmployeess();
+    // this.exampleDatabase.getAllEmployeess();
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
