@@ -139,9 +139,9 @@ export class AllemployeesComponent
     
   ) {
     super();
-    this.updateRegistrationCalled = false;
+    // this.updateRegistrationCalled = false;
     // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
-    this.updateRegistrationCalled = false;
+    // this.updateRegistrationCalled = false;
   }
 
   ngOnInit() {
@@ -360,17 +360,6 @@ export class AllemployeesComponent
           this.employeesArray
         );
           
-        /* if(this.statusOrder != "closed"){         
-          this.updateRegistration()
-        } */
-        /* if (this.statusOrder != "closed" && !this.updateRegistrationCalled) {
-          this.updateRegistration();
-          this.updateRegistrationCalled = true; // Marca que la función se ha llamado
-        } */
-       /*  this.totalHoursArray = [];
-        for (const item of this.employeesArray) {
-          this.totalHoursArray.push(item.hours);
-        } */
         if (this.statusOrder != "closed" && !this.updateRegistrationCalled) {
           this.updateRegistration();
           this.updateRegistrationCalled = true; // Marca que la función se ha llamado
@@ -428,7 +417,7 @@ export class AllemployeesComponent
         employees.forEach(employee => {
           // let id = employee.id
           // employeesArray.push({ ...employee, hourFrom }); // Mantén la misma estructura.
-          console.log("statusHWS", employee.status)
+          
           // employee.employee.status !== "SMS Sent"
           if (employee.status !== "Rejected" && employee.status !== "SMS Sent") {
           // if (employee.status !== "Rejected") {
@@ -492,9 +481,9 @@ export class AllemployeesComponent
   
         employees.forEach(employee => {
           const employeeId = employee.data.employeeId;
-          // console.log("aux",employee.status)
           // : "Rejected" 
           if (employee.status !== "Rejected") {
+            // console.log("aux",employee.status)
             const existingEmployeeIndex = employeesArray.findIndex(existingEmployee => {
               // console.log("xexistingEmployee", existingEmployee.employee.data)
               const condition = existingEmployee.employee.data.employeeId === employeeId && existingEmployee.hourFrom === hourFrom 
@@ -547,9 +536,8 @@ export class AllemployeesComponent
                   lastName: employee.data.lastname,
                   payRollId: employee.data.payrollid || 'No Data',
                 }; 
-              
-              this.employeesArray.push(addEmployeeRegist); 
-            }
+                this.employeesArray.push(addEmployeeRegist); 
+              }
           }
         });
       }); 
@@ -558,20 +546,29 @@ export class AllemployeesComponent
      items.forEach((item) => {
        const hourFrom = item.hourFrom;
        item.employees.forEach((employee) => {
-         const employeeData = { ...employee.data, hourFrom };
+         const employeeData = { ...employee, hourFrom };
          employeeDataArray.push(employeeData);
        });
      });
+     console.log("this.employeesArrayJ1", this.employeesArray)
      this.employeesArray = this.employeesArray.filter((employee) => {
+      console.log("employee.employee.status", employee.employee.status)
+      employeeDataArray.forEach((aqui)=>
+      console.log("sataus Aqui",aqui.status)
+      )
        const highKeyId = employee.highKeyId;
        const hourFrom = employee.hourFrom;
        const employeeExistsInDataArray = employeeDataArray.some(
          (dataEmployee) =>
-           dataEmployee.employeeId === highKeyId &&
+         
+           dataEmployee.data.employeeId === highKeyId &&
            dataEmployee.hourFrom === hourFrom &&
-           employee.employee.status !== "Rejected" && 
-           employee.employee.status !== "SMS Sent"
+           (employee.employee.status !== "Rejected" ||
+           employee.employee.status !== "SMS Sent")
+
+           
        );
+       
        return employeeExistsInDataArray;
      });
     //  console.log('Contenido de employeesArray después de agregar empleados únicos:'     );
