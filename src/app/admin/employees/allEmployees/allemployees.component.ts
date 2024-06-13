@@ -40,7 +40,6 @@ import axios from 'axios';
 import * as L from 'leaflet';
 import {Map, marker, tileLayer, Marker} from 'leaflet';
 
-
 //import 'leaflet/dist/leaflet.css';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;                       
@@ -121,6 +120,7 @@ export class AllemployeesComponent
   longitudeEvent: number;
   selected_Rows: any[] = []; // Nueva propiedad para almacenar las selecciones
   // updateRegistrationCalled: boolean;
+  
 
   constructor(
     private datePipe: DatePipe,
@@ -139,9 +139,9 @@ export class AllemployeesComponent
     
   ) {
     super();
-    this.updateRegistrationCalled = false;
+    // this.updateRegistrationCalled = false;
     // this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort);
-    this.updateRegistrationCalled = false;
+    // this.updateRegistrationCalled = false;
   }
 
   ngOnInit() {
@@ -254,12 +254,13 @@ export class AllemployeesComponent
   
   getEmployees() {
     //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`
-    //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
+    // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
     fetch(`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
       .then((response) => response.json())
       .then((data) => {
         this.isTblLoading = false;
-        console.log("datadelRegistro: ", data);
+        console.log("datadelRegistro:", data);
+              
   
         this.employeesArray = data.employees.map((employee) => {
           // const employeeData = { ...employee.employee.data };
@@ -270,7 +271,7 @@ export class AllemployeesComponent
             employeeData.lastname &&
             employeeData.employeeId 
           ) {
-          // console.log('Arreglo de empleados: ',employee)
+          console.log('Arreglo de empleados: ',employee)
           const firstName = employeeData.firstname || "No data";
           // console.log('dlnempleado: ',employee)
           const lastName = employeeData.lastname
@@ -353,23 +354,12 @@ export class AllemployeesComponent
          console.log('---------------------------');
 
         this.dataSource = new ExampleDataSource(
-          this.exampleDatabase,
+          // this.exampleDatabase,
           this.paginator,
           this.sort,
           this.employeesArray
         );
           
-        /* if(this.statusOrder != "closed"){         
-          this.updateRegistration()
-        } */
-        /* if (this.statusOrder != "closed" && !this.updateRegistrationCalled) {
-          this.updateRegistration();
-          this.updateRegistrationCalled = true; // Marca que la función se ha llamado
-        } */
-       /*  this.totalHoursArray = [];
-        for (const item of this.employeesArray) {
-          this.totalHoursArray.push(item.hours);
-        } */
         if (this.statusOrder != "closed" && !this.updateRegistrationCalled) {
           this.updateRegistration();
           this.updateRegistrationCalled = true; // Marca que la función se ha llamado
@@ -427,7 +417,7 @@ export class AllemployeesComponent
         employees.forEach(employee => {
           // let id = employee.id
           // employeesArray.push({ ...employee, hourFrom }); // Mantén la misma estructura.
-          console.log("statusHWS", employee.status)
+          
           // employee.employee.status !== "SMS Sent"
           if (employee.status !== "Rejected" && employee.status !== "SMS Sent") {
           // if (employee.status !== "Rejected") {
@@ -493,6 +483,7 @@ export class AllemployeesComponent
           const employeeId = employee.data.employeeId;
           // : "Rejected" 
           if (employee.status !== "Rejected" && employee.status !== "SMS Sent") {
+            // console.log("aux",employee.status)
             const existingEmployeeIndex = employeesArray.findIndex(existingEmployee => {
               // console.log("xexistingEmployee", existingEmployee.employee.data)
               const condition = existingEmployee.employee.data.employeeId === employeeId && existingEmployee.hourFrom === hourFrom 
@@ -545,9 +536,8 @@ export class AllemployeesComponent
                   lastName: employee.data.lastname,
                   payRollId: employee.data.payrollid || 'No Data',
                 }; 
-              
-              this.employeesArray.push(addEmployeeRegist); 
-            }
+                this.employeesArray.push(addEmployeeRegist); 
+              }
           }
         });
       }); 
@@ -556,7 +546,7 @@ export class AllemployeesComponent
      items.forEach((item) => {
        const hourFrom = item.hourFrom;
        item.employees.forEach((employee) => {
-         const employeeData = { ...employee.data, hourFrom };
+         const employeeData = { ...employee, hourFrom };
          employeeDataArray.push(employeeData);
        });
      });
@@ -565,10 +555,10 @@ export class AllemployeesComponent
        const hourFrom = employee.hourFrom;
        const employeeExistsInDataArray = employeeDataArray.some(
          (dataEmployee) =>
-           dataEmployee.employeeId === highKeyId &&
+           dataEmployee.data.employeeId === highKeyId &&
            dataEmployee.hourFrom === hourFrom &&
-           employee.employee.status !== "Rejected" && 
-           employee.employee.status !== "SMS Sent"
+           dataEmployee.status !== "Rejected" &&
+           dataEmployee.status !== "SMS Sent"
        );
        return employeeExistsInDataArray;
      });
@@ -691,7 +681,8 @@ export class AllemployeesComponent
 
       const apiUrl =
       `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-      // `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      // `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; 
+      //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -2674,16 +2665,11 @@ closeMapModal() {
 
 
 getEventLocation() {
-  if (!this.dataEmployees || !this.dataEmployees.data || !this.dataEmployees.data.mapLink) {
-    console.log("No se encontró mapLink en los datos del empleado.");
-    return;
-  }
-
   console.log("Ubicación del evento", this.dataEmployees.data.mapLink);
   const url = this.dataEmployees.data.mapLink;
 
   let latitude, longitude;
-
+  // Expresiones Regulares
   // Intentar extraer las coordenadas directamente de la URL de goo.gl (estructura larga)
   const gooGlMatch = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
   console.log("gooGlMatch: ", gooGlMatch);
@@ -3112,7 +3098,7 @@ export class ExampleDataSource extends DataSource<Employees> {
   filteredData: Employees[] = [];
   renderedData: Employees[] = [];
   constructor(
-    public exampleDatabase: EmployeesService,
+    // public exampleDatabase: EmployeesService,
     public paginator: MatPaginator,
     public _sort: MatSort,
 
@@ -3126,16 +3112,17 @@ export class ExampleDataSource extends DataSource<Employees> {
   connect(): Observable<Employees[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.exampleDatabase.dataChange,
+      // this.exampleDatabase.dataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
 
-    this.exampleDatabase.getAllEmployeess();
+    // this.exampleDatabase.getAllEmployeess();
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
+        console.log(" this.employeesArrayJJr",  this.employeesArray)
         this.filteredData = this.employeesArray
           .slice()
           .filter((employees: Employees) => {
@@ -3188,7 +3175,7 @@ export class ExampleDataSource extends DataSource<Employees> {
         // console.log("antesdel renderr", this.employeesArray)
         // this.renderedData = this.employeesArray.slice(startIndex, this.paginator.pageSize);
         
-        // console.log("this.renderedData", this.renderedData)
+        console.log("this.renderedData", this.renderedData)
 
         return this.renderedData;
       })
