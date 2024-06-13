@@ -563,8 +563,8 @@ export class AllemployeesComponent
          
            dataEmployee.data.employeeId === highKeyId &&
            dataEmployee.hourFrom === hourFrom &&
-           (employee.employee.status !== "Rejected" ||
-           employee.employee.status !== "SMS Sent")
+           employee.employee.status !== "Rejected" &&
+           employee.employee.status !== "SMS Sent"
 
            
        );
