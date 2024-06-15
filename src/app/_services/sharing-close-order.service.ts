@@ -6,6 +6,7 @@ import { Subject, Observable} from 'rxjs';
 })
 export class SharingCloseOrderService {
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() { }
 
   private statusOrderSubject = new Subject<string>();

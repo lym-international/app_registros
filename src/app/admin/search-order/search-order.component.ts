@@ -125,8 +125,8 @@ export class SearchOrderComponent{
   getOrders(){
     fetch(
       //`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getActiveOrders`
-      //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
       // `https://us-central1-highkeystaff.cloudfunctions.net/orders/totalOrders`
+      //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrders`
        `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrders`
     )
     .then((response) => response.json())
@@ -254,6 +254,7 @@ export class SearchOrderComponent{
 
   orderOption(order: any){
     this.selectedOrder = order;
+    // console.log("orderIdJR", order.id)
     this.orderDataService.setSelectedOrder(order);
   }
 
@@ -315,7 +316,7 @@ export class SearchOrderComponent{
   getSearchOrdersByEmp(hkId): void {
     
     const apiUrl =`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
-    // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
+    // const apiUrl =`https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
 
     this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
       this.ordenes = ordenes;
@@ -336,7 +337,7 @@ export class SearchOrderComponent{
   getSearchOrdersByEmp1(hkId): void {
     
     const apiUrl =`http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByEmployee?hkId=${hkId}`
-    // `https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
+    // const apiUrl =`https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByEmployee?hkId=${hkId}`
 
     this.http.get<any[]>(apiUrl).subscribe((ordenes) => {
       this.ordenes = ordenes;

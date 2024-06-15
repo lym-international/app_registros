@@ -226,7 +226,7 @@ export class DashboardLmComponent implements OnInit {
               totalCheckout?: number;
               totalnoShow?: number;
             } = position.hours[hourFrom];
-            console.log(`Hora inicial: ${hourFrom}`);
+            // console.log(`Hora inicial: ${hourFrom}`);
             if (!this.checkinValues[positionName]) {
               this.checkinValues[positionName] = {};
             }
@@ -239,26 +239,26 @@ export class DashboardLmComponent implements OnInit {
             if (hourTotals.totalCheckin !== undefined) {
               this.checkinValues[positionName][hourFrom] =
                 hourTotals.totalCheckin;
-              console.log(`Total de check-in: ${hourTotals.totalCheckin}`);
+              // console.log(`Total de check-in: ${hourTotals.totalCheckin}`);
             } else {
               this.checkinValues[positionName][hourFrom] = 0;
-              console.log(`Total de check-in: 0`);
+              // console.log(`Total de check-in: 0`);
             }
             if (hourTotals.totalCheckout !== undefined) {
               this.checkOutValues[positionName][hourFrom] =
                 hourTotals.totalCheckout;
-              console.log(`Total de check-out: ${hourTotals.totalCheckout}`);
+              // console.log(`Total de check-out: ${hourTotals.totalCheckout}`);
             } else if (hourTotals.totalCheckout === 0) {
               this.checkOutValues[positionName][hourFrom] = 0;
-              console.log(`Total de check-out: 0`);
+              // console.log(`Total de check-out: 0`);
             }
             if (hourTotals.totalnoShow !== undefined) {
               this.noShowValues[positionName][hourFrom] =
                 hourTotals.totalnoShow;
-              console.log(`Total de noShow: ${hourTotals.totalnoShow}`);
+              // console.log(`Total de noShow: ${hourTotals.totalnoShow}`);
             } else {
               this.noShowValues[positionName][hourFrom] = 0;
-              console.log(`Total de noShow: 0`);
+              // console.log(`Total de noShow: 0`);
             }
             console.log('---');
           }
@@ -285,10 +285,10 @@ export class DashboardLmComponent implements OnInit {
       this.porcentajeConfirmed = Math.round(
         (totalConfirmed / totalRequest) * 100
       );
-      console.log('Porcentaje checkIn: ', this.porcentajeCheckIn);
-      console.log('Porcentaje checkOut: ', this.porcentajeCheckOut);
-      console.log('Porcentaje Noshow: ', this.porcentajeNoshow);
-      console.log('Porcentaje confirmed: ', this.porcentajeConfirmed);
+      // console.log('Porcentaje checkIn: ', this.porcentajeCheckIn);
+      // console.log('Porcentaje checkOut: ', this.porcentajeCheckOut);
+      // console.log('Porcentaje Noshow: ', this.porcentajeNoshow);
+      // console.log('Porcentaje confirmed: ', this.porcentajeConfirmed);
     } else {
       // Manejo del caso cuando this.totalConfirmed es igual a cero
       console.log(

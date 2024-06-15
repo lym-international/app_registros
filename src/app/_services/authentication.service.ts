@@ -139,7 +139,7 @@ export class AuthenticationService {
               this.currentUserData = data; // diego 8-7 : Almacenar los datos del usuario en currentUserData
               // localStorage.setItem('currentUserData', JSON.stringify(data));
               sessionStorage.setItem('currentUserData', JSON.stringify(data));
-
+              console.log("gurdandoSesionStorage")
               this.setData(data);
               setTimeout(() => {
                 this.isAuthenticatingSubject.next(false);

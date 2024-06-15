@@ -46,7 +46,7 @@ export class AddExistingEmployeeComponent {
   selectedRows: { [key: string]: boolean } = {};
   isTableSelected = false;
   searchHighKey = '';
-  selectedRowIndex: number = -1;
+  selectedRowIndex = -1;
 
   
   @ViewChild('highKeyIdInput') highKeyIdInput;
@@ -76,6 +76,7 @@ export class AddExistingEmployeeComponent {
     });
   }
 
+  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngOnInit(): void {
     this.firstName = new FormControl();
     this.lastName = new FormControl();

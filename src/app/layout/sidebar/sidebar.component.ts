@@ -157,7 +157,7 @@ export class SidebarComponent implements OnInit {
         // console.log('DATA del method PUT', data.data.status);
         this.orderStatus = data.data.status;
         this.orderDataService.setSelectedOrder(data);
-        
+        sessionStorage.removeItem('currentOrders');
         /*
         this.sharingCloseOrderService
         .getStatusOrderObservable()

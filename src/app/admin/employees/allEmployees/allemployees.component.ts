@@ -254,7 +254,7 @@ export class AllemployeesComponent
   
   getEmployees() {
     //`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`
-    //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
+    // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`
     fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`)
       .then((response) => response.json())
       .then((data) => {
@@ -482,7 +482,7 @@ export class AllemployeesComponent
         employees.forEach(employee => {
           const employeeId = employee.data.employeeId;
           // : "Rejected" 
-          if (employee.status !== "Rejected") {
+          if (employee.status !== "Rejected" && employee.status !== "SMS Sent") {
             // console.log("aux",employee.status)
             const existingEmployeeIndex = employeesArray.findIndex(existingEmployee => {
               // console.log("xexistingEmployee", existingEmployee.employee.data)
@@ -555,13 +555,10 @@ export class AllemployeesComponent
        const hourFrom = employee.hourFrom;
        const employeeExistsInDataArray = employeeDataArray.some(
          (dataEmployee) =>
-         
            dataEmployee.data.employeeId === highKeyId &&
            dataEmployee.hourFrom === hourFrom &&
-           employee.employee.status !== "Rejected" &&
-           employee.employee.status !== "SMS Sent"
-
-           
+           dataEmployee.status !== "Rejected" &&
+           dataEmployee.status !== "SMS Sent"
        );
        
        return employeeExistsInDataArray;
@@ -685,7 +682,8 @@ export class AllemployeesComponent
 
       const apiUrl =
       // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; 
+      //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -1106,7 +1104,8 @@ export class AllemployeesComponent
 
       const apiUrl =
       // `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+      `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`; 
+      //`https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
