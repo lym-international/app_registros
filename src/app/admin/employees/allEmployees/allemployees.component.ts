@@ -550,12 +550,7 @@ export class AllemployeesComponent
          employeeDataArray.push(employeeData);
        });
      });
-     console.log("this.employeesArrayJ1", this.employeesArray)
      this.employeesArray = this.employeesArray.filter((employee) => {
-      console.log("employee.employee.status", employee.employee.status)
-      employeeDataArray.forEach((aqui)=>
-      console.log("sataus Aqui",aqui.status)
-      )
        const highKeyId = employee.highKeyId;
        const hourFrom = employee.hourFrom;
        const employeeExistsInDataArray = employeeDataArray.some(
