@@ -2667,40 +2667,45 @@ closeMapModal() {
 
 
 getEventLocation() {
-  console.log("Ubicación del evento", this.dataEmployees.data.mapLink);
-  const url = this.dataEmployees.data.mapLink;
+  if (this.dataEmployees && this.dataEmployees.data && this.dataEmployees.data.mapLink) {
+    const url = this.dataEmployees.data.mapLink;
+    console.log("Ubicación del evento", url);
 
-  let latitude, longitude;
-  // Expresiones Regulares
-  // Intentar extraer las coordenadas directamente de la URL de goo.gl (estructura larga)
-  const gooGlMatch = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
-  console.log("gooGlMatch: ", gooGlMatch);
-  if (gooGlMatch) {
-    latitude = parseFloat(gooGlMatch[1]);
-    longitude = parseFloat(gooGlMatch[2]);
-    console.log("lat en gooGlMatch: ", latitude);
-    console.log("long en gooGlMatch: ", longitude);
-  } else {
-    // Intentar extraer las coordenadas de la URL de google.com/maps (estructura corta)
-    const googleMapsMatch = url.match(/\/maps\/@(-?\d+\.\d+),(-?\d+\.\d+)/);
-    console.log("googleMapsMatch: ", googleMapsMatch);
-    if (googleMapsMatch) {
-      latitude = parseFloat(googleMapsMatch[1]);
-      longitude = parseFloat(googleMapsMatch[2]);
-      console.log("lat en googleMapsMatch: ", latitude);
-      console.log("long en googleMapsMatch: ", longitude);
+    let latitude, longitude;
+    // Expresiones Regulares
+    // Intentar extraer las coordenadas directamente de la URL de goo.gl (estructura larga)
+    const gooGlMatch = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+    console.log("gooGlMatch: ", gooGlMatch);
+    if (gooGlMatch) {
+      latitude = parseFloat(gooGlMatch[1]);
+      longitude = parseFloat(gooGlMatch[2]);
+      console.log("lat en gooGlMatch: ", latitude);
+      console.log("long en gooGlMatch: ", longitude);
+    } else {
+      // Intentar extraer las coordenadas de la URL de google.com/maps (estructura corta)
+      const googleMapsMatch = url.match(/\/maps\/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+      console.log("googleMapsMatch: ", googleMapsMatch);
+      if (googleMapsMatch) {
+        latitude = parseFloat(googleMapsMatch[1]);
+        longitude = parseFloat(googleMapsMatch[2]);
+        console.log("lat en googleMapsMatch: ", latitude);
+        console.log("long en googleMapsMatch: ", longitude);
+      }
     }
-  }
 
-  if (latitude !== undefined && longitude !== undefined) {
-    this.latitudeEvent = latitude;
-    this.longitudeEvent = longitude;
-    console.log("Latitud evento:", this.latitudeEvent);
-    console.log("Longitud evento:", this.longitudeEvent);
+    if (latitude !== undefined && longitude !== undefined) {
+      this.latitudeEvent = latitude;
+      this.longitudeEvent = longitude;
+      console.log("Latitud evento:", this.latitudeEvent);
+      console.log("Longitud evento:", this.longitudeEvent);
+    } else {
+      console.log("No se encontraron las coordenadas en la URL.");
+    }
   } else {
-    console.log("No se encontraron las coordenadas en la URL.");
+    console.log("No se encontró la URL del mapa en los datos del empleado.");
   }
 }
+
 
 
 
