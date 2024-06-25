@@ -122,6 +122,7 @@ export class AuthenticationService {
    /*  setTimeout(() => {
       this.isAuthenticatingSubject.next(false);
     }, 1500); */
+
     this.auth
       .signInWithEmailAndPassword(username, password)
       .then((user) => {

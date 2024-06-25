@@ -65,8 +65,9 @@ export class SearchOrderComponent implements OnInit {
 
   initializeOrders() {
     if (this.data.role === 'Client') {
-      this.getOrderByIdUser(this.data.email, this.data.hkId);
-      this.getSearchOrders();
+      // this.getOrderByIdUser(this.data.email, this.data.hkId);
+      this.getOrdersByClient(this.data.client)
+      // this.getSearchOrders();
     } else if (this.data.role === 'Administrator' || this.data.role === 'Executive') {
       const storedOrders = sessionStorage.getItem('currentOrders');
       if (storedOrders) {
@@ -148,6 +149,19 @@ export class SearchOrderComponent implements OnInit {
     this.ordSvc.getSearchOrdersByEmp(hkId).subscribe(
       (ordenes) => {
         this.ordenes = ordenes;
+      },
+      (error) => {
+        console.log('Error fetching search orders by employee:', error);
+      }
+    );
+  }
+
+  getOrdersByClient(clientId: string){
+    this.ordSvc.getOrdersByClient(clientId).subscribe(
+      (ordenes) => {
+        this.ordenes = ordenes;
+        this.orders = ordenes;
+        this.orders.sort((a, b) => b.data.ordNumb - a.data.ordNumb);
       },
       (error) => {
         console.log('Error fetching search orders by employee:', error);

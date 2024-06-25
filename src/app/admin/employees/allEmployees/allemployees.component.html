@@ -159,7 +159,6 @@
                                     <div class="background" *ngIf="dataUser && dataUser.role !== 'Client'">
                                         <li class="tbl-header-btn">
                                             <div class=" marginButton" matTooltip="ADD NEW">
-                                                <!--class="m-l-10"-->
                                                 <button mat-mini-fab color="primary" (click)="addNewEmergencyEmployeeModal()">
                                                 <mat-icon class="col-white">person_add</mat-icon>
                                             </button>
@@ -167,13 +166,29 @@
                                         </li>
                                         <li class="tbl-header-btn">
                                             <div class="marginButton" matTooltip="SEARCH EMPLOYEE">
-                                                <!--class="m-l-10"-->
                                                 <button mat-mini-fab color="primary" (click)="addExistingEmergencyEmployeeModal()">
                                                 <mat-icon class="col-white">person_search</mat-icon>
                                             </button>
                                             </div>
                                         </li>
                                     </div>
+                                    <!-- <div class="background" *ngIf="dataUser && dataUser.role !== 'Client'">
+  <li class="tbl-header-btn">
+    <div class="marginButton" matTooltip="ADD NEW">
+      <button mat-mini-fab color="primary" (click)="addEmergencyEmployeeModal(false)">
+        <mat-icon class="col-white">person_add</mat-icon>
+      </button>
+    </div>
+  </li>
+  <li class="tbl-header-btn">
+    <div class="marginButton" matTooltip="SEARCH EMPLOYEE">
+      <button mat-mini-fab color="primary" (click)="addEmergencyEmployeeModal(true)">
+        <mat-icon class="col-white">person_search</mat-icon>
+      </button>
+    </div>
+  </li>
+</div> -->
+
                                 </span>
                                 <li class="tbl-header-btn">
                                     <div class="" matTooltip="DOWNLOAD">
