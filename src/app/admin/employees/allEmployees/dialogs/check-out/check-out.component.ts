@@ -13,6 +13,7 @@ import { Employees } from '../../employees.model';
 import { formatDate } from '@angular/common';
 import { CheckoutValidatorService } from 'app/_services/checkout-validator.service';
 import { ShareStartDateService } from 'app/_services/share-start-date.service';
+import { GeolocationService } from 'app/_services/geolocation.service';
 //import { CheckOutModel } from './check-out.model';
 export interface DialogData {
   id: number;
@@ -71,7 +72,8 @@ export class CheckOutComponent implements OnInit{
     //public calendarService: CalendarService,
     private fb: UntypedFormBuilder,
     private checkoutValidatorService: CheckoutValidatorService,
-    private shareStartDateService: ShareStartDateService
+    private shareStartDateService: ShareStartDateService,
+    private geolocationService: GeolocationService
   ) {
     // Set the defaults
     this.action = data.action;
@@ -164,6 +166,7 @@ export class CheckOutComponent implements OnInit{
   public confirmAdd(): void {
     const endDate = this.fechaSalida.value;
     this.dialogRef.close(endDate);
+    this.geolocationService.getCurrentLocation();
     //this.checkoutValidatorService.setCheckoutDate(endDate);
   }
 

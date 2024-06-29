@@ -17,6 +17,7 @@ export class OrderService{
       : 'https://us-central1-highkeystaff.cloudfunctions.net/orders';
   }
   
+  
   getOrders(): Observable<any[]> {
     return this.http.get<any[]>(`${this.orderFunctionsURL}/getOrders`);
   }
@@ -49,9 +50,11 @@ export class OrderService{
     return this.http.get<any[]>(`${this.orderFunctionsURL}/getOrdersByUser/user?user=${user}`);
   }
 
+  
   getOrdersByClient(client: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.orderFunctionsURL}/getOrdersByClient?client=${client}`)
+    return this.http.get<any[]>(`${this.orderFunctionsURL}/getOrdersByClient?client=${client}`);
   }
+  
 
   verifyConcurrency(empleado: any, horaInicio: string, duracionHoras: number, startDate: string): Observable<boolean> {
     const apiUrl = `${this.orderFunctionsURL}/getOrdersByStartDate?date=${startDate}`;
@@ -93,6 +96,16 @@ export class OrderService{
 
   private addHours(hours: number, date: Date): Date {
     return new Date(date.getTime() + hours * 60 * 60 * 1000);
+  }
+
+  closeOrder(orderId: string, userEmail: string): Observable<any> {
+    const apiUrl = `${this.orderFunctionsURL}/order/close?id=${orderId}&updatedBy=${userEmail}`;
+    return this.http.put(apiUrl, null);
+  }
+
+  updateOrder(orderId: string, updatedData: any): Observable<any> {
+    const apiUrl = `${this.orderFunctionsURL}/order/id?id=${orderId}`;
+    return this.http.put(apiUrl, updatedData);
   }
   
 }

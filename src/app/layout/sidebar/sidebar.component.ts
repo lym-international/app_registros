@@ -89,6 +89,11 @@ export class SidebarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.sharingCloseOrderService.getOrderIdObservable().subscribe(orderId => {
+      console.log('OrderId recibido:', orderId);
+      this.orderId = orderId;
+     
+    });
     
     this.dataUser = this.authenticationService.getData();
     
@@ -122,12 +127,12 @@ export class SidebarComponent implements OnInit {
     this.initLeftSidebar();
     this.bodyTag = this.document.body;
 
-    this.dataOrder = this.orderDataService.getSelectedOrder();
-    this.orderStatus = this.dataOrder.data.status;
+    // this.dataOrder = this.orderDataService.getSelectedOrder();
+    // this.orderStatus = this.dataOrder.data.status;
     //console.log('Data Order: ', this.dataOrder);
-    this.orderStatus = this.dataOrder.data.status;
+    // this.orderStatus = this.dataOrder.data.status;
   
-    this.orderId = this.dataOrder.id;
+    // this.orderId = this.dataOrder.id;
     //console.log('this.orderId:', this.orderId)
     //console.log('this.dataUser.email: ',this.dataUser.email)
     
@@ -144,37 +149,45 @@ export class SidebarComponent implements OnInit {
     return false;
   }
 
-  closeOrder(){
-    const apiUrl =
-     `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
-    //  `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
+  closeOrder() {
+    const apiUrl =  `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
+    // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
     fetch(apiUrl, {
       method: 'PUT'
     })
       .then((response) => response.json())
       .then((data) => {
-  
-        // console.log('DATA del method PUT', data.data.status);
         this.orderStatus = data.data.status;
         this.orderDataService.setSelectedOrder(data);
         sessionStorage.removeItem('currentOrders');
-        /*
-        this.sharingCloseOrderService
-        .getStatusOrderObservable()
-        .subscribe((status) => {
-          this.statusOrder = status;
-        });
-    
-    console.log('statusOrder en sideBarComponent METODO CLOSEORDER: ',this.statusOrder)
-        */
-        // Forzar la recarga de la página actual (para actualizar la página de allEmployees y que no se vean los botones)
-        // window.location.reload();
+
+        // Notificar al componente AllemployeesComponent sobre el cierre de la orden
+        this.sharingCloseOrderService.setStatusOrder(this.orderStatus);
+      })
+      .catch((error) => {
+        console.error('Error al actualizar:', error);
+      });
+  }
+
+  closeOrder1(){
+    const apiUrl =
+    //  `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
+     `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
+    fetch(apiUrl, {
+      method: 'PUT'
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        this.orderStatus = data.data.status;
+        this.orderDataService.setSelectedOrder(data);
+        sessionStorage.removeItem('currentOrders');
       })
       .catch((error) => {
         console.error('Error al actualizar:', error);
       });
       //console.log('ORDEN CERRADA')
   }
+  
   
   initLeftSidebar() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias

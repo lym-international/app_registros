@@ -17,6 +17,7 @@ import { formatDate } from '@angular/common';
 //import { BreakModel } from './break.model';
 //import { AllActionsModel } from './all-actions.model';
 import { ShareStartDateService } from '../../../../../_services/share-start-date.service';
+import { GeolocationService } from 'app/_services/geolocation.service';
 
 export interface DialogData {
   id: number;
@@ -75,7 +76,8 @@ export class AllActionsComponent implements OnInit{
     public dialogRef: MatDialogRef<AllActionsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private fb: UntypedFormBuilder,
-    private shareStartDateService: ShareStartDateService
+    private shareStartDateService: ShareStartDateService,
+    private geolocationService: GeolocationService,
   ) {
     
       this.dialogTitle = 'All Actions:';
@@ -174,10 +176,8 @@ export class AllActionsComponent implements OnInit{
       startDate: startDate,
       endDate: endDate,
       break: _break
-  };
-  //console.log('RESULT ::',result)
-
-    // Cierra el diálogo y pasa el resultado
+    };
+    this.geolocationService.getCurrentLocation();
     this.dialogRef.close(result);
   }
   

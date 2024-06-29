@@ -36,6 +36,7 @@ import { ShareTimeDifferenceInMinutesService } from 'app/_services/share-time-di
 import {Map, marker, tileLayer, Marker} from 'leaflet';
 import { OrderService } from 'app/_services/order.service';
 import { RegistrationService } from 'app/_services/registration.service';
+import { GeolocationService } from 'app/_services/geolocation.service';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;                       
 
@@ -106,7 +107,16 @@ export class AllemployeesComponent
   latitudeEvent: number;
   longitudeEvent: number;
   selected_Rows: any[] = []; // Nueva propiedad para almacenar las selecciones
+
+  latitude: number;
+  longitude: number; 
+  private map: Map;
   // updateRegistrationCalled: boolean;
+  loadingStatus: boolean = false;
+  isModalAproveOpen = false;
+  modalAproveComments: string = '';
+  approveChecked: boolean = false;
+
   
   
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -129,6 +139,8 @@ export class AllemployeesComponent
     private shareTimeDifferenceInMinutesService: ShareTimeDifferenceInMinutesService,
     private ordSvc: OrderService,
     private regSvc: RegistrationService,
+    private geolocationService: GeolocationService,
+    
   ) {
     super();
   }
@@ -141,13 +153,20 @@ export class AllemployeesComponent
     this.getEmployees();
     this.loadData();
     this.getEventLocation();
+
+
+    
   }
+
+
 
   private initializeOrderData() {
       this.dataEmployees = this.orderDataService.getSelectedOrder();
       this.statusOrder = this.dataEmployees.data.status;  
       this.orderId = this.dataEmployees.id;
-      // console.log('orderId:', this.orderId);
+      console.log('orderId:', this.orderId, this.statusOrder);
+      this.sharingCloseOrderService.setOrderId(this.orderId);
+      this.sharingCloseOrderService.setStatusOrder(this.statusOrder);
 
       this.orderDataService.getSelectedOrderObservable().subscribe((selectedOrder) => {
         // console.log('Activa el subscribe en allEmployees');
@@ -164,6 +183,56 @@ export class AllemployeesComponent
       this.startDate = this.dataEmployees.data.startDate;
       // console.log('Data StatusOrder: ', this.statusOrder);
       this.exactHourPayment = this.dataEmployees.data.exactHourPayment;
+  }
+
+  isUserRoleValid(): boolean {
+    if (this.dataUser && this.dataUser.role) {
+      const userRole = this.dataUser.role;
+      // Verifica si el rol del usuario es "Administrator" o "Client"
+      return userRole === 'Administrator' || userRole === 'Supervisor';//|| userRole === 'Client';
+    }
+    // Si no se proporciona un rol de usuario válido, oculta el botón
+    return false;
+  }
+
+  closeOrder() {
+    this.loadingStatus = true;
+    this.ordSvc.closeOrder(this.orderId, this.dataUser.email).subscribe(
+      (data) => {
+        this.statusOrder = data.data.status;
+        // Asumiendo que setSelectedOrder() y setStatusOrder() son métodos del componente actual
+        this.orderDataService.setSelectedOrder(data);
+        this.sharingCloseOrderService.setStatusOrder(this.statusOrder);
+        sessionStorage.removeItem('currentOrders');
+        this.loadingStatus = false;
+      },
+      (error) => {
+        console.error('Error al cerrar la orden:', error);
+        this.loadingStatus = false;
+      }
+    );
+  }
+  closeOrder1() {
+    this.loadingStatus = true;
+    // const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
+    const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
+    fetch(apiUrl, {
+      method: 'PUT'
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        this.statusOrder = data.data.status;
+        this.loadingStatus = false;
+        this.orderDataService.setSelectedOrder(data);
+        sessionStorage.removeItem('currentOrders');
+
+        // Notificar al componente AllemployeesComponent sobre el cierre de la orden
+        this.sharingCloseOrderService.setStatusOrder(this.statusOrder);
+      })
+      .catch((error) => {
+        console.error('Error al actualizar:', error);
+        this.loadingStatus = false;
+      });
   }
 
   private initializeUserData() {
@@ -349,8 +418,8 @@ export class AllemployeesComponent
   
     this.removeRejectedOrSmsSentEmployees(items);
     // https://us-central1-highkeystaff.cloudfunctions.net
-    // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-    const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+    const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+    // const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
     const response = await fetch(apiUrl, {
       method: 'PUT',
       headers: {
@@ -525,8 +594,8 @@ export class AllemployeesComponent
 
   private async updateEmployeesOnServer1(updatedEmployees: Employees[]) {
     // https://us-central1-highkeystaff.cloudfunctions.net
-    // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-    const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+    const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+    // const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
     try {
       const response = await fetch(apiUrl, {
         method: 'PUT',
@@ -632,6 +701,13 @@ export class AllemployeesComponent
     const timestampCheckoutRounded = Timestamp.fromDate(new Date(roundedOut));
     const dateCheckinRounded = timestampCheckinRounded?.seconds || 0;
     const dateCheckoutRounded = timestampCheckoutRounded?.seconds || 0;
+    try {
+      const coordinates = await this.getCoordinates();
+      this.latitude = coordinates.latitude;
+      this.longitude = coordinates.longitude;
+    } catch (error) {
+      console.error("Error obteniendo las coordenadas: ", error);
+    }
   
     const updatedEmployees = this.employeesArray.map((employee) => {
       if (selectedRows.some(
@@ -667,6 +743,8 @@ export class AllemployeesComponent
           dateCheckinRounded: { _seconds: dateCheckinRounded, _nanoseconds: 0 },
           dateCheckout: { _seconds: checkOutTimestamp, _nanoseconds: 0 },
           dateCheckoutRounded: { _seconds: dateCheckoutRounded, _nanoseconds: 0 },
+          checkOutCoordinates:{latitudeOut: this.latitude, longitudeOut: this.longitude }, 
+          checkinCoordinates: {latitude: this.latitude, longitude: this.longitude},
           hours: updatedHours.toFixed(2),
           updateUser: this.dataUser.email
         };
@@ -675,6 +753,19 @@ export class AllemployeesComponent
     });
   
     await this.updateEmployeesOnServer(updatedEmployees);
+  }
+
+  getCoordinates(): Promise<{ latitude: number; longitude: number }> {
+    return new Promise((resolve, reject) => {
+      this.geolocationService.getCoordinatesObservable().subscribe(
+        (coordinates) => {
+          resolve(coordinates);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
   }
 
   async checkInModal(selectedRows: Employees[]) {
@@ -699,6 +790,13 @@ export class AllemployeesComponent
     const checkInTimestamp = Timestamp.fromDate(new Date(result)).seconds || 0;
     const rounded = this.roundDate(result);
     const dateCheckinRounded = Timestamp.fromDate(new Date(rounded)).seconds || 0;
+    try {
+      const coordinates = await this.getCoordinates();
+      this.latitude = coordinates.latitude;
+      this.longitude = coordinates.longitude;
+    } catch (error) {
+      console.error("Error obteniendo las coordenadas: ", error);
+    }
   
     this.isTblLoading = true; // Marcar como cargando
   
@@ -717,6 +815,7 @@ export class AllemployeesComponent
           dateCheckin: { _seconds: checkInTimestamp, _nanoseconds: 0 },
           realCheckin: { _seconds: checkInTimestamp, _nanoseconds: 0 },
           dateCheckinRounded: { _seconds: dateCheckinRounded, _nanoseconds: 0 },
+          checkinCoordinates: {latitude: this.latitude, longitude: this.longitude},
           updateUser: this.dataUser.email,
         };
       }
@@ -800,6 +899,14 @@ export class AllemployeesComponent
     const checkOutTimestamp = Timestamp.fromDate(new Date(result)).seconds || 0;
     const rounded = this.roundDate(result);
     const dateCheckoutRounded = Timestamp.fromDate(new Date(rounded)).seconds || 0;
+
+    try {
+      const coordinates = await this.getCoordinates();
+      this.latitude = coordinates.latitude;
+      this.longitude = coordinates.longitude;
+    } catch (error) {
+      console.error("Error obteniendo las coordenadas: ", error);
+    }
   
     this.isTblLoading = true; // Marcar como cargando
   
@@ -820,6 +927,7 @@ export class AllemployeesComponent
           checkout: true,
           dateCheckout: { _seconds: checkOutTimestamp, _nanoseconds: 0 },
           dateCheckoutRounded: { _seconds: dateCheckoutRounded, _nanoseconds: 0 },
+          checkOutCoordinates:{latitudeOut: this.latitude, longitudeOut: this.longitude }, 
           updateUser: this.dataUser.email,
           status: 'Checked Out',
           hours: roundedHours.toFixed(2),
@@ -1258,8 +1366,8 @@ export class AllemployeesComponent
 
 async verifyConcurrency1(empleado, horaInicio, duracionHoras, startDate): Promise<boolean> {
   // https://us-central1-highkeystaff.cloudfunctions.net
-  // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByStartDate?date=${startDate}`;
-  const apiUrl = ` https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByStartDate?date=${startDate}`;
+  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByStartDate?date=${startDate}`;
+  // const apiUrl = ` https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByStartDate?date=${startDate}`;
   const response = await fetch(apiUrl);
   const ordenes = await response.json();
 
@@ -1358,8 +1466,8 @@ async addExistingEmergencyEmployeeModal() {
 
 async fetchOrderData(orderId: string) {
   // https://us-central1-highkeystaff.cloudfunctions.net/orders
-  // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${orderId}`;
-  const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${orderId}`;
+  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${orderId}`;
+  // const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${orderId}`;
   const response = await fetch(apiUrl, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
@@ -1395,9 +1503,9 @@ async updateEmployee(result: any) {
     status: result.status || ''
   };
 
-  // const url = `http://127.0.0.1:5001/highkeystaff/us-central1/users/updateEmployee/id?id=${result.id}`;
+  const url = `http://127.0.0.1:5001/highkeystaff/us-central1/users/updateEmployee/id?id=${result.id}`;
   // https://us-central1-highkeystaff.cloudfunctions.net/orders
-  const url = `https://us-central1-highkeystaff.cloudfunctions.net/users/updateEmployee/id?id=${result.id}`;
+  // const url = `https://us-central1-highkeystaff.cloudfunctions.net/users/updateEmployee/id?id=${result.id}`;
 
   try {
     const response = await fetch(url, {
@@ -1441,8 +1549,8 @@ addEmployeeToArray(result: any, startDate: string, horaInicio: string) {
 }
 async updateEmployeesArray() {
   // https://us-central1-highkeystaff.cloudfunctions.net
-  // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-  const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+  // const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
   try {
     const response = await fetch(apiUrl, {
       method: 'PUT',
@@ -1485,8 +1593,8 @@ async addNewEmergencyEmployeeModal() {
 }
 async getLastEmployeeID() {
   // https://us-central1-highkeystaff.cloudfunctions.net
-  // const response = await fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/users/getLastEmployeeID`);
-  const response = await fetch(`https://us-central1-highkeystaff.cloudfunctions.net/users/getLastEmployeeID`);
+  const response = await fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/users/getLastEmployeeID`);
+  // const response = await fetch(`https://us-central1-highkeystaff.cloudfunctions.net/users/getLastEmployeeID`);
   const data = await response.json();
   return data.lastEmployeeID;
 }
@@ -1502,8 +1610,8 @@ async createEmployee(highKeyid: number, result: any) {
     status: "Active"
   };
   // https://us-central1-highkeystaff.cloudfunctions.net
-  // const response = await fetch('http://127.0.0.1:5001/highkeystaff/us-central1/users/addEmployee', {
-  const response = await fetch('https://us-central1-highkeystaff.cloudfunctions.net/users/addEmployee', {
+  const response = await fetch('http://127.0.0.1:5001/highkeystaff/us-central1/users/addEmployee', {
+  // const response = await fetch('https://us-central1-highkeystaff.cloudfunctions.net/users/addEmployee', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(addNewEmployee),
@@ -1540,8 +1648,8 @@ addEmployeeToArray2(highKeyid: number, result: any) {
 }
 async updateOrderWithNewEmployee(highKeyid: number, result: any) {
   // https://us-central1-highkeystaff.cloudfunctions.net
-  // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
-  const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`;
+  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+  // const apiUrl = `https://us-central1-highkeystaff.clou1dfunctions.net/orders/order/id?id=${this.orderId}`;
   const orderData = await this.fetchOrderData(this.orderId);
 
   const newEmployee = {
@@ -1577,8 +1685,8 @@ async updateOrderWithNewEmployee(highKeyid: number, result: any) {
 }
 async updateOrderData(orderData: any) {
   // https://us-central1-highkeystaff.cloudfunctions.net
-  // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
-  const apiUrl = ` https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`;
+  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+  // const apiUrl = ` https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`;
   const response = await fetch(apiUrl, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -1589,8 +1697,8 @@ async updateOrderData(orderData: any) {
 }
 async updateOrderWithExistingEmployee(result: any) {
   // https://us-central1-highkeystaff.cloudfunctions.net
-  // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
-  const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`;
+  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+  // const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`;
   const orderData = await this.fetchOrderData(this.orderId);
 
   const itemIndex = orderData.data.items.findIndex(item => item.position === result.position && item.hourFrom === result.hourFrom);
@@ -2009,26 +2117,6 @@ async updateOrderWithExistingEmployee(result) {
 }
  */
 //INICIO MAPA
-// Abre el modal del mapa
-openMapModal() {
-  const modal = document.getElementById('mapModal');
-  modal.style.display = 'block';
-  this.createEventMap(this.getSelectedRows());
-  
-  // Agrega un evento click para cerrar el modal al hacer clic en el fondo semitransparente
-  const closeModalHandler = (event) => {
-    if (event.target === modal) {
-      this.closeMapModal();
-      modal.removeEventListener('click', closeModalHandler);
-    }
-  };
-  modal.addEventListener('click', closeModalHandler);
-}
-// Cierra el modal del mapa
-closeMapModal() {
-  const modal = document.getElementById('mapModal');
-  modal.style.display = 'none';
-}
 // Obtiene la ubicación del evento
 getEventLocation() {
   if (this.dataEmployees && this.dataEmployees.data && this.dataEmployees.data.mapLink) {
@@ -2048,43 +2136,86 @@ getEventLocation() {
   } else {
     console.log("No se encontró la URL del mapa en los datos del empleado.");
   }
+  
 }
 // Extrae las coordenadas de una URL de Google Maps
 extractCoordinatesFromURL(url: string): { latitude: number, longitude: number } | null {
+  console.log("llama a estraccions", url);
+  // Coincidir con el formato de coordenadas en la URL proporcionada
+  const queryMatch = url.match(/query=(-?\d+\.\d+)%2C(-?\d+\.\d+)/);
+  if (queryMatch) {
+    console.log("entra por el if");
+    return { latitude: parseFloat(queryMatch[1]), longitude: parseFloat(queryMatch[2]) };
+  }
+  
+  // Coincidir con el formato de coordenadas en los otros tipos de URL
   const gooGlMatch = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
   if (gooGlMatch) {
+    console.log("entra por el else if");
     return { latitude: parseFloat(gooGlMatch[1]), longitude: parseFloat(gooGlMatch[2]) };
   }
 
   const googleMapsMatch = url.match(/\/maps\/@(-?\d+\.\d+),(-?\d+\.\d+)/);
   if (googleMapsMatch) {
+    console.log("entra por el else if");
     return { latitude: parseFloat(googleMapsMatch[1]), longitude: parseFloat(googleMapsMatch[2]) };
   }
-
+  
   return null;
 }
+
+// Abre el modal del mapa
+openMapModal(row) {
+  console.log("row",row)
+  const modal = document.getElementById('mapModal');
+  modal.style.display = 'block';
+  this.createEventMap(row);
+  
+  // Agrega un evento click para cerrar el modal al hacer clic en el fondo semitransparente
+  const closeModalHandler = (event) => {
+    if (event.target === modal) {
+      this.closeMapModal();
+      modal.removeEventListener('click', closeModalHandler);
+    }
+  };
+  modal.addEventListener('click', closeModalHandler);
+}
+
+// Cierra el modal del mapa
+closeMapModal() {
+  const modal = document.getElementById('mapModal');
+  modal.style.display = 'none';
+
+  // Destruye el mapa para resetearlo
+  if (this.map) {
+    this.map.remove();
+    this.map = null;
+  }
+}
+
 // Crea el mapa del evento
-createEventMap(selectedRows: Employees[]) {
-  if (selectedRows.length > 0) {
-    const map = new Map('mapInModal').setView(
-      [selectedRows[0].checkinCoordinates.latitude, selectedRows[0].checkinCoordinates.longitude],
+createEventMap(selectedRows) {
+  if (selectedRows) {
+    this.map = new Map('mapInModal').setView(
+      [selectedRows.checkinCoordinates.latitude, selectedRows.checkinCoordinates.longitude],
       14
     );
 
     this.getEventLocation();
     if (this.latitudeEvent !== undefined && this.longitudeEvent !== undefined) {
-      this.mostrarCoordenadasEnMapaModal(map, this.latitudeEvent, this.longitudeEvent, "Event");
+      this.mostrarCoordenadasEnMapaModal(this.map, this.latitudeEvent, this.longitudeEvent, "Event");
     }
 
-    selectedRows.forEach(row => {
-      this.addEmployeeMarkersToMap(map, row);
-    });
+    // selectedRows.forEach(row => {
+      this.addEmployeeMarkersToMap(this.map, selectedRows);
+    // });
 
     console.log('selectedRows: ', selectedRows);
   } else {
     console.log('No se seleccionó ninguna fila');
   }
 }
+
 // Agrega los marcadores del empleado al mapa
 addEmployeeMarkersToMap(map: Map, row: Employees) {
   const { checkinCoordinates, checkOutCoordinates } = row;
@@ -2097,6 +2228,7 @@ addEmployeeMarkersToMap(map: Map, row: Employees) {
     this.mostrarCoordenadasEnMapaModal(map, checkOutCoordinates.latitudeOut, checkOutCoordinates.longitudeOut, "Checkout");
   }
 }
+
 // Muestra las coordenadas en el mapa modal
 mostrarCoordenadasEnMapaModal(map: Map, coordLat: number, coordLong: number, markerName: string) {
   console.log("coordlat, coordlong", coordLat, coordLong);
@@ -2366,6 +2498,110 @@ mostrarCoordenadasEnMapaModal(map: Map, coordLat: number, coordLong: number, mar
       this.contextMenu.openMenu();
     }
   }
+
+  toggleModalAprove() {
+    this.isModalAproveOpen = !this.isModalAproveOpen;
+  }
+
+  async saveModalAprove() {
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleString(); 
+
+    console.log('commentsApprove:', this.modalAproveComments);
+    console.log('Approve:', this.approveChecked);
+    console.log("ApproverEmail:", this.dataUser.email)
+    console.log("approverName", this.dataUser.firstname, this.dataUser.lastname)
+    console.log('dateApproved:', formattedDate);
+    try {
+      const dataToUpdate = {
+        approveComments: this.modalAproveComments,
+        approvedStatus: this.approveChecked,
+        approverEmail: this.dataUser.email,
+        approverName: `${this.dataUser.firstname} ${this.dataUser.lastname}`,
+        approvedDate: formattedDate
+      };
+
+      await this.ordSvc.updateOrder(this.orderId, dataToUpdate).toPromise();
+      console.log('Orden actualizada correctamente');
+
+      // Cerrar el modal después de la actualización
+      this.toggleModalAprove();
+
+    } catch (error) {
+      console.error('Error al actualizar la orden:', error);
+      // Manejar el error según sea necesario
+    }
+  }
+  async saveModalAprove2() {
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleString(); 
+  
+    console.log('approveComments:', this.modalAproveComments);
+    console.log('approveStatus:', this.approveChecked);
+    console.log("ApproverEmail:", this.dataUser.email)
+    console.log("approverName",this.dataUser.firstname, this.dataUser.lastname)
+    console.log('dateAprove:', formattedDate);
+    console.log("Order #",  this.orderId)
+  
+    try {
+      // Obtener los datos del pedido
+      const orderData = await this.fetchOrderData(this.orderId);
+      console.log("OrderData", orderData);
+  
+      // Construir el objeto para enviar a la base de datos
+      const dataToSend = {
+        approvedComments: this.modalAproveComments,
+        approvedStatus: this.approveChecked,
+        approverEmail: this.dataUser.email,
+        approverName: `${this.dataUser.firstname} ${this.dataUser.lastname}`,
+        approvedDate: formattedDate,
+        // orderData: orderData.data, // Asumiendo que `fetchOrderData` devuelve un objeto con una propiedad `data`
+      };
+  
+      // Construir la URL de la API
+      const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+  
+      // Realizar la solicitud PUT
+      const response = await fetch(apiUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataToSend),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error al enviar los datos a la API');
+      }
+  
+      console.log('Datos enviados correctamente a la base de datos');
+      
+      // Cerrar el modal si la solicitud fue exitosa
+      this.toggleModalAprove();
+  
+    } catch (error) {
+      console.error('Error al procesar la solicitud:', error);
+      // Manejar el error según sea necesario
+    }
+  }
+  
+  async saveModalAprove1() {
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleString(); 
+  
+    const dataToUpdate = {
+      comments: this.modalAproveComments,
+      approve: this.approveChecked,
+      approverEmail: this.dataUser.email,
+      approverName: `${this.dataUser.firstname} ${this.dataUser.lastname}`,
+      dateApproved: formattedDate,
+      // orderId: this.orderId,
+    };
+  
+    console.log('Data to Update:', dataToUpdate);
+  
+    // Llama a la función para actualizar los datos del pedido
+    await this.updateOrderData(dataToUpdate);
+  }
+  
 }
 
 

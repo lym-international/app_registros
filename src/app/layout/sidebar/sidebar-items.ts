@@ -11,7 +11,8 @@ export const ROUTES: RouteInfo[] = [
     groupTitle: false,
     badge: '',
     badgeClass: '',
-    role: ['All'],
+    // role: ['All'],
+    role: ['Administrator', 'Supervisor', 'Client'],
     submenu: [],
   },
   {

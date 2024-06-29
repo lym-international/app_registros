@@ -151,7 +151,9 @@ export class AuthenticationService {
 
               if (this.currentUserData.role == 'Employee') {
                 console.log('Es Empleado');
-                this.router.navigate(['/admin/search-order']);
+                // this.router.navigate(['/admin/search-order']);
+                this.router.navigate(['/admin/employees/admin-employees']);
+                // http://localhost:5200/#/admin/employees/admin-employees
               } else if (this.currentUserData.role == 'Client') {
                 console.log('Es cliente');
                 this.router.navigate(['/admin/search-order/']);
