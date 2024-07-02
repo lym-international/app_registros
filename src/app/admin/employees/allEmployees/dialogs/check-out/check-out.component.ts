@@ -163,10 +163,23 @@ export class CheckOutComponent implements OnInit{
     this.dialogRef.close();
   }
   
-  public confirmAdd(): void {
+  public async confirmAdd(): Promise<void> {
     const endDate = this.fechaSalida.value;
-    this.dialogRef.close(endDate);
+    try {
+      const coordinates = await this.geolocationService.getCurrentLocationB();
+      const result = { endDate, coordinates };
+      this.dialogRef.close(result);
+    } catch (error) {
+      console.error("Error obteniendo las coordenadas: ", error);
+      // Manejar el error si es necesario
+    }
+    //this.checkoutValidatorService.setCheckoutDate(endDate);
+  }
+  
+  public confirmAdd1(): void {
+    const endDate = this.fechaSalida.value;
     this.geolocationService.getCurrentLocation();
+    this.dialogRef.close(endDate);
     //this.checkoutValidatorService.setCheckoutDate(endDate);
   }
 

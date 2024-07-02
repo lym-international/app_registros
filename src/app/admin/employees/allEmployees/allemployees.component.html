@@ -376,15 +376,29 @@
 <!-- Modal -->
 <div *ngIf="isModalAproveOpen" class="modalAprove">
     <div class="modalAprove-content">
-        <h2>APPROVE</h2>
+        <h4 style="display: flex; justify-content: space-between; align-items: center;">APPROVE
+            <button mat-icon-button class="custom-close-button" style="margin-left: auto;" (click)="toggleModalAprove()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </h4>
         <!-- <small>comments</small> -->
         <mat-form-field>
             <textarea matInput placeholder="Add Comments" [(ngModel)]="modalAproveComments"></textarea>
         </mat-form-field>
         <mat-checkbox [(ngModel)]="approveChecked">approve</mat-checkbox>
-        <button mat-raised-button color="primary" (click)="saveModalAprove()">Save</button>
+        <button mat-raised-button color="primary" (click)="saveModalAprove()" [disabled]="isSaving">
+            <ng-container *ngIf="isSaving; else saveText">
+                <mat-spinner [diameter]="20"></mat-spinner>
+            </ng-container>
+            <ng-template #saveText>Save</ng-template>
+        </button>
+        <!-- Mostrar los comentarios si existen -->
+        <div *ngIf="modalAproveComments">
+            <label>Comments: {{ modalAproveComments }}</label>
+        </div>
     </div>
 </div>
+
 
 
 

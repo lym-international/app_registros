@@ -19,6 +19,7 @@ import {
 import { Position } from 'app/interfaces/position.interface';
 import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
 import { RegistrationService } from 'app/_services/registration.service';
+import { OrderService } from 'app/_services/order.service';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -72,6 +73,7 @@ export class DashboardLmComponent implements OnInit {
     private orderDataService: OrderDataService,
     private sharingCloseOrderService: SharingCloseOrderService,
     private regSvc: RegistrationService,
+    private ordSvc: OrderService,
   ) {}
 
   ngOnInit() {
@@ -88,7 +90,23 @@ export class DashboardLmComponent implements OnInit {
       this.statusOrder = status;
     });
     console.log('STATUS ORDER en dasboardLm: ', this.statusOrder);
+    this.updateDataOrder()
   }
+
+  updateDataOrder() {
+    this.ordSvc.getOrderById(this.orderId).subscribe(
+      (order) => {
+        this.dataOrder = order;
+        this.statusOrder = order.data.status;
+        this.getTotalRequest(); 
+      },
+      (error) => {
+        console.error('Error al obtener la orden:', error);
+      }
+    );
+  }
+
+
 
   getTotalRequest() {
     if (this.dataOrder.data.items) {

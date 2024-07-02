@@ -42,6 +42,41 @@ export class GeolocationService {
     }
   }
 
+  getCurrentLocationB(): Promise<{latitude: number, longitude: number}> {
+    return new Promise((resolve, reject) => {
+      if ('geolocation' in navigator) {
+        const timeoutDuration = 4000; // Tiempo de espera en milisegundos
+        const geolocationOptions = { timeout: timeoutDuration };
+  
+        const timeoutId = setTimeout(() => {
+          // Tiempo de espera agotado
+          reject(new Error('Tiempo de espera agotado al obtener la ubicación.'));
+        }, timeoutDuration);
+  
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            clearTimeout(timeoutId); // Borra el temporizador si la ubicación se obtiene con éxito
+            const coordinates = { latitude: position.coords.latitude, longitude: position.coords.longitude };
+            resolve(coordinates);
+          },
+          (error) => {
+            clearTimeout(timeoutId); // Borra el temporizador si se produce un error
+            // Manejar otros tipos de errores y mostrar mensajes específicos
+            if (error.code === 3) {
+              reject(new Error('Tiempo de espera agotado al obtener la ubicación.'));
+            } else {
+              reject(error);
+            }
+          },
+          geolocationOptions
+        );
+      } else {
+        reject(new Error('Geolocation is not available in this browser.'));
+      }
+    });
+  }
+  
+
   getCoordinatesObservable() {
     return this.coordinatesSubject.asObservable();
   }

@@ -107,5 +107,10 @@ export class OrderService{
     const apiUrl = `${this.orderFunctionsURL}/order/id?id=${orderId}`;
     return this.http.put(apiUrl, updatedData);
   }
+
+  getOrderById(orderId: string): Observable<any> {
+    const apiUrl = `${this.orderFunctionsURL}/order/id?id=${orderId}`;
+    return this.http.get<any>(apiUrl);
+  }
   
 }

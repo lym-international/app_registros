@@ -168,7 +168,29 @@ export class AllActionsComponent implements OnInit{
     this.dialogRef.close();
   }
 
-  public confirmAdd(): void {
+  public async confirmAdd(): Promise<void> {
+    // const endDate = this.fechaSalida.value;
+    const startDate = this.fechaInicio.value;
+    const endDate = this.fechaSalida.value;
+    const _break = this.allActionsForm.value.break;
+    try {
+      const coordinates = await this.geolocationService.getCurrentLocationB();
+      // const result = { endDate, coordinates };
+      const result = {
+        startDate: startDate,
+        endDate: endDate,
+        break: _break,
+        coordinates,
+      };
+      this.dialogRef.close(result);
+    } catch (error) {
+      console.error("Error obteniendo las coordenadas: ", error);
+      // Manejar el error si es necesario
+    }
+    //this.checkoutValidatorService.setCheckoutDate(endDate);
+  }
+
+  public confirmAdd1(): void {
     const startDate = this.fechaInicio.value;
     const endDate = this.fechaSalida.value;
     const _break = this.allActionsForm.value.break;//this.breakForm.value;
