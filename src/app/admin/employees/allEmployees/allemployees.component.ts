@@ -2659,7 +2659,6 @@ closeMapModal() {
 }
 
 
-
 getEventLocation() {
   console.log("Ubicación del evento", this.dataEmployees.data.mapLink);
   const url = this.dataEmployees.data.mapLink;
@@ -2698,12 +2697,9 @@ getEventLocation() {
 }
 
 createEventMap(selectedRows: Employees[]) {
+  
   if (selectedRows.length > 0) {
-    
-    // Asegúrate de que no haya un mapa existente antes de crear uno nuevo
-    
     const map = new Map('mapInModal').setView([selectedRows[0].checkinCoordinates.latitude, selectedRows[0].checkinCoordinates.longitude], 14); // Crea el mapa una sola vez
-
     // Llamar a getEventLocation() para obtener las coordenadas del evento
     this.getEventLocation();
     console.log("latitude , Logitude: ", this.latitudeEvent,  this.longitudeEvent)
