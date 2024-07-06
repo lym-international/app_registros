@@ -8,7 +8,8 @@ import { Observable } from 'rxjs';
 export class UsersService {
   
   private userFunctionsURL = (location.hostname === 'localhost')
-    ? 'http://127.0.0.1:5001/highkeystaff/us-central1/users'
+    ? 'https://us-central1-highkeystaff.cloudfunctions.net/users'
+    //'http://127.0.0.1:5001/highkeystaff/us-central1/users'
     : 'https://us-central1-highkeystaff.cloudfunctions.net/users';
 
   constructor(private http: HttpClient) { }
