@@ -158,69 +158,7 @@ export class AddExistingEmployeeComponent {
         }
       );
   }
-  /* searchBy1() {
-    console.log('searchByHighkeyId() se está ejecutando');  
-    const inputValues = {
-      highKeyId: this.highKeyIdInput.nativeElement.value,
-      payroll: this.payrollInput.nativeElement.value,
-      firstName: this.firstNameInput.nativeElement.value,
-      lastName: this.lastNameInput.nativeElement.value,
-    };
-  
-    const searchType = Object.keys(inputValues).find((key) => inputValues[key]);
-    
-    if (!searchType) {
-      console.log('No se proporcionaron valores de búsqueda');
-      this.clearFormData();
-      return;
-    }
-  
-    const endpointMap = {
-      highKeyId:
-      `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeById/id?id=${inputValues.highKeyId}`,
-      //  `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeeById/id?id=${inputValues.highKeyId}`,
-      payroll: 
-      `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeByPayroll/payroll?payroll=${inputValues.payroll}`,
-      // `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeeByPayroll/payroll?payroll=${inputValues.payroll}`,
-      firstName: 
-      `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeesByFN/firstName?firstName=${inputValues.firstName}`,
-      // `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeesByFN/firstName?firstName=${inputValues.firstName}`,
-      lastName:
-      `https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeesByLN/lastName?lastName=${inputValues.lastName}`,
-      //  `http://127.0.0.1:5001/highkeystaff/us-central1/users/getEmployeesByLN/lastName?lastName=${inputValues.lastName}`,
-    };
-  
-    fetch(endpointMap[searchType])
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(`Data desde el searchBy() en ${searchType}:`, data);
-        if (data.message === undefined) {
-          if (searchType === 'highKeyId') {
-          console.log("dataq", [data])
-            this.formData = [data];
-          } else {
-            const employees = data.map((emp) => {
-              console.log('EMP: ', emp);
-              return emp;
-            });
-            console.log("employessq", employees)
-            this.formData = employees;
-          }
-          //this.formData = this.formData.map((item) => ({ data: item, selected: false }));
-          console.log(`this.formData ${searchType}: `, this.formData);
-        } 
-        
-        else {
-          console.log('No se encontró un empleado con el valor proporcionado');
-          this.clearFormData();
-        }
-      })
-      .catch((error) => {
-        console.error('Error en la solicitud:', error);
-        this.clearFormData();
-      });
-  } */
-  
+ 
   handleRowClickEMP(event, selectedIndex) {
     // Prevenir que el clic en el checkbox propague al hacer clic en la fila
     event.stopPropagation();
@@ -245,45 +183,7 @@ export class AddExistingEmployeeComponent {
     });
   }
 
-  //BUSQUEDA SOLO CON EL HIGHKEYID
-  /*
-  searchByHighkeyId() {
-    console.log('searchByHighkeyId() se está ejecutando');
-    //console.log('Valor del input searchHighKey: ',this.searchHighKey);
-    const highKey = this.filterInput.nativeElement.value;
-    console.log('Valor del input HighKey: ',highKey);
-    if (highKey) {
-      fetch(`https://us-central1-highkeystaff.cloudfunctions.net/users/getEmployeeById/id?id=${highKey}`)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log('Data desde el searchByHighkeyId():',data)
-          if (data.message === undefined) {
-            this.formData = data.data;
-            this.formData.id = data.id;
-            // Asignar los valores al formulario
-            this.employeesForm.patchValue({
-              firstName: data.data.firstname,
-              lastName: data.data.lastname,
-              phone: data.data.phone,
-              email: data.data.email,
-              // Otros campos si los tienes
-            });
-          } else {
-            // No se encontró un empleado con el Highkey Id proporcionado
-            // Puedes mostrar un mensaje de error al usuario aquí si lo deseas
-            console.log('No se encontró un empleado con el Highkey Id proporcionado');
-            this.clearFormData(); // Limpia el formulario en caso de error
-          }
-        })
-        .catch((error) => {
-          console.error('Error en la solicitud:', error);
-          // Puedes manejar el error de alguna manera aquí si lo deseas
-          this.clearFormData(); // Limpia el formulario en caso de error
-        });
-    } 
-  }
-*/
-
+  
   // Método para limpiar el formulario
   clearFormData() {
     this.formData = {
