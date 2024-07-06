@@ -55,24 +55,6 @@ export class SigninComponent
     }); 
   } 
 
-  /*get f() {
-    return this.authForm.controls;
-  }*/
-
-  
-
-  /*adminSet() {
-    this.authForm.get('username')?.setValue('admin@software.com');
-    this.authForm.get('password')?.setValue('admin@123');
-  }
-  employeeSet() {
-    this.authForm.get('username')?.setValue('employee@software.com');
-    this.authForm.get('password')?.setValue('employee@123');
-  }
-  clientSet() {
-    this.authForm.get('username')?.setValue('client@software.com');
-    this.authForm.get('password')?.setValue('client@123');
-  } */
   
   
   onSubmit() {

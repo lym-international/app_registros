@@ -142,11 +142,5 @@ export class CheckInComponent implements OnInit {
     //this.checkoutValidatorService.setCheckoutDate(endDate);
   }
 
-  public confirmAdd1(): void {
-    const startDate = this.fechaInicio.value;
-    this.checkoutValidatorService.setCheckInDate(startDate); // Llama al método del servicio
-    this.dialogRef.close(startDate);
-
-    this.geolocationService.getCurrentLocation();
-  }
+  
 }
