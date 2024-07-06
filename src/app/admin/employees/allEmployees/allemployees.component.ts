@@ -37,6 +37,7 @@ import {Map, marker, tileLayer, Marker} from 'leaflet';
 import { OrderService } from 'app/_services/order.service';
 import { RegistrationService } from 'app/_services/registration.service';
 import { GeolocationService } from 'app/_services/geolocation.service';
+import { UsersService } from 'app/_services/users.service';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;                       
 
@@ -127,6 +128,7 @@ export class AllemployeesComponent
   @ViewChild(MatMenuTrigger)
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
+  orderData: any;
   constructor(
     private datePipe: DatePipe,
     public httpClient: HttpClient,
@@ -142,7 +144,7 @@ export class AllemployeesComponent
     private ordSvc: OrderService,
     private regSvc: RegistrationService,
     private geolocationService: GeolocationService,
-    
+    private usersService: UsersService,
   ) {
     super();
   }
@@ -397,7 +399,7 @@ export class AllemployeesComponent
     this.totalHoursSum = Number(this.totalHoursSum.toFixed(2));
   }
   
-  async updateRegistration1() {
+  /* async updateRegistration1() {
     console.log("llama update")
     const { employeesArray, dataEmployees: { data: { items, startDate } } } = this;
   
@@ -408,8 +410,8 @@ export class AllemployeesComponent
     }
   
     this.removeRejectedOrSmsSentEmployees(items);
-    // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-    const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+    const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+    // const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
     const response = await fetch(apiUrl, {
       method: 'PUT',
       headers: {
@@ -421,10 +423,10 @@ export class AllemployeesComponent
     if (!response.ok) {
       throw new Error('Failed to update employees array.');
     }
-  }
+  } */
 
   async updateRegistration(): Promise<void> {
-    console.log("llama update");
+    console.log("llama a modific");
     const { employeesArray, dataEmployees: { data: { items, startDate } } } = this;
 
     if (employeesArray.length === 0) {
@@ -774,10 +776,7 @@ export class AllemployeesComponent
     const dateStartData = selectedRows.map((row) => row.dateStart);
     this.shareStartDateService.setDateStartData(dateStartData);
   
-   /*  const result = await dialogRef.afterClosed().toPromise();
-    if (!result) {
-      return; // El diálogo fue cerrado sin resultado
-    } */
+   
     const result = await dialogRef.afterClosed().toPromise();
     if (!result) {
       console.log('El diálogo fue cerrado sin resultado');
@@ -1375,10 +1374,10 @@ export class AllemployeesComponent
 
 
 
-async verifyConcurrency1(empleado, horaInicio, duracionHoras, startDate): Promise<boolean> {
+/* async verifyConcurrency1(empleado, horaInicio, duracionHoras, startDate): Promise<boolean> {
   // https://us-central1-highkeystaff.cloudfunctions.net
-  // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByStartDate?date=${startDate}`;
-  const apiUrl = ` https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByStartDate?date=${startDate}`;
+  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/getOrdersByStartDate?date=${startDate}`;
+  // const apiUrl = ` https://us-central1-highkeystaff.cloudfunctions.net/orders/getOrdersByStartDate?date=${startDate}`;
   const response = await fetch(apiUrl);
   const ordenes = await response.json();
 
@@ -1414,9 +1413,9 @@ async verifyConcurrency1(empleado, horaInicio, duracionHoras, startDate): Promis
   }
 
   return false; // No hay conflicto de horario
-}
+} */
 
-async addExistingEmergencyEmployeeModal1() {
+/* async addExistingEmergencyEmployeeModal1() {
   const dialogRef = this.dialog.open(AddExistingEmployeeComponent);
   const result = await dialogRef.afterClosed().toPromise();
 
@@ -1440,9 +1439,40 @@ async addExistingEmergencyEmployeeModal1() {
       console.error('Error:', error);
     }
   }
+} */
+async addExistingEmergencyEmployeeModal() {
+  const dialogRef = this.dialog.open(AddExistingEmployeeComponent);
+  const result = await dialogRef.afterClosed().toPromise();
+
+  if (result && result.id) {
+    try {
+      this.orderData = await this.ordSvc.getOrderById(this.orderId).toPromise();
+      const positionData = this.findPositionData(this.orderData, result.position);
+
+      if (!positionData) throw new Error('Position data not found.');
+      sessionStorage.removeItem('currentOrders');
+      const duracionHoras = positionData.hours;
+      const startDate = this.orderData.data.startDate;
+
+      this.ordSvc.verifyConcurrency(result, result.hourFrom, duracionHoras, startDate).subscribe(
+        async (tieneConflictos) => {
+          if (!tieneConflictos) {
+            await this.addAndProcessEmployee(result, startDate);
+          } else {
+            this.showNotification('snackbar-danger', `Employee is already assigned in order number ${this.orderAssigned} at this time.`, 'top', 'center');
+          }
+        },
+        (error) => {
+          console.error('Error verifying concurrency:', error);
+        }
+      );
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
 }
 
-async addExistingEmergencyEmployeeModal() {
+/* async addExistingEmergencyEmployeeModal1() {
   const dialogRef = this.dialog.open(AddExistingEmployeeComponent);
   const result = await dialogRef.afterClosed().toPromise();
 
@@ -1472,20 +1502,20 @@ async addExistingEmergencyEmployeeModal() {
       console.error('Error:', error);
     }
   }
-}
+} */
 
 
-async fetchOrderData(orderId: string) {
+/* async fetchOrderData(orderId: string) {
   // https://us-central1-highkeystaff.cloudfunctions.net/orders
-  // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${orderId}`;
-  const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${orderId}`;
+  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${orderId}`;
+  // const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${orderId}`;
   const response = await fetch(apiUrl, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
   if (!response.ok) throw new Error('Failed to fetch order data.');
   return response.json();
-}
+} */
 findPositionData(orderData: any, position: string) {
   return orderData.data.items.find(item => item.position === position);
 }
@@ -1514,8 +1544,30 @@ async updateEmployee(result: any) {
     status: result.status || ''
   };
 
-  // const url = `http://127.0.0.1:5001/highkeystaff/us-central1/users/updateEmployee/id?id=${result.id}`;
-  const url = `https://us-central1-highkeystaff.cloudfunctions.net/users/updateEmployee/id?id=${result.id}`;
+  try {
+    await this.usersService.updateEmployee(employeeData).toPromise();
+    console.log('Employee updated successfully');
+  } catch (error) {
+    console.error('Error updating employee:', error);
+    throw new Error('Failed to update the employee.');
+  }
+}
+/* async updateEmployee1(result: any) {
+  const employeeData = {
+    company: result.company || '',
+    email: result.email || '', 
+    employeeId: result.employeeId || '',
+    firstname: result.firstname || '',
+    gender: result.gender || '',
+    id: result.id || '',
+    lastname: result.lastname || '',
+    phone: result.phone || '',
+    positions: result.positions || [],
+    status: result.status || ''
+  };
+
+  const url = `http://127.0.0.1:5001/highkeystaff/us-central1/users/updateEmployee/id?id=${result.id}`;
+  // const url = `https://us-central1-highkeystaff.cloudfunctions.net/users/updateEmployee/id?id=${result.id}`;
 
   try {
     const response = await fetch(url, {
@@ -1529,7 +1581,7 @@ async updateEmployee(result: any) {
     console.error('Error updating employee:', error);
     throw new Error('Failed to update the employee.');
   }
-}
+} */
 addEmployeeToArray(result: any, startDate: string, horaInicio: string) {
   const addEmployeeRegist = {
     hours: 0,
@@ -1557,9 +1609,21 @@ addEmployeeToArray(result: any, startDate: string, horaInicio: string) {
   this.employeesArray.push(addEmployeeRegist);
   this.showNotification('snackbar-success', 'Successful Add Employee...!!!', 'bottom', 'center');
 }
+
 async updateEmployeesArray() {
-  // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
-  const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+  try {
+    await this.regSvc.updateRegistration(this.orderId, this.employeesArray).toPromise();
+    this.getEmployees();
+    this.removeSelectedRows();
+    this.showNotification('snackbar-success', 'Successful update!!!', 'bottom', 'center');
+  } catch (error) {
+    console.error('Error updating employees array:', error);
+    this.showNotification('snackbar-error', 'Failed to update employees.', 'bottom', 'center');
+  }
+}
+/* async updateEmployeesArray1() {
+  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
+  // const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/registrations/registbyOrder/orderId?orderId=${this.orderId}`;
   try {
     const response = await fetch(apiUrl, {
       method: 'PUT',
@@ -1576,7 +1640,7 @@ async updateEmployeesArray() {
     console.error('Error updating employees array:', error);
     this.showNotification('snackbar-error', 'Failed to update employees.', 'bottom', 'center');
   }
-}
+} */
 async addNewEmergencyEmployeeModal() {
   try {
     const dialogRef = this.dialog.open(FormDialogComponent);
@@ -1601,12 +1665,44 @@ async addNewEmergencyEmployeeModal() {
   }
 }
 async getLastEmployeeID() {
-  // const response = await fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/users/getLastEmployeeID`);
-  const response = await fetch(`https://us-central1-highkeystaff.cloudfunctions.net/users/getLastEmployeeID`);
+  try {
+    const data = await this.usersService.getLastEmployeeID().toPromise();
+    console.log('Last employee ID:', data.lastEmployeeID);
+    return data.lastEmployeeID;
+  } catch (error) {
+    console.error('Error fetching last employee ID:', error);
+    throw new Error('Failed to fetch last employee ID.');
+  }
+}
+/* async getLastEmployeeID1() {
+  const response = await fetch(`http://127.0.0.1:5001/highkeystaff/us-central1/users/getLastEmployeeID`);
+  // const response = await fetch(`https://us-central1-highkeystaff.cloudfunctions.net/users/getLastEmployeeID`);
   const data = await response.json();
   return data.lastEmployeeID;
-}
+} */
+
 async createEmployee(highKeyid: number, result: any) {
+  const newEmployee = {
+    firstname: result.firstName.toUpperCase(),
+    phone: result.phone,
+    company: "L&M Employee",
+    employeeId: highKeyid,
+    positions: [{ rate: result.rate, name: result.position }],
+    email: result.email,
+    lastname: result.lastName.toUpperCase(),
+    status: "Active",
+    source: "Emergency"
+  };
+
+  try {
+    await this.usersService.createEmployee(newEmployee).toPromise();
+    console.log('Employee created successfully');
+  } catch (error) {
+    console.error('Error creating employee:', error);
+    throw new Error('Failed to create the employee.');
+  }
+}
+/* async createEmployee1(highKeyid: number, result: any) {
   const addNewEmployee = {
     firstname: result.firstName.toUpperCase(),
     phone: result.phone,
@@ -1617,15 +1713,15 @@ async createEmployee(highKeyid: number, result: any) {
     lastname: result.lastName.toUpperCase(),
     status: "Active"
   };
-  // const response = await fetch('http://127.0.0.1:5001/highkeystaff/us-central1/users/addEmployee', {
-  const response = await fetch('https://us-central1-highkeystaff.cloudfunctions.net/users/addEmployee', {
+  const response = await fetch('http://127.0.0.1:5001/highkeystaff/us-central1/users/addEmployee', {
+  // const response = await fetch('https://us-central1-highkeystaff.cloudfunctions.net/users/addEmployee', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(addNewEmployee),
   });
 
   if (!response.ok) throw new Error('Failed to create employee.');
-}
+} */
 addEmployeeToArray2(highKeyid: number, result: any) {
   const newEmployeeRegist = {
     hours: 0,
@@ -1653,9 +1749,49 @@ addEmployeeToArray2(highKeyid: number, result: any) {
 
   this.employeesArray.push(newEmployeeRegist);
 }
+
 async updateOrderWithNewEmployee(highKeyid: number, result: any) {
-  // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
-  const apiUrl = `https://us-central1-highkeystaff.clou1dfunctions.net/orders/order/id?id=${this.orderId}`;
+  try {
+    const orderData = await this.ordSvc.getOrderById(this.orderId).toPromise();
+
+    const newEmployee = {
+      agmRate: result.rate,
+      booking: 'Emergency',
+      data: {
+        firstname: result.firstName.toUpperCase(),
+        phone: result.phone,
+        company: "L&M Employee",
+        employeeId: highKeyid,
+        positions: [{ rate: result.rate, name: result.position }],
+        email: result.email,
+        lastname: result.lastName.toUpperCase(),
+        status: "Active"
+      },
+      rate: result.rate,
+      favourite: 'Emergency',
+      status: 'Confirmed',
+      id: result.id,
+    };
+
+    const itemIndex = orderData.data.items.findIndex(item => item.position === result.position && item.hourFrom === result.hourFrom);
+
+    if (itemIndex !== -1) {
+      orderData.data.items[itemIndex].employees.push(newEmployee);
+      orderData.data.items[itemIndex].pending -= 1;
+      orderData.data.items[itemIndex].m += 1;
+
+      await this.updateOrderData(orderData);
+    } else {
+      throw new Error('Item not found in order.');
+    }
+  } catch (error) {
+    console.error('Error updating order with new employee:', error);
+  }
+}
+
+/* async updateOrderWithNewEmployee1(highKeyid: number, result: any) {
+  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+  // const apiUrl = `https://us-central1-highkeystaff.clou1dfunctions.net/orders/order/id?id=${this.orderId}`;
   const orderData = await this.fetchOrderData(this.orderId);
 
   const newEmployee = {
@@ -1688,10 +1824,19 @@ async updateOrderWithNewEmployee(highKeyid: number, result: any) {
   } else {
     throw new Error('Item not found in order.');
   }
-}
+} */
 async updateOrderData(orderData: any) {
-  // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
-  const apiUrl = ` https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`;
+  try {
+    await this.ordSvc.updateOrder(this.orderId, orderData).toPromise();
+    this.showNotification('snackbar-success', 'Order updated successfully.', 'top', 'center');
+  } catch (error) {
+    console.error('Error updating order data:', error);
+    this.showNotification('snackbar-danger', 'Error updating order data.', 'top', 'center');
+  }
+}
+/* async updateOrderData1(orderData: any) {
+  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+  // const apiUrl = ` https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`;
   const response = await fetch(apiUrl, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -1699,10 +1844,39 @@ async updateOrderData(orderData: any) {
   });
 
   if (!response.ok) throw new Error('Failed to update order with new employee.');
-}
+} */
 async updateOrderWithExistingEmployee(result: any) {
-  // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
-  const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`;
+  try {
+    const orderData = await this.ordSvc.getOrderById(this.orderId).toPromise();
+
+    const itemIndex = orderData.data.items.findIndex(item => item.position === result.position && item.hourFrom === result.hourFrom);
+
+    if (itemIndex !== -1) {
+      const newEmployee = {
+        agmRate: result.rate,
+        booking: 'Emergency',
+        data: { ...result },
+        rate: result.rate,
+        favourite: 'Emergency',
+        status: 'Confirmed',
+        id: result.id,
+      };
+
+      orderData.data.items[itemIndex].employees.push(newEmployee);
+      orderData.data.items[itemIndex].pending -= 1;
+      orderData.data.items[itemIndex].m += 1;
+      console.log("OrdenActualizada", orderData)
+      await this.updateOrderData(orderData);
+    } else {
+      throw new Error('Item not found in order.');
+    }
+  } catch (error) {
+    console.error('Error updating order with existing employee:', error);
+  }
+}
+/* async updateOrderWithExistingEmployee1(result: any) {
+  const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/id?id=${this.orderId}`;
+  // const apiUrl = `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/id?id=${this.orderId}`;
   const orderData = await this.fetchOrderData(this.orderId);
 
   const itemIndex = orderData.data.items.findIndex(item => item.position === result.position && item.hourFrom === result.hourFrom);
@@ -1726,7 +1900,7 @@ async updateOrderWithExistingEmployee(result: any) {
   } else {
     throw new Error('Item not found in order.');
   }
-}
+} */
 
 
 /* 
@@ -2527,10 +2701,7 @@ validateCoordinates(row) {
     }
   }
 
-  toggleModalAprove1() {
-    console.log("this.dataEmployeessiuuu", this.dataEmployees)
-    this.isModalAproveOpen = !this.isModalAproveOpen;
-  }
+  
 
   toggleModalAprove() {
     console.log("this.dataEmployees:", this.dataEmployees);
@@ -2547,12 +2718,6 @@ validateCoordinates(row) {
    
     const currentDate = new Date();
     const formattedDate = currentDate.toLocaleString(); 
-
-    console.log('commentsApprove:', this.modalAproveComments);
-    console.log('Approve:', this.approveChecked);
-    console.log("ApproverEmail:", this.dataUser.email)
-    console.log("approverName", this.dataUser.firstname, this.dataUser.lastname)
-    console.log('dateApproved:', formattedDate);
     try {
       const dataToUpdate = {
         approveComments: this.modalAproveComments,

@@ -20,4 +20,8 @@ export class OrderDataService {
   getSelectedOrderObservable(): Observable<any> {
     return this.selectedOrderSubject.asObservable();
   }
+  clearSelectedOrder() {
+    localStorage.removeItem(this.storageKey); // Remueve la orden seleccionada del almacenamiento local
+    this.selectedOrderSubject.next(null); // Notifica que la orden seleccionada ha sido eliminada
+  }
 }

@@ -23,6 +23,7 @@ export class OrderService{
   }
 
   getOrderByHKid(hkId: string): Observable<any[]> {
+    console.log("HkIk", hkId)
     return this.http.get<any[]>(`${this.orderFunctionsURL}/getOrdersByEmployee?hkId=${hkId}`);
   }
 
@@ -105,10 +106,20 @@ export class OrderService{
 
   updateOrder(orderId: string, updatedData: any): Observable<any> {
     const apiUrl = `${this.orderFunctionsURL}/order/id?id=${orderId}`;
+    return this.http.put(apiUrl, updatedData.data); // Asegúrate de enviar solo updatedData.data
+  }
+  
+  updateOrder1(orderId: string, updatedData: any): Observable<any> {
+    // console.log("orden llega al servicio", updatedData)
+    const apiUrl = `${this.orderFunctionsURL}/order/id?id=${orderId}`;
     return this.http.put(apiUrl, updatedData);
   }
 
   getOrderById(orderId: string): Observable<any> {
+    const apiUrl = `${this.orderFunctionsURL}/order/id?id=${orderId}`;
+    return this.http.get<any>(apiUrl);
+  }
+  fetchOrderData(orderId: string): Observable<any> {
     const apiUrl = `${this.orderFunctionsURL}/order/id?id=${orderId}`;
     return this.http.get<any>(apiUrl);
   }

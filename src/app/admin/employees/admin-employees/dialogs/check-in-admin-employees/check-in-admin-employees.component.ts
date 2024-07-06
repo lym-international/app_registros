@@ -122,8 +122,20 @@ export class CheckInAdminEmployeesComponent implements OnInit {
   onNoClick(): void {
     this.dialogRef.close();
   }
+  public async confirmAdd(): Promise<void> {
+    const startDate = this.fechaInicio.value;
+    try {
+      const coordinates = await this.geolocationService.getCurrentLocationB();
+      const result = { startDate, coordinates };
+      this.dialogRef.close(result);
+    } catch (error) {
+      console.error("Error obteniendo las coordenadas: ", error);
+      // Manejar el error si es necesario
+    }
+    //this.checkoutValidatorService.setCheckoutDate(endDate);
+  }
 
-  public confirmAdd(): void {
+  public confirmAdd1(): void {
     const startDate = this.fechaInicio.value;
     this.schedule = {
       startDate: startDate,

@@ -23,6 +23,11 @@ export class RegistrationService {
     return this.http.get<any[]>(url);
   }
 
+  getRegistration(orderId: string): Observable<{ employees: any[] }> {
+    const url = `${this.orderFunctionsURL}/registbyOrder/orderId?orderId=${orderId}`;
+    return this.http.get<{ employees: any[] }>(url);
+  }
+
   updateRegistration(orderId: string, employeesArray: any[]): Observable<any> {
     const apiUrl = `${this.orderFunctionsURL}/registbyOrder/orderId?orderId=${orderId}`;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });

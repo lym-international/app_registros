@@ -10,6 +10,7 @@ import {
 import { Role, AuthService } from '@core';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { AuthenticationService } from 'app/_services/authentication.service'; //Jairo
+import Swal from 'sweetalert2';
 
 
 
@@ -86,7 +87,20 @@ export class SigninComponent
       const username = this.authForm.get('username')?.value.toLowerCase();
       const password = this.authForm.get('password')?.value;
     
-      this.authenticationService.login(username, password); //jairo
+      // this.authenticationService.login(username, password); //jairo
+      this.authenticationService.login(username, password).catch((error) => {
+        switch (error.code) {
+          case 'auth/wrong-password':
+            Swal.fire('Warning', 'The password is invalid or the user does not have a password.', 'warning');
+            break;
+          case 'auth/too-many-requests':
+            Swal.fire('Warning', 'Too many unsuccessful login attempts. Please try again later.', 'warning');
+            break;
+          default:
+            Swal.fire('Warning', error.message, 'warning');
+            break;
+        }
+      });
       
       
     } 

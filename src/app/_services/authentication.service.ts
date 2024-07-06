@@ -118,7 +118,7 @@ export class AuthenticationService {
       }
     })
   }
-  login(username: string, password: string) {
+  login1(username: string, password: string) {
    /*  setTimeout(() => {
       this.isAuthenticatingSubject.next(false);
     }, 1500); */
@@ -195,7 +195,61 @@ export class AuthenticationService {
         }
       });
   }
-
+  login(username: string, password: string): Promise<void> {
+    return this.auth
+      .signInWithEmailAndPassword(username, password)
+      .then((user) => {
+        console.log('Usuario autenticado con éxito!', user.user?.email);
+  
+        return this.db
+          .collection('Users', (ref) => ref.where('email', '==', username))
+          .get()
+          .toPromise()
+          .then((usersInfo) => {
+            usersInfo.docs.forEach((item: any) => {
+              const data = item.data();
+              console.log('DATA ::', data);
+              sessionStorage.setItem('currentUser', JSON.stringify(data));
+              this.currentUserSubject.next(data);
+              this.currentUserData = data; // diego 8-7 : Almacenar los datos del usuario en currentUserData
+              sessionStorage.setItem('currentUserData', JSON.stringify(data));
+              console.log("Guardando en sessionStorage");
+              this.setData(data);
+              setTimeout(() => {
+                this.isAuthenticatingSubject.next(false);
+              }, 1000);
+  
+              // this.auxCurrentUser = user;
+              // const auxDate = new Date();
+              // const date = new Date(auxDate.getTime() - (auxDate.getTimezoneOffset() * 60000));
+  
+              if (this.currentUserData.role === 'Employee') {
+                console.log('Es Empleado');
+                this.router.navigate(['/admin/employees/admin-employees']);
+              } else if (this.currentUserData.role === 'Client') {
+                console.log('Es cliente');
+                this.router.navigate(['/admin/search-order/']);
+              } else if (this.currentUserData.role === 'Executive') {
+                console.log('Executive');
+              } else if (this.currentUserData.role === 'Supervisor') {
+                console.log('Es Supervisor');
+                this.router.navigate(['/admin/search-order/']);
+              } else if (this.currentUserData.role === 'Administrator') {
+                console.log('Es administrador');
+                this.router.navigate(['/admin/search-order/']);
+              } else {
+                this.router.navigate(['/authentication/signin']);
+              }
+            });
+          });
+      })
+      .catch((error) => {
+        this.isAuthenticatingSubject.next(false);
+        console.error('Error en autenticación:', error);
+        throw error;
+      });
+  }
+  
 
   setData(data: any) {
     this.data = data;

@@ -6,6 +6,7 @@
     font-size: medium;
 }
 
+
 .tarjeta-pequena {
     margin: 20px 0 20px 0;
     //width: 50%;
@@ -56,6 +57,33 @@
     margin: 50px auto 70px auto;
 }
 
+//----------------------------
+.content {
+    position: relative;
+  }
+  .home-link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 10px; /* Ajusta la distancia desde arriba según sea necesario */
+    margin-right: 20px; /* Ajusta la distancia desde la derecha según sea necesario */
+  }
+  
+  .home-icon {
+    width: 2rem; /* Ajusta el tamaño del icono según sea necesario */
+    height: 2rem; /* Ajusta el tamaño del icono según sea necesario */
+    margin-right: 10px; /* Ajusta el espacio entre el icono y el texto */
+    color: black;
+  }
+  
+  .home-text {
+    font-size: 1.2rem; /* Ajusta el tamaño del texto según sea necesario */
+  }
+  
+  
+  
+
 @media (max-width: 500px) {
     .content-block {
         width: 100%;
@@ -80,11 +108,42 @@
         width: 50%;
         margin: 3px auto 30px auto;
     }
-    .ocultarMovil {
+    /* .ocultarMovil {
         display: none;
     }
+    .ocultarMovilE {
+        display: block; 
+    } */
+    
+    
     .sub-sub-column {
         display: grid;
         margin-top: -25px;
     }
 }
+
+@media (max-width: 500px) {
+    /* Estilos para la vista móvil */
+    .ocultarMovil {
+        display: none;
+    }
+    .ocultarMovilE {
+        display: block; /* Mostrar en vista móvil */
+    }
+}
+
+@media (min-width: 501px) {
+    /* Estilos para la vista web */
+    .ocultarMovil {
+        display: block; /* Mostrar en vista web */
+    }
+    .ocultarMovilE {
+        display: none;
+    }
+}
+
+/* Ajustes adicionales según sea necesario */
+.block-header {
+    padding: 10px; /* Ajusta el padding u otros estilos según sea necesario para la versión móvil */
+}
+

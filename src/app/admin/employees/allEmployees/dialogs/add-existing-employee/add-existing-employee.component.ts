@@ -13,6 +13,7 @@ import {
 import { Employees } from '../../employees.model';
 import { formatDate } from '@angular/common';
 import { NavigationExtras, Router } from '@angular/router';
+import { UsersService } from 'app/_services/users.service';
 
 
 export interface DialogData {
@@ -60,6 +61,7 @@ export class AddExistingEmployeeComponent {
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     //private fb: UntypedFormBuilder,
     private fb: FormBuilder,
+    private usersService: UsersService
     
   ) {
     this.dialogTitle = 'Add existing emergency employee';
@@ -133,6 +135,45 @@ export class AddExistingEmployeeComponent {
       this.clearFormData();
       return;
     }
+
+    this.usersService.searchEmployeeByType(searchType, inputValues[searchType])
+      .subscribe(
+        (data) => {
+          console.log(`Data desde el searchBy() en ${searchType}:`, data);
+          if (data.message === undefined) {
+            if (searchType === 'highKeyId') {
+              this.formData = [data];
+            } else {
+              this.formData = data.map((emp) => emp);
+            }
+            console.log(`this.formData ${searchType}: `, this.formData);
+          } else {
+            console.log('No se encontró un empleado con el valor proporcionado');
+            this.clearFormData();
+          }
+        },
+        (error) => {
+          console.error('Error en la solicitud:', error);
+          this.clearFormData();
+        }
+      );
+  }
+  /* searchBy1() {
+    console.log('searchByHighkeyId() se está ejecutando');  
+    const inputValues = {
+      highKeyId: this.highKeyIdInput.nativeElement.value,
+      payroll: this.payrollInput.nativeElement.value,
+      firstName: this.firstNameInput.nativeElement.value,
+      lastName: this.lastNameInput.nativeElement.value,
+    };
+  
+    const searchType = Object.keys(inputValues).find((key) => inputValues[key]);
+    
+    if (!searchType) {
+      console.log('No se proporcionaron valores de búsqueda');
+      this.clearFormData();
+      return;
+    }
   
     const endpointMap = {
       highKeyId:
@@ -178,7 +219,7 @@ export class AddExistingEmployeeComponent {
         console.error('Error en la solicitud:', error);
         this.clearFormData();
       });
-  }
+  } */
   
   handleRowClickEMP(event, selectedIndex) {
     // Prevenir que el clic en el checkbox propague al hacer clic en la fila
