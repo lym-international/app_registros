@@ -12,6 +12,7 @@ import {
 import { formatDate } from '@angular/common';
 import { CheckoutValidatorService } from 'app/_services/checkout-validator.service';
 import { ShareStartDateService } from 'app/_services/share-start-date.service';
+import { GeolocationService } from 'app/_services/geolocation.service';
 
 
 export interface DialogData {
@@ -68,7 +69,8 @@ export class CheckInComponent implements OnInit {
     private fb: UntypedFormBuilder,
     private checkoutValidatorService: CheckoutValidatorService,
     private readonly el: ElementRef,
-    private shareStartDateService: ShareStartDateService
+    private shareStartDateService: ShareStartDateService, 
+    private geolocationService: GeolocationService,
   ) {
     // this.action = data.action;
     if (this.action === 'edit') {
@@ -127,9 +129,18 @@ export class CheckInComponent implements OnInit {
     this.dialogRef.close();
   }
   
-  public confirmAdd(): void {
+  public async confirmAdd(): Promise<void> {
     const startDate = this.fechaInicio.value;
-    this.checkoutValidatorService.setCheckInDate(startDate); // Llama al método del servicio
-    this.dialogRef.close(startDate);
+    try {
+      const coordinates = await this.geolocationService.getCurrentLocationB();
+      const result = { startDate, coordinates };
+      this.dialogRef.close(result);
+    } catch (error) {
+      console.error("Error obteniendo las coordenadas: ", error);
+      // Manejar el error si es necesario
+    }
+    //this.checkoutValidatorService.setCheckoutDate(endDate);
   }
+
+  
 }

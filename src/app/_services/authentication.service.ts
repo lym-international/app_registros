@@ -97,7 +97,6 @@ export class AuthenticationService {
         const receivedToken = token.replace(/-/g, '+').replace(/_/g, '/');
         const decryptedToken = this.decryptData(receivedToken);
         sessionStorage.setItem('accessToken', token);
-        
         // const decryptedToken = this.decryptData(tk);
         if (decryptedToken) {
           try {
@@ -106,6 +105,7 @@ export class AuthenticationService {
             const password = userData.pass;
             const pass = this.extractOriginalString(password);
            
+            sessionStorage.removeItem('currentOrders');
             this.login(username, pass);
             
           } catch (error) {
@@ -118,47 +118,47 @@ export class AuthenticationService {
       }
     })
   }
-  login(username: string, password: string) {
-   /*  setTimeout(() => {
-      this.isAuthenticatingSubject.next(false);
-    }, 1500); */
-    this.auth
+ 
+  login(username: string, password: string): Promise<void> {
+    return this.auth
       .signInWithEmailAndPassword(username, password)
       .then((user) => {
-        // console.log('usuario autenticado con exito!', user.user?.email);
-
-        this.db
+        console.log('Usuario autenticado con éxito!', user.user?.email);
+  
+        return this.db
           .collection('Users', (ref) => ref.where('email', '==', username))
           .get()
-          .subscribe((usersInfo) => {
+          .toPromise()
+          .then((usersInfo) => {
             usersInfo.docs.forEach((item: any) => {
               const data = item.data();
-              // console.log('DATA ::', item.data());
+              console.log('DATA ::', data);
               sessionStorage.setItem('currentUser', JSON.stringify(data));
               this.currentUserSubject.next(data);
               this.currentUserData = data; // diego 8-7 : Almacenar los datos del usuario en currentUserData
-              localStorage.setItem('currentUserData', JSON.stringify(data));
-
+              sessionStorage.setItem('currentUserData', JSON.stringify(data));
+              console.log("Guardando en sessionStorage");
               this.setData(data);
               setTimeout(() => {
                 this.isAuthenticatingSubject.next(false);
               }, 1000);
+  
               // this.auxCurrentUser = user;
               // const auxDate = new Date();
               // const date = new Date(auxDate.getTime() - (auxDate.getTimezoneOffset() * 60000));
-
-              if (this.currentUserData.role == 'Employee') {
+  
+              if (this.currentUserData.role === 'Employee') {
                 console.log('Es Empleado');
-                this.router.navigate(['/admin/search-order']);
-              } else if (this.currentUserData.role == 'Client') {
+                this.router.navigate(['/admin/employees/admin-employees']);
+              } else if (this.currentUserData.role === 'Client') {
                 console.log('Es cliente');
                 this.router.navigate(['/admin/search-order/']);
-              } else if (this.currentUserData.role == 'Executive') {
+              } else if (this.currentUserData.role === 'Executive') {
                 console.log('Executive');
-              } else if (this.currentUserData.role == 'Supervisor') {
+              } else if (this.currentUserData.role === 'Supervisor') {
                 console.log('Es Supervisor');
                 this.router.navigate(['/admin/search-order/']);
-              } else if (this.currentUserData.role == 'Administrator') {
+              } else if (this.currentUserData.role === 'Administrator') {
                 console.log('Es administrador');
                 this.router.navigate(['/admin/search-order/']);
               } else {
@@ -169,29 +169,11 @@ export class AuthenticationService {
       })
       .catch((error) => {
         this.isAuthenticatingSubject.next(false);
-        switch (error.code) {
-          case 'auth/wrong-password':
-            console.log('error1', error.message);
-            this.messageService.messageWarning(
-              'Warning',
-              'The password is invalid or the user does not have a password.'
-            );
-            break;
-          case 'auth/too-many-requests':
-            console.log('error2', error.message);
-            this.messageService.messageWarning(
-              'Warning',
-              'Too many unsuccessful login attempts. Please try again later.'
-            );
-            break;
-          default:
-            console.log('error3', error.message);
-            this.messageService.messageWarning('Warning', error.message);
-            break;
-        }
+        console.error('Error en autenticación:', error);
+        throw error;
       });
   }
-
+  
 
   setData(data: any) {
     this.data = data;
@@ -238,14 +220,13 @@ export class AuthenticationService {
     this.isAuthenticatingSubject.next(false);
     this.auth.signOut().then(() => {
       sessionStorage.removeItem('currentUser');
-      localStorage.removeItem('currentUserData');
-      sessionStorage.removeItem('currentOrders'); 
+      sessionStorage.removeItem('currentUserData');
+      sessionStorage.removeItem('currentOrders');
       this.currentUserSubject.next(null);
       this.auxCurrentUser = null;
       this.currentUserData = null; // Restablecer currentUserData a null
-      //this.router.navigate(['pages/login']);
-      this.router.navigate(['/authentication/signin']); 
+      // this.router.navigate(['pages/login']);
+      this.router.navigate(['/authentication/signin']);
     });
   }
 }
-

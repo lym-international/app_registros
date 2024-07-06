@@ -320,10 +320,10 @@
         </div>
         <br/>
         <div class="q-positions">
-            <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12" style="padding-right: 0px; text-align: center;">
+            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12" style="padding-right: 0px; text-align: center;">
                 <mat-card class="" style="background: linear-gradient(135deg, #051e2f 60%, rgb(30, 168, 255) 100%); color: white; font-size: medium; border-radius: 8px;">
                     <mat-card-content>
-                        <mat-card-title>Required: {{totalRequeridos}}</mat-card-title>
+                        <mat-card-title>Required positions: {{totalRequeridos}}</mat-card-title>
                     </mat-card-content>
                 </mat-card>
             </div>
@@ -449,7 +449,7 @@
                                         <th class="column-check"></th>
                                         <th class="column-check" matTooltip="Scheduled time" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">T</th>
                                         <th class="column-check" matTooltip="Required" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">R</th>
-                                        <th class="column-check" matTooltip="Confirmed" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">C</th>
+                                        <th class="column-check" matTooltip="Assigned" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">A</th>
                                         <th class="column-check" matTooltip="(Confirmed/Required)*100" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">%C</th>
                                         <th class="column-check" matTooltip="CheckIn" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">In</th>
                                         <th class="column-check" matTooltip="(CheckIn/Confirmed)*100" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">%In</th>
@@ -515,8 +515,8 @@
                                             <th class="column-check">Position</th>
                                             <th class="column-check" matTooltip="Scheduled time" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">Time</th>
                                             <th class="column-check">Required</th>
-                                            <th class="column-check">Confirmed</th>
-                                            <th class="column-check" matTooltip="(Confirmed/Required)*100" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">Confirmed %</th>
+                                            <th class="column-check">Assigned</th>
+                                            <th class="column-check" matTooltip="(Confirmed/Required)*100" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">Assigned %</th>
                                             <th class="column-check">CheckIn</th>
                                             <th class="column-check" matTooltip="(CheckIn/Confirmed)*100" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">CheckIn %</th>
                                             <th class="column-check">CheckOut</th>

@@ -13,6 +13,7 @@ import { ConfigService } from '@config';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { LanguageService, InConfiguration, AuthService } from '@core';
 import { AuthenticationService } from 'app/_services/authentication.service';
+import { FontAwesomeComponent } from 'app/icons/font-awesome/font-awesome.component';
 
 
 interface Notifications {
@@ -54,7 +55,7 @@ export class HeaderComponent
     private authService: AuthService,
     private router: Router,
     public languageService: LanguageService,
-    public authenticationService: AuthenticationService
+    public authenticationService: AuthenticationService,
     
   ) {
     super();
@@ -92,22 +93,27 @@ export class HeaderComponent
     this.setHeaderProperties();
 
     // Intentar recuperar los datos del usuario del localStorage
-    const storedUserData = localStorage.getItem('currentUserData');
+    // const storedUserData = localStorage.getItem('currentUserData');
+    const storedUserData = sessionStorage.getItem('currentUserData');
+
+    
+
     if (storedUserData) {
       this.dataUser = JSON.parse(storedUserData);
     } else {
       // Si no se encuentran los datos en el localStorage, obtenerlos del servicio
       this.dataUser = this.authenticationService.getData();
       // Almacenar los datos en el localStorage
-      localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
+      // localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
+      sessionStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
     }
     // Acceso a los datos del usuario en la variable dataUser
-    console.log('Datos en storedUserData desde el HEADER: ', storedUserData);
-    console.log('dataUser ==> ', this.dataUser)
+    // console.log('Datos en storedUserData desde el HEADER: ', storedUserData);
+    // console.log('dataUser ==> ', this.dataUser)
     
     this.datosUsuario = this.dataUser;
     this.datosUsuarioEmitter.emit(this.datosUsuario);
-    console.log('Datos Usuario EMITER: ',this.datosUsuario)
+    // console.log('Datos Usuario EMITER: ',this.datosUsuario)
     
     /*if (userRole === 'Admin') { 
       this.homePage = 'admin/search-order';
@@ -130,6 +136,7 @@ export class HeaderComponent
       this.flagvalue = val.map((element) => element.flag);
     }
   }
+
   hasToken(): boolean {
     const token = sessionStorage.getItem('accessToken');    
     return !!token; // Returns true if token is present, false otherwise
@@ -196,14 +203,13 @@ export class HeaderComponent
     }
   }
   logout() {
-    this.authenticationService.logout(); //jairo 
-    
-    /*
-    this.subs.sink = this.authService.logout().subscribe((res) => {
+
+  this.authenticationService.logout(); //jairo
+
+    /* this.subs.sink = this.authService.logout().subscribe((res) => {
       if (!res.success) {
         this.router.navigate(['/authentication/signin']);
       }
-    });
-    */
+    }); */
   }
 }

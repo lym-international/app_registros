@@ -13,6 +13,7 @@ import { Employees } from '../../employees.model';
 import { formatDate } from '@angular/common';
 import { CheckoutValidatorService } from 'app/_services/checkout-validator.service';
 import { ShareStartDateService } from 'app/_services/share-start-date.service';
+import { GeolocationService } from 'app/_services/geolocation.service';
 //import { CheckOutModel } from './check-out.model';
 export interface DialogData {
   id: number;
@@ -71,7 +72,8 @@ export class CheckOutComponent implements OnInit{
     //public calendarService: CalendarService,
     private fb: UntypedFormBuilder,
     private checkoutValidatorService: CheckoutValidatorService,
-    private shareStartDateService: ShareStartDateService
+    private shareStartDateService: ShareStartDateService,
+    private geolocationService: GeolocationService
   ) {
     // Set the defaults
     this.action = data.action;
@@ -161,49 +163,17 @@ export class CheckOutComponent implements OnInit{
     this.dialogRef.close();
   }
   
-  public confirmAdd(): void {
+  public async confirmAdd(): Promise<void> {
     const endDate = this.fechaSalida.value;
-    this.dialogRef.close(endDate);
+    try {
+      const coordinates = await this.geolocationService.getCurrentLocationB();
+      const result = { endDate, coordinates };
+      this.dialogRef.close(result);
+    } catch (error) {
+      console.error("Error obteniendo las coordenadas: ", error);
+      // Manejar el error si es necesario
+    }
     //this.checkoutValidatorService.setCheckoutDate(endDate);
   }
-
-
-
-/*
-  public confirmAdd(): void {
-    const endDate = this.fechaSalida.value;
-    this.checkoutValidatorService.setCheckoutDate(endDate);
   
-    if (this.checkoutValidatorService.validateCheckoutDate()) {
-      // La fecha del checkout es válida, puedes cerrar el modal de checkout
-      this.dialogRef.close(endDate);
-      this.showError = false; // Oculta el mensaje de error
-    } else {
-      
-      // Muestra el mensaje de error
-      this.showError = true;
-    }
-  }
-  */
-  /*
-  public confirmAdd(): void {
-    const endDate = this.fechaSalida.value;
-    this.checkoutValidatorService.setCheckoutDate(endDate);
-
-    if (this.checkoutValidatorService.validateCheckoutDate()) {
-      // La fecha del checkout es válida, puedes cerrar el modal de checkout
-      this.dialogRef.close(endDate);
-    } else {
-      // Muestra un mensaje de error
-      alert("La fecha de checkout debe ser posterior a la fecha de checkin.");
-    
-    }
-    */
-    /*
-    const endDate = this.fechaSalida.value;
-    
-    this.dialogRef.close(endDate);
-    
-  }
-  */
 }

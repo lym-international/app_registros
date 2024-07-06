@@ -35,7 +35,7 @@
                         <mat-card class="tarjeta-pequena">
                             <mat-card-content>
                                 <mat-card-title>Order number</mat-card-title>
-                                {{dataEmployees.data.orderId}}
+                                {{ dataEmployees.data.orderId }}
                             </mat-card-content>
                         </mat-card>
                     </div>
@@ -43,39 +43,46 @@
                         <mat-card class="tarjeta-pequena">
                             <mat-card-content>
                                 <mat-card-title>Client</mat-card-title>
-                                <!-- {{dataEmployees.data.clientName}} -->
-                                {{dataEmployees.data.clientName ? dataEmployees.data.clientName : dataEmployees.data.company}}
-                                <!-- company -->
+                                {{ dataEmployees.data.clientName ? dataEmployees.data.clientName : dataEmployees.data.company }}
                             </mat-card-content>
                         </mat-card>
                     </div>
                     <div class="sub-sub-column">
                         <mat-card class="tarjeta-pequena">
                             <mat-card-content>
-                                <mat-card-title>Hours worked </mat-card-title>
-                                {{totalHoursSum}}
+                                <mat-card-title>Hours worked</mat-card-title>
+                                {{ totalHoursSum }}
                             </mat-card-content>
                         </mat-card>
                     </div>
                     <div class="sub-sub-column">
                         <mat-card class="tarjeta-pequena">
                             <mat-card-content>
-                                <mat-card-title>Event date </mat-card-title>
-                                {{dataEmployees.data.startDate}}
+                                <mat-card-title>Event date</mat-card-title>
+                                {{ dataEmployees.data.startDate }}
                             </mat-card-content>
                         </mat-card>
                     </div>
-                    <div class="sub-sub-column">
-                        <mat-card class="tarjeta-pequena-2">
+                    <div class="sub-sub-column" (click)="closeOrder()" *ngIf="isUserRoleValid()" style="cursor: pointer;">
+                        <mat-card class="tarjeta-pequena-2" style="background-color: #f0f0f0;">
                             <mat-card-content>
-                                <mat-card-title>Status </mat-card-title>
-                                {{statusOrder}}
+                                <mat-card-title>Status</mat-card-title>
+                                <!-- Mostrar el spinner si loadingStatus es true -->
+                                <div *ngIf="loadingStatus">
+                                    <mat-spinner diameter="20"></mat-spinner>
+                                </div>
+                                <!-- Mostrar el estado cuando no está cargando -->
+                                <div *ngIf="!loadingStatus">
+                                    {{ statusOrder }}
+                                </div>
                             </mat-card-content>
                         </mat-card>
                     </div>
+                    
                 </div>
             </div>
         </div>
+        
         <!--FIN VISIBILIDAD MOVILES TARJETAS-->
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -159,7 +166,6 @@
                                     <div class="background" *ngIf="dataUser && dataUser.role !== 'Client'">
                                         <li class="tbl-header-btn">
                                             <div class=" marginButton" matTooltip="ADD NEW">
-                                                <!--class="m-l-10"-->
                                                 <button mat-mini-fab color="primary" (click)="addNewEmergencyEmployeeModal()">
                                                 <mat-icon class="col-white">person_add</mat-icon>
                                             </button>
@@ -167,13 +173,29 @@
                                         </li>
                                         <li class="tbl-header-btn">
                                             <div class="marginButton" matTooltip="SEARCH EMPLOYEE">
-                                                <!--class="m-l-10"-->
                                                 <button mat-mini-fab color="primary" (click)="addExistingEmergencyEmployeeModal()">
                                                 <mat-icon class="col-white">person_search</mat-icon>
                                             </button>
                                             </div>
                                         </li>
                                     </div>
+                                    <!-- <div class="background" *ngIf="dataUser && dataUser.role !== 'Client'">
+  <li class="tbl-header-btn">
+    <div class="marginButton" matTooltip="ADD NEW">
+      <button mat-mini-fab color="primary" (click)="addEmergencyEmployeeModal(false)">
+        <mat-icon class="col-white">person_add</mat-icon>
+      </button>
+    </div>
+  </li>
+  <li class="tbl-header-btn">
+    <div class="marginButton" matTooltip="SEARCH EMPLOYEE">
+      <button mat-mini-fab color="primary" (click)="addEmergencyEmployeeModal(true)">
+        <mat-icon class="col-white">person_search</mat-icon>
+      </button>
+    </div>
+  </li>
+</div> -->
+
                                 </span>
                                 <li class="tbl-header-btn">
                                     <div class="" matTooltip="DOWNLOAD">
@@ -276,7 +298,7 @@
                                     <mat-header-cell class="pr-0" *matHeaderCellDef>Map</mat-header-cell>
                                     <mat-cell class="celda" *matCellDef="let row; let i=index;" class="pr-0">
                                         <span class="mobile-label">Map</span>
-                                        <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Map: Event, CheckIn and CheckOut." (click)="openMapModal()">
+                                        <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Map: Event, CheckIn and CheckOut." (click)="openMapModal(row)">
                                             <app-feather-icons [icon]="'map-pin'" [class]="'tbl-fav-delete'"></app-feather-icons>
                                         </button>
                                     </mat-cell>
@@ -300,8 +322,20 @@
                                 <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
                                 </mat-progress-spinner>
                             </div>
-                            <mat-paginator #paginator [length]="dataSource.filteredData?.length || 0" [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+                           <!--  
+                            <mat-paginator #paginator 
+                                [length]="dataSource.filteredData?.length || 0" 
+                                [pageIndex]="0" 
+                                [pageSize]="10" 
+                                [pageSizeOptions]="[5, 10, 25, 100]">
+                            </mat-paginator> -->
+                            <mat-paginator #paginator 
+                                [length]="dataSource?.filteredData?.length ?? 0" 
+                                [pageIndex]="0" 
+                                [pageSize]="10" 
+                                [pageSizeOptions]="[5, 10, 25, 100]">
                             </mat-paginator>
+
                         </div>
                     </div>
                 </div>
@@ -319,6 +353,55 @@
             </div>
         </div>
     </div>
+    
+
+<!-- Botón para abrir el modal
+<button mat-mini-fab color="primary" (click)="openModalAprove()"> 
+    <mat-icon class="col-white">open_in_new</mat-icon>
+  </button>
+  
+  Modal Aprove
+  <mat-dialog-content *ngIf="isModalAproveOpen">
+    <h2 mat-dialog-title>Modal Aprove</h2>
+    <mat-dialog-actions>
+      <button mat-button (click)="closeModalAprove()">Cerrar</button>
+    </mat-dialog-actions>
+  </mat-dialog-content> -->
+
+  <!-- Botón para abrir el modal -->
+  <button mat-mini-fab color="primary" (click)="toggleModalAprove()"> 
+    <mat-icon class="col-white">open_in_new</mat-icon>
+</button>
+
+<!-- Modal -->
+<div *ngIf="isModalAproveOpen" class="modalAprove">
+    <div class="modalAprove-content">
+        <h4 style="display: flex; justify-content: space-between; align-items: center;">APPROVE
+            <button mat-icon-button class="custom-close-button" style="margin-left: auto;" (click)="toggleModalAprove()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </h4>
+        <!-- <small>comments</small> -->
+        <mat-form-field>
+            <textarea matInput placeholder="Add Comments" [(ngModel)]="modalAproveComments"></textarea>
+        </mat-form-field>
+        <mat-checkbox [(ngModel)]="approveChecked">approve</mat-checkbox>
+        <button mat-raised-button color="primary" (click)="saveModalAprove()" [disabled]="isSaving">
+            <ng-container *ngIf="isSaving; else saveText">
+                <mat-spinner [diameter]="20"></mat-spinner>
+            </ng-container>
+            <ng-template #saveText>Save</ng-template>
+        </button>
+        <!-- Mostrar los comentarios si existen -->
+        <div *ngIf="modalAproveComments">
+            <label>Comments: {{ modalAproveComments }}</label>
+        </div>
+    </div>
+</div>
+
+
+
+
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
 
     <!--MAPA DEL EVENTO-->

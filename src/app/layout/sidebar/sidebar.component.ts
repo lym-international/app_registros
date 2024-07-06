@@ -89,17 +89,26 @@ export class SidebarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.sharingCloseOrderService.getOrderIdObservable().subscribe(orderId => {
+      console.log('OrderId recibido:', orderId);
+      this.orderId = orderId;
+     
+    });
     
     this.dataUser = this.authenticationService.getData();
     
-    const storedUserData = localStorage.getItem('currentUserData');
+    // const storedUserData = localStorage.getItem('currentUserData');
+    const storedUserData = sessionStorage.getItem('currentUserData');
+
+    
     if (storedUserData) {
       this.dataUser = JSON.parse(storedUserData);
     } else {
       // Si no se encuentran los datos en el localStorage, obtenerlos del servicio
       this.dataUser = this.authenticationService.getData();
       // Almacenar los datos en el localStorage
-      localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
+      // localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
+      sessionStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
     }
     // Aquí tienes acceso a los datos del usuario en la variable dataUser
     //console.log('Datos en storedUserData desde el sideBar: ', storedUserData);
@@ -118,12 +127,12 @@ export class SidebarComponent implements OnInit {
     this.initLeftSidebar();
     this.bodyTag = this.document.body;
 
-    this.dataOrder = this.orderDataService.getSelectedOrder();
-    this.orderStatus = this.dataOrder.data.status;
+    // this.dataOrder = this.orderDataService.getSelectedOrder();
+    // this.orderStatus = this.dataOrder.data.status;
     //console.log('Data Order: ', this.dataOrder);
-    this.orderStatus = this.dataOrder.data.status;
+    // this.orderStatus = this.dataOrder.data.status;
   
-    this.orderId = this.dataOrder.id;
+    // this.orderId = this.dataOrder.id;
     //console.log('this.orderId:', this.orderId)
     //console.log('this.dataUser.email: ',this.dataUser.email)
     
@@ -140,7 +149,27 @@ export class SidebarComponent implements OnInit {
     return false;
   }
 
-  closeOrder(){
+  closeOrder() {
+    const apiUrl =  `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
+    // const apiUrl = `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
+    fetch(apiUrl, {
+      method: 'PUT'
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        this.orderStatus = data.data.status;
+        this.orderDataService.setSelectedOrder(data);
+        sessionStorage.removeItem('currentOrders');
+
+        // Notificar al componente AllemployeesComponent sobre el cierre de la orden
+        this.sharingCloseOrderService.setStatusOrder(this.orderStatus);
+      })
+      .catch((error) => {
+        console.error('Error al actualizar:', error);
+      });
+  }
+
+  closeOrder1(){
     const apiUrl =
      `https://us-central1-highkeystaff.cloudfunctions.net/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
     //  `http://127.0.0.1:5001/highkeystaff/us-central1/orders/order/close?id=${this.orderId}&updatedBy=${this.dataUser.email}`
@@ -149,28 +178,16 @@ export class SidebarComponent implements OnInit {
     })
       .then((response) => response.json())
       .then((data) => {
-  
-        // console.log('DATA del method PUT', data.data.status);
         this.orderStatus = data.data.status;
         this.orderDataService.setSelectedOrder(data);
-        
-        /*
-        this.sharingCloseOrderService
-        .getStatusOrderObservable()
-        .subscribe((status) => {
-          this.statusOrder = status;
-        });
-    
-    console.log('statusOrder en sideBarComponent METODO CLOSEORDER: ',this.statusOrder)
-        */
-        // Forzar la recarga de la página actual (para actualizar la página de allEmployees y que no se vean los botones)
-        // window.location.reload();
+        sessionStorage.removeItem('currentOrders');
       })
       .catch((error) => {
         console.error('Error al actualizar:', error);
       });
       //console.log('ORDEN CERRADA')
   }
+  
   
   initLeftSidebar() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -210,11 +227,13 @@ export class SidebarComponent implements OnInit {
     }
   }
   logout() {
-    this.authService.logout().subscribe((res) => {
+    this.authenticationService.logout(); //jairo
+    
+    /* this.authService.logout().subscribe((res) => {
       if (!res.success) {
         this.router.navigate(['/authentication/signin']);
       }
-    });
+    }); */
   }
 }
 
