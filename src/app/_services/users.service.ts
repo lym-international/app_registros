@@ -9,9 +9,10 @@ export class UsersService {
   
   private userFunctionsURL = (location.hostname === 'localhost')
     // ? 'https://us-central1-highkeystaff.cloudfunctions.net/users'
-    ?'http://127.0.0.1:5001/highkeystaff/us-central1/users'
-    : 'https://us-central1-highkeystaff.cloudfunctions.net/users';
+    ?'http://127.0.0.1:5001/highkeystaff-test/us-central1/users'
+    : 'https://us-central1-highkeystaff-test.cloudfunctions.net/users';
 
+    
   constructor(private http: HttpClient) { }
 
   updateEmployee(employeeData: any): Observable<any> {
