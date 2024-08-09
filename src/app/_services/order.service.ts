@@ -21,6 +21,8 @@ export class OrderService{
   
   
   getOrders(): Observable<any[]> {
+
+    console.log("llamando a getOrders JR")
     return this.http.get<any[]>(`${this.orderFunctionsURL}/getOrders`);
   }
 
