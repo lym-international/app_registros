@@ -79,6 +79,15 @@
                         </mat-card>
                     </div>
                     
+                    <!-- <div class="sub-sub-column">
+                        <mat-card class="tarjeta-pequena">
+                            <mat-card-content>
+                                <mat-card-title>Approve</mat-card-title>
+                                approved by customer 
+                            </mat-card-content>
+                        </mat-card>
+                    </div> -->
+
                 </div>
             </div>
         </div>
@@ -88,19 +97,55 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="materialTableHeader">
-                        <div class="left">
+                        <!-- <div class="left">
                             <ul class="header-buttons-left ms-0">
                                 <li class="tbl-title">
-                                    <!--<h2>Employees</h2>-->
                                 </li>
                                 <li class="tbl-search-box">
                                     <label for="search-input"><i class="material-icons search-icon">search</i></label>
                                     <input placeholder="Search" type="text" #filter class="browser-default search-field" aria-label="Search box">
+                                </li>  
+                            </ul>
+                        </div> -->
+                        
+                        <div class="left">
+                            <ul class="header-buttons-left ms-0">
+                                <li class="tbl-title">
                                 </li>
+                                <li class="tbl-search-box" style="display: flex; align-items: center;">
+                                    <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                                    <!-- <input placeholder="Search" type="text" #filter class="browser-default search-field" aria-label="Search box"> -->
+                                    <input placeholder="Search" type="text" #filter class="browser-default search-field" aria-label="Search box" style="width: 200px;">
+
+                                </li>
+                                <!-- <li *ngIf="dataEmployees.data.approvedStatus" class="tbl-search-box" style="display: flex; align-items: center;"  matTooltip="this.dataEmployees.data.modalAproveComments" matTooltipPosition="above" matTooltipClass="custom-tooltip"> -->
+                                    <!-- <mat-icon class="col-green">done</mat-icon> -->
+                                    <!-- <mat-icon class="col-green">check_circle</mat-icon> -->
+                                <!-- </li> -->
+
+                                <li *ngIf="dataEmployees.data.approvedStatus" 
+                                    class="tbl-search-box" 
+                                    style="display: flex; align-items: center;"  
+                                    [matTooltip]="'Approved by customer: ' + dataEmployees.data.approverName + ' ' + dataEmployees.data.approveComments" 
+                                    matTooltipPosition="above" 
+                                    matTooltipClass="custom-tooltip">
+                                    <mat-icon class="col-green">done</mat-icon>
+                                    <!-- <mat-icon class="col-green">check_circle</mat-icon> -->
+                                </li>
+                            
+                            
+
+
+                                  
                             </ul>
                         </div>
+                        
+                        
                         <div class="right" style="flex: 60% !important;">
                             <ul class="tbl-export-btn">
+
+                                
+
                                 <span *ngIf="ShowButtons" class="tbl-export-btn">
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10"  [hidden]=!selection.hasValue() matTooltip="MARK">

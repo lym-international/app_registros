@@ -1889,7 +1889,8 @@ export class AllemployeesComponent
   }
 
   toggleModalAprove() {
-    console.log("this.dataEmployees:", this.dataEmployees);
+    console.log("this.dataEmployeesJJ:", this.dataEmployees);
+    
     this.isModalAproveOpen = !this.isModalAproveOpen;
     if (this.dataEmployees && this.dataEmployees.data) {
         this.approveChecked = this.dataEmployees.data.approvedStatus || false;
@@ -1909,12 +1910,14 @@ export class AllemployeesComponent
         approverEmail: this.dataUser.email,
         approverName: `${this.dataUser.firstname} ${this.dataUser.lastname}`,
         approvedDate: formattedDate
+
       };
 
-      await this.ordSvc.updateOrder(this.orderId, dataToUpdate).toPromise();
-      // console.log('Orden actualizada correctamente');
+      await this.ordSvc.updateOrder1(this.orderId, dataToUpdate).toPromise();
+      console.log('Orden actualizada correctamente', this.orderId, dataToUpdate);
 
       // Cerrar el modal después de la actualización
+      sessionStorage.removeItem('currentOrders');
       this.updateDataOrder()
       this.toggleModalAprove();
 
