@@ -34,6 +34,7 @@ import { CloseEventComponent } from './close-event/close-event.component';
 import { OcultarSidebarService } from './_services/ocultar-sidebar.service'; // Diego
 import { TimesheetComponent } from './timesheet/timesheet.component'; //Jairo
 import { AuthenticationService } from './_services/authentication.service'; //Jairo
+import { GoogleMapsModule } from '@angular/google-maps'; // Jairo
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -69,6 +70,7 @@ export function createTranslateLoader(http: HttpClient) {
     // core & shared
     CoreModule,
     SharedModule,
+    GoogleMapsModule
   ],
   providers: [
     AuthenticationService, //Jairo

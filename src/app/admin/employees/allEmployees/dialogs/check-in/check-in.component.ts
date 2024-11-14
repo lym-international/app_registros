@@ -138,9 +138,13 @@ export class CheckInComponent implements OnInit {
     } catch (error) {
       console.error("Error obteniendo las coordenadas: ", error);
       // Manejar el error si es necesario
+      const result = { startDate, coordinates: null }; 
+      this.dialogRef.close(result);
+
     }
     //this.checkoutValidatorService.setCheckoutDate(endDate);
   }
 
+ 
   
 }

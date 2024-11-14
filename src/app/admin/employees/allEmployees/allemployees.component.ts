@@ -33,11 +33,14 @@ import { ActivatedRoute } from '@angular/router';
 import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
 import { ShareStartDateService } from '../../../_services/share-start-date.service';
 import { ShareTimeDifferenceInMinutesService } from 'app/_services/share-time-difference-in-minutes.service';
-import {Map, marker, tileLayer, Marker} from 'leaflet';
+// import {Map, marker, tileLayer, Marker} from 'leaflet';
 import { OrderService } from 'app/_services/order.service';
 import { RegistrationService } from 'app/_services/registration.service';
 import { GeolocationService } from 'app/_services/geolocation.service';
 import { UsersService } from 'app/_services/users.service';
+
+// import { MapMarker } from '@angular/google-maps';
+
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;                       
 
@@ -51,6 +54,9 @@ export class AllemployeesComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit
 {
+
+ 
+
   displayedColumns = [
     'select',
     'lastName',
@@ -111,7 +117,7 @@ export class AllemployeesComponent
 
   latitude: number;
   longitude: number; 
-  private map: Map;
+  // private map: Map;
   // updateRegistrationCalled: boolean;
   // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   loadingStatus: boolean = false;
@@ -124,8 +130,12 @@ export class AllemployeesComponent
   isSaving: boolean = false;
 
 
-  
-  
+  @ViewChild('mapModal', { static: false }) mapModal: ElementRef;
+  // center: google.maps.LatLngLiteral;
+  center: google.maps.LatLngLiteral | null = null;
+  zoom = 13;
+  markers: google.maps.MarkerOptions[] = []
+
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
@@ -133,6 +143,8 @@ export class AllemployeesComponent
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
   orderData: any;
+  placeitem: any;
+  
   constructor(
     private datePipe: DatePipe,
     public httpClient: HttpClient,
@@ -405,7 +417,7 @@ export class AllemployeesComponent
   
   
   async updateRegistration(): Promise<void> {
-    console.log("llama a modific");
+    // console.log("llama a modific");
     const { employeesArray, dataEmployees: { data: { items, startDate } } } = this;
 
     if (employeesArray.length === 0) {
@@ -441,16 +453,49 @@ export class AllemployeesComponent
     items.forEach(item => {
       const { hourFrom, employees, position } = item;
       employees.forEach(employee => {
-        if (employee.status !== "Rejected" && employee.status !== "SMS Sent") {
+        /* if (employee.status !== "Rejected" && employee.status !== "SMS Sent") {
+          console.log("llegaca", employee, hourFrom)
+          employeesArray.forEach(indes =>(
+            console.log("ides", indes)
+          ))
           const existingEmployeeIndex = employeesArray.findIndex(existingEmployee => 
             existingEmployee.employee.data.employeeId === employee.data.employeeId &&
             existingEmployee.hourFrom === hourFrom
           );
+          console.log("existingEmployeeIndex", existingEmployeeIndex)
   
           if (existingEmployeeIndex === -1) {
             this.employeesArray.push(this.createEmployeeRegist(employee, hourFrom, position, startDate));
           }
-        }
+        } */
+
+          if (employee.status !== "Rejected" && employee.status !== "SMS Sent") {
+            // console.log("llegaca", employee, hourFrom);
+            
+            // se elimina duplicados
+            this.employeesArray = this.employeesArray.filter((existingEmployee, index, self) =>
+              index === self.findIndex(e =>
+                e.employee.data.employeeId === existingEmployee.employee.data.employeeId &&
+                (e.hourFrom === existingEmployee.hourFrom || e.dateStart === existingEmployee.dateStart)
+              )
+            );
+          
+            // Busca empleado con el mismo employeeId y hourFrom o dateStart
+            const existingEmployeeIndex = this.employeesArray.findIndex(existingEmployee => 
+              existingEmployee.employee.data.employeeId === employee.data.employeeId &&
+              (existingEmployee.hourFrom === hourFrom || existingEmployee.dateStart === startDate)
+            );
+          
+            // console.log("existingEmployeeIndex", existingEmployeeIndex);
+          
+            if (existingEmployeeIndex === -1) {
+              // Si no existe, lo agrega al arreglo
+              this.employeesArray.push(this.createEmployeeRegist(employee, hourFrom, position, startDate));
+            } else {
+              // console.log("Empleado duplicado encontrado, no se agregará uno nuevo");
+            }
+          }
+          
       });
     });
   }
@@ -679,8 +724,8 @@ export class AllemployeesComponent
           dateCheckinRounded: { _seconds: dateCheckinRounded, _nanoseconds: 0 },
           dateCheckout: { _seconds: checkOutTimestamp, _nanoseconds: 0 },
           dateCheckoutRounded: { _seconds: dateCheckoutRounded, _nanoseconds: 0 },
-          checkOutCoordinates:{latitudeOut: coordinates.latitude, longitudeOut:  coordinates.longitude }, 
-          checkinCoordinates: {latitude: coordinates.latitude, longitude:  coordinates.longitude},
+          checkOutCoordinates:{latitudeOut: coordinates?.latitude, longitudeOut:  coordinates?.longitude }, 
+          checkinCoordinates: {latitude: coordinates?.latitude, longitude:  coordinates?.longitude},
           hours: updatedHours.toFixed(2),
           updateUser: this.dataUser.email
         };
@@ -747,7 +792,7 @@ export class AllemployeesComponent
           dateCheckin: { _seconds: checkInTimestamp, _nanoseconds: 0 },
           realCheckin: { _seconds: checkInTimestamp, _nanoseconds: 0 },
           dateCheckinRounded: { _seconds: dateCheckinRounded, _nanoseconds: 0 },
-          checkinCoordinates: {latitude: coordinates.latitude, longitude: coordinates.longitude},
+          checkinCoordinates: {latitude: coordinates?.latitude, longitude: coordinates?.longitude},
           updateUser: this.dataUser.email,
         };
       }
@@ -854,7 +899,7 @@ export class AllemployeesComponent
           checkout: true,
           dateCheckout: { _seconds: checkOutTimestamp, _nanoseconds: 0 },
           dateCheckoutRounded: { _seconds: dateCheckoutRounded, _nanoseconds: 0 },
-          checkOutCoordinates:{latitudeOut: coordinates.latitude, longitudeOut: coordinates.longitude}, 
+          checkOutCoordinates:{latitudeOut: coordinates?.latitude, longitudeOut: coordinates?.longitude}, 
           updateUser: this.dataUser.email,
           status: 'Checked Out',
           hours: roundedHours.toFixed(2),
@@ -1396,8 +1441,6 @@ export class AllemployeesComponent
     }
   }
 
-
-
   async addNewEmergencyEmployeeModal() {
     try {
       const dialogRef = this.dialog.open(FormDialogComponent);
@@ -1562,7 +1605,7 @@ export class AllemployeesComponent
     }
   }
 
-  //INICIO MAPA
+/*  //INICIO MAPA
   // Obtiene la ubicación del evento
   getEventLocation() {
     if (this.dataEmployees && this.dataEmployees.data && this.dataEmployees.data.mapLink) {
@@ -1603,7 +1646,7 @@ export class AllemployeesComponent
 
     const googleMapsMatch = url.match(/\/maps\/@(-?\d+\.\d+),(-?\d+\.\d+)/);
     if (googleMapsMatch) {
-      console.log("entra por el else if");
+      console.log(" else");
       return { latitude: parseFloat(googleMapsMatch[1]), longitude: parseFloat(googleMapsMatch[2]) };
     }
     
@@ -1613,9 +1656,9 @@ export class AllemployeesComponent
   // Abre el modal del mapa
   openMapModal(row) {
     console.log("row", row);
-
     // Validar coordenadas
     const validCoordinates = this.validateCoordinates(row);
+    
     
     if (!validCoordinates) {
       // alert('No hay ubicaciones disponibles para mostrar el mapa.');
@@ -1625,6 +1668,7 @@ export class AllemployeesComponent
 
     const modal = document.getElementById('mapModal');
     modal.style.display = 'block';
+    
     this.createEventMap(row);
 
     const closeModalHandler = (event) => {
@@ -1647,6 +1691,7 @@ export class AllemployeesComponent
   }
 
   createEventMap(selectedRows) {
+   
     let lat: number, long: number;
 
     if (this.isValidCoordinate(selectedRows.checkinCoordinates.latitude) && this.isValidCoordinate(selectedRows.checkinCoordinates.longitude)) {
@@ -1663,12 +1708,13 @@ export class AllemployeesComponent
       return;
     }
 
+    console.log("AQUI SI ENTRA", lat, long)
     this.map = new Map('mapInModal').setView([lat, long], 14);
     this.getEventLocation();
 
     if (this.isValidCoordinate(this.latitudeEvent) && this.isValidCoordinate(this.longitudeEvent)) {
       this.mostrarCoordenadasEnMapaModal(this.map, this.latitudeEvent, this.longitudeEvent, "Event");
-    }
+    }else(console.log("AQUI  ESTA FALLANDO"))
 
     this.addEmployeeMarkersToMap(this.map, selectedRows);
     console.log('selectedRows: ', selectedRows);
@@ -1708,9 +1754,156 @@ export class AllemployeesComponent
       (this.isValidCoordinate(row.checkOutCoordinates.latitudeOut) && this.isValidCoordinate(row.checkOutCoordinates.longitudeOut)) ||
       (this.isValidCoordinate(this.latitudeEvent) && this.isValidCoordinate(this.longitudeEvent))
     );
-  }
+  } */
 
   //FIN MAPA
+
+  //INICIO MAPA GOOGLE MAPS
+  
+  getEventLocation() {
+    if (this.dataEmployees && this.dataEmployees.data && this.dataEmployees.data.mapLink) {
+      const url = this.dataEmployees.data.mapLink;
+      console.log("Ubicación del evento", url);
+
+      const coordinates = this.extractCoordinatesFromURL(url);
+      if (coordinates) {
+        const { latitude, longitude } = coordinates;
+        this.latitudeEvent = latitude;
+        this.longitudeEvent = longitude;
+        console.log("Latitud evento:", this.latitudeEvent);
+        console.log("Longitud evento:", this.longitudeEvent);
+      } else {
+        console.log("No se encontraron las coordenadas en la URL.");
+      }
+    } else {
+      console.log("No se encontró la URL del mapa en los datos del empleado.");
+    }
+  }
+
+  // Extrae las coordenadas de una URL de Google Maps
+  extractCoordinatesFromURL(url: string): { latitude: number, longitude: number } | null {
+    console.log("llama a estraccions", url);
+    // Coincidir con el formato de coordenadas en la URL proporcionada
+    const queryMatch = url.match(/query=(-?\d+\.\d+)%2C(-?\d+\.\d+)/);
+    if (queryMatch) {
+      console.log("entra por el if");
+      return { latitude: parseFloat(queryMatch[1]), longitude: parseFloat(queryMatch[2]) };
+    }
+    
+    // Coincidir con el formato de coordenadas en los otros tipos de URL
+    const gooGlMatch = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+    if (gooGlMatch) {
+      console.log("entra por el else if");
+      return { latitude: parseFloat(gooGlMatch[1]), longitude: parseFloat(gooGlMatch[2]) };
+    }
+
+    const googleMapsMatch = url.match(/\/maps\/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+    if (googleMapsMatch) {
+      console.log(" else");
+      return { latitude: parseFloat(googleMapsMatch[1]), longitude: parseFloat(googleMapsMatch[2]) };
+    }
+    
+    return null;
+  }
+
+  openMapModal(row) {
+    // console.log('row', row);
+    console.log('openMapModal called', row);
+  
+    // Validar coordenadas
+    const validCoordinates = this.validateCoordinates(row);
+  
+    if (!validCoordinates) {
+      this.showNotification('warning', 'No locations available to display the map.', 'top', 'center');
+      return;
+    }
+  
+    const modal = this.mapModal.nativeElement;
+    modal.style.display = 'block';
+  
+    this.createEventMap(row);
+  }
+  
+  closeMapModal() {
+    const modal = this.mapModal.nativeElement;
+    modal.style.display = 'none';
+  
+    this.markers = [];
+  }
+  
+  createEventMap(selectedRows) {
+    let lat: number;
+    let long: number;
+  
+    if (this.isValidCoordinate(selectedRows.checkinCoordinates?.latitude) && this.isValidCoordinate(selectedRows.checkinCoordinates?.longitude)) {
+      lat = parseFloat(selectedRows.checkinCoordinates.latitude as string);
+      long = parseFloat(selectedRows.checkinCoordinates.longitude as string);
+    } else if (this.isValidCoordinate(selectedRows.checkOutCoordinates?.latitudeOut) && this.isValidCoordinate(selectedRows.checkOutCoordinates?.longitudeOut)) {
+      lat = parseFloat(selectedRows.checkOutCoordinates.latitudeOut as string);
+      long = parseFloat(selectedRows.checkOutCoordinates.longitudeOut as string);
+    } else if (this.isValidCoordinate(this.latitudeEvent) && this.isValidCoordinate(this.longitudeEvent)) {
+      lat = this.latitudeEvent;
+      long = this.longitudeEvent;
+    }    
+    else {
+      this.showNotification('warning', 'No locations available to display the map.', 'top', 'center');
+      return;
+    }
+  
+    this.center = { lat, lng: long };
+  
+    // Agregar los marcadores al mapa
+    this.addEmployeeMarkersToMap(selectedRows);
+  }
+  
+  addEmployeeMarkersToMap(row) {
+    const { checkinCoordinates, checkOutCoordinates } = row;
+  
+    if (this.isValidCoordinate(checkinCoordinates?.latitude) && this.isValidCoordinate(checkinCoordinates?.longitude)) {
+     
+      this.addMarker(parseFloat(checkinCoordinates.latitude as unknown as string), parseFloat(checkinCoordinates.longitude as unknown as string), 'Checkin');
+    }
+  
+    if (this.isValidCoordinate(checkOutCoordinates?.latitudeOut) && this.isValidCoordinate(checkOutCoordinates?.longitudeOut)) {
+     
+      this.addMarker(parseFloat(checkOutCoordinates.latitudeOut as unknown as string), parseFloat(checkOutCoordinates.longitudeOut as unknown as string), 'Checkout');
+    }
+  
+    if (this.isValidCoordinate(this.latitudeEvent) && this.isValidCoordinate(this.longitudeEvent)) {
+      
+      this.addMarker(this.latitudeEvent, this.longitudeEvent, 'Event');
+    }
+  }
+  
+  addMarker(lat: number, lng: number, label: string) {
+    const markerOptions: google.maps.MarkerOptions = {
+      position: { lat, lng },
+      title: label,
+      icon: {
+        url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+      }
+    };
+    this.markers.push(markerOptions);
+  }
+  
+  
+
+  isValidCoordinate(coordinate: any) {
+    return coordinate !== undefined && coordinate !== '-' && coordinate !== '' && !isNaN(parseFloat(coordinate as unknown as string));
+  }
+  
+  validateCoordinates(row) {
+    return (
+      (this.isValidCoordinate(row.checkinCoordinates?.latitude) && this.isValidCoordinate(row.checkinCoordinates?.longitude)) ||
+      (this.isValidCoordinate(row.checkOutCoordinates?.latitudeOut) && this.isValidCoordinate(row.checkOutCoordinates?.longitudeOut)) ||
+      (this.isValidCoordinate(this.latitudeEvent) && this.isValidCoordinate(this.longitudeEvent))
+    );
+  }
+  
+  // FIN MAPA GOOGLE MAPS
+
+
+
  //Abre el modal FormDialogComponent para editar los datos.
   editCall(row: Employees) {
     this.id = row.id;

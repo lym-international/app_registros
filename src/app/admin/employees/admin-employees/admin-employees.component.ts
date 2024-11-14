@@ -96,6 +96,17 @@ implements OnInit
     'break',
     'totalHours',
   ];
+
+  mobileDisplayedColumns: string[] = ['position-hourFrom-in', 'out-break-totalHours'];
+
+  get isWebView(): boolean {
+    return window.innerWidth > 500;
+  }
+
+  get isMobileView(): boolean {
+    return window.innerWidth <= 500;
+  }
+
   exampleDatabase?: EmployeesService;
   selection = new SelectionModel<AdminEmployees>(true, []);
   index?: number;
@@ -141,6 +152,11 @@ implements OnInit
   longitude: number;  
   orders: any[];
   ordenes: any[];
+  
+  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+  isMobile: boolean = false;
+
+  
 
   constructor(
     private datePipe: DatePipe,
@@ -157,6 +173,8 @@ implements OnInit
     private el: ElementRef,
     private ordSvc: OrderService,
     private regSvc: RegistrationService,
+    
+    
   ) {
     super();
   }
@@ -185,7 +203,14 @@ implements OnInit
         }
     );
 
+
+    this.checkMobileView();
+    window.addEventListener('resize', this.checkMobileView.bind(this));
    
+  }
+
+  checkMobileView() {
+    this.isMobile = window.innerWidth <= 500;
   }
 
   getOrderByHKid(hkId: string) {
@@ -193,9 +218,13 @@ implements OnInit
           (data) => {
             console.log("DATAAA", data)
               // Obtén la fecha de hoy en formato YYYY-MM-DD
-              const today = new Date();
+              /* const today = new Date();
               const todayString = today.toISOString().split('T')[0];
-              console.log("todayString", todayString)
+              console.log("todayString", todayString) */
+
+              const today = new Date();
+              const todayString = today.toLocaleDateString('en-CA'); // 'en-CA' usa el formato YYYY-MM-DD
+              console.log("todayString", todayString);
               // Filtra las órdenes para incluir solo las que tienen startDate igual a hoy
               this.orders = data.filter(order => order.data.startDate === todayString);
 
@@ -314,14 +343,14 @@ implements OnInit
             }
           }  
 
-          let checkInTime = "No Data";
+          let checkInTime = "-";
           if (employee.dateCheckin && employee.dateCheckin._seconds) {
             const checkIn = employee.dateCheckin._seconds;
             const checkInDate = new Date(checkIn * 1000);
             checkInTime = this.datePipe.transform(checkInDate, 'hh:mm a');
           }
 
-          let checkOutTime = 'No Data';
+          let checkOutTime = '-';
           if (employee.dateCheckout && employee.dateCheckout._seconds) {
             const checkOut = employee.dateCheckout._seconds;
             const checkOutDate = new Date(checkOut * 1000);
@@ -444,9 +473,9 @@ implements OnInit
             status: 'reseted',
             hours: 0,
             break: 0,
-            in: 'No Data',
-            out: 'No Data',
-            realInTime: 'No Data',
+            in: '-',
+            out: '-',
+            realInTime: '-',
             totalHours: 0,
             checkinCoordinates: {
               latitude: '-',
@@ -573,8 +602,8 @@ implements OnInit
               _nanoseconds: 0,
             },
             checkinCoordinates: {
-              latitude: coordinates.latitude,
-              longitude: coordinates.longitude,
+              latitude: coordinates?.latitude,
+              longitude: coordinates?.longitude,
             },
             realInTime: result.actualTime,
             updateUser: this.dataUser.email,
@@ -720,8 +749,8 @@ implements OnInit
               _nanoseconds: 0,
             },
             checkOutCoordinates:{
-              latitudeOut: coordinates.latitude,
-              longitudeOut: coordinates.longitude,
+              latitudeOut: coordinates?.latitude,
+              longitudeOut: coordinates?.longitude,
             },        
             updateUser: this.dataUser.email,
             status: 'Checked Out',
