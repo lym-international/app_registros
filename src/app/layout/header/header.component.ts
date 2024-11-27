@@ -150,8 +150,8 @@ export class HeaderComponent
        //https://register.highkeystaff.com/#/authentication/signin
       //  https://highkeystaff.web.app/dashboard
       // http://localhost:4200/dashboard
-      //  window.location.href= 'https://highkeystaff.web.app/dashboard'
-      window.location.href= 'https://highkeystaff-test.web.app'
+       window.location.href= 'https://highkeystaff.web.app/dashboard'
+      // window.location.href= 'https://highkeystaff-test.web.app'
       // window.location.href = `https://register.highkeystaff.com/#/authentication/signin/?token=${token}`;
     } else {
       console.error('Token de acceso no presente en sessionStorage.');
