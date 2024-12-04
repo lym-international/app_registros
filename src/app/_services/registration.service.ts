@@ -8,9 +8,11 @@ import { Observable } from 'rxjs';
 export class RegistrationService {
 
   private orderFunctionsURL = (location.hostname === 'localhost')
-  ?'https://us-central1-highkeystaff.cloudfunctions.net/registrations'
-    : 'https://us-central1-highkeystaff.cloudfunctions.net/registrations'
-    // ?'http://127.0.0.1:5001/highkeystaff-test/us-central1/registrations'
+  ? 'http://127.0.0.1:5001/highkeystaff/us-central1/registrations'
+  : 'https://us-central1-highkeystaff.cloudfunctions.net/registrations'
+     
+    // 'https://us-central1-highkeystaff.cloudfunctions.net/registrations'
+   
     // : 'https://us-central1-highkeystaff-test.cloudfunctions.net/registrations';
 
 

@@ -13,9 +13,11 @@ export class OrderService{
 
   constructor(private http: HttpClient) { 
     this.orderFunctionsURL = (location.hostname === 'localhost')
-      ?'https://us-central1-highkeystaff.cloudfunctions.net/orders'
-      :'https://us-central1-highkeystaff.cloudfunctions.net/orders';
-      // 'http://127.0.0.1:5001/highkeystaff/us-central1/orders'
+      ?'http://127.0.0.1:5001/highkeystaff/us-central1/orders'
+      :'https://us-central1-highkeystaff.cloudfunctions.net/orders'
+      
+      // 'https://us-central1-highkeystaff.cloudfunctions.net/orders';
+      
       // ?'http://127.0.0.1:5001/highkeystaff-test/us-central1/orders'
       // : 'https://us-central1-highkeystaff-test.cloudfunctions.net/orders';
   }

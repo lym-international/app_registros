@@ -38,6 +38,7 @@ import { OrderService } from 'app/_services/order.service';
 import { RegistrationService } from 'app/_services/registration.service';
 import { GeolocationService } from 'app/_services/geolocation.service';
 import { UsersService } from 'app/_services/users.service';
+import { style } from '@angular/animations';
 
 // import { MapMarker } from '@angular/google-maps';
 
@@ -1146,31 +1147,34 @@ export class AllemployeesComponent
   getEmployeesObject(employees) {
     return {
       columns: [
-        { width: '*', text: '' },
         {
           width: 'auto',
-          alignment: 'left',
+          alignment: 'left', // Alinea a la izquierda
+          margin: [0, 0, 0, 0], // Elimina cualquier margen adicional
           table: {
-            widths: Array(8).fill('auto'),
+            widths: [18, 70, 70, 38, 42, 50, 50, 50, 50], 
+              // widths: [18, 70, 70, 38, 42, 'auto', 'auto', 'auto', 'auto'],
             body: [
               [
-                { text: "No", style: "tableHeader" },
-                { text: "LAST NAME", style: "tableHeader" },
-                { text: "FIRST NAME", style: "tableHeader" },
-                { text: "HK ID", style: "tableHeader" },
-                { text: "IN", style: "tableHeader" },
-                { text: "BREAK", style: "tableHeader" },
-                { text: "OUT", style: "tableHeader" },
-                { text: "TOTAL", style: "tableHeader" },
+                { text: "No", style: "tableHeader" },             
+                { text: "LAST NAME", style: "tableHeader" },       
+                { text: "FIRST NAME", style: "tableHeader" },      
+                { text: "HK ID", style: "tableHeader" },          
+                { text: "PAYROLL", style: "tableHeader" },        
+                { text: "IN", style: "tableHeader" },             
+                { text: "BREAK", style: "tableHeader" },          
+                { text: "OUT", style: "tableHeader" },            
+                { text: "TOTAL", style: "tableHeader" },          
               ],
               ...this.groupEmployees.map(emp => emp),
             ],
           },
         },
-        { alignment: 'left', margin: [30, 10, 0, 10], text: '' },
+        { text: '' }, // Espacio opcional si necesitas otras columnas
       ],
     };
   }
+  
   
   async getDocumentDefinition() {
     const getImageAsBase64 = async (url) => {
@@ -1197,24 +1201,91 @@ export class AllemployeesComponent
     await this.loadTimesheet();
   
     return {
+     pageMargins: [40, 180, 40, 60], // Márgenes globales: [izquierda, arriba, derecha, abajo]
+        header:  {
+          
+          margin: [40, 40, 40, 0],
+            columns: [
+              {
+                image: logoBase64, // Asegúrate de que el logo se cargue correctamente
+                width: 100, height: 50,
+                alignment: 'left',
+              },
+              {
+                margin: [-95, 45, 5, 0], // Espaciado entre logo e información
+                stack: [
+                  { text: 'T: 410-922-6140', fontSize: 8.5, bold: true },
+                  { text: 'operations@stafflm.com', fontSize: 8.5 },
+                  { text: 'www.stafflm.com', fontSize: 8.5 },
+                ],
+                alignment: 'left',
+              },
+
+              {
+                stack: [
+                  { text: 'Timesheet ', bold: true, fontSize: 15,  margin: [0, 0, 0, 5] },
+                  { text: `Date: ${this.dataEmployees.data.startDate}`, fontSize: 9, bold: true, margin: [0, 0, 0, 5] },
+                  { text: `HK Order: ${this.dataEmployees.data.orderId}`, fontSize: 9, bold: true, margin: [0, 0, 0, 5] },
+                  { text: `Customer: ${this.dataEmployees.data.company}`, fontSize: 9, bold: true, margin: [0, 0, 0, 5] },
+                  { text: `Place: ${this.dataEmployees.data.place}`, fontSize: 9, bold: true, margin: [0, 0, 0, 5] },
+                  // { text: `Address: ${this.dataEmployees.data.address}, ${this.dataEmployees.data.city}, ${this.dataEmployees.data.state}`, fontSize: 9, bold:true, margin: [0, 0, 0, 5] },
+                  // { text: ` ${this.dataEmployees.data.zipcode}`,  bold: true },
+                  {
+                    text: `Address: ${this.dataEmployees.data.address}, ${this.dataEmployees.data.city}, ${this.dataEmployees.data.state}`,
+                    fontSize: 9,
+                    bold: true,
+                    margin: [0, 0, 0, 5], // Espaciado estándar
+                  },
+                  {
+                    text: `${this.dataEmployees.data.zipcode}`,
+                    bold: true,
+                    fontSize: 9,
+                    margin: [40, 0, 0, 0], // Ajustar margen izquierdo para alinear
+                  },
+                  
+                ],
+                alignment: 'left',
+              },
+            ],
+          },
       content: [
-        { image: logoBase64, width: 100, height: 70, absolutePosition: { x: 30, y: 10 } },
-        { text: "(410) 922-6140\noperations@stafflm.com", style: "header", fontSize: 9.5, alignment: "left", absolutePosition: { x: 35, y: 70 } },
-        { text: `Order: ${this.dataEmployees.data.orderId}`, style: "header", alignment: "right" },
-        { text: `Timesheet`, bold: true, fontSize: 30, alignment: "center", margin: [0, 0, 0, 5] },
-        { text: `Customer:${this.dataEmployees.data.company}`, bold: true, fontSize: 20, alignment: "center", margin: [0, 0, 0, 5] },
-        { text: `${this.dataEmployees.data.place}`, bold: true, fontSize: 15, alignment: "center", margin: [0, 0, 0, 5] },
-        { text: `${this.dataEmployees.data.address} ${this.dataEmployees.data.city} ${this.dataEmployees.data.state} ${this.dataEmployees.data.zipcode}`, bold: true, fontSize: 13, alignment: "center", margin: [0, 0, 0, 5] },
-        { text: `Date: ${this.dataEmployees.data.startDate}`, bold: true, alignment: "center", margin: [0, 0, 0, 20] },
+        // { image: logoBase64, width: 100, height: 70, absolutePosition: { x: 30, y: 10 } },
+        // { text: "(410) 922-6140\noperations@stafflm.com", style: "header", fontSize: 9.5, alignment: "left", absolutePosition: { x: 35, y: 70 } },
+        // { text: `Order: ${this.dataEmployees.data.orderId}`, style: "header", alignment: "right" },
+        // { text: `Timesheet`, bold: true, fontSize: 30, alignment: "center", margin: [0, 0, 0, 5] },
+        // { text: `Customer:${this.dataEmployees.data.company}`, bold: true, fontSize: 20, alignment: "center", margin: [0, 0, 0, 5] },
+        // { text: `${this.dataEmployees.data.place}`, bold: true, fontSize: 15, alignment: "center", margin: [0, 0, 0, 5] },
+        // { text: `${this.dataEmployees.data.address} ${this.dataEmployees.data.city} ${this.dataEmployees.data.state} ${this.dataEmployees.data.zipcode}`, bold: true, fontSize: 13, alignment: "center", margin: [0, 0, 0, 5] },
+        // { text: `Date: ${this.dataEmployees.data.startDate}`, bold: true, alignment: "center", margin: [0, 0, 0, 20] },
         this.getEmployeesObject(this.employeesArray),
-        { text: this.timeSheet.total > 0 ? `Total hours: ${this.timeSheet.total}` : '', margin: [380, 10, 0, 0] },
-        { text: "NOTE:", alignment: 'left', margin: [30, 30, 0, 0] },
-        { canvas: [{ type: "rect", x: 10, y: 10, w: 400, h: 80 }], alignment: 'left', margin: [30, 10, 0, 10] },
-        { text: "The time as shown on the Time-Sheet are correct and the work has been performed to our satisfaction. Employee certifies that this form is true and accurate and that no injuries were sustained during this assigment and will not solicit permanent, part time, independent contract with any of our clients.", fontSize: 10, alignment: 'left', margin: [30, 10, 0, 10] },
-        { text: `________________________\n Authorized Representative of Costumer\n ${this.dataEmployees.data.company}`, alignment: 'left', margin: [30, 10, 0, 10] },
-        { text: '________________\n Invoice', alignment: "right", margin: [0, 20, 0, 0] },
+        {
+          canvas: [{ type: "rect", x: 460.5, y: -5, w: 59, h: 30 }],
+          width: "right",
+          fontSize: 9,
+          margin: [0, 5, 0, 0], // Mantiene la posición del cuadro
+      },
+        // { text: this.timeSheet.total > 0 ? `TOTAL HOURS:   ${this.timeSheet.total}`: '', margin: [379, -20, 5, 0] },
+        { text: this.timeSheet.total > 0 ? `TOTAL HOURS:   ${this.timeSheet.total}` : '', margin: [385, -20, 5, 0], fontSize:11 },
+        { text: "NOTE:", alignment: 'left', margin: [0, 30, 0, 0] },
+        { canvas: [{ type: "rect", x: 10, y: 10, w: 400, h: 80 }], alignment: 'left', margin: [0, 10, 0, 10] },
+        { text: "The time as shown on the Time-Sheet are correct and the work has been performed to our satisfaction. Employee certifies that this form is true and accurate and that no injuries were sustained during this assigment and will not solicit permanent, part time, independent contract with any of our clients.", fontSize: 10, alignment: 'left', margin: [0, 10, 0, 10] },
+        { text: `_______________________________________\n Authorized Representative of Costumer\n ${this.dataEmployees.data.company}`, alignment: 'left', margin: [30, 10, 0, 10] },
+        // { text: '________________\n Invoice', alignment: "right", margin: [0, 20, 0, 0] },
+
+        {
+          text: 'Invoice #',
+          alignment: 'center',
+          margin: [240, -45, 5, 0],
+          fontSize: 8,
+      },
+      {
+          canvas: [{ type: "rect", x: 0, y: 0, w: 105, h: 35 }],
+          width: "right",
+          fontSize: 9,
+          margin: [400, -20, 0, 0],
+      },
       ],
-      footer: (currentPage, pageCount) => ({
+      /* footer: (currentPage, pageCount) => ({
         margin: 10,
         columns: [
           {
@@ -1226,15 +1297,32 @@ export class AllemployeesComponent
             alignment: "center",
           },
         ],
-      }),
+      }), */
+      footer: (currentPage, pageCount) => {
+        const now = new Date();
+        const formattedDate = now.toLocaleString();
+      
+        if (currentPage === pageCount) {
+          return {
+            columns: [
+              { text: '', width: '*' }, // Columna vacía para centrar el contador de páginas
+              //  { text: `________________________\n Authorized Representative of Costumer\n ${this.dataEmployees.data.company}`, alignment: 'left', margin: [30, 10, 0, 10] },
+              { text: `${currentPage.toString()} of ${pageCount}`, alignment: 'center', width: 'auto', margin: [0, 10] },
+              { text: `${formattedDate}`, alignment: 'right', margin: [0, 10, 20, 0], fontSize: 8 }
+            ]
+          };
+        }
+      
+        return { text: `${currentPage.toString()} of ${pageCount}`, alignment: 'center', margin: [0, 10] };
+      },
       info: {
         title: `Timesheet ${this.dataEmployees.data.company}_${this.dataEmployees.data.orderId}_${this.dataEmployees.data.startDate}`,
       },
       styles: {
         header: { fontSize: 18, bold: true, margin: [0, 20, 0, 10], decoration: "underline" },
-        name: { fontSize: 16, bold: true },
-        tableHeader: { bold: true },
-        signature: { margin: [20, 0, 0, 20] },
+        name: {  bold: true, fontSize: 10  },
+        tableHeader: { bold: true, fontSize: 10 },
+        signature: { margin: [20, 0, 0, 20], fontSize:10 },
       },
     };
   }
@@ -1281,7 +1369,7 @@ export class AllemployeesComponent
   
     positions.forEach((position) => {
       this.groupEmployees.push([
-        { colSpan: 8, text: `${position.name} - ${position.hour} / Hours by position: ${position.total}`, style: "tableHeader" },
+        { colSpan: 9, text: `      ${position.name} - ${position.hour}     /     Hours by position: ${position.total}`,   margin: [25, 5, 0, 5], fontSize:10,  style: "tableHeader"  },
         "-", "-", "-", "-", "-", "-", "-",
       ]);
   
@@ -1302,15 +1390,17 @@ export class AllemployeesComponent
           emp.break = emp.checkout ? emp.break : "No checkout";
         }
         this.groupEmployees.push([
-          index + 1,
-          emp.employee.data.lastname[0].toUpperCase() + emp.employee.data.lastname.substring(1).toLowerCase(),
-          emp.employee.data.firstname[0].toUpperCase() + emp.employee.data.firstname.substring(1).toLowerCase(),
-          emp.employee.data.employeeId ? emp.employee.data.employeeId : "0",
-          dateFrom,
-          emp.break,
-          dateTo,
-          emp.hours,
-        ]);
+          { text: index + 1, fontSize: 10 }, // Número
+    { text: emp.employee.data.lastname[0].toUpperCase() + emp.employee.data.lastname.substring(1).toLowerCase(), fontSize: 10 }, // Apellido
+    { text: emp.employee.data.firstname[0].toUpperCase() + emp.employee.data.firstname.substring(1).toLowerCase(), fontSize: 10 }, // Nombre
+    { text: emp.employee.data.employeeId ? emp.employee.data.employeeId : "0", fontSize: 10 }, // HK ID
+    { text: emp.employee.data.payrollid ? emp.employee.data.payrollid : '0', fontSize: 10 }, // Payroll
+    { text: dateFrom, fontSize: 10 }, // Hora de entrada
+    { text: emp.break, fontSize: 10 }, // Break
+    { text: dateTo, fontSize: 10 }, // Hora de salida
+    { text: emp.hours, fontSize: 10 }, // Total horas
+  ]);
+
       });
     });
   
@@ -1468,7 +1558,7 @@ export class AllemployeesComponent
   async getLastEmployeeID() {
     try {
       const data = await this.usersService.getLastEmployeeID().toPromise();
-      console.log('Last employee ID:', data.lastEmployeeID);
+      // console.log('Last employee ID:', data.lastEmployeeID);
       return data.lastEmployeeID;
     } catch (error) {
       console.error('Error fetching last employee ID:', error);
