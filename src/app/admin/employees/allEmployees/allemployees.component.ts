@@ -1152,7 +1152,7 @@ export class AllemployeesComponent
           alignment: 'left', // Alinea a la izquierda
           margin: [0, 0, 0, 0], // Elimina cualquier margen adicional
           table: {
-            widths: [18, 70, 70, 38, 42, 50, 50, 50, 50], 
+            widths: [14, 86, 84, 40, 44, 54, 25, 54, 50], 
               // widths: [18, 70, 70, 38, 42, 'auto', 'auto', 'auto', 'auto'],
             body: [
               [
@@ -1162,7 +1162,7 @@ export class AllemployeesComponent
                 { text: "HK ID", style: "tableHeader" },          
                 { text: "PAYROLL", style: "tableHeader" },        
                 { text: "IN", style: "tableHeader" },             
-                { text: "BREAK", style: "tableHeader" },          
+                { text: "BK", style: "tableHeader" },          
                 { text: "OUT", style: "tableHeader" },            
                 { text: "TOTAL", style: "tableHeader" },          
               ],
@@ -1199,7 +1199,19 @@ export class AllemployeesComponent
     const generated = this.datePipe.transform(Date.now(), "MMMM d, y");
     const logoBase64 = await getImageAsBase64('https://firebasestorage.googleapis.com/v0/b/highkeystaff.appspot.com/o/Emails%2Flogolm-min.png?alt=media&token=7f1badc5-9f07-476c-82b0-7a16a3254ff0');
     await this.loadTimesheet();
-  
+
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    const date = this.dataEmployees.data.startDate
+    ? new Date(this.dataEmployees.data.startDate).toLocaleDateString("en-US", {
+        ...options,
+        timeZone: "UTC",
+    })
+    : "";
     return {
      pageMargins: [40, 180, 40, 60], // Márgenes globales: [izquierda, arriba, derecha, abajo]
         header:  {
@@ -1220,27 +1232,26 @@ export class AllemployeesComponent
                 ],
                 alignment: 'left',
               },
-
               {
+                margin: [-35, -15,0,0],
                 stack: [
-                  { text: 'Timesheet ', bold: true, fontSize: 15,  margin: [0, 0, 0, 5] },
-                  { text: `Date: ${this.dataEmployees.data.startDate}`, fontSize: 9, bold: true, margin: [0, 0, 0, 5] },
-                  { text: `HK Order: ${this.dataEmployees.data.orderId}`, fontSize: 9, bold: true, margin: [0, 0, 0, 5] },
-                  { text: `Customer: ${this.dataEmployees.data.company}`, fontSize: 9, bold: true, margin: [0, 0, 0, 5] },
-                  { text: `Place: ${this.dataEmployees.data.place}`, fontSize: 9, bold: true, margin: [0, 0, 0, 5] },
+                  { text: 'TIMESHEET', bold: true, fontSize: 15,  },
+                  { text: `Date:          ${date}`, bold: true, fontSize:11.5,  margin: [2, 5, 0, 0] },
+                  { text: `HK Order:  ${this.dataEmployees.data.ordNum}`, fontSize:11.5, bold: true, margin: [2, 5, 0, 0] },
+                  { text: `Customer: ${this.dataEmployees.data.company}`,  bold: true, fontSize:11.5, margin: [2, 5, 0, 0] },
+                  { text: `Place:         ${this.dataEmployees.data.place}`, bold: true, fontSize:11.5, margin: [2, 5, 0, 0] },
                   // { text: `Address: ${this.dataEmployees.data.address}, ${this.dataEmployees.data.city}, ${this.dataEmployees.data.state}`, fontSize: 9, bold:true, margin: [0, 0, 0, 5] },
                   // { text: ` ${this.dataEmployees.data.zipcode}`,  bold: true },
                   {
-                    text: `Address: ${this.dataEmployees.data.address}, ${this.dataEmployees.data.city}, ${this.dataEmployees.data.state}`,
-                    fontSize: 9,
+                    text: `Address:     ${this.dataEmployees.data.address}`,
                     bold: true,
-                    margin: [0, 0, 0, 5], // Espaciado estándar
+                    margin: [2, 5, 0, 0], // Espaciado estándar
+                    fontSize:11.5,
                   },
                   {
-                    text: `${this.dataEmployees.data.zipcode}`,
+                    text: ` ${this.dataEmployees.data.city}, ${this.dataEmployees.data.state}, ${this.dataEmployees.data.zipcode}`,
                     bold: true,
-                    fontSize: 9,
-                    margin: [40, 0, 0, 0], // Ajustar margen izquierdo para alinear
+                    margin: [65, 5, 0, 0], // Ajustar margen izquierdo para alinear
                   },
                   
                 ],
@@ -1259,13 +1270,13 @@ export class AllemployeesComponent
         // { text: `Date: ${this.dataEmployees.data.startDate}`, bold: true, alignment: "center", margin: [0, 0, 0, 20] },
         this.getEmployeesObject(this.employeesArray),
         {
-          canvas: [{ type: "rect", x: 460.5, y: -5, w: 59, h: 30 }],
+          canvas: [{ type: "rect", x: 473.5, y: -5, w: 59, h: 30 }],
           width: "right",
           fontSize: 9,
           margin: [0, 5, 0, 0], // Mantiene la posición del cuadro
       },
         // { text: this.timeSheet.total > 0 ? `TOTAL HOURS:   ${this.timeSheet.total}`: '', margin: [379, -20, 5, 0] },
-        { text: this.timeSheet.total > 0 ? `TOTAL HOURS:   ${this.timeSheet.total}` : '', margin: [385, -20, 5, 0], fontSize:11 },
+        { text: this.timeSheet.total > 0 ? `TOTAL HOURS:   ${this.timeSheet.total}` : '', margin: [395, -20, 5, 0], fontSize:11 },
         { text: "NOTE:", alignment: 'left', margin: [0, 30, 0, 0] },
         { canvas: [{ type: "rect", x: 10, y: 10, w: 400, h: 80 }], alignment: 'left', margin: [0, 10, 0, 10] },
         { text: "The time as shown on the Time-Sheet are correct and the work has been performed to our satisfaction. Employee certifies that this form is true and accurate and that no injuries were sustained during this assigment and will not solicit permanent, part time, independent contract with any of our clients.", fontSize: 10, alignment: 'left', margin: [0, 10, 0, 10] },
@@ -1321,7 +1332,7 @@ export class AllemployeesComponent
       styles: {
         header: { fontSize: 18, bold: true, margin: [0, 20, 0, 10], decoration: "underline" },
         name: {  bold: true, fontSize: 10  },
-        tableHeader: { bold: true, fontSize: 10 },
+        tableHeader: { bold: true, fontSize: 10.5, alignment: 'center', },
         signature: { margin: [20, 0, 0, 20], fontSize:10 },
       },
     };
@@ -1369,7 +1380,8 @@ export class AllemployeesComponent
   
     positions.forEach((position) => {
       this.groupEmployees.push([
-        { colSpan: 9, text: `      ${position.name} - ${position.hour}     /     Hours by position: ${position.total}`,   margin: [25, 5, 0, 5], fontSize:10,  style: "tableHeader"  },
+        { colSpan: 9, text: `      ${position.name} - ${position.hour}     /     Hours by position: ${position.total}`,  
+          bold: true, margin: [25, 8, 0, 8], fontSize:12,   },
         "-", "-", "-", "-", "-", "-", "-",
       ]);
   
@@ -1389,16 +1401,31 @@ export class AllemployeesComponent
           dateTo = emp.checkout ? convertTimestampToTime(emp.dateCheckout) : "-";
           emp.break = emp.checkout ? emp.break : "No checkout";
         }
+
+        const [firstLastname, secondLastname] = emp.employee.data.lastname.split(' ');
+    const formattedLastname = secondLastname
+        ? `${firstLastname.charAt(0).toUpperCase()}${firstLastname.slice(1).toLowerCase()} ${secondLastname.charAt(0).toUpperCase()}.`
+        : firstLastname.charAt(0).toUpperCase() + firstLastname.slice(1).toLowerCase();
+
+    // Procesar nombre
+    const [firstFirstname, secondFirstname] = emp.employee.data.firstname.split(' ');
+    const formattedFirstname = secondFirstname
+        ? `${firstFirstname.charAt(0).toUpperCase()}${firstFirstname.slice(1).toLowerCase()} ${secondFirstname.charAt(0).toUpperCase()}.`
+        : firstFirstname.charAt(0).toUpperCase() + firstFirstname.slice(1).toLowerCase();
+
+
         this.groupEmployees.push([
           { text: index + 1, fontSize: 10 }, // Número
-    { text: emp.employee.data.lastname[0].toUpperCase() + emp.employee.data.lastname.substring(1).toLowerCase(), fontSize: 10 }, // Apellido
-    { text: emp.employee.data.firstname[0].toUpperCase() + emp.employee.data.firstname.substring(1).toLowerCase(), fontSize: 10 }, // Nombre
-    { text: emp.employee.data.employeeId ? emp.employee.data.employeeId : "0", fontSize: 10 }, // HK ID
-    { text: emp.employee.data.payrollid ? emp.employee.data.payrollid : '0', fontSize: 10 }, // Payroll
-    { text: dateFrom, fontSize: 10 }, // Hora de entrada
-    { text: emp.break, fontSize: 10 }, // Break
-    { text: dateTo, fontSize: 10 }, // Hora de salida
-    { text: emp.hours, fontSize: 10 }, // Total horas
+    // { text: emp.employee.data.lastname[0].toUpperCase() + emp.employee.data.lastname.substring(1).toLowerCase(), fontSize: 10 }, // Apellido
+    // { text: emp.employee.data.firstname[0].toUpperCase() + emp.employee.data.firstname.substring(1).toLowerCase(), fontSize: 10 }, // Nombre
+    { text: formattedLastname, fontSize: 11 }, // Apellido formateado
+    { text: formattedFirstname, fontSize: 11 }, 
+    { text: emp.employee.data.employeeId ? emp.employee.data.employeeId : "0", fontSize: 11 }, // HK ID
+    { text: emp.employee.data.payrollid ? emp.employee.data.payrollid : '0', fontSize: 11 }, // Payroll
+    { text: dateFrom, fontSize: 11 }, // Hora de entrada
+    { text: emp.break, fontSize: 11 }, // Break
+    { text: dateTo, fontSize: 11 }, // Hora de salida
+    { text: emp.hours, fontSize: 11 }, // Total horas
   ]);
 
       });
