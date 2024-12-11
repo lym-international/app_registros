@@ -181,14 +181,25 @@
                                     </div>
                                 </li>
 
-                                <li class="tbl-header-btn">
+                               <!--  <li class="tbl-header-btn">
                                     <div class="m-l-10" *ngIf="showNoShowButton" matTooltip="NOSHOW">
-                                        <!--<div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="NOSHOW"> -->
                                         <button mat-mini-fab color="warn" (click)="outEmployee(getSelectedRows())"> 
                                             <mat-icon class="col-white">visibility_off</mat-icon>
                                         </button>
                                     </div>
-                                </li>
+                                </li> -->
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-12" *ngIf="showNoShowButton">
+                                      <mat-menu #menu="matMenu">
+                                        <button mat-menu-item (click)="outEmployee(getSelectedRows(), 'No show')">NO SHOW</button>
+                                        <button mat-menu-item (click)="outEmployee(getSelectedRows(), 'Call out')">CALL OUT</button>
+                                      </mat-menu>                                  
+                                      <button mat-mini-fab color="warn" [matMenuTriggerFor]="menu">
+                                        <mat-icon class="col-white">visibility_off</mat-icon>
+                                      </button>
+                                    </div>
+                                  </li>
+                                  
 
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="DELETE: IN, OUT, BREAK">

@@ -579,10 +579,16 @@ export class AllemployeesComponent
   }
 
   // Noshow
-  outEmployee(selectedRows: Employees[]) {
+
+  outEmployee(selectedRows: Employees[], action: string): void {
+    console.log('Selected action:', action);
+    console.log('Selected rows:', selectedRows);
+
+  // outEmployee(selectedRows: Employees[]) {
     if (selectedRows.length === 0) return;
 
-    const updatedEmployees = this.updateEmployeeStatus(selectedRows, 'No show', {
+    // const updatedEmployees = this.updateEmployeeStatus(selectedRows, 'No show', {
+    const updatedEmployees = this.updateEmployeeStatus(selectedRows, action, {
       checkin: false,
       checkout: false,
       dateCheckin: "-",
@@ -1253,7 +1259,7 @@ export class AllemployeesComponent
                     bold: true,
                     margin: [65, 5, 0, 0], // Ajustar margen izquierdo para alinear
                   },
-                  
+
                 ],
                 alignment: 'left',
               },
@@ -1457,7 +1463,7 @@ export class AllemployeesComponent
       try {
         this.orderData = await this.ordSvc.getOrderById(this.orderId).toPromise();
         const positionData = this.findPositionData(this.orderData, result.position);
-
+        // console.log("PositionDat",positionData);
         if (!positionData) throw new Error('Position data not found.');
         sessionStorage.removeItem('currentOrders');
         const duracionHoras = positionData.hours;
@@ -1466,7 +1472,7 @@ export class AllemployeesComponent
         this.ordSvc.verifyConcurrency(result, result.hourFrom, duracionHoras, startDate).subscribe(
           async (tieneConflictos) => {
             if (!tieneConflictos) {
-              await this.addAndProcessEmployee(result, startDate);
+              await this.addAndProcessEmployee(result, startDate, positionData);
             } else {
               this.showNotification('snackbar-danger', `Employee is already assigned in order number ${this.orderAssigned} at this time.`, 'top', 'center');
             }
@@ -1484,10 +1490,10 @@ export class AllemployeesComponent
   findPositionData(orderData: any, position: string) {
     return orderData.data.items.find(item => item.position === position);
   }
-  async addAndProcessEmployee(result: any, startDate: string) {
+  async addAndProcessEmployee(result: any, startDate: string, positionData) {
     this.isTblLoading = true;
     await this.updateEmployee(result);
-    this.addEmployeeToArray(result, startDate, result.hourFrom);
+    this.addEmployeeToArray(result, startDate, result.hourFrom, positionData);
     await this.updateEmployeesArray();
     await this.updateOrderWithExistingEmployee(result);
     this.showNotification('snackbar-success', 'Successful Add Employee...!!!', 'bottom', 'center');
@@ -1518,7 +1524,7 @@ export class AllemployeesComponent
     }
   }
 
-  addEmployeeToArray(result: any, startDate: string, horaInicio: string) {
+  addEmployeeToArray(result: any, startDate: string, horaInicio: string, positionData) {
     const addEmployeeRegist = {
       hours: 0,
       hourFrom: result.hourFrom,
@@ -1526,6 +1532,7 @@ export class AllemployeesComponent
       position: result.position,
       dateStart: new Date(`${startDate}T${horaInicio}`),
       break: 0,
+      codPos: positionData.codPos,
       employee: {
         agmRate: result.rate,
         booking: "Emergency",
