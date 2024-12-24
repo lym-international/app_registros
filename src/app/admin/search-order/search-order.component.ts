@@ -85,10 +85,11 @@ export class SearchOrderComponent implements OnInit {
     }
   }
 
-  getOrders() {
+  getOrders1() {
     this.ordSvc.getOrders().subscribe(
       (data) => {
         this.orders = data;
+        console.log("datica", data)
         this.orders.sort((a, b) => b.data.ordNumb - a.data.ordNumb);
         sessionStorage.setItem('currentOrders', JSON.stringify(this.orders));
       },
@@ -97,6 +98,35 @@ export class SearchOrderComponent implements OnInit {
       }
     );
   }
+  getOrders() {
+    this.ordSvc.getOrders().subscribe(
+      (data) => {
+        this.orders = data;
+  
+        this.orders.sort((a, b) => {
+          // Verifica si ambos tienen ordN
+          if (a.data.ordNo && b.data.ordNo) {
+            return b.data.ordNo - a.data.ordNo; // Ordena por ordN de manera descendente
+          }
+          // Si uno tiene ordN y el otro no, prioriza el que tiene ordN
+          if (a.data.ordNo && !b.data.ordNo) {
+            return -1;
+          }
+          if (!a.data.ordNo && b.data.ordNo) {
+            return 1;
+          }
+          // Si ninguno tiene ordN, ordena por ordNumb de manera descendente
+          return b.data.ordNumb - a.data.ordNumb;
+        });
+  
+        sessionStorage.setItem('currentOrders', JSON.stringify(this.orders));
+      },
+      (error) => {
+        console.log('Error fetching orders:', error);
+      }
+    );
+  }
+  
 
   getOrderByHKid(hkId: string) {
     this.ordSvc.getOrderByHKid(hkId).subscribe(
