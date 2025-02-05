@@ -142,7 +142,8 @@ export class CheckInComponent implements OnInit {
       this.dialogRef.close(result);
 
     }
-    //this.checkoutValidatorService.setCheckoutDate(endDate);
+    this.checkoutValidatorService.setCheckInDate(startDate);
+    
   }
 
  

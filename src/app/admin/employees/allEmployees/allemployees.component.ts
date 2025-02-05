@@ -1980,7 +1980,7 @@ export class AllemployeesComponent
     this.addEmployeeMarkersToMap(selectedRows);
   }
   
-  addEmployeeMarkersToMap(row) {
+  addEmployeeMarkersToMap_bn(row) {
     const { checkinCoordinates, checkOutCoordinates } = row;
   
     if (this.isValidCoordinate(checkinCoordinates?.latitude) && this.isValidCoordinate(checkinCoordinates?.longitude)) {
@@ -1999,6 +1999,35 @@ export class AllemployeesComponent
     }
   }
   
+  addEmployeeMarkersToMap(row) {
+    const { checkinCoordinates, checkOutCoordinates } = row;
+
+    // Verifica si las coordenadas de checkIn y checkOut son válidas y si son iguales
+    if (this.isValidCoordinate(checkinCoordinates?.latitude) && 
+        this.isValidCoordinate(checkinCoordinates?.longitude) &&
+        this.isValidCoordinate(checkOutCoordinates?.latitudeOut) && 
+        this.isValidCoordinate(checkOutCoordinates?.longitudeOut) &&
+        parseFloat(checkinCoordinates.latitude) === parseFloat(checkOutCoordinates.latitudeOut) &&
+        parseFloat(checkinCoordinates.longitude) === parseFloat(checkOutCoordinates.longitudeOut)) {
+
+        // Si son iguales, añade un solo marcador con la etiqueta "Checkin/Checkout"
+        this.addMarker(parseFloat(checkinCoordinates.latitude), parseFloat(checkinCoordinates.longitude), 'Checkin/Checkout');
+    } else {
+        // Si no son iguales, añade los marcadores por separado
+        if (this.isValidCoordinate(checkinCoordinates?.latitude) && this.isValidCoordinate(checkinCoordinates?.longitude)) {
+            this.addMarker(parseFloat(checkinCoordinates.latitude), parseFloat(checkinCoordinates.longitude), 'Checkin');
+        }
+
+        if (this.isValidCoordinate(checkOutCoordinates?.latitudeOut) && this.isValidCoordinate(checkOutCoordinates?.longitudeOut)) {
+            this.addMarker(parseFloat(checkOutCoordinates.latitudeOut), parseFloat(checkOutCoordinates.longitudeOut), 'Checkout');
+        }
+    }
+
+    // Añade el marcador del evento si las coordenadas son válidas
+    if (this.isValidCoordinate(this.latitudeEvent) && this.isValidCoordinate(this.longitudeEvent)) {
+        this.addMarker(this.latitudeEvent, this.longitudeEvent, 'Event');
+    }
+  }
   addMarker(lat: number, lng: number, label: string) {
     const markerOptions: google.maps.MarkerOptions = {
       position: { lat, lng },

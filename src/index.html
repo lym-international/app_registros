@@ -8,10 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 
+    <!-- Fuentes de Google -->
     <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbvyBxmMbFhrzP9Z8moyYr6dCr-pzjhBE&callback=Function.prototype">
-    </script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -19,10 +18,27 @@
 
 <body class="mat-typography">
     <app-root></app-root>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6oGm9cwDuswR8Jf6vo6MNAZkrXoZ3wSY&callback=initMap" async defer></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6oGm9cwDuswR8Jf6vo6MNAZkrXoZ3wSY&libraries=marker" async defer></script>
 
-    
+    <!-- Definir la función initMap en el ámbito global -->
+    <script>
+        function initMap() {
+            console.log("Google Maps API cargada correctamente.");
+            // Aquí puedes inicializar el mapa o realizar otras operaciones
+        }
+
+        // Manejar errores de carga de la API
+        window.gm_authFailure = function() {
+            console.error("Error al cargar la API de Google Maps.");
+        };
+    </script>
+
+    <!-- Cargar la API de Google Maps (solo una vez) -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6oGm9cwDuswR8Jf6vo6MNAZkrXoZ3wSY&callback=initMap&libraries=marker" async defer></script>
+
+    <!-- Carga duplicada de la API (comentada) -->
+    <!--
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbvyBxmMbFhrzP9Z8moyYr6dCr-pzjhBE&callback=Function.prototype"></script>
+    -->
 </body>
 
 </html>
