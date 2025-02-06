@@ -1980,25 +1980,6 @@ export class AllemployeesComponent
     this.addEmployeeMarkersToMap(selectedRows);
   }
   
-  addEmployeeMarkersToMap_bn(row) {
-    const { checkinCoordinates, checkOutCoordinates } = row;
-  
-    if (this.isValidCoordinate(checkinCoordinates?.latitude) && this.isValidCoordinate(checkinCoordinates?.longitude)) {
-     
-      this.addMarker(parseFloat(checkinCoordinates.latitude as unknown as string), parseFloat(checkinCoordinates.longitude as unknown as string), 'Checkin');
-    }
-  
-    if (this.isValidCoordinate(checkOutCoordinates?.latitudeOut) && this.isValidCoordinate(checkOutCoordinates?.longitudeOut)) {
-     
-      this.addMarker(parseFloat(checkOutCoordinates.latitudeOut as unknown as string), parseFloat(checkOutCoordinates.longitudeOut as unknown as string), 'Checkout');
-    }
-  
-    if (this.isValidCoordinate(this.latitudeEvent) && this.isValidCoordinate(this.longitudeEvent)) {
-      
-      this.addMarker(this.latitudeEvent, this.longitudeEvent, 'Event');
-    }
-  }
-  
   addEmployeeMarkersToMap(row) {
     const { checkinCoordinates, checkOutCoordinates } = row;
 
