@@ -5,7 +5,8 @@ import { OrderDataService } from 'app/_services/orderData.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { OcultarSidebarService } from 'app/_services/ocultar-sidebar.service';
 import { OrderService } from 'app/_services/order.service';
-import { BehaviorSubject } from 'rxjs';
+
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-search-order',
@@ -27,6 +28,7 @@ export class SearchOrderComponent implements OnInit {
   loading = false;
 
   @ViewChild('orderInput') orderInput: ElementRef;
+  selectedRole: string;
 
   constructor(
     private http: HttpClient, 
@@ -35,7 +37,9 @@ export class SearchOrderComponent implements OnInit {
     private router: Router,
     private ocultarSidebarService: OcultarSidebarService,
     private ordSvc: OrderService 
-  ) { }
+  ) { 
+   
+  }
 
   ngOnInit() {
     this.ocultarSidebarService.ocultarSidebar();
@@ -48,8 +52,10 @@ export class SearchOrderComponent implements OnInit {
       this.data = this.authenticationService.getData();
       sessionStorage.setItem('currentUserData', JSON.stringify(this.data));
     }
-
+    this.selectedRole = this.authenticationService.getSelectedRole();
     this.initializeOrders();
+
+    // console.log('selectedRole ', this.selectedRole)
   }
 
   // Método para manejar la selección de una orden
@@ -85,19 +91,7 @@ export class SearchOrderComponent implements OnInit {
     }
   }
 
-  getOrders1() {
-    this.ordSvc.getOrders().subscribe(
-      (data) => {
-        this.orders = data;
-        console.log("datica", data)
-        this.orders.sort((a, b) => b.data.ordNumb - a.data.ordNumb);
-        sessionStorage.setItem('currentOrders', JSON.stringify(this.orders));
-      },
-      (error) => {
-        console.log('Error fetching orders:', error);
-      }
-    );
-  }
+  
   getOrders() {
     this.ordSvc.getOrders().subscribe(
       (data) => {
@@ -210,35 +204,66 @@ export class SearchOrderComponent implements OnInit {
     );
   }
 
+
   searchOrder() {
     let inputValue: string = this.orderNumber;
-    inputValue = inputValue.replace(/-/g, '');
+    inputValue = inputValue.replace(/-/g, ''); // Elimina guiones
     if (inputValue.length >= 4) {
-      inputValue = inputValue.substring(0, 4) + '-' + inputValue.substring(4);
+      inputValue = inputValue.substring(0, 4) + '-' + inputValue.substring(4); // Formatea el número de orden
     }
     this.orderNumber = inputValue;
-
+    // console.log('Orden a buscar:', this.orderNumber);
+  
+    // Validar el formato del número de orden
+    const orderNumberPattern = /^\d{4}-\d{2,4}$/; // Expresión regular para el formato
+    if (!orderNumberPattern.test(this.orderNumber)) {
+      // console.log('Formato de número de orden inválido. Debe ser como 2025-94 o 2024-1234.');
+      return; // Detener la ejecución si el formato no es válido
+    }
+  
+    // Buscar en sessionStorage
     const storedOrders = sessionStorage.getItem('currentOrders');
     if (storedOrders) {
       this.ordenes = JSON.parse(storedOrders);
     }
-
+  
+    // Buscar la orden en las órdenes almacenadas
     this.foundOrder = this.ordenes.find(order => order.data.orderId === this.orderNumber);
-
+  
     if (this.foundOrder) {
+      // Si se encuentra en sessionStorage, asignarla al servicio
       this.orderDataService.setSelectedOrder(this.foundOrder);
     } else {
-      console.log("No se encontró ningún objeto con el orderId especificado.");
+      // console.log("No se encontró la orden en sessionStorage. Buscando en el servicio...");
+  
+      // Si no se encuentra en sessionStorage, buscar en el servicio
+      this.ordSvc.getOrderByOrderId(this.orderNumber).subscribe(
+        (orden) => {
+          // console.log("Orden encontrada en el servicio:", orden);
+          this.foundOrder = orden[0];
+  
+          // Asignar la orden encontrada al servicio
+          this.orderDataService.setSelectedOrder(this.foundOrder);
+        },
+        (error) => {
+          // console.log('Error al buscar la orden en el servicio:', error);
+        }
+      );
     }
   }
 
   navegar() {
-    if (this.data.role === "Administrator" || this.data.role === "Supervisor" || this.data.role === "Client") {
-      this.router.navigate(['/admin/dashboard-lm/']);
-    } else if (this.data.role === "Employee") {
+    if (this.selectedRole === 'Employee') {
       this.router.navigate(['/admin/employees/admin-employees/']);
-    }
+    } 
+    else if (this.data.role === "Administrator" || this.data.role === "Supervisor" || (this.data.role === "Client")) {
+      this.router.navigate(['/admin/dashboard-lm/']);
+    } 
+    else if (this.data.role === "Employee") {
+      this.router.navigate(['/admin/employees/admin-employees/']);
+    }  
     this.shouldReload.next(true);
   }
+  
   
 }

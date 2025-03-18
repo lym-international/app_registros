@@ -145,6 +145,9 @@ export class AllemployeesComponent
   contextMenuPosition = { x: '0px', y: '0px' };
   orderData: any;
   placeitem: any;
+  ordersByWeek: any[] = [];
+  statusWeek: string;
+  yearWeek: number;
   
   constructor(
     private datePipe: DatePipe,
@@ -174,7 +177,7 @@ export class AllemployeesComponent
     this.getEmployees();
     this.loadData();
     this.getEventLocation();
-
+   
     // this.updateDataOrder()
     
   }
@@ -228,6 +231,8 @@ export class AllemployeesComponent
 
   closeOrder() {
     this.loadingStatus = true;
+    // console.log("dat,,",  this.dataEmployees.data.week)
+    // this.getWeek(this.dataEmployees.data.week)
     this.ordSvc.closeOrder(this.orderId, this.dataUser.email).subscribe(
       (data) => {
         this.statusOrder = data.data.status;
@@ -243,6 +248,64 @@ export class AllemployeesComponent
       }
     );
   }
+
+
+/*   getOrdersByWeek(weekNumber: number) {
+    this.ordSvc.getOrdersByWeek(weekNumber).subscribe(
+      (response) => {
+        this.ordersByWeek = response.orders;
+        console.log('Órdenes recibidas:', this.ordersByWeek);
+  
+        // Si no hay órdenes recibidas o el array está vacío, llamar a getWeek()
+        if (!this.ordersByWeek || this.ordersByWeek.length === 0) {
+          console.log('No se encontraron órdenes. Buscando semana...');
+          this.getWeek(weekNumber);
+        }
+      },
+      (error) => {
+        console.error('Error al obtener órdenes:', error);
+        this.getWeek(weekNumber);
+      }
+    );
+  } */
+  
+
+   /*  getWeek(weekNumber) {
+      // const weekNumber = 27; // Número de la semana a buscar
+    
+      this.ordSvc.getWeekByNumber(weekNumber).subscribe(
+        (response) => {
+          console.log('Semana encontrada:', response);
+          console.log('Status:', response.status);
+          console.log('ID:', response.id);
+          console.log('Year:', response.year);
+          this.statusWeek = response.status;
+          this.yearWeek = response.year; 
+        },
+        (error) => {
+          console.error('Error al obtener la semana:', error);
+        }
+      );
+    } */
+    
+
+  /* updateWeek(res) {
+    console.log(res.id)
+    // const weekId = 'enCRTS9rBvfrJ1Z0Kk8l'; // ID de la semana a actualizar
+    const updateData = {
+      status: 'closed',
+      updatedAt: new Date().toISOString()
+    };
+
+    this.ordSvc.updateWeek(res.id, updateData).subscribe(
+      response => {
+        console.log('Semana actualizada:', response);
+      },
+      error => {
+        console.error('Error al actualizar la semana:', error);
+      }
+    );
+  } */
 
   private initializeUserData() {
       const storedUserData = sessionStorage.getItem('currentUserData');
@@ -1383,14 +1446,22 @@ export class AllemployeesComponent
         positions.push({ name: employee.position, hour: employee.hourFrom, total: totalHours });
       }
     });
-  
+
     positions.forEach((position) => {
+      const formattedHour = new Date(`1970-01-01T${position.hour}:00`).toLocaleString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      });
+    
+      const roundedTotal = position.total.toFixed(2); // Redondea a 2 decimales
+    
       this.groupEmployees.push([
-        { colSpan: 9, text: `      ${position.name} - ${position.hour}     /     Hours by position: ${position.total}`,  
+        { colSpan: 9, text: `      ${position.name} - ${formattedHour}     /     Hours by position: ${roundedTotal}`,  
           bold: true, margin: [25, 8, 0, 8], fontSize:12,   },
         "-", "-", "-", "-", "-", "-", "-",
       ]);
-  
+        
       const employees = employeesToShow.filter(
         employee => employee.position == position.name && employee.hourFrom == position.hour
       );

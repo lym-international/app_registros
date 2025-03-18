@@ -30,7 +30,7 @@ import { CloseEventComponent } from './close-event/close-event.component';
 import { OcultarSidebarService } from './_services/ocultar-sidebar.service'; // Diego
 import { TimesheetComponent } from './timesheet/timesheet.component'; //Jairo
 import { AuthenticationService } from './_services/authentication.service'; //Jairo
-import { GoogleMapsModule } from '@angular/google-maps'; // Jairo
+import { GoogleMapsModule } from '@angular/google-maps';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -46,6 +46,7 @@ export function createTranslateLoader(http: HttpClient) {
         MainLayoutComponent,
         CloseEventComponent,
         TimesheetComponent,
+        
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
         AngularFireModule.initializeApp(environment_A.firebase), //Jairo

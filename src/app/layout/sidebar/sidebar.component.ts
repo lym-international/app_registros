@@ -161,9 +161,10 @@ export class SidebarComponent implements OnInit {
         this.orderStatus = data.data.status;
         this.orderDataService.setSelectedOrder(data);
         sessionStorage.removeItem('currentOrders');
-
+        
         // Notificar al componente AllemployeesComponent sobre el cierre de la orden
         this.sharingCloseOrderService.setStatusOrder(this.orderStatus);
+        this.orderDataService.clearSelectedOrder();
       })
       .catch((error) => {
         console.error('Error al actualizar:', error);

@@ -10,10 +10,11 @@ import { map } from 'rxjs/operators';
 export class OrderService{
 
   private orderFunctionsURL: string;
+  private baseUrl = 'http://localhost:6001/highkeystaff/us-central1/orders';
 
   constructor(private http: HttpClient) { 
     this.orderFunctionsURL = (location.hostname === 'localhost')
-      ?'http://127.0.0.1:5001/highkeystaff/us-central1/orders'
+      ?'https://us-central1-highkeystaff.cloudfunctions.net/orders'
       :'https://us-central1-highkeystaff.cloudfunctions.net/orders'
       
       // 'https://us-central1-highkeystaff.cloudfunctions.net/orders';
@@ -129,5 +130,25 @@ export class OrderService{
     const apiUrl = `${this.orderFunctionsURL}/order/id?id=${orderId}`;
     return this.http.get<any>(apiUrl);
   }
+
+  getOrderByOrderId(orderId: string): Observable<any>{
+    const apiUrl = `${this.orderFunctionsURL}/getOrderByOrderId/orderId?orderId=${orderId}`
+    return this.http.get<any>(apiUrl);
+  }
+
+ /*  getOrdersByWeek(week: number) {
+    return this.http.get<{ orders: any[] }>(`${this.baseUrl}/getOrdersByWeek/${week}`);
+  } */
+
+ /*  updateWeek(weekId: string, updateData: any) {
+    const url = `${this.baseUrl}/updateWeek/${weekId}`;
+    return this.http.post(url, updateData);
+  } */
+
+  
+ /*  getWeekByNumber(weekNumber: number) {
+    return this.http.get<{ id: string; status: string; year: number }>(`${this.baseUrl}/getWeekByNumber/${weekNumber}`);
+  }
+   */
   
 }

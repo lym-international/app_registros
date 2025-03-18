@@ -52,7 +52,7 @@ import { GeolocationService } from 'app/_services/geolocation.service';
 import { ShareScheduledTimeService } from 'app/_services/share-scheduled-time.service';
 import { OrderService } from 'app/_services/order.service';
 import { RegistrationService } from 'app/_services/registration.service';
-//import { HeaderComponent } from '../../../layout/header/header.component';
+// import { HeaderComponent } from '../../../layout/header/header.component';
 
 
 export type ChartOptions = {
@@ -98,15 +98,15 @@ implements OnInit
   ];
 
   mobileDisplayedColumns: string[] = ['position-hourFrom-in', 'out-break-totalHours'];
-
+  
   get isWebView(): boolean {
     return window.innerWidth > 500;
   }
-
+  
   get isMobileView(): boolean {
     return window.innerWidth <= 500;
   }
-
+  
   exampleDatabase?: EmployeesService;
   selection = new SelectionModel<AdminEmployees>(true, []);
   index?: number;
@@ -137,16 +137,18 @@ implements OnInit
   totalHoursSum: number;
   //geolocationService: any;
   startDate: any;
-
+  
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild('filter', { static: true }) filter!: ElementRef;
   @ViewChild(MatMenuTrigger)
   contextMenu?: MatMenuTrigger;
   contextMenuPosition = { x: '0px', y: '0px' };
-
-  dataSource!: ExampleDataSource;
-
+  
+  // dataSource!: ExampleDataSource;
+  dataSource: any;
+  
+  
   HeaderComponent: any;
   latitude: number;
   longitude: number;  
@@ -155,8 +157,7 @@ implements OnInit
   
   // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   isMobile: boolean = false;
-
-  
+  selectedRole: string | null = null;
 
   constructor(
     private datePipe: DatePipe,
@@ -181,6 +182,8 @@ implements OnInit
   
   ngOnInit() {
     this.dataUser = this.authenticationService.getData(); // Persistencia de datos
+    // this.selectedRole = this.authenticationService.getSelectedRole();
+    // console.log('Selected role in component:', this.selectedRole);
     const storedUserData = sessionStorage.getItem('currentUserData');
     if (storedUserData) {
         this.dataUser = JSON.parse(storedUserData);
@@ -195,6 +198,7 @@ implements OnInit
     this.geolocationService.getCoordinatesObservable().subscribe(
         (coordinates) => {
             this.latitude = coordinates.latitude;
+            // eslint-disable-next-line no-self-assign
             this.longitude = this.longitude;
             console.log("Coordenadas recibidas: ", coordinates);
         },
@@ -209,6 +213,8 @@ implements OnInit
    
   }
 
+  
+
   checkMobileView() {
     this.isMobile = window.innerWidth <= 500;
   }
@@ -217,11 +223,9 @@ implements OnInit
       this.ordSvc.getOrderByHKid(hkId).subscribe(
           (data) => {
             console.log("DATAAA", data)
+            sessionStorage.setItem('currentOrders', JSON.stringify(data));
               // Obtén la fecha de hoy en formato YYYY-MM-DD
-              /* const today = new Date();
-              const todayString = today.toISOString().split('T')[0];
-              console.log("todayString", todayString) */
-
+              
               const today = new Date();
               const todayString = today.toLocaleDateString('en-CA'); // 'en-CA' usa el formato YYYY-MM-DD
               console.log("todayString", todayString);
@@ -230,17 +234,18 @@ implements OnInit
 
               console.log("Ordenes del empleado para hoy", this.orders);
 
-                const selectedOrder = this.orderDataService.getSelectedOrder();
+                const selectedOrder =this.orderDataService.getSelectedOrder();
                 if (selectedOrder) {
-                  // console.log("entra por selected")
-                    // this.orders = [selectedOrder];  // Asignar la orden seleccionada si existe
-                    let order= this.orderDataService.getSelectedOrder()
+                  console.log("entra por selected")
+                    this.orders = [selectedOrder];  // Asignar la orden seleccionada si existe
+                    // const order= this.orderDataService.getSelectedOrder()
+                    const order = selectedOrder
                     this.fetchRegistrations(order, true);
                     // this.orderDataService.clearSelectedOrder();
                 }
               
               if (this.orders.length > 0) {
-                  let orderFound = false;  // Bandera para verificar si se encontró la orden prioritaria
+                  const orderFound = false;  // Bandera para verificar si se encontró la orden prioritaria
 
                   for (const order of this.orders) {
                       if (orderFound) break;  // Detener el bucle si ya se encontró la orden prioritaria
@@ -313,7 +318,7 @@ implements OnInit
       this.loadData();
   }
 
-  getEmployees() {
+  getEmployees_bn() {
     this.isTblLoading = true;
     this.regSvc.getRegistration(this.orderId).subscribe(
       (data) => {
@@ -403,6 +408,132 @@ implements OnInit
         this.totalHoursArray = this.employeeArray.map(item => Number(item.hours));
         this.totalHoursSum = this.totalHoursArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
+      },
+      (error) => {
+        this.isTblLoading = false;
+        console.log(error);
+      }
+    );
+  }
+  
+  getEmployees() {
+    this.isTblLoading = true;
+    this.regSvc.getRegistration(this.orderId).subscribe(
+      (data) => {
+        this.isTblLoading = false;
+  
+        // Verificar si data.employees existe y no está vacío
+        if (!data.employees || data.employees.length === 0) {
+          console.log('No employees found in the response.');
+          this.employeesArray = []; // Inicializar como array vacío
+          this.employeeArray = [];  // Inicializar como array vacío
+          this.dataSource = null;   // Evitar errores en la tabla
+          return;
+        }
+  
+        // Mapear los empleados solo si data.employees existe
+        this.employeesArray = data.employees.map((employee) => {
+          // Verificar si employee y employee.employee.data existen
+          if (!employee || !employee.employee || !employee.employee.data) {
+            console.warn('Employee data is incomplete:', employee);
+            return null; // Retornar null para filtrar después
+          }
+  
+          const employeeData = { ...employee.employee.data };
+          const firstName = employeeData.firstname || "No data";
+          const lastName = employeeData.lastname || "No data";
+          const highKeyId = employeeData.employeeId || "No data";
+          const position = employee.position || "No data";
+          const totalHours = employee.hours || 0;
+          const payrollId = employeeData.payrollid || "No data";
+          const brake = employee.break || "0";
+          const hourFrom = employee.hourFrom || "No data";
+  
+          let hourFromFormatted = "No Data";
+          if (employee.hourFrom) {
+            const hourParts = employee.hourFrom.split(':');
+            if (hourParts.length === 2) {
+              const hours = parseInt(hourParts[0]);
+              const minutes = parseInt(hourParts[1]);
+              const period = hours >= 12 ? 'PM' : 'AM';
+              const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
+              const formattedMinutes = minutes.toString().padStart(2, '0');
+              hourFromFormatted = `${formattedHours}:${formattedMinutes} ${period}`;
+            }
+          }
+  
+          let checkInTime = "-";
+          if (employee.dateCheckin && employee.dateCheckin._seconds) {
+            const checkIn = employee.dateCheckin._seconds;
+            const checkInDate = new Date(checkIn * 1000);
+            checkInTime = this.datePipe.transform(checkInDate, 'hh:mm a');
+          }
+  
+          let checkOutTime = '-';
+          if (employee.dateCheckout && employee.dateCheckout._seconds) {
+            const checkOut = employee.dateCheckout._seconds;
+            const checkOutDate = new Date(checkOut * 1000);
+            checkOutTime = this.datePipe.transform(checkOutDate, 'hh:mm a');
+          }
+  
+          return {
+            ...employee,
+            employee: {
+              ...employee.employee,
+              data: employeeData,
+            },
+            firstName: firstName,
+            lastName: lastName,
+            highKeyId: highKeyId,
+            position: position,
+            hours: employee.hours,
+            totalHours: totalHours,
+            payRollId: payrollId,
+            hourFromFormatted: hourFromFormatted,
+            hourFrom: hourFrom,
+            in: checkInTime,
+            out: checkOutTime,
+            break: brake,
+          };
+        }).filter(employee => employee !== null); // Filtrar empleados nulos
+  
+        console.log('---------------------------');
+        console.log('Array empleados: ');
+        console.log(this.employeesArray);
+        console.log('---------------------------');
+  
+        const hkId = this.dataUser.highkeyId;
+  
+        // Validación de la propiedad highKeyId del empleado con el highkeyId del usuario
+        this.employeeArray = this.employeesArray.filter((employee) => {
+          console.log("hkId:", hkId);
+          console.log("employee.highKeyId: ", employee.highKeyId);
+          return employee.highKeyId === Number(hkId);
+        });
+  
+        console.log('Employee Array after filter:', this.employeeArray);
+  
+        if (this.employeeArray.length > 0) {
+          // Crear el dataSource solo si hay empleados
+          this.dataSource = new ExampleDataSource(
+            this.exampleDatabase,
+            this.paginator,
+            this.sort,
+            this.employeeArray
+          );
+  
+          // Vincular el paginator después de crear el dataSource
+          if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+          }
+  
+          // Sumar las horas trabajadas
+          this.totalHoursArray = this.employeeArray.map(item => Number(item.hours));
+          this.totalHoursSum = this.totalHoursArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+        } else {
+          console.log('No employees found for the given highKeyId');
+          this.dataSource = null; // Evitar errores en la tabla
+        }
       },
       (error) => {
         this.isTblLoading = false;
@@ -1073,14 +1204,19 @@ if (checkinDate.getTime() > dateStart.getTime()){
 export class ExampleDataSource extends DataSource<AdminEmployees> {
   data: any[];
   filterChange = new BehaviorSubject('');
+  
   get filter(): string {
     return this.filterChange.value;
   }
+
   set filter(filter: string) {
+    console.log('Filtro actualizado:', filter);
     this.filterChange.next(filter);
   }
+
   filteredData: AdminEmployees[] = [];
   renderedData: AdminEmployees[] = [];
+
   constructor(
     public exampleDatabase: EmployeesService,
     public paginator: MatPaginator,
@@ -1088,106 +1224,113 @@ export class ExampleDataSource extends DataSource<AdminEmployees> {
     public employeesArray: any[]
   ) {
     super();
-    // Reset to the first page when the user changes the filter.
-    this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
-    // Establece la columna 'hourFrom' como la columna activa para el ordenamiento predeterminado.
+    
+    // Resetear a la primera página cuando cambia el filtro.
+    this.filterChange.subscribe(() => {
+      console.log('Cambio en filtro, reiniciando paginador.');
+      this.paginator.pageIndex = 0;
+    });
+
+    // Configuración predeterminada de ordenamiento.
     this._sort.active = 'hourFrom';
-    this._sort.direction = 'asc'; // Orden ascendente
+    this._sort.direction = 'asc';
+
+    console.log('DataSource inicializada:', {
+      employeesArray: this.employeesArray,
+      sortActive: this._sort.active,
+      sortDirection: this._sort.direction
+    });
   }
-  /** Connect function called by the table to retrieve one stream containing the data to render. */
+
+  /** Conexión a la fuente de datos */
   connect(): Observable<AdminEmployees[]> {
-    // Listen for any changes in the base data, sorting, filtering, or pagination
-    const displayDataChanges = [
+    const displayDataChanges: Observable<any>[] = [
       this.exampleDatabase.dataChange,
       this._sort.sortChange,
       this.filterChange,
-      this.paginator.page,
     ];
-
-    // this.exampleDatabase.getAllEmployeess();
+  
+    // Solo agregar paginator.page si paginator está definido
+    if (this.paginator) {
+      displayDataChanges.push(this.paginator.page.pipe(map(() => null))); // Evita el error de tipo
+    }
+  
     return merge(...displayDataChanges).pipe(
       map(() => {
-        // Filter data
-        this.filteredData = this.employeesArray
-          .slice()
-          .filter((employees: AdminEmployees) => {
-            const searchStr = (
-              employees.lastName +
-              employees.firstName +
-              employees.highKeyId +
-              employees.payRollId +
-              employees.position +
-              employees.hourFrom +
-              employees.in +
-              employees.out +
-              employees.break +
-              employees.totalHours
-            )
-              //employees.department +
-              //employees.role +
-              //employees.degree +
-              //employees.email +
-              //employees.mobile
-              .toLowerCase();
-            return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
-          });
-        // Sort filtered data
+        console.log('Filtro actual:', this.filter);
+        console.log('Array de empleados antes del filtrado:', this.employeesArray);
+  
+        // Filtrar datos
+        this.filteredData = this.employeesArray.slice().filter((employees: AdminEmployees) => {
+          const searchStr = (
+            employees.lastName +
+            employees.firstName +
+            employees.highKeyId +
+            employees.payRollId +
+            employees.position +
+            employees.hourFrom +
+            employees.in +
+            employees.out +
+            employees.break +
+            employees.totalHours
+          ).toLowerCase();
+          return searchStr.includes(this.filter.toLowerCase());
+        });
+  
+        console.log('Array de empleados después del filtrado:', this.filteredData);
+  
+        // Ordenar los datos filtrados
         const sortedData = this.sortData(this.filteredData.slice());
-        // Grab the page's slice of the filtered sorted data.
-        const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
-        this.renderedData = sortedData.splice(
-          startIndex,
-          this.paginator.pageSize
-        );
+        console.log('Datos ordenados:', sortedData);
+  
+        // Aplicar paginación solo si paginator está definido
+        if (this.paginator) {
+          const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
+          this.renderedData = sortedData.slice(startIndex, startIndex + this.paginator.pageSize);
+          console.log('Datos renderizados (paginados):', this.renderedData);
+        } else {
+          this.renderedData = sortedData;
+          console.warn('Paginator no definido, mostrando todos los datos.');
+        }
+  
         return this.renderedData;
       })
     );
   }
+  
+
   disconnect() {
-    // disconnect
-  }  
-  /** Returns a sorted copy of the database data. */
+    console.log('Desconectando DataSource...');
+  }
+
+  /** Ordena los datos */
   sortData(data: AdminEmployees[]): AdminEmployees[] {
     if (!this._sort.active || this._sort.direction === '') {
+      console.warn('Sort no activo o sin dirección definida.');
       return data;
     }
+
     return data.sort((a, b) => {
       let propertyA: number | string = '';
       let propertyB: number | string = '';
+
       switch (this._sort.active) {
-        case 'firstName':
-          [propertyA, propertyB] = [a.firstName, b.firstName];
-          break;
-        case 'lastName':
-          [propertyA, propertyB] = [a.lastName, b.lastName];
-          break;
-        case 'highKeyID':
-          [propertyA, propertyB] = [a.highKeyId, b.highKeyId]; //Diego
-          break;
-        case 'position':
-          [propertyA, propertyB] = [a.position, b.position]; //Diego
-          break;
-        case 'totalHours':
-          [propertyA, propertyB] = [a.totalHours, b.totalHours]; //Diego
-          break;
-        case 'payRollID':
-          [propertyA, propertyB] = [a.payRollId, b.payRollId]; //Diego
-          break;
-        case 'hourFrom':
-          [propertyA, propertyB] = [a.hourFrom, b.hourFrom]; //Diego
-          break;
-        case 'in':
-          [propertyA, propertyB] = [a.in, b.in]; //Diego
-          break;
-        case 'out':
-          [propertyA, propertyB] = [a.out, b.out]; //Diego
-          break;
+        case 'firstName': [propertyA, propertyB] = [a.firstName, b.firstName]; break;
+        case 'lastName': [propertyA, propertyB] = [a.lastName, b.lastName]; break;
+        case 'highKeyID': [propertyA, propertyB] = [a.highKeyId, b.highKeyId]; break;
+        case 'position': [propertyA, propertyB] = [a.position, b.position]; break;
+        case 'totalHours': [propertyA, propertyB] = [a.totalHours, b.totalHours]; break;
+        case 'payRollID': [propertyA, propertyB] = [a.payRollId, b.payRollId]; break;
+        case 'hourFrom': [propertyA, propertyB] = [a.hourFrom, b.hourFrom]; break;
+        case 'in': [propertyA, propertyB] = [a.in, b.in]; break;
+        case 'out': [propertyA, propertyB] = [a.out, b.out]; break;
       }
+
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
       const valueB = isNaN(+propertyB) ? propertyB : +propertyB;
-      return (
-        (valueA < valueB ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1)
-      );      
+
+      return (valueA < valueB ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1);
     });
   }
-}  
+}
+  
