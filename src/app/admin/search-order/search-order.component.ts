@@ -7,6 +7,7 @@ import { OcultarSidebarService } from 'app/_services/ocultar-sidebar.service';
 import { OrderService } from 'app/_services/order.service';
 
 import { BehaviorSubject, Subject } from 'rxjs';
+import { UserRoleService } from 'app/_services/UserRole.service';
 
 @Component({
   selector: 'app-search-order',
@@ -29,6 +30,7 @@ export class SearchOrderComponent implements OnInit {
 
   @ViewChild('orderInput') orderInput: ElementRef;
   selectedRole: string;
+  currentRole: any;
 
   constructor(
     private http: HttpClient, 
@@ -36,7 +38,8 @@ export class SearchOrderComponent implements OnInit {
     private orderDataService: OrderDataService,
     private router: Router,
     private ocultarSidebarService: OcultarSidebarService,
-    private ordSvc: OrderService 
+    private ordSvc: OrderService,
+    private userRoleService: UserRoleService
   ) { 
    
   }
@@ -253,16 +256,22 @@ export class SearchOrderComponent implements OnInit {
   }
 
   navegar() {
-    if (this.selectedRole === 'Employee') {
+    this.currentRole = this.userRoleService.getSelectedRole();
+    if(this.currentRole){
+      console.log('Jairo Navegando', this.currentRole)
       this.router.navigate(['/admin/employees/admin-employees/']);
-    } 
-    else if (this.data.role === "Administrator" || this.data.role === "Supervisor" || (this.data.role === "Client")) {
-      this.router.navigate(['/admin/dashboard-lm/']);
-    } 
-    else if (this.data.role === "Employee") {
-      this.router.navigate(['/admin/employees/admin-employees/']);
-    }  
-    this.shouldReload.next(true);
+    }else{   
+      if (this.selectedRole === 'Employee') {
+        this.router.navigate(['/admin/employees/admin-employees/']);
+      } 
+      else if (this.data.role === "Administrator" || this.data.role === "Supervisor" || (this.data.role === "Client")) {
+        this.router.navigate(['/admin/dashboard-lm/']);
+      } 
+      else if (this.data.role === "Employee") {
+        this.router.navigate(['/admin/employees/admin-employees/']);
+      }  
+      this.shouldReload.next(true);
+    }
   }
   
   

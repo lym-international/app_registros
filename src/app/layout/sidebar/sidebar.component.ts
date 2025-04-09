@@ -16,6 +16,7 @@ import { AuthenticationService } from 'app/_services/authentication.service';
 import { Subscription } from 'rxjs';
 import { OrderDataService } from 'app/_services/orderData.service';
 import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
+import { UserRoleService } from 'app/_services/UserRole.service';
 
 
 @Component({
@@ -42,6 +43,8 @@ export class SidebarComponent implements OnInit {
   statusOrder: string;
   orderStatus: any;
 
+  currentRole= '';
+  isEmployee = false;
   
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -52,7 +55,7 @@ export class SidebarComponent implements OnInit {
     public authenticationService: AuthenticationService,
     private orderDataService: OrderDataService,
     private sharingCloseOrderService: SharingCloseOrderService,
-    
+    private userRoleService: UserRoleService
   ) {
     this.elementRef.nativeElement.closest('body');
     this.routerObj = this.router.events.subscribe((event) => {
@@ -99,7 +102,8 @@ export class SidebarComponent implements OnInit {
     
     // const storedUserData = localStorage.getItem('currentUserData');
     const storedUserData = sessionStorage.getItem('currentUserData');
-
+    this.currentRole = this.userRoleService.getSelectedRole();
+   
     
     if (storedUserData) {
       this.dataUser = JSON.parse(storedUserData);
@@ -115,13 +119,18 @@ export class SidebarComponent implements OnInit {
     //console.log('Datos usuario desde el sideBar: ', this.dataUser)
     
     //Validación del rol del usuario para la visualización de los items del sidebar
-    if (this.dataUser) {
-      const userRole = this.dataUser.role;
+    if(this.currentRole){
       this.sidebarItems = ROUTES.filter(
-        (x) => x.role.indexOf(userRole) !== -1 || x.role.indexOf('All') !== -1
+        (x) => x.role.indexOf(this.currentRole) !== -1 || x.role.indexOf('All') !== -1
       );
-      //console.log('SIDEBAR ITEMS: ', this.sidebarItems)
-      
+    }else{
+      if (this.dataUser) {
+        const userRole = this.dataUser.role;
+        this.sidebarItems = ROUTES.filter(
+          (x) => x.role.indexOf(userRole) !== -1 || x.role.indexOf('All') !== -1
+        );
+        //console.log('SIDEBAR ITEMS: ', this.sidebarItems)
+      }
     }
     
     this.initLeftSidebar();

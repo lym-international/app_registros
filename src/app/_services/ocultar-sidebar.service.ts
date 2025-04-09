@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 })
 export class OcultarSidebarService {
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() { }
   
   private mostrarSidebarSubject: Subject<boolean> = new Subject<boolean>();

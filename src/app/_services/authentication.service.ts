@@ -16,6 +16,7 @@ import * as CryptoJS from 'crypto-js'; //Jairo
 
 import { MatDialog } from '@angular/material/dialog';
 import { RoleChoiceModalComponent } from 'app/admin/role-choice-modal/role-choice-modal.component';
+import { UserRoleService } from './UserRole.service';
 
 @Injectable({
   providedIn: 'root',
@@ -53,6 +54,7 @@ export class AuthenticationService {
     private route: ActivatedRoute,
     // private notifSvc: NotificationsService,
     private dialog: MatDialog,
+    private userRoleService: UserRoleService
   ){
     this.returnUrl =
       this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
@@ -163,11 +165,18 @@ export class AuthenticationService {
                 console.log('Executive');
               } else if (this.currentUserData.role === 'Supervisor') {
                 console.log('Es Supervisor');
-                this.router.navigate(['/admin/search-order/']);
+                if(this.currentUserData.highkeyId){
+                  this.showRoleChoiceModal();
+                }else{
+                  this.router.navigate(['/admin/search-order/']);
+                }
               } else if (this.currentUserData.role === 'Administrator') {
                 console.log('Es administrador');
-                this.showRoleChoiceModal();
-                // this.router.navigate(['/admin/search-order/']);
+                if(this.currentUserData.highkeyId){
+                  this.showRoleChoiceModal();
+                }else{
+                  this.router.navigate(['/admin/search-order/']);
+                }
               } else {
                 this.router.navigate(['/authentication/signin']);
               }
@@ -181,7 +190,7 @@ export class AuthenticationService {
       });
   }
   
-  showRoleChoiceModal() {
+  showRoleChoiceModal_bn() {
     const dialogRef = this.dialog.open(RoleChoiceModalComponent, {
       width: '400px',
       disableClose: true
@@ -199,7 +208,26 @@ export class AuthenticationService {
       dialogRef.close(); // Cierra el modal después de la redirección
     });
   }
+  showRoleChoiceModal() {
+    const dialogRef = this.dialog.open(RoleChoiceModalComponent, {
+      width: '400px',
+      disableClose: true,
+      data: { role: this.currentUserData.role } // Envía el rol actual al modal
+    });
   
+    // Suscríbete al evento roleChosen
+    dialogRef.componentInstance.roleChosen.subscribe((role: string) => {
+      this.setSelectedRole(role); 
+      if (role === 'Administrator') {
+        this.router.navigate(['/admin/search-order/']);
+      } else if (role === 'Supervisor') {
+        this.router.navigate(['/admin/search-order/']);
+      } else if (role === 'Employee') {
+        this.router.navigate(['/admin/employees/admin-employees']);
+      }
+      dialogRef.close();
+    });
+  }
   
   setData(data: any) {
     this.data = data;
@@ -248,6 +276,7 @@ export class AuthenticationService {
       sessionStorage.removeItem('currentUser');
       sessionStorage.removeItem('currentUserData');
       sessionStorage.removeItem('currentOrders');
+      this.userRoleService.clearSelectedRole();
       this.currentUserSubject.next(null);
       this.auxCurrentUser = null;
       this.currentUserData = null; // Restablecer currentUserData a null
@@ -260,6 +289,9 @@ export class AuthenticationService {
    setSelectedRole(role: string) {
     this.selectedRole = role;
     console.log('Selected role set to:', role); // Para depuración
+    if(role === 'Employee'){
+      this.userRoleService.setSelectedRole('Employee');
+    }
   }
 
   // obtener el rol seleccionado
