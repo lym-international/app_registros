@@ -198,7 +198,7 @@ export class AllemployeesComponent
       this.dataEmployees = this.orderDataService.getSelectedOrder();
       this.statusOrder = this.dataEmployees.data.status;  
       this.orderId = this.dataEmployees.id;
-      console.log('orderId:', this.orderId, this.statusOrder);
+      // console.log('orderId:', this.orderId, this.statusOrder);
       this.sharingCloseOrderService.setOrderId(this.orderId);
       this.sharingCloseOrderService.setStatusOrder(this.statusOrder);
 
@@ -213,7 +213,7 @@ export class AllemployeesComponent
         }
       });
 
-      console.log('Data Order: ', this.dataEmployees);
+      // console.log('Data Order: ', this.dataEmployees);
       this.startDate = this.dataEmployees.data.startDate;
       // console.log('Data StatusOrder: ', this.statusOrder);
       this.exactHourPayment = this.dataEmployees.data.exactHourPayment;
@@ -728,7 +728,7 @@ export class AllemployeesComponent
 
   
   // MODAL ALL ACTIONS
-  async allActionsModal(selectedRows: Employees[]) {
+  async allActionsModal_bn(selectedRows: Employees[]) {
     if (selectedRows.length === 0) {
       return; // No hay empleados seleccionados
     }
@@ -797,6 +797,113 @@ export class AllemployeesComponent
           checkOutCoordinates:{latitudeOut: coordinates?.latitude, longitudeOut:  coordinates?.longitude }, 
           checkinCoordinates: {latitude: coordinates?.latitude, longitude:  coordinates?.longitude},
           hours: updatedHours.toFixed(2),
+          updateUser: this.dataUser.email
+        };
+      }
+      return employee;
+    });
+  
+    await this.updateEmployeesOnServer(updatedEmployees);
+  }
+
+  async allActionsModal(selectedRows: Employees[]) {
+    if (selectedRows.length === 0) {
+      return; // No hay empleados seleccionados
+    }
+  
+    const dateStartData = selectedRows.map((row) => row.dateStart);
+    this.shareStartDateService.setDateStartData(dateStartData);
+  
+    const dialogRef = this.dialog.open(AllActionsComponent);
+    const result = await dialogRef.afterClosed().toPromise();
+    if (!result) {
+      return; // El diálogo fue cerrado sin resultado
+    }
+    
+    const { coordinates } = result;
+    
+    // Aquí determinamos si aplicar el roundHours o no según exactHourPayment
+    let breakHours;
+    if (this.exactHourPayment) {
+      // Tiempo de break en horas con 2 decimales sin roundHours
+      breakHours = Number((result.break / 60));
+    } else {
+      // Tiempo de break en horas con roundHours
+      breakHours = this.roundHours(result.break / 60);
+    }
+  
+    const timestampIn = Timestamp.fromDate(new Date(result.startDate));
+    const timestampOut = Timestamp.fromDate(new Date(result.endDate));
+    const checkInTimestamp = timestampIn?.seconds || 0;
+    const checkOutTimestamp = timestampOut?.seconds || 0;
+  
+    const roundedIn = this.roundDate(result.startDate);
+    const roundedOut = this.roundDate(result.endDate);
+    const timestampCheckinRounded = Timestamp.fromDate(new Date(roundedIn));
+    const timestampCheckoutRounded = Timestamp.fromDate(new Date(roundedOut));
+    const dateCheckinRounded = timestampCheckinRounded?.seconds || 0;
+    const dateCheckoutRounded = timestampCheckoutRounded?.seconds || 0;
+    /* try {
+      const coordinates = await this.getCoordinates();
+      this.latitude = coordinates.latitude;
+      this.longitude = coordinates.longitude;
+    } catch (error) {
+      console.error("Error obteniendo las coordenadas: ", error);
+    } */
+  
+    const updatedEmployees = this.employeesArray.map((employee) => {
+      if (selectedRows.some(
+        (row) =>
+          row.employee.data.employeeId === employee.employee.data.employeeId &&
+          row.hourFrom === employee.hourFrom
+      )) {
+        let updatedHours = 0;
+        
+        if (this.exactHourPayment) {
+          // Cálculo exacto sin roundHours
+          // Calcular diferencia entre check-out y check-in (en horas)
+          const exactHours = this.calculateTimeDifference(checkInTimestamp, checkOutTimestamp);
+          // Restar el break con 2 decimales
+          updatedHours = Number((exactHours - breakHours).toFixed(2));
+        } else if (employee.empExactHours) {
+          updatedHours = this.calculateRegularHoursAll(dateCheckinRounded, dateCheckoutRounded);
+          
+          // Si hay break, aplicar la deducción con el roundHours
+          if (result.break > 0) {
+            updatedHours = updatedHours - breakHours;
+          }
+        } else {
+          updatedHours = this.calculateHoursWorkedAll(
+            employee,
+            checkInTimestamp,
+            dateCheckinRounded,
+            checkOutTimestamp,
+            dateCheckoutRounded
+          );
+  
+          const dateCheckin = new Date(dateCheckinRounded * 1000);
+          const late = this.validateCheckout(employee.hourFrom, dateCheckin);
+          
+          // Solo aplicar deducción de break si se cumple la condición
+          if (!(late < 8 && updatedHours === 5) && result.break > 0) {
+            updatedHours = updatedHours - breakHours;
+          }
+        }
+  
+        return {
+          ...employee,
+          checkin: true,
+          checkout: true,
+          break: result.break,
+          status: "Checked Out",
+          dateCheckin: { _seconds: checkInTimestamp, _nanoseconds: 0 },
+          realCheckin: { _seconds: checkInTimestamp, _nanoseconds: 0 },
+          dateCheckinRounded: { _seconds: dateCheckinRounded, _nanoseconds: 0 },
+          dateCheckout: { _seconds: checkOutTimestamp, _nanoseconds: 0 },
+          dateCheckoutRounded: { _seconds: dateCheckoutRounded, _nanoseconds: 0 },
+          checkOutCoordinates:{latitudeOut: coordinates?.latitude, longitudeOut: coordinates?.longitude }, 
+          checkinCoordinates: {latitude: coordinates?.latitude, longitude: coordinates?.longitude},
+          hours: Number(updatedHours).toFixed(2),
           updateUser: this.dataUser.email
         };
       }
@@ -1028,7 +1135,7 @@ export class AllemployeesComponent
     );
   }
 
-  async breakModal(selectedRows: Employees[]) {
+  async breakModal_bn(selectedRows: Employees[]) {
     this.employeesArray.forEach((employee) => {
       employee.selected = false;
     });
@@ -1101,7 +1208,95 @@ export class AllemployeesComponent
     );
   }
 
-  calculateHoursWorkedAll(
+  async breakModal(selectedRows: Employees[]) {
+    this.employeesArray.forEach((employee) => {
+      employee.selected = false;
+    });
+  
+    if (selectedRows.length === 0) {
+      return; // No hay empleados seleccionados
+    }
+  
+    console.log('Empleados seleccionados para break:', selectedRows);
+    const dialogRef = this.dialog.open(BreakComponent, {
+      data: {
+        employees: this.employees,
+        action: 'add',
+      },
+    });
+  
+    const result = await dialogRef.afterClosed().toPromise();
+    if (!result) {
+      return; // El diálogo fue cerrado sin resultado
+    }
+  
+    const updatedEmployees = this.employeesArray.map((employee) => {
+      const isSelected = selectedRows.some(
+        (row) =>
+          row.employee.data.employeeId === employee.employee.data.employeeId &&
+          row.hourFrom === employee.hourFrom &&
+          employee.dateCheckin !== null &&
+          employee.dateCheckin !== undefined
+      );
+  
+      if (isSelected) {
+        let updatedHours = 0;
+        
+        if (employee.dateCheckout !== null && employee.dateCheckout !== undefined) {
+          if (this.exactHourPayment) {
+            // Cálculo exacto sin roundHours, pero con redondeo a 2 decimales
+            const exactHours = this.calculateTimeDifference(
+              employee.dateCheckin._seconds, 
+              employee.dateCheckout._seconds
+            );
+            // Restar tiempo de break exacto (en horas) con redondeo a 2 decimales
+            const breakHours = Number((result.break / 60));
+            // console.log('break', breakHours)
+            updatedHours = Number((exactHours - breakHours).toFixed(2));
+          } else {
+            // Cálculo con redondeo como estaba antes
+            const roundedBreak = this.roundHours(result.break / 60);
+            
+            const roundedHours = this.calculateHoursWorked(
+              employee, 
+              employee.dateCheckout._seconds, 
+              employee.dateCheckoutRounded._seconds
+            );
+            
+            const totalHours = roundedHours.toFixed(2);
+            const dateCheckin = new Date(employee.dateCheckin._seconds * 1000);
+            const late = this.validateCheckout(employee.hourFrom, dateCheckin);
+      
+            if (late < 8 && employee.hours == 5) {
+              updatedHours = employee.hours;
+            } else {
+              updatedHours = Number(totalHours) - roundedBreak;
+            }
+          }
+        }
+        
+        return {
+          ...employee,
+          updateUser: this.dataUser.email,
+          break: result.break,
+          hours: updatedHours,
+        };
+      }
+  
+      return employee;
+    });
+    
+    await this.updateEmployeesOnServer(updatedEmployees);
+  
+    this.showNotification(
+      'snackbar-success',
+      'Successful break...!!!',
+      'bottom',
+      'center'
+    );
+  }
+
+  calculateHoursWorkedAll_bn(
     employee: Employees,
     checkInTimestamp: number,
     dateCheckinRounded: number,
@@ -1131,7 +1326,38 @@ export class AllemployeesComponent
     return roundedHours;
   }
 
-  calculateHoursWorked(
+  calculateHoursWorkedAll(
+    employee: Employees,
+    checkInTimestamp: number,
+    dateCheckinRounded: number,
+    checkOutTimestamp: number,
+    dateCheckoutRounded: number
+): number {
+    if (this.exactHourPayment) {
+      // Cálculo exacto sin roundHours pero con redondeo a 2 decimales
+      return this.calculateExactHourPaymentAll(checkInTimestamp, checkOutTimestamp);
+    }
+  
+    const lateThreshold = 8;
+    const secondsWorked = dateCheckoutRounded - dateCheckinRounded;
+    const hoursWorked = secondsWorked / 3600;
+    let roundedHours = this.roundHours(hoursWorked);
+  
+    if (roundedHours < 5) {
+      const dateCheckin = new Date(checkInTimestamp * 1000);
+      const late = this.validateCheckout(employee.hourFrom, dateCheckin);
+  
+      if (late < 8) {
+        roundedHours = 5;
+      } else if (late > lateThreshold) {
+        roundedHours = this.calculateRegularHoursAll(dateCheckinRounded, dateCheckoutRounded);
+      }
+    }
+  
+    return roundedHours;
+  }
+  
+  calculateHoursWorked_bn(
     employee: Employees,
     checkOutTimestamp: number,
     dateCheckoutRounded: number
@@ -1140,13 +1366,13 @@ export class AllemployeesComponent
       return this.calculateExactHourPayment(employee, checkOutTimestamp);
     }
     let roundedBreak =0;
-    if(employee.break){
+    if(employee.break ){
       roundedBreak = this.roundHours(Number(employee.break)/ 60);
     }
     const lateThreshold = 8;
     const secondsWorked = dateCheckoutRounded - employee.dateCheckinRounded._seconds;
     const hoursWorked = secondsWorked / 3600;
-    
+    // console.log("ked", hoursWorked)
     let roundedHours = this.roundHours(hoursWorked);
     roundedHours = roundedHours - roundedBreak;
   
@@ -1163,6 +1389,54 @@ export class AllemployeesComponent
   
     return roundedHours;
   }
+
+  calculateHoursWorked(
+    employee: Employees,
+    checkOutTimestamp: number,
+    dateCheckoutRounded: number
+): number {
+    if (this.exactHourPayment) {
+      // Aquí calculamos las horas exactas sin roundHours, pero con redondeo a 2 decimales
+      let exactHours = this.calculateTimeDifference(employee.dateCheckin._seconds, checkOutTimestamp);
+      
+      // Si hay tiempo de descanso, lo restamos sin redondear con roundHours
+      if (employee.break) {
+        // Convertimos minutos a horas exactas
+        const breakHours = Number((Number(employee.break) / 60).toFixed(2));
+        exactHours = Number((exactHours - breakHours).toFixed(2));
+      }
+      
+      return exactHours;
+    }
+    
+    // Código original para cálculos con redondeo
+    let roundedBreak = 0;
+    if (employee.break) {
+      roundedBreak = this.roundHours(Number(employee.break) / 60);
+    }
+    
+    const lateThreshold = 8;
+    const secondsWorked = dateCheckoutRounded - employee.dateCheckinRounded._seconds;
+    const hoursWorked = secondsWorked / 3600;
+    // console.log("ked", hoursWorked);
+    let roundedHours = this.roundHours(hoursWorked);
+    roundedHours = roundedHours - roundedBreak;
+  
+    if (roundedHours < 5) {
+      const dateCheckin = new Date(employee.dateCheckin._seconds * 1000);
+      const late = this.validateCheckout(employee.hourFrom, dateCheckin);
+  
+      if (late < 8) {
+        roundedHours = 5;
+      } else if (late > lateThreshold) {
+        roundedHours = this.calculateRegularHours(employee, dateCheckoutRounded);
+      }
+    }
+  
+    return roundedHours;
+}
+
+
 
   validateCheckout(hourFrom: string, checkinDate: Date): number {
     const [hour, minute] = hourFrom.split(':').map(Number);
@@ -1189,11 +1463,14 @@ export class AllemployeesComponent
   calculateExactHourPayment(employee: Employees, checkOutTimestamp: number): number {
     return this.calculateTimeDifference(employee.dateCheckin._seconds, checkOutTimestamp);
   }
-  
+
   calculateTimeDifference(startTimestamp: number, endTimestamp: number): number {
     const secondsWorked = endTimestamp - startTimestamp;
+    // console.log("salida - entrada", endTimestamp,  startTimestamp)
+    // console.log('horas trabajadas', secondsWorked)
     const hoursWorked = secondsWorked / 3600;
-    return Number(hoursWorked.toFixed(2));
+    // console.log("valor dividido", hoursWorked)
+    return Number(hoursWorked);
   }
   async loadTimesheet() {
     this.outEmployees = [];
@@ -1346,6 +1623,28 @@ export class AllemployeesComponent
       },
         // { text: this.timeSheet.total > 0 ? `TOTAL HOURS:   ${this.timeSheet.total}`: '', margin: [379, -20, 5, 0] },
         { text: this.timeSheet.total > 0 ? `TOTAL HOURS:   ${this.timeSheet.total}` : '', margin: [395, -20, 5, 0], fontSize:11 },
+      // Definimos el rectángulo para el total
+
+/* {
+  canvas: [{ type: "rect", x: 473.5, y: -5, w: 59, h: 30 }],
+  width: "right",
+  fontSize: 9,
+  margin: [0, 5, 0, 0], // Mantiene la posición del cuadro
+},
+// Posicionamos el valor del total DENTRO del rectángulo
+{
+  text: this.timeSheet.total > 0 ? `${this.timeSheet.total}` : '',  // Solo el valor numérico
+  absolutePosition: { x: 493, y: 435 },  // Ajusta estas coordenadas para centrarlo en el rectángulo
+  fontSize: 12,
+  bold: true
+},
+// Mantenemos el texto "TOTAL HOURS:" fuera del rectángulo
+{
+  text: "TOTAL HOURS:",
+  margin: [395, -25, 5, 0],
+  fontSize: 11,
+  bold: true
+}, */
         { text: "NOTE:", alignment: 'left', margin: [0, 30, 0, 0] },
         { canvas: [{ type: "rect", x: 10, y: 10, w: 400, h: 80 }], alignment: 'left', margin: [0, 10, 0, 10] },
         { text: "The time as shown on the Time-Sheet are correct and the work has been performed to our satisfaction. Employee certifies that this form is true and accurate and that no injuries were sustained during this assigment and will not solicit permanent, part time, independent contract with any of our clients.", fontSize: 10, alignment: 'left', margin: [0, 10, 0, 10] },
@@ -1512,6 +1811,7 @@ export class AllemployeesComponent
       pdfMake.createPdf(result).open();
     });
   }
+  
  
   addHours(numOfHours, date = new Date()) {
     // console.log("adhours", numOfHours, "date", date)
@@ -2287,7 +2587,7 @@ export class AllemployeesComponent
   }
 
   toggleModalAprove() {
-    console.log("this.dataEmployeesJJ:", this.dataEmployees);
+    // console.log("this.dataEmployeesJJ:", this.dataEmployees);
     
     this.isModalAproveOpen = !this.isModalAproveOpen;
     if (this.dataEmployees && this.dataEmployees.data) {
@@ -2366,7 +2666,7 @@ export class ExampleDataSource extends DataSource<Employees> {
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        console.log(" this.employeesArrayJJr",  this.employeesArray)
+        // console.log(" this.employeesArrayJJr",  this.employeesArray)
         this.filteredData = this.employeesArray
           .slice()
           .filter((employees: Employees) => {
