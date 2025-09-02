@@ -348,7 +348,7 @@ export class AllemployeesComponent
 
   // Función para verificar la visibilidad de los botones al hacer clic en el checkbox  
   onCheckboxClick(row: Employees) {
-    const { dateCheckin, dateCheckout, break: breakTime } = row;
+    /* const { dateCheckin, dateCheckout, break: breakTime } = row;
   
     if (!dateCheckin && !dateCheckout) {
       this.setButtonVisibility(true, false, false, true);
@@ -358,8 +358,63 @@ export class AllemployeesComponent
       this.setButtonVisibility(false, false, true, false);
     } else {
       this.setButtonVisibility(false, false, false, false);
-    }
+    } */
+    setTimeout(() => {
+      if (this.selection.hasValue()) {
+        this.updateButtonsBasedOnSelection();
+      } else {
+        // Si no hay selección, ocultar todos los botones
+        this.setButtonVisibility(false, false, false, false);
+      }
+    }, 0);
   }
+
+  private updateButtonsBasedOnSelection() {
+  const selectedRows = this.selection.selected;
+  
+  if (selectedRows.length === 0) {
+    this.setButtonVisibility(false, false, false, false);
+    return;
+  }
+
+  // Si solo hay una fila seleccionada, usar la lógica original
+  if (selectedRows.length === 1) {
+    const row = selectedRows[0];
+    const { dateCheckin, dateCheckout, break: breakTime } = row;
+    
+    if (!dateCheckin && !dateCheckout) {
+      this.setButtonVisibility(true, false, false, true);
+    } else if (dateCheckin && !dateCheckout) {
+      this.setButtonVisibility(false, true, true, false);
+    } else if (dateCheckout && (!breakTime || breakTime === "0")) {
+      this.setButtonVisibility(false, false, true, false);
+    } else {
+      // Si ya tiene todo (checkin, checkout y break)
+      this.setButtonVisibility(false, false, false, false);
+    }
+    return;
+  }
+
+  // Para múltiples filas seleccionadas, evaluar el estado general
+  const allWithoutCheckin = selectedRows.every(row => !row.dateCheckin);
+  const allWithCheckin = selectedRows.every(row => row.dateCheckin);
+  const allWithCheckout = selectedRows.every(row => row.dateCheckout);
+  const anyWithoutBreak = selectedRows.some(row => !row.break || row.break === "0");
+
+  if (allWithoutCheckin) {
+    // Todos sin check-in
+    this.setButtonVisibility(true, false, false, true);
+  } else if (allWithCheckin && !allWithCheckout) {
+    // Todos con check-in pero sin check-out
+    this.setButtonVisibility(false, true, true, false);
+  } else if (allWithCheckout && anyWithoutBreak) {
+    // Todos con check-out pero algunos sin break
+    this.setButtonVisibility(false, false, true, false);
+  } else {
+    // Estado mixto - mostrar todos los botones disponibles
+    this.setButtonVisibility(false, true, true, false);
+  }
+}
 
   private setButtonVisibility(checkIn: boolean, checkOut: boolean, breakButton: boolean, noShow: boolean) {
     this.showCheckInButton = checkIn;
@@ -2462,11 +2517,24 @@ export class AllemployeesComponent
   }
   
   /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
+  masterToggle_bn() {
     this.toggleCheckInOutButtons();
     this.toggleSelection();
     this.paginator.firstPage();
   }
+
+  masterToggle() {
+    this.toggleSelection();
+    this.paginator.firstPage();
+    
+    // Usar el mismo método para evaluar botones
+    if (this.selection.hasValue()) {
+      this.updateButtonsBasedOnSelection();
+    } else {
+      this.setButtonVisibility(false, false, false, false);
+    }
+  }
+
   // Verifica y establece los botones de check-in, no-show, check-out y break
   toggleCheckInOutButtons() {
     const allSelectedWithNullCheckin = this.dataSource.renderedData.every(
