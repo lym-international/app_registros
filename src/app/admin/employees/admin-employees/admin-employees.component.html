@@ -1,0 +1,294 @@
+<section class="content">
+    <div class="content-block">
+        <div class="block-header ocultarMovilE">
+            <p>{{ dataUser.firstname }} {{ dataUser.lastname }} - {{dataUser.highkeyId}} </p>
+        </div>
+        
+        <a [routerLink]="'/admin/search-order'" class="home-link">
+            <i class="fa fa-home home-icon"></i>
+        </a>
+
+        
+
+
+        <div class="container">
+            <!-- <div *ngIf="dataEmployees?.data; else noOrderAssigned"> -->
+                <!-- <div  *ngIf="dataEmployees?.data; else noOrderAssigned"  class="column" style="padding-top: 40px;">
+                    <div class="card">
+                        <div class="card-statistic-3">
+                            <div class="card-icon card-icon-large"><i class="fa fa-globe"></i></div>
+                            <div class="tarjeta">
+                                <span
+                                    style="font-size: large; color: #1A202E; font-weight: 700;">{{dataEmployees.data.clientName}}</span>
+                                <br /> <br /> {{dataEmployees.data.place}}
+                                <br /> <br /> {{dataEmployees.data.address}}
+                                <br /> <br /> {{dataEmployees.data.city}} {{dataEmployees.data.state}}
+                                {{dataEmployees.data.zipcode}}
+                                <br /> <br /> Order Number: {{dataEmployees.data.orderId}}
+                                <br /> <br /> Event date: {{dataEmployees.data.startDate}} 
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+                 
+                <div *ngIf="dataEmployees?.data; else noOrderAssigned" class="column" style="padding-top: 40px;">
+                    <div class="card">
+                        <div class="card-statistic-3">
+                            <div class="card-icon card-icon-large"><i class="fa fa-globe"></i></div>
+                            <div class="tarjeta">
+                                <div class="order-event-info">
+                                    <span class="event-date"> {{dataEmployees.data.startDate}}</span>
+                                    <span class="order-number">{{dataEmployees.data.orderId}}</span>
+                                </div>
+                                <!-- <br /> -->
+                                <span style="font-size: large; color: #1A202E; font-weight: 500;">
+                                    {{ dataEmployees?.data?.company || dataEmployees?.data?.clientName }}
+                                  </span>
+                                  <br><br/>
+                                 {{dataEmployees.data.place}}
+                                <br><br/> {{dataEmployees.data.address}}
+                                <br><br/> {{dataEmployees.data.city}} {{dataEmployees.data.state}} {{dataEmployees.data.zipcode}}
+                                <!-- <br/><br/> <p class="order-number ocultarMovilE">T.H.W: {{totalHoursSum}}</p> -->
+                                <br/><br/>
+                                <p class="order-number ocultarMovilE"
+                                   matTooltip="Total hours worked"
+                                   matTooltipPosition="above">
+                                    T.H.W: {{totalHoursSum}}
+                                </p>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="column ocultarMovil" style="margin: auto;">
+                    <div class="sub-column">
+                        <div class="sub-sub-column">
+                            <mat-card class="tarjeta-pequena"
+                                style="background: linear-gradient(135deg, #16033a 60%, rgb(255, 255, 255) 100%);">
+                                <mat-card-content>
+                                    <mat-card-title>Highkey ID: {{dataUser.highkeyId}}</mat-card-title>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                        <div class="sub-sub-column">
+                            <mat-card class="tarjeta-pequena"
+                                style="background: linear-gradient(135deg, #16033a 60%, rgb(255, 255, 255) 100%);">
+                                <mat-card-content>
+                                    <mat-card-title>Total hours worked: {{totalHoursSum}}</mat-card-title>
+                                    <!--{{dataEmployees.data.clientName ? dataEmployees.data.clientName : dataEmployees.data.company}} -->
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                    </div>
+                </div>
+            <!-- </div> -->
+            <ng-template #noOrderAssigned>
+                <div class="column" style="padding-top: 40px; display: flex; justify-content: flex-end; align-items: center; height: 400px;">
+                    <div class="card" style="padding: 40px; text-align: center;">
+                        <div class="card-statistic-3">
+                            <div class="card-icon card-icon-large"><i class="fa fa-globe"></i></div>
+                            <!-- <div class="tarjeta">
+                                <span style="font-size: x-large; color: #1A202E; font-weight: 700;">You are not assigned to any order</span>
+                            </div> -->
+                            <div class="tarjetanoShitf" style="margin-right: 30px; text-align: center;">
+                                <span style="font-size: x-large; color: #1A202E; font-weight: 500;">No shift assigned</span>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+            </ng-template>           
+
+        </div>
+
+        <!-- <hr class="separador" id="buttonsSection" /> -->
+ <!-- *ngIf="dataEmployees?.data && dataSource" -->
+  
+        <div  class="row ocultarMovil">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="materialTableHeader">
+                        <div class="left">
+                            <ul class="header-buttons-left ms-0 ocultarMovil" >
+                                <li class="tbl-search-box ">
+                                    <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                                    <input placeholder="Search" type="text" #filter class="browser-default search-field"
+                                        aria-label="Search box">
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <ul class="tbl-export-btn">
+
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" *ngIf="showCheckInButton" matTooltip="CHECKIN">
+                                        <button mat-mini-fab color="primary" (click)="checkInModal(getSelectedRows())">
+                                            <!--<mat-icon class="col-white">how_to_reg</mat-icon>-->
+                                            IN
+                                        </button>
+                                    </div>
+                                </li>
+
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" *ngIf="showCheckOutButton" matTooltip="CHECKOUT">
+                                        <button mat-mini-fab color="primary" (click)="checkOutModal(getSelectedRows())">
+                                            <!--<mat-icon class="col-white">logout</mat-icon>-->
+                                            OUT
+                                        </button>
+                                    </div>
+                                </li>
+
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" *ngIf="showBreakButton" matTooltip="BREAK">
+                                        <button mat-mini-fab color="primary" (click)="breakModal(getSelectedRows())">
+                                            <mat-icon class="col-white">coffee</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="body overflow-auto">
+                        <div class="responsive_table">
+                            <table mat-table [dataSource]="dataSource" matSort class="mat-cell">
+                                <!--#table-->
+                                <!-- Checkbox Column -->
+                                <ng-container matColumnDef="select">
+                                    <mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-7'">
+                                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                                            [checked]="selection.hasValue() && isAllSelected()"
+                                            [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                            [ngClass]="'tbl-checkbox'">
+                                        </mat-checkbox>
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" [ngClass]="'tbl-col-width-per-7'">
+                                        <mat-checkbox (click)="onCheckboxClick(row)"
+                                            (change)="$event ? selection.toggle(row) : null"
+                                            [checked]="selection.isSelected(row)" [ngClass]="'tbl-checkbox'">
+                                        </mat-checkbox>
+                                    </mat-cell>
+                                </ng-container>                                
+                                <ng-container matColumnDef="position">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef
+                                        mat-sort-header>Position</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span
+                                            class="mobile-label">Position: </span>{{row.position}}</mat-cell>                                        
+                                </ng-container>
+                                <ng-container matColumnDef="hourFrom">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Scheduled
+                                        time</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"><span class="mobile-label">Scheduled
+                                        time:</span>{{row.hourFromFormatted}}</mat-cell>
+                                </ng-container>                           
+                                <ng-container matColumnDef="in">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef
+                                        mat-sort-header>In</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span
+                                            class="mobile-label">IN:</span>{{row.in}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="out">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef
+                                        mat-sort-header>Out</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span
+                                            class="mobile-label">OUT</span>{{row.out}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="break">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef
+                                        mat-sort-header>Break</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span
+                                            class="mobile-label">Break</span>{{row.break}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef="totalHours">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Total
+                                        Hours</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Worked Hours:</span>{{row.totalHours}}</mat-cell>
+                                </ng-container>
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'"
+                                    matRipple>
+                                    <!--(click)="editCall(row)"-->
+                                </mat-row>
+                            </table>
+                            <!-- Loading spinner -->
+                            <div *ngIf="isTblLoading" class="tbl-spinner">
+                                <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
+                                </mat-progress-spinner>
+                            </div>
+
+                            <!-- <mat-paginator #paginator [length]="dataSource.filteredData?.length || 0" [pageIndex]="0"
+                                [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+                            </mat-paginator> -->
+                            <!-- <mat-paginator *ngIf="dataSource" #paginator 
+                                        [length]="dataSource.filteredData?.length || 0" 
+                                        [pageIndex]="0" 
+                                        [pageSize]="10" 
+                                        [pageSizeOptions]="[5, 10, 25, 100]">
+                            </mat-paginator> -->
+                            
+                        </div>                        
+                    </div> 
+                </div>
+            </div>
+        </div>
+
+<!-- Tabla para vista móvil -->
+<!-- Tabla para vista móvil -->
+<div *ngIf="isMobileView" class="row ocultarMovilE">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <!-- <div class="body overflow-auto"> -->
+                <!-- <div class="responsive_table"> -->
+                    <table mat-table [dataSource]="dataSource" matSort class="mat-cell">
+                        <ng-container matColumnDef="position-hourFrom-in">
+                            <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Details</mat-header-cell>
+                            <mat-cell class="celda1" *matCellDef="let row">
+                                <div class="tbl-header-btn1">
+                                    <button *ngIf="showCheckInButton" mat-mini-fab color="primary" (click)="checkInModal([row])">IN</button>
+                                    <button  *ngIf="showCheckOutButton" mat-mini-fab color="primary" (click)="checkOutModal([row])">OUT</button>
+                                    <button *ngIf="showBreakButton"  mat-mini-fab color="primary" (click)="breakModal([row])">
+                                        <mat-icon class="col-white">coffee</mat-icon>
+                                    </button>
+                                </div>
+
+                                <div class="info-container">
+                                    <div class="info-details">
+                                        <div class="checkbox-info">
+                                            <mat-checkbox (click)="onCheckboxClick(row)" [checked]="selection.isSelected(row)"></mat-checkbox>
+                                            <span class="position-hourFrom">{{row.position}} -- {{row.hourFromFormatted}}</span>
+                                        </div>                                        
+                                        <span class="in-to">{{row.in}} to {{row.out}} Br {{row.break}}</span>
+                                        <span class="total-hours"><strong>Total Hours: {{row.totalHours}}</strong></span>
+                                    </div>
+                                </div>
+                                
+                            </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="out-break-totalHours">
+                            <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>More Details</mat-header-cell>
+                            <mat-cell class="celda1" *matCellDef="let row">
+                                <div>
+                                    <!-- <strong>Out: </strong>{{row.out}} <br /> -->
+                                    <!-- <strong>Break: </strong>{{row.break}} <br /> -->
+                                    <!-- <strong>Total Hours: </strong>{{row.totalHours}} <br /> -->
+                                   
+                                </div>
+                            </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="mobileDisplayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: mobileDisplayedColumns;" matRipple>
+                        </mat-row>
+                    </table>
+                <!-- </div> -->
+            <!-- </div> -->
+        </div>
+    </div>
+</div>
+
+
+
+        
+         
+
+    </div>
+</section>

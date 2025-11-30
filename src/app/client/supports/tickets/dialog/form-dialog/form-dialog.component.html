@@ -1,0 +1,99 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          {{dialogTitle}}
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="ticketForm" (ngSubmit)="submit">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Created By</mat-label>
+            <input matInput formControlName="createdBy" required>
+            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>person_outline</mat-icon>
+            <mat-error *ngIf="ticketForm.get('createdBy')?.hasError('required')">
+              Created By is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Subject</mat-label>
+            <input matInput formControlName="subject" required>
+            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>subject</mat-icon>
+            <mat-error *ngIf="ticketForm.get('subject')?.hasError('required')">
+              Subject is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width " appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status" required>
+              <mat-option [value]="'Open'">
+                Open
+              </mat-option>
+              <mat-option [value]="'Closed'">
+                Closed
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="ticketForm.get('status')?.hasError('required')">
+              Status is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Assign To</mat-label>
+            <input matInput formControlName="assignTo" required>
+            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>person_outline</mat-icon>
+            <mat-error *ngIf="ticketForm.get('assignTo')?.hasError('required')">
+              Assign To is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="ticketForm.get('date')?.hasError('required')">
+              Please select date
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>details</mat-label>
+            <textarea matInput formControlName="details"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row" align="end">
+            <button mat-raised-button color="primary" [disabled]="!ticketForm.valid" [mat-dialog-close]="1"
+              (click)="confirmAdd()">Save</button>
+            <button mat-raised-button color="warn" (click)="onNoClick()" tabindex="-1">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

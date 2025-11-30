@@ -1,0 +1,556 @@
+<section class="content">
+    <div class="content-block">
+        <div class="block-header">
+            <!-- breadcrumb -->
+            <app-breadcrumb [title]="'Workers'" [items]="['Dashboard']" [active_item]="'Workers'">
+            </app-breadcrumb>
+        </div>
+
+        <!--INICIO VISIBILIDAD MOVILES DATA-->
+
+        <div class="container d-block d-md-none">
+            <!---->
+            <div class="column" style="padding-top: 40px;">
+                <div class="card card-large">
+                    <div class="card-statistic-3">
+                        <div class="card-icon card-icon-large"><i class="fa fa-info"></i></div>
+                        <div class="tarjeta">
+                            <span class="title-data-mobile">Order Id: </span> {{dataEmployees.data.orderId}}
+                            <br/> <br/> <span class="title-data-mobile">Client Name: </span>{{dataEmployees.data.clientName ? dataEmployees.data.clientName : dataEmployees.data.company}}
+                            <br/> <br/> <span class="title-data-mobile">Total hours: </span>{{totalHoursSum}}
+                            <br/> <br/> <span class="title-data-mobile">Event date: </span>{{dataEmployees.data.startDate}}
+                            <br/> <br/> <span class="title-data-mobile">Status Order: </span>{{statusOrder}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--FIN VISIBILIDAD MOVILES DATA-->
+
+        <!--INICIO VISIBILIDAD ESCRITORIO TARJETAS-->
+        <div class="container d-none d-md-flex">
+            <div class="column">
+                <div class="sub-column">
+                    <div class="sub-sub-column">
+                        <mat-card class="tarjeta-pequena">
+                            <mat-card-content>
+                                <mat-card-title>Order number</mat-card-title>
+                                {{ dataEmployees.data.orderId }}
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    <div class="sub-sub-column">
+                        <mat-card class="tarjeta-pequena">
+                            <mat-card-content>
+                                <mat-card-title>Client</mat-card-title>
+                                {{ dataEmployees.data.clientName ? dataEmployees.data.clientName : dataEmployees.data.company }}
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    <div class="sub-sub-column">
+                        <mat-card class="tarjeta-pequena">
+                            <mat-card-content>
+                                <mat-card-title>Hours worked</mat-card-title>
+                                {{ totalHoursSum }}
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    <div class="sub-sub-column">
+                        <mat-card class="tarjeta-pequena">
+                            <mat-card-content>
+                                <mat-card-title>Event date</mat-card-title>
+                                {{ dataEmployees.data.startDate }}
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    <div class="sub-sub-column" (click)="closeOrder()" *ngIf="isUserRoleValid()" style="cursor: pointer;">
+                        <mat-card class="tarjeta-pequena-2" style="background-color: #f0f0f0;">
+                            <mat-card-content>
+                                <mat-card-title>Status</mat-card-title>
+                                <!-- Mostrar el spinner si loadingStatus es true -->
+                                <div *ngIf="loadingStatus">
+                                    <mat-spinner diameter="20"></mat-spinner>
+                                </div>
+                                <!-- Mostrar el estado cuando no está cargando -->
+                                <div *ngIf="!loadingStatus">
+                                    {{ statusOrder }}
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    
+                    <!-- <div class="sub-sub-column">
+                        <mat-card class="tarjeta-pequena">
+                            <mat-card-content>
+                                <mat-card-title>Approve</mat-card-title>
+                                approved by customer 
+                            </mat-card-content>
+                        </mat-card>
+                    </div> -->
+
+                </div>
+            </div>
+        </div>
+        
+        <!--FIN VISIBILIDAD MOVILES TARJETAS-->
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="materialTableHeader">
+                        <!-- <div class="left">
+                            <ul class="header-buttons-left ms-0">
+                                <li class="tbl-title">
+                                </li>
+                                <li class="tbl-search-box">
+                                    <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                                    <input placeholder="Search" type="text" #filter class="browser-default search-field" aria-label="Search box">
+                                </li>  
+                            </ul>
+                        </div> -->
+                        
+                        <div class="left">
+                            <ul class="header-buttons-left ms-0">
+                                <li class="tbl-title">
+                                </li>
+                                <li class="tbl-search-box" style="display: flex; align-items: center;">
+                                    <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                                    <!-- <input placeholder="Search" type="text" #filter class="browser-default search-field" aria-label="Search box"> -->
+                                    <input placeholder="Search" type="text" #filter class="browser-default search-field" aria-label="Search box" style="width: 200px;">
+                                </li>
+                                <!-- <li *ngIf="dataEmployees.data.approvedStatus" class="tbl-search-box" style="display: flex; align-items: center;"  matTooltip="this.dataEmployees.data.modalAproveComments" matTooltipPosition="above" matTooltipClass="custom-tooltip"> -->
+                                    <!-- <mat-icon class="col-green">done</mat-icon> -->
+                                    <!-- <mat-icon class="col-green">check_circle</mat-icon> -->
+                                <!-- </li> -->
+
+                                <li *ngIf="dataEmployees.data.approvedStatus" 
+                                    class="tbl-search-box" 
+                                    style="display: flex; align-items: center;"  
+                                    [matTooltip]="'Approved by customer: ' + dataEmployees.data.approverName + ' ' + dataEmployees.data.approveComments" 
+                                    matTooltipPosition="above" 
+                                    matTooltipClass="custom-tooltip">
+                                    <mat-icon class="col-green">done</mat-icon>
+                                    <!-- <mat-icon class="col-green">check_circle</mat-icon> -->
+                                </li>
+                            
+                            
+
+
+                                  
+                            </ul>
+                        </div>
+                        
+                        
+                        <div class="right" style="flex: 60% !important;">
+                            <ul class="tbl-export-btn">
+
+                                
+
+                                <span *ngIf="ShowButtons" class="tbl-export-btn">
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10"  [hidden]=!selection.hasValue() matTooltip="MARK">
+                                        <button mat-mini-fab color="#ffec8b" (click)="markEmpWorkHours(getSelectedRows())"> 
+                                            <mat-icon class="col-yellow">how_to_reg</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" *ngIf="showCheckInButton" matTooltip="CHECKIN">
+                                        <!--<div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="CHECKIN"> -->
+                                        <button mat-mini-fab color="primary" (click)="checkInModal(getSelectedRows())"> 
+                                            <mat-icon class="col-white">how_to_reg</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" *ngIf="showCheckOutButton" matTooltip="CHECKOUT">
+                                        <!--<div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="CHECKOUT"> -->
+                                        <button mat-mini-fab color="primary" (click)="checkOutModal(getSelectedRows())"> 
+                                            <mat-icon class="col-white">logout</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" *ngIf="showBreakButton" matTooltip="BREAK">
+                                        <!--<div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="BREAK">-->
+                                        <button mat-mini-fab color="primary" (click)="breakModal(getSelectedRows())"> 
+                                            <mat-icon class="col-white">coffee</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+
+                               <!--  <li class="tbl-header-btn">
+                                    <div class="m-l-10" *ngIf="showNoShowButton" matTooltip="NOSHOW">
+                                        <button mat-mini-fab color="warn" (click)="outEmployee(getSelectedRows())"> 
+                                            <mat-icon class="col-white">visibility_off</mat-icon>
+                                        </button>
+                                    </div>
+                                </li> -->
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-12" *ngIf="showNoShowButton">
+                                      <mat-menu #menu="matMenu">
+                                        <button mat-menu-item (click)="outEmployee(getSelectedRows(), 'No show')">NO SHOW</button>
+                                        <button mat-menu-item (click)="outEmployee(getSelectedRows(), 'Call out')">CALL OUT</button>
+                                      </mat-menu>                                  
+                                      <button mat-mini-fab color="warn" [matMenuTriggerFor]="menu">
+                                        <mat-icon class="col-white">visibility_off</mat-icon>
+                                      </button>
+                                    </div>
+                                  </li>
+                                  
+
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="DELETE: IN, OUT, BREAK">
+                                        <button mat-mini-fab color="warn" (click)="deleteInTime(getSelectedRows())">
+                                        <mat-icon class="col-white">refresh</mat-icon>
+                                      </button>
+                                    </div>
+                                </li>
+
+                                <!-- BOTONES ESTÁTICOS -->
+
+                                <li class="tbl-header-btn borde-izq">
+                                    <div class="m-l-10" matTooltip="All ACTIONS">
+                                        <button mat-mini-fab color="primary" (click)="allActionsModal(getSelectedRows())"> 
+                                        <mat-icon class="col-white">swap_horizontal_circle</mat-icon>
+                                      </button>
+                                    </div>
+                                </li>
+                                    <div class="background" *ngIf="dataUser && dataUser.role !== 'Client'">
+                                        <li class="tbl-header-btn">
+                                            <div class=" marginButton" matTooltip="ADD NEW">
+                                                <button mat-mini-fab color="primary" (click)="addNewEmergencyEmployeeModal()">
+                                                <mat-icon class="col-white">person_add</mat-icon>
+                                            </button>
+                                            </div>
+                                        </li>
+                                        <li class="tbl-header-btn">
+                                            <div class="marginButton" matTooltip="SEARCH EMPLOYEE">
+                                                <button mat-mini-fab color="primary" (click)="addExistingEmergencyEmployeeModal()">
+                                                <mat-icon class="col-white">person_search</mat-icon>
+                                            </button>
+                                            </div>
+                                        </li>
+                                    </div>
+                                    <!-- <div class="background" *ngIf="dataUser && dataUser.role !== 'Client'">
+  <li class="tbl-header-btn">
+    <div class="marginButton" matTooltip="ADD NEW">
+      <button mat-mini-fab color="primary" (click)="addEmergencyEmployeeModal(false)">
+        <mat-icon class="col-white">person_add</mat-icon>
+      </button>
+    </div>
+  </li>
+  <li class="tbl-header-btn">
+    <div class="marginButton" matTooltip="SEARCH EMPLOYEE">
+      <button mat-mini-fab color="primary" (click)="addEmergencyEmployeeModal(true)">
+        <mat-icon class="col-white">person_search</mat-icon>
+      </button>
+    </div>
+  </li>
+</div> -->
+
+                                </span>
+                                <li class="tbl-header-btn">
+                                    <div class="" matTooltip="DOWNLOAD">
+                                        <button mat-mini-fab color="primary" (click)="generatePdf()">
+                                            <!-- (click)="exportExcel()" -->
+                                        <mat-icon class="col-white">download</mat-icon>
+                                      </button>
+                                    </div>
+                                </li>
+
+                                <!--<li class="tbl-header-btn">
+                                    <div class="m-l-10" matTooltip="REFRESH">
+                                        <button mat-mini-fab color="primary" (click)="refresh()">
+                                            <mat-icon class="col-white">refresh</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>-->
+
+
+
+                                <!--<li>
+                                    <div class="export-button m-l-10" matTooltip="XLSX">
+                                        <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
+                                    </div>
+                                </li> -->
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="body overflow-auto">
+                        <div class="responsive_table">
+                            <table mat-table [dataSource]="dataSource" matSort class="mat-cell">
+                                <ng-container matColumnDef="select">
+                                    <mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-7'">
+                                        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [ngClass]="'tbl-checkbox'">
+                                        </mat-checkbox>
+                                    </mat-header-cell>
+                                    <mat-cell *matCellDef="let row" [ngClass]="'tbl-col-width-per-7'">
+                                        <mat-checkbox (click)="onCheckboxClick(row)" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [ngClass]="'tbl-checkbox'">
+                                        </mat-checkbox>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="lastName">
+                                    <mat-header-cell class="encabezado mat-tooltip-panel-above" *matHeaderCellDef mat-sort-header matTooltip="Last name">LastName</mat-header-cell>
+                                    <mat-cell class="celda" *matCellDef="let row"> <span class="mobile-label">LastName:</span>{{row.lastName}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
+                                </ng-container>
+                                <ng-container matColumnDef="firstName">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>FirstName</mat-header-cell>
+                                    <mat-cell class="celda" *matCellDef="let row"> <span class="mobile-label">FirstName:</span>{{row.firstName}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
+                                </ng-container>
+                                <ng-container matColumnDef="highKeyID">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>HighKey ID</mat-header-cell>
+                                    <mat-cell class="celda" *matCellDef="let row"> <span class="mobile-label">HighKeyId:</span>{{row.highKeyId}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
+                                </ng-container>
+                                <ng-container matColumnDef="payRollID">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>PayRoll ID</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">PayRoll ID:</span>{{row.payRollId}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
+                                </ng-container>
+                                <ng-container matColumnDef="position">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Position</mat-header-cell>
+                                    <mat-cell class="celda" *matCellDef="let row"> <span class="mobile-label">Position:</span>{{row.position}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
+                                </ng-container>
+                                <ng-container matColumnDef="hourFrom">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Scheduled time</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Scheduled time:</span>{{row.hourFromFormatted}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
+                                </ng-container>
+                                <ng-container matColumnDef="in">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>In</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">In:</span>{{row.in}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
+                                </ng-container>
+                                <ng-container matColumnDef="out">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Out</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Out:</span>{{row.out}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
+                                </ng-container>
+                                <ng-container matColumnDef="break">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Break</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Break:</span>{{row.break}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
+                                </ng-container>
+                                <ng-container matColumnDef="totalHours">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Total hours</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Total hours:</span>{{row.totalHours}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
+                                </ng-container>
+                                <ng-container matColumnDef="status">
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Status:</span>{{row.status}}</mat-cell>
+                                    <!--(contextmenu)="onContextMenu($event, row)"-->
+                                </ng-container>
+
+                                <ng-container matColumnDef="map">
+                                    <mat-header-cell class="pr-0" *matHeaderCellDef>Map</mat-header-cell>
+                                    <mat-cell class="celda" *matCellDef="let row; let i=index;" class="pr-0">
+                                        <span class="mobile-label">Map</span>
+                                        <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Map: Event, CheckIn and CheckOut." (click)="openMapModal(row)">
+                                            <app-feather-icons [icon]="'map-pin'" [class]="'tbl-fav-delete'"></app-feather-icons>
+                                        </button>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+
+                                <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'" matRipple [ngStyle]="{'background-color': row.empExactHours ? '#FCF3CF' : ''}">
+                                    <!--(click)="editCall(row)"-->
+                                </mat-row>
+                                <!--
+                                <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'" matRipple [ngClass]="getCssClasses(row)">
+                                </mat-row>
+                                -->
+
+
+
+                            </table>
+                            <!-- Loading spinner -->
+                            <div *ngIf="isTblLoading" class="tbl-spinner">
+                                <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
+                                </mat-progress-spinner>
+                            </div>
+                           <!--  
+                            <mat-paginator #paginator 
+                                [length]="dataSource.filteredData?.length || 0" 
+                                [pageIndex]="0" 
+                                [pageSize]="10" 
+                                [pageSizeOptions]="[5, 10, 25, 100]">
+                            </mat-paginator> -->
+                            <mat-paginator #paginator 
+                                [length]="dataSource?.filteredData?.length ?? 0" 
+                                [pageIndex]="0" 
+                                [pageSize]="10" 
+                                [pageSizeOptions]="[5, 10, 25, 100]">
+                            </mat-paginator>
+
+                        </div>
+                    </div>
+                </div>
+                <!--BOTON MAPA DEL EVENTO-->
+                <!--
+                    <div class="row" style="margin: auto auto 10px 10px;">
+                    <button class="mapButton" style="border: none; background-color: #1A202D; color: white;" (click)="openMapModal()">Event Map</button>
+                </div>
+                -->
+                <!--
+                    <div class="row" style="margin: auto auto 10px 10px;">
+                    <button class="mapButton" style=" border: none; background-color: #1A202D; color: white;" (click)="createEventMap(getSelectedRows())">CheckIn map</button>
+                </div>
+                -->
+            </div>
+        </div>
+    </div>
+    
+
+<!-- Botón para abrir el modal
+<button mat-mini-fab color="primary" (click)="openModalAprove()"> 
+    <mat-icon class="col-white">open_in_new</mat-icon>
+  </button>
+  
+  Modal Aprove
+  <mat-dialog-content *ngIf="isModalAproveOpen">
+    <h2 mat-dialog-title>Modal Aprove</h2>
+    <mat-dialog-actions>
+      <button mat-button (click)="closeModalAprove()">Cerrar</button>
+    </mat-dialog-actions>
+  </mat-dialog-content> -->
+
+  <!-- Botón para abrir el modal -->
+  <button mat-mini-fab color="primary" (click)="toggleModalAprove()"> 
+    <mat-icon class="col-white">open_in_new</mat-icon>
+</button>
+
+<!-- Modal -->
+<div *ngIf="isModalAproveOpen" class="modalAprove">
+    <div class="modalAprove-content">
+        <h4 style="display: flex; justify-content: space-between; align-items: center;">APPROVE
+            <button mat-icon-button class="custom-close-button" style="margin-left: auto;" (click)="toggleModalAprove()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </h4>
+        <!-- <small>comments</small> -->
+        <mat-form-field>
+            <textarea matInput placeholder="Add Comments" [(ngModel)]="modalAproveComments"></textarea>
+        </mat-form-field>
+        <mat-checkbox [(ngModel)]="approveChecked">approve</mat-checkbox>
+        <button mat-raised-button color="primary" (click)="saveModalAprove()" [disabled]="isSaving">
+            <ng-container *ngIf="isSaving; else saveText">
+                <mat-spinner [diameter]="20"></mat-spinner>
+            </ng-container>
+            <ng-template #saveText>Save</ng-template>
+        </button>
+        <!-- Mostrar los comentarios si existen -->
+        <div *ngIf="modalAproveComments">
+            <label>Comments: {{ modalAproveComments }}</label>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+    <!--MAPA DEL EVENTO-->
+    <!--<div class="row backgroundMap">
+        <div class="map">
+            <div id="mapIn" style="height: 400px;"></div>
+        </div>
+    </div>
+    -->
+    <!-- MODAL DEL MAPA -->
+
+    <!-- <div id="mapModal" class="modal" style="top: 10%; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);">
+        <div class="modal-content" style="width: 30%; margin: auto;">
+            <span class="close" (click)="closeMapModal()">&times; Close</span>
+            <div id="mapInModal" style="height: 400px;">
+            </div>
+        </div>
+    </div> -->
+    <!-- <div id="mapModal" class="modal" style="top: 10%; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);">
+        <div class="modal-content" style="width: 30%; margin: auto;">
+          <span class="close" (click)="closeMapModal()">&times; Close</span>
+          <div id="mapInModal" style="height: 400px;"></div>
+        </div>
+      </div> -->
+
+      
+    
+      <!-- Bien
+      <div id="mapModal" class="modal" style="top: 10%; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center;" (click)="closeMapModal()">
+        <div class="modal-content" style="width: 50%; height: 60%; background-color: white; position: relative; padding: 10px;" (click)="$event.stopPropagation()">
+          <span class="close" (click)="closeMapModal()" style="position: absolute; top: 10px; right: 10px; cursor: pointer; background: #ddd; padding: 5px 10px; border-radius: 3px;">&times; Close</span>
+          <div style="height: calc(100% - 40px);">
+            <google-map
+              width="100%"
+              height="100%"
+              [center]="center"
+              [zoom]="zoom"
+            ></google-map>
+          </div>
+        </div>
+      </div> -->
+
+      
+
+       <!-- <div id="mapModal" #mapModal class="modal" style="top: 10%; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center;" (click)="closeMapModal()">
+        <div class="modal-content" style="width: 50%; height: 60%; background-color: white; position: relative; padding: 10px;" (click)="$event.stopPropagation()">
+          <span class="close" (click)="closeMapModal()" style="position: absolute; top: 10px; right: 10px; cursor: pointer; background: #ddd; padding: 5px 10px; border-radius: 3px;">&times; Close</span>
+          <div style="height: calc(100% - 40px);">
+            <google-map
+              [center]="center"
+              [zoom]="zoom"
+              [options]="{ scrollwheel: false }"
+              width="100%"
+              height="100%"
+              >
+              <map-marker *ngFor="let marker of markers" [position]="marker.position" [title]="marker.title" [icon]="marker.icon"></map-marker>
+            </google-map>
+          </div>
+        </div>
+      </div> -->
+
+      <div id="mapModal" #mapModal class="modal" style="display: none; top: 10%; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center;" (click)="closeMapModal()">
+        <div class="modal-content" style="width: 50%; height: 60%; background-color: white; position: relative; padding: 10px;" (click)="$event.stopPropagation()">
+          <span class="close" (click)="closeMapModal()" style="position: absolute; top: 10px; right: 10px; cursor: pointer; background: #ddd; padding: 5px 10px; border-radius: 3px;">&times; Close</span>
+          <div style="height: calc(100% - 40px);">
+            <google-map
+              [center]="center"
+              [zoom]="zoom"
+              [options]="{ scrollwheel: false }"
+              width="100%"
+              height="100%"
+              >
+              <map-marker *ngFor="let marker of markers" [position]="marker.position" [title]="marker.title" [icon]="marker.icon"></map-marker>
+            </google-map>
+          </div>
+        </div>
+      </div>
+      
+      
+      <!-- <ng-container matColumnDef="map">
+        <mat-header-cell class="pr-0" *matHeaderCellDef>Map</mat-header-cell>
+        <mat-cell class="celda" *matCellDef="let row; let i=index;" class="pr-0">
+          <span class="mobile-label">Map</span>
+          <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Map: Event, CheckIn and CheckOut." (click)="openMapModal(row)">
+            <app-feather-icons [icon]="'map-pin'" [class]="'tbl-fav-delete'"></app-feather-icons>
+          </button>
+        </mat-cell>
+      </ng-container> -->
+      
+      
+      
+     
+     
+      
+      
+
+</section>

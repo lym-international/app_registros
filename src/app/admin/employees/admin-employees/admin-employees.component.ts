@@ -1,0 +1,1336 @@
+import { Component, ElementRef, Input, OnInit, ViewChild, AfterViewInit, Renderer2 } from '@angular/core';
+import { EmployeesService } from '../allEmployees/employees.service';
+import { HttpClient } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { AdminEmployees } from './admin-employees.model';
+import { DataSource } from '@angular/cdk/collections';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { BehaviorSubject, fromEvent, merge, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+//import { FormDialogComponent } from './dialogs/form-dialog/form-dialog.component';
+//import { DeleteDialogComponent } from './dialogs/delete/delete.component';
+import { SelectionModel } from '@angular/cdk/collections';
+import { UnsubscribeOnDestroyAdapter } from '@shared';
+import { Direction } from '@angular/cdk/bidi';
+import { TableExportUtil, TableElement } from '@shared';
+import { DatePipe, formatDate } from '@angular/common';
+import { OrderDataService } from 'app/_services/orderData.service';
+import { delay } from 'rxjs/operators'; //Jairo
+import { Timestamp } from 'firebase/firestore';
+import { AuthenticationService } from 'app/_services/authentication.service';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexXAxis,
+  ApexDataLabels,
+  ApexStroke,
+  ApexMarkers,
+  ApexYAxis,
+  ApexGrid,
+  ApexTitleSubtitle,
+  ApexTooltip,
+  ApexLegend,
+  ApexFill,
+  ApexResponsive,
+  ApexNonAxisChartSeries,
+} from 'ng-apexcharts';
+import { Position } from 'app/interfaces/position.interface';
+import { CheckInAdminEmployeesComponent } from './dialogs/check-in-admin-employees/check-in-admin-employees.component';
+import { CheckOutAdminEmployeesComponent } from './dialogs/check-out-admin-employees/check-out-admin-employees.component';
+import { BreakAdminEmployeesComponent } from './dialogs/break-admin-employees/break-admin-employees.component';
+import { GeolocationService } from 'app/_services/geolocation.service';
+import { ShareScheduledTimeService } from 'app/_services/share-scheduled-time.service';
+import { OrderService } from 'app/_services/order.service';
+import { RegistrationService } from 'app/_services/registration.service';
+// import { HeaderComponent } from '../../../layout/header/header.component';
+
+
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  series2: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  stroke: ApexStroke;
+  dataLabels: ApexDataLabels;
+  markers: ApexMarkers;
+  colors: string[];
+  yaxis: ApexYAxis;
+  grid: ApexGrid;
+  legend: ApexLegend;
+  tooltip: ApexTooltip;
+  fill: ApexFill;
+  title: ApexTitleSubtitle;
+  responsive: ApexResponsive[];
+  labels: string[];
+};
+@Component({
+  selector: 'app-admin-employees',
+  templateUrl: './admin-employees.component.html',
+  styleUrls: ['./admin-employees.component.scss'],
+  providers: [DatePipe],
+})
+export class AdminEmployeesComponent 
+extends UnsubscribeOnDestroyAdapter 
+implements OnInit
+{
+  displayedColumns = [
+    'select',
+    //'lastName',
+    //'firstName',
+    //'highKeyID',
+    //'payRollID',
+    'position',
+    'hourFrom',
+    'in',
+    'out',
+    'break',
+    'totalHours',
+  ];
+
+  mobileDisplayedColumns: string[] = ['position-hourFrom-in', 'out-break-totalHours'];
+  
+  get isWebView(): boolean {
+    return window.innerWidth > 500;
+  }
+  
+  get isMobileView(): boolean {
+    return window.innerWidth <= 500;
+  }
+  
+  exampleDatabase?: EmployeesService;
+  selection = new SelectionModel<AdminEmployees>(true, []);
+  index?: number;
+  id?: number;
+  employees?: AdminEmployees;
+  public dataEmployees!: any;
+  employeesData: any[] = [];
+  public orderId!: string;
+  public exactHourPayment: boolean;
+  public empleados: string;
+  public employeesDatos: any[];
+  employeesArray: any[] = [];
+  isTblLoading = true;
+  public checkIn!: any;
+  public checkInTime!:any;
+  public checkOutTime!:any
+  showCheckInButton = false;
+  showCheckOutButton = false;
+  showBreakButton = false;
+  showNoShowButton = false;
+  public dataUser!: any;
+  groupEmployees = [];
+  public timeSheet: any = {};
+  public outEmployees = [];
+  public pdfEmployees = [];
+  employeeArray: any[] = [];
+  totalHoursArray: number[] = [];
+  totalHoursSum: number;
+  //geolocationService: any;
+  startDate: any;
+  
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
+  @ViewChild('filter', { static: true }) filter!: ElementRef;
+  @ViewChild(MatMenuTrigger)
+  contextMenu?: MatMenuTrigger;
+  contextMenuPosition = { x: '0px', y: '0px' };
+  
+  // dataSource!: ExampleDataSource;
+  dataSource: any;
+  
+  
+  HeaderComponent: any;
+  latitude: number;
+  longitude: number;  
+  orders: any[];
+  ordenes: any[];
+  
+  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+  isMobile: boolean = false;
+  selectedRole: string | null = null;
+
+  constructor(
+    private datePipe: DatePipe,
+    public httpClient: HttpClient,
+    public dialog: MatDialog,
+    public employeesService: EmployeesService,
+    private snackBar: MatSnackBar,
+    private orderDataService: OrderDataService,
+    public authenticationService: AuthenticationService,
+    private geolocationService: GeolocationService,
+    private shareScheduledTimeService : ShareScheduledTimeService,
+    //private checkInService: CheckInService,
+    private renderer: Renderer2, 
+    private el: ElementRef,
+    private ordSvc: OrderService,
+    private regSvc: RegistrationService,
+    
+    
+  ) {
+    super();
+  }
+  
+  ngOnInit() {
+    this.dataUser = this.authenticationService.getData(); // Persistencia de datos
+    // this.selectedRole = this.authenticationService.getSelectedRole();
+    // console.log('Selected role in component:', this.selectedRole);
+    const storedUserData = sessionStorage.getItem('currentUserData');
+    if (storedUserData) {
+        this.dataUser = JSON.parse(storedUserData);
+    } else {
+        // Si no se encuentran los datos en el sessionStorage, obtenerlos del servicio
+        this.dataUser = this.authenticationService.getData();
+        sessionStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
+    }
+    this.getOrderByHKid(this.dataUser.highkeyId);
+    console.log('Datos traídos desde el header: ', this.dataUser);
+    
+    this.geolocationService.getCoordinatesObservable().subscribe(
+        (coordinates) => {
+            this.latitude = coordinates.latitude;
+            // eslint-disable-next-line no-self-assign
+            this.longitude = this.longitude;
+            console.log("Coordenadas recibidas: ", coordinates);
+        },
+        (error) => {
+            console.error("Error obteniendo las coordenadas: ", error);
+        }
+    );
+
+
+    this.checkMobileView();
+    window.addEventListener('resize', this.checkMobileView.bind(this));
+   
+  }
+
+  
+
+  checkMobileView() {
+    this.isMobile = window.innerWidth <= 500;
+  }
+
+  getOrderByHKid(hkId: string) {
+      this.ordSvc.getOrderByHKid(hkId).subscribe(
+          (data) => {
+            console.log("DATAAA", data)
+            sessionStorage.setItem('currentOrders', JSON.stringify(data));
+              // Obtén la fecha de hoy en formato YYYY-MM-DD
+              
+              const today = new Date();
+              const todayString = today.toLocaleDateString('en-CA'); // 'en-CA' usa el formato YYYY-MM-DD
+              console.log("todayString", todayString);
+              // Filtra las órdenes para incluir solo las que tienen startDate igual a hoy
+              this.orders = data.filter(order => order.data.startDate === todayString);
+
+              console.log("Ordenes del empleado para hoy", this.orders);
+
+                const selectedOrder =this.orderDataService.getSelectedOrder();
+                if (selectedOrder) {
+                  console.log("entra por selected")
+                    this.orders = [selectedOrder];  // Asignar la orden seleccionada si existe
+                    // const order= this.orderDataService.getSelectedOrder()
+                    const order = selectedOrder
+                    this.fetchRegistrations(order, true);
+                    // this.orderDataService.clearSelectedOrder();
+                }
+              
+              if (this.orders.length > 0) {
+                  const orderFound = false;  // Bandera para verificar si se encontró la orden prioritaria
+
+                  for (const order of this.orders) {
+                      if (orderFound) break;  // Detener el bucle si ya se encontró la orden prioritaria
+                      this.fetchRegistrations(order, orderFound);
+                  }
+              } else {
+                  console.log("No hay órdenes para el día de hoy.");
+                  
+              }
+
+              // this.orders.sort((a, b) => b.data.ordNumb - a.data.ordNumb);
+          },
+          (error) => {
+              console.log('Error fetching orders by HK id:', error);
+          }
+      );
+  }
+
+  fetchRegistrations(order, orderFound) {
+    this.isTblLoading = true;
+    this.regSvc.getRegistration(order.id).subscribe(
+      (data) => {
+        this.isTblLoading = false;
+        console.log("datadelRegistroJR", data);
+        const checkInTrue = data.employees.find(employee => employee.checkin === true && employee.dateCheckin && !employee.checkout && !employee.dateCheckout);
+        if (checkInTrue) {
+          this.dataEmployees = order;
+          this.updateOrderDetails();
+          console.log("Orden con checkin true encontrada: ", order);
+          orderFound = true;
+        } else if (!orderFound) {
+          const now = new Date();
+          let closestOrder = null;
+          let closestTimeDifference = Infinity;
+          this.orders.forEach(order => {
+            order.data.items.forEach(item => {
+              const dateTimeString = `${order.data.startDate}T${item.hourFrom}`;
+              const orderDateTime = new Date(dateTimeString);
+
+              const timeDifference = Math.abs(now.getTime() - orderDateTime.getTime());
+
+              if (timeDifference < closestTimeDifference) {
+                closestTimeDifference = timeDifference;
+                closestOrder = order;
+              }
+            });
+          });
+
+          if (closestOrder) {
+            this.dataEmployees = closestOrder;
+            this.updateOrderDetails();
+            console.log("Orden más cercana a la hora actual: ", closestOrder);
+          }
+        }
+      },
+      (error) => {
+        console.error("Error fetching registrations:", error);
+        this.isTblLoading = false;
+      }
+    );
+  }
+
+  updateOrderDetails() {
+    console.log("data final",this.dataEmployees.data)
+      this.orderId = this.dataEmployees.id;
+      this.exactHourPayment = this.dataEmployees.data.exactHourPayment;
+      this.startDate = this.dataEmployees.data.startDate;
+      
+      this.getEmployees();
+      this.loadData();
+  }
+
+  getEmployees_bn() {
+    this.isTblLoading = true;
+    this.regSvc.getRegistration(this.orderId).subscribe(
+      (data) => {
+        this.isTblLoading = false;
+
+        this.employeesArray = data.employees.map((employee) => {
+          const employeeData = { ...employee.employee.data };
+          const firstName = employeeData.firstname || "No data";
+          const lastName = employeeData.lastname || "No data";
+          const highKeyId = employeeData.employeeId || "No data";
+          const position = employee.position || "No data";
+          const totalHours = employee.hours || 0;
+          const payrollId = employeeData.payrollid || "No data";
+          const brake = employee.break || "0";
+          const hourFrom = employee.hourFrom || "No data";
+          
+          let hourFromFormatted = "No Data";
+          if (employee.hourFrom) {
+            const hourParts = employee.hourFrom.split(':');
+            if (hourParts.length === 2) {
+              const hours = parseInt(hourParts[0]);
+              const minutes = parseInt(hourParts[1]);
+              const period = hours >= 12 ? 'PM' : 'AM';         
+              const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
+              const formattedMinutes = minutes.toString().padStart(2, '0');
+              hourFromFormatted = `${formattedHours}:${formattedMinutes} ${period}`;
+            }
+          }  
+
+          let checkInTime = "-";
+          if (employee.dateCheckin && employee.dateCheckin._seconds) {
+            const checkIn = employee.dateCheckin._seconds;
+            const checkInDate = new Date(checkIn * 1000);
+            checkInTime = this.datePipe.transform(checkInDate, 'hh:mm a');
+          }
+
+          let checkOutTime = '-';
+          if (employee.dateCheckout && employee.dateCheckout._seconds) {
+            const checkOut = employee.dateCheckout._seconds;
+            const checkOutDate = new Date(checkOut * 1000);
+            checkOutTime = this.datePipe.transform(checkOutDate, 'hh:mm a');
+          }
+
+          return {
+            ...employee,
+            employee: {
+              ...employee.employee,
+              data: employeeData,
+            },
+            firstName: firstName,
+            lastName: lastName,
+            highKeyId: highKeyId,
+            position: position,
+            hours: employee.hours,
+            totalHours: totalHours,
+            payRollId: payrollId,
+            hourFromFormatted: hourFromFormatted,
+            hourFrom: hourFrom,
+            in: checkInTime,
+            out: checkOutTime,
+            break: brake,
+          };
+        });
+
+        console.log('---------------------------');
+        console.log('Array empleados: ');
+        console.log(this.employeesArray);
+        console.log('---------------------------');
+        
+        const hkId = this.dataUser.highkeyId;
+
+        // Validación de la propiedad highKeyId del empleado con el highkeyId del usuario
+        this.employeeArray = this.employeesArray.filter((employee) => {
+          console.log("hkId:", hkId);
+          console.log("employee.highKeyId: ", employee.highKeyId);
+          return employee.highKeyId === Number(hkId);
+        });
+
+        this.dataSource = new ExampleDataSource(
+          this.exampleDatabase,
+          this.paginator,
+          this.sort,
+          this.employeeArray // Muestra la info de la orden según empleado en el listado.
+        );
+
+        // Sumando los totales de las horas trabajadas
+        this.totalHoursArray = this.employeeArray.map(item => Number(item.hours));
+        this.totalHoursSum = this.totalHoursArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+      },
+      (error) => {
+        this.isTblLoading = false;
+        console.log(error);
+      }
+    );
+  }
+  
+  getEmployees() {
+    this.isTblLoading = true;
+    this.regSvc.getRegistration(this.orderId).subscribe(
+      (data) => {
+        this.isTblLoading = false;
+  
+        // Verificar si data.employees existe y no está vacío
+        if (!data.employees || data.employees.length === 0) {
+          console.log('No employees found in the response.');
+          this.employeesArray = []; // Inicializar como array vacío
+          this.employeeArray = [];  // Inicializar como array vacío
+          this.dataSource = null;   // Evitar errores en la tabla
+          return;
+        }
+  
+        // Mapear los empleados solo si data.employees existe
+        this.employeesArray = data.employees.map((employee) => {
+          // Verificar si employee y employee.employee.data existen
+          if (!employee || !employee.employee || !employee.employee.data) {
+            console.warn('Employee data is incomplete:', employee);
+            return null; // Retornar null para filtrar después
+          }
+  
+          const employeeData = { ...employee.employee.data };
+          const firstName = employeeData.firstname || "No data";
+          const lastName = employeeData.lastname || "No data";
+          const highKeyId = employeeData.employeeId || "No data";
+          const position = employee.position || "No data";
+          const totalHours = employee.hours || 0;
+          const payrollId = employeeData.payrollid || "No data";
+          const brake = employee.break || "0";
+          const hourFrom = employee.hourFrom || "No data";
+  
+          let hourFromFormatted = "No Data";
+          if (employee.hourFrom) {
+            const hourParts = employee.hourFrom.split(':');
+            if (hourParts.length === 2) {
+              const hours = parseInt(hourParts[0]);
+              const minutes = parseInt(hourParts[1]);
+              const period = hours >= 12 ? 'PM' : 'AM';
+              const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
+              const formattedMinutes = minutes.toString().padStart(2, '0');
+              hourFromFormatted = `${formattedHours}:${formattedMinutes} ${period}`;
+            }
+          }
+  
+          let checkInTime = "-";
+          if (employee.dateCheckin && employee.dateCheckin._seconds) {
+            const checkIn = employee.dateCheckin._seconds;
+            const checkInDate = new Date(checkIn * 1000);
+            checkInTime = this.datePipe.transform(checkInDate, 'hh:mm a');
+          }
+  
+          let checkOutTime = '-';
+          if (employee.dateCheckout && employee.dateCheckout._seconds) {
+            const checkOut = employee.dateCheckout._seconds;
+            const checkOutDate = new Date(checkOut * 1000);
+            checkOutTime = this.datePipe.transform(checkOutDate, 'hh:mm a');
+          }
+  
+          return {
+            ...employee,
+            employee: {
+              ...employee.employee,
+              data: employeeData,
+            },
+            firstName: firstName,
+            lastName: lastName,
+            highKeyId: highKeyId,
+            position: position,
+            hours: employee.hours,
+            totalHours: totalHours,
+            payRollId: payrollId,
+            hourFromFormatted: hourFromFormatted,
+            hourFrom: hourFrom,
+            in: checkInTime,
+            out: checkOutTime,
+            break: brake,
+          };
+        }).filter(employee => employee !== null); // Filtrar empleados nulos
+  
+        console.log('---------------------------');
+        console.log('Array empleados: ');
+        console.log(this.employeesArray);
+        console.log('---------------------------');
+  
+        const hkId = this.dataUser.highkeyId;
+  
+        // Validación de la propiedad highKeyId del empleado con el highkeyId del usuario
+        this.employeeArray = this.employeesArray.filter((employee) => {
+          console.log("hkId:", hkId);
+          console.log("employee.highKeyId: ", employee.highKeyId);
+          return employee.highKeyId === Number(hkId);
+        });
+  
+        console.log('Employee Array after filter:', this.employeeArray);
+  
+        if (this.employeeArray.length > 0) {
+          // Crear el dataSource solo si hay empleados
+          this.dataSource = new ExampleDataSource(
+            this.exampleDatabase,
+            this.paginator,
+            this.sort,
+            this.employeeArray
+          );
+  
+          // Vincular el paginator después de crear el dataSource
+          if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+          }
+  
+          // Sumar las horas trabajadas
+          this.totalHoursArray = this.employeeArray.map(item => Number(item.hours));
+          this.totalHoursSum = this.totalHoursArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+        } else {
+          console.log('No employees found for the given highKeyId');
+          this.dataSource = null; // Evitar errores en la tabla
+        }
+      },
+      (error) => {
+        this.isTblLoading = false;
+        console.log(error);
+      }
+    );
+  }
+
+  onCheckboxClick(row: AdminEmployees) {
+    const dateStart = new Date(`${this.startDate}T${row.hourFrom}`);   
+    console.log("gdateStart", dateStart)       
+    this.shareScheduledTimeService.setScheduleDate(dateStart);
+    if ((row.dateCheckin === null || row.dateCheckin === undefined)&&(row.dateCheckout === null || row.dateCheckout === undefined)) {
+      console.log('dateCheckin', row.dateCheckin) 
+      this.showCheckInButton = true;
+      this.showCheckOutButton = false;
+      this.showBreakButton = false;
+      this.showNoShowButton = true;
+    }
+    else if((row.dateCheckin !== null || row.dateCheckin !== undefined)&&(row.dateCheckout === null || row.dateCheckout === undefined)) {
+      this.showCheckInButton = false;
+      this.showCheckOutButton = true;
+      this.showBreakButton = true;
+      this.showNoShowButton = false;
+    }  
+    else if ((row.dateCheckout !== null || row.dateCheckout !== undefined)&&(row.break === null || row.break === undefined || row.break === "0")){
+      this.showCheckInButton = false;
+      this.showCheckOutButton = false;
+      this.showBreakButton = true;
+      this.showNoShowButton = false;
+    }
+    else {
+      this.showCheckInButton = false;
+      this.showCheckOutButton = false;
+      this.showBreakButton = false;
+      this.showNoShowButton = false;
+    }
+    this.scrollToButtons()  
+  } 
+  scrollToButtons() {
+    const buttonsSection = this.el.nativeElement.querySelector('#buttonsSection'); // Replace 'buttonsSection' with the actual element ID you want to scroll to
+    if (buttonsSection) {
+      buttonsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+  //Borra checkIn, CheckOut y break.
+  deleteInTime(selectedRows: AdminEmployees[]) {
+    if (selectedRows.length > 0) {
+      // Filtrar y actualizar solo el empleado que hizo el check-in con sus datos actualizados
+      const updatedEmployees = this.employeesArray.map((employee) => {
+        if (
+          selectedRows.some(
+            (row) =>
+              row.employee.data.employeeId === employee.employee.data.employeeId &&
+              row.hourFrom === employee.hourFrom,
+          )
+        ) {
+          return {
+            ...employee,
+            checkin: false,
+            dateCheckin: "-",
+            realCheckin: "-",
+            dateCheckinRounded: "-",
+            checkout: false,
+            dateCheckout: "-",
+            dateCheckoutRounded: "-",
+            updateUser: this.dataUser.email,
+            status: 'reseted',
+            hours: 0,
+            break: 0,
+            in: '-',
+            out: '-',
+            realInTime: '-',
+            totalHours: 0,
+            checkinCoordinates: {
+              latitude: '-',
+              longitude: '-',
+            },
+            checkOutCoordinates: {
+              latitudeOut: '-',
+              longitudeOut: '-',
+            },
+          };
+        }
+        return employee;
+      });
+
+      console.log('updatedEmployees', updatedEmployees);
+
+      this.regSvc.updateRegistration(this.orderId, updatedEmployees).subscribe(
+        (data) => {
+          this.showNotification(
+            'snackbar-success',
+            'Check-in data reset successfully',
+            'bottom',
+            'center'
+          );
+          this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+          this.removeSelectedRows();
+        },
+        (error) => {
+          console.error('Error al actualizar:', error);
+        }
+      );
+    } else {
+      console.log('Ningún empleado seleccionado para check-in.');
+    }
+  }
+
+  mergeEmployeesData(newEmployeesData: any[]) {
+    return newEmployeesData.map((newEmployee) => {
+      // Buscar si el empleado ya existe en this.employeesArray
+      const existingEmployee = this.employeesArray.find(
+        (emp) => emp.orderId === newEmployee.orderId
+      );
+      if (existingEmployee) {
+        return {
+          ...existingEmployee,
+          ...newEmployee,
+        };
+      } else {
+        return newEmployee;
+      }
+    });
+  }
+
+  refresh() {
+    this.loadData();
+  }
+  getSelectedRow(): AdminEmployees | null {
+    const selectedRows = this.selection.selected;
+    if (selectedRows.length === 1) {
+      return selectedRows[0];
+    }
+    return null;
+  }
+  onActionButtonClick() { //botones de acciones (ya no aplica)
+    const selectedRows = this.getSelectedRows();
+    if (selectedRows.length > 0) {
+      // Realiza la acción con los objetos seleccionados, por ejemplo:
+      console.log('Objetos seleccionados:', selectedRows);
+    } else {
+      console.log('Ningún objeto seleccionado.');
+    }
+  }
+  getSelectedRows(): AdminEmployees[] {
+    return this.selection.selected;
+  }
+
+  formatTwoDigits(value: number): string {
+    return String(value).padStart(2, '0');
+  }
+
+  async checkInModal(selectedRows: AdminEmployees[]) {
+    if (selectedRows.length > 0) {
+      console.log('Empleados seleccionados para check-in:', selectedRows);
+      
+      const dialogRef = this.dialog.open(CheckInAdminEmployeesComponent, {        
+        data: {
+          employees: this.employeesArray,
+          action: 'add',
+        },
+      });
+
+      const result = await dialogRef.afterClosed().toPromise();
+      if (!result) {
+        console.log('El diálogo fue cerrado sin resultado');
+        return; // El diálogo fue cerrado sin resultado
+      }
+
+      const { startDate, coordinates } = result;
+
+      const timestamp = Timestamp.fromDate(new Date(startDate));
+      const checkInTimestamp = timestamp?.seconds || 0;
+      const rounded = this.roundDate(startDate);
+      const timestampCheckinRounded = Timestamp.fromDate(new Date(rounded));
+      const dateCheckinRounded = timestampCheckinRounded?.seconds || 0;
+
+      const updatedEmployees = this.employeesArray.map((employee) => {
+        if (selectedRows.some((row) => 
+            row.employee.data.employeeId === employee.employee.data.employeeId && 
+            row.hourFrom === employee.hourFrom)) {
+          return {
+            ...employee,
+            checkin: true,
+            status: "Checked In",
+            dateCheckin: {
+              _seconds: checkInTimestamp,
+              _nanoseconds: 0,
+            },
+            realCheckin: {
+              _seconds: checkInTimestamp,
+              _nanoseconds: 0,
+            },
+            dateCheckinRounded: {
+              _seconds: dateCheckinRounded,
+              _nanoseconds: 0,
+            },
+            checkinCoordinates: {
+              latitude: coordinates?.latitude,
+              longitude: coordinates?.longitude,
+            },
+            realInTime: result.actualTime,
+            updateUser: this.dataUser.email,
+          };
+        }
+        return employee;
+      });
+
+      console.log("updatedEmployees: ", updatedEmployees);
+
+      this.regSvc.updateRegistration(this.orderId, updatedEmployees).subscribe(
+        (data) => {
+          this.showNotification(
+            'snackbar-success',
+            'Successful CheckIn...!!!',
+            'bottom',
+            'center'
+          );
+          this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+          this.removeSelectedRows(); // Actualiza la tabla para que no duplique el dato en el anterior empleado.
+        },
+        (error) => {
+          console.error('Error al actualizar:', error);
+        }
+      );
+    } else {
+      console.log('Ningún empleado seleccionado para check-in.');
+    }
+  }
+
+  getCoordinates(): Promise<{ latitude: number; longitude: number }> {
+    return new Promise((resolve, reject) => {
+      this.geolocationService.getCoordinatesObservable().subscribe(
+        (coordinates) => {
+          resolve(coordinates);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
+  }
+
+  roundDate(date: Date) {
+    // Verificar si 'date' es una instancia válida de Date
+    if (date instanceof Date && !isNaN(date.getTime())) {
+      // eslint-disable-next-line prefer-const
+      let roundedDate = new Date(date); // Crear una copia de 'date'
+      roundedDate.setSeconds(0, 0);
+      // eslint-disable-next-line prefer-const
+      let minutes = roundedDate.getMinutes();
+      let sum = 0;
+      roundedDate.setMinutes(0);
+      if (minutes >= 0 && minutes <= 7) {
+        sum = 0;
+      } else if (minutes >= 8 && minutes <= 22) {
+        sum = 15;
+      } else if (minutes >= 23 && minutes <= 37) {
+        sum = 30;
+      } else if (minutes >= 38 && minutes <= 52) {
+        sum = 45;
+      } else {
+        sum = 60;
+      }
+      roundedDate.setMinutes(sum);
+      return roundedDate;
+    } else {
+      return null; // O devuelve un valor predeterminado o maneja el error de otra manera
+    }
+  }
+  
+  roundHours(hour: number) {
+    let decimal = hour - Math.floor(hour);
+    // eslint-disable-next-line prefer-const
+    let trunc = Math.trunc(hour);
+
+    let minutes = decimal * 60;
+    minutes = Math.round(minutes);
+    if (minutes >= 0 && minutes <= 7) {
+      decimal = 0;
+    } else if (minutes >= 8 && minutes <= 22) {
+      decimal = 0.25;
+    } else if (minutes >= 23 && minutes <= 37) {
+      decimal = 0.5;
+    } else if (minutes >= 38 && minutes <= 52) {
+      decimal = 0.75;
+    } else {
+      decimal = 1.0;
+    }
+    // eslint-disable-next-line prefer-const
+    let fixed = trunc + decimal;
+    return fixed;
+  }
+
+  async checkOutModal(selectedRows: AdminEmployees[]) {
+    if (selectedRows.length > 0) {
+      console.log('Empleados seleccionados para check-out:', selectedRows);
+      
+      const dialogRef = this.dialog.open(CheckOutAdminEmployeesComponent, {
+        data: {
+          employees: this.employeesArray,
+          action: 'add',
+        },
+      });
+
+      const result = await dialogRef.afterClosed().toPromise();
+      if (!result) {
+        console.log('El diálogo fue cerrado sin resultado');
+        return; // El diálogo fue cerrado sin resultado
+      }
+
+      const { endDate, coordinates } = result;
+
+      const timestamp = Timestamp.fromDate(new Date(endDate));
+      const checkOutTimestamp = timestamp?.seconds || 0;
+      const rounded = this.roundDate(endDate);
+      const timestampCheckoutRounded = Timestamp.fromDate(new Date(rounded));
+      const dateCheckoutRounded = timestampCheckoutRounded?.seconds || 0;
+
+      const updatedEmployees = this.employeesArray.map((employee) => {
+        if (
+          selectedRows.some(
+            (row) =>
+              row.employee.data.employeeId === employee.employee.data.employeeId &&
+              row.hourFrom === employee.hourFrom,
+          )
+        ) {
+          const roundedHours = this.calculateHoursWorked(
+            employee,
+            checkOutTimestamp,
+            dateCheckoutRounded
+          );
+
+          return {
+            ...employee,
+            checkout: true,
+            dateCheckout: {
+              _seconds: checkOutTimestamp,
+              _nanoseconds: 0,
+            },
+            dateCheckoutRounded: {
+              _seconds: dateCheckoutRounded,
+              _nanoseconds: 0,
+            },
+            checkOutCoordinates:{
+              latitudeOut: coordinates?.latitude,
+              longitudeOut: coordinates?.longitude,
+            },        
+            updateUser: this.dataUser.email,
+            status: 'Checked Out',
+            hours: roundedHours.toFixed(2),
+          };
+        }
+        return employee;
+      });
+
+      console.log('updatedEmployees', updatedEmployees);
+
+      this.regSvc.updateRegistration(this.orderId, updatedEmployees).subscribe(
+        (data) => {
+          this.showNotification(
+            'snackbar-success',
+            'Successful CheckOut...!!!',
+            'bottom',
+            'center'
+          );
+          this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+          this.removeSelectedRows();
+        },
+        (error) => {
+          console.error('Error al actualizar:', error);
+        }
+      );
+    } else {
+      console.log('Ningún empleado seleccionado para check-out.');
+    }
+  }
+ 
+  calculateHoursWorked(
+    employee: AdminEmployees,
+    checkOutTimestamp: number,
+    dateCheckoutRounded: number
+  ): number {
+    if (this.exactHourPayment) {
+      const hoursNumberExact = this.calculateExactHourPayment(
+        employee,
+        checkOutTimestamp
+      );
+      // const hours = hoursNumberExact.toFixed(2);
+      return hoursNumberExact;
+    } else {
+
+      let roundedBreak =0;
+    if(employee.break){
+      roundedBreak = this.roundHours(Number(employee.break)/ 60);
+    }
+    
+      const lateThreshold = 8; // Umbral de llegada tarde en horas
+      const checkInTime = employee.dateCheckinRounded._seconds;
+      const checkOutTime = dateCheckoutRounded;
+      const secondsWorked = checkOutTime - checkInTime;
+      const hoursWorked = secondsWorked / 3600; //3600000
+      // console.log("oursWorked", hoursWorked)
+      let hoursNumber = this.roundHours(hoursWorked);
+      hoursNumber = hoursNumber- roundedBreak;  
+      const roundedHours = this.roundHours(hoursWorked);
+      if (hoursNumber < 5) {
+        const dateCheckin = new Date(employee.dateCheckin._seconds * 1000);
+        // eslint-disable-next-line prefer-const
+        let late = this.validateCheckout(employee.hourFrom, dateCheckin);
+        if (late < 8) {
+          hoursNumber = 5;
+        } else {
+          if (late > lateThreshold) {
+            // hoursNumber = lateThreshold;
+            hoursNumber = this.calculateRegularHours(
+              employee,
+              dateCheckoutRounded
+            );
+          }
+        }
+      }
+      return hoursNumber;
+    }
+  }
+
+  validateCheckout(hourFrom, checkinDate) {
+    const [hour, minute] = hourFrom.split(':');
+    const hourLimit = new Date(checkinDate);
+    hourLimit.setHours(hour, minute, 0, 0);
+const dateStart = new Date(`${this.startDate}T${hourFrom}`);
+// console.log(dateStart.getTime())   
+if (checkinDate.getTime() > dateStart.getTime()){ 
+    // if (checkinDate.getTime() > hourLimit.getTime()) {
+      const diff = Math.abs(checkinDate.getTime() - hourLimit.getTime());
+      const minutes = Math.floor(diff / 60000);
+      return minutes;
+    }
+    return 0;
+  }
+
+  calculateRegularHours(employee: AdminEmployees, dateCheckoutRounded: number) {   
+    const checkinTime = new Date(employee.dateCheckinRounded._seconds * 1000);
+    const checkOutTime = new Date(dateCheckoutRounded * 1000);
+    const hours = (checkOutTime.getTime() - checkinTime.getTime()) / 3600000;
+    return Number(hours.toFixed(2));
+  }
+
+  calculateExactHourPayment(employee: AdminEmployees, checkOutTimestamp: number) {
+    const checkInTime = employee.dateCheckin._seconds;
+    const checkOutTime = checkOutTimestamp;
+    const secondsWorked = checkOutTime - checkInTime;
+    const hoursWorked = secondsWorked / 3600;
+    return Number(hoursWorked.toFixed(2));
+  }
+  
+  async breakModal(selectedRows: AdminEmployees[]) {
+    if (selectedRows.length > 0) {
+      console.log('Empleados seleccionados para break:', selectedRows);
+      const dialogRef = this.dialog.open(BreakAdminEmployeesComponent, {
+        data: {
+          employees: this.employeesArray,
+          action: 'add',
+        },
+      });
+
+      const result = await dialogRef.afterClosed().toPromise();
+      console.log('Result break: ', result);
+      const roundedBreak = this.roundHours(result.break / 60);
+
+      let updatedHours = 0;
+      const updatedEmployees = this.employeesArray.map((employee) => {
+        if (
+          selectedRows.some(
+            (row) =>
+              row.employee.data.employeeId === employee.employee.data.employeeId &&
+              row.hourFrom === employee.hourFrom,
+          )
+        ) {
+          if (employee.dateCheckout !== null && employee.dateCheckout !== undefined) {
+            const roundedHours = employee.empExactHours
+              ? this.calculateRegularHours(employee, employee.dateCheckoutRounded._seconds)
+              : this.calculateHoursWorked(employee, employee.dateCheckout._seconds, employee.dateCheckoutRounded._seconds);
+
+            const totalHours = roundedHours.toFixed(2);
+            const dateCheckin = new Date(employee.dateCheckin._seconds * 1000);
+            const late = this.validateCheckout(employee.hourFrom, dateCheckin);
+
+            if (late < 8 && employee.hours == 5) {
+              updatedHours = employee.hours;
+            } else {
+              updatedHours = Number(totalHours) - roundedBreak;
+            }
+          }
+          return {
+            ...employee,
+            updateUser: this.dataUser.email,
+            break: result.break,
+            hours: updatedHours.toFixed(2),
+          };
+        }
+        return employee;
+      });
+      console.log('updatedEmployees', updatedEmployees);
+
+      this.regSvc.updateRegistration(this.orderId, updatedEmployees).subscribe(
+        (data) => {
+          this.showNotification(
+            'snackbar-success',
+            'Successful break...!!!',
+            'bottom',
+            'center'
+          );
+          this.getEmployees(); // Llamar a la función getEmployees() para actualizar la tabla
+          this.removeSelectedRows();
+        },
+        (error) => {
+          console.error('Error al actualizar:', error);
+        }
+      );
+    } else {
+      console.log('Ningún empleado seleccionado para break.');
+    }
+  }
+ 
+  async loadTimesheet() {
+    this.outEmployees = [];
+    this.pdfEmployees = [];
+    let total = 0;
+     if (this.employeesArray) {
+     await this.employeesArray.forEach((emp) => {
+        this.outEmployees.push(emp);
+        if (emp.checkout) {
+          total += Number(emp.hours);
+          this.pdfEmployees.push(emp);
+        }
+      });
+     }
+    this.timeSheet.total = total.toFixed(2);
+  }
+
+  getEmployeesObject(employees) {
+    return {
+      columns: [
+        { width: '*', text: ''},
+        {
+          width: 'auto', 
+          alignment: 'left', // Alineación central dentro de la columna
+          table: {
+            widths: [
+              "auto",
+              "auto",
+              "auto",
+              "auto",
+              "auto",
+              "auto",
+              "auto",
+              "auto",
+            ],
+            body: [
+              [
+                {
+                  text: "No",
+                  style: "tableHeader",
+                },
+                {
+                  text: "LAST NAME",
+                  style: "tableHeader",
+                },
+                {
+                  text: "FIRST NAME",
+                  style: "tableHeader",
+                },
+                {
+                  text: "HK ID",
+                  style: "tableHeader",
+                },
+                {
+                  text: "IN",
+                  style: "tableHeader",
+                },
+                {
+                  text: "BREAK",
+                  style: "tableHeader",
+                },
+                {
+                  text: "OUT",
+                  style: "tableHeader",
+                },
+                {
+                  text: "TOTAL",
+                  style: "tableHeader",
+                },
+                
+              ],
+              // this.groupEmployees
+              ...this.groupEmployees.map((emp) => {
+                return emp;
+              }),
+            ],
+            
+          },
+        },  
+        {  alignment: 'left',  margin: [30, 10, 0, 10],   text: ''},
+         
+      ]
+    };
+  }
+  
+  private refreshTable() {
+    this.paginator._changePageSize(this.paginator.pageSize);
+  }
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.renderedData.length;
+    return numSelected === numRows;
+  }
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.dataSource.renderedData.forEach((row) =>
+          this.selection.select(row)
+        );
+  }
+  removeSelectedRows() {
+    const totalSelect = this.selection.selected.length;
+    this.selection.selected.forEach((item) => {
+      const index: number = this.dataSource.renderedData.findIndex(
+        (d) => d === item
+      );
+      // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
+      this.exampleDatabase?.dataChange.value.splice(index, 1);
+
+      this.refreshTable();
+      this.selection = new SelectionModel<AdminEmployees>(true, []);
+    });
+  }
+  //buscador
+  public loadData() {
+    this.exampleDatabase = new EmployeesService(this.httpClient);
+    //this.dataSource = new ExampleDataSource(this.exampleDatabase, this.paginator, this.sort, this.employeesArray);
+    this.subs.sink = fromEvent(this.filter.nativeElement, 'keyup').subscribe(
+      () => {
+        if (!this.dataSource) {
+          return;
+        }
+        this.dataSource.filter = this.filter.nativeElement.value;
+      }
+    );
+  }
+  showNotification(
+    colorName: string,
+    text: string,
+    placementFrom: MatSnackBarVerticalPosition,
+    placementAlign: MatSnackBarHorizontalPosition
+  ) {
+    this.snackBar.open(text, '', {
+      duration: 2000,
+      verticalPosition: placementFrom,
+      horizontalPosition: placementAlign,
+      panelClass: colorName,
+    });
+  }  
+}
+export class ExampleDataSource extends DataSource<AdminEmployees> {
+  data: any[];
+  filterChange = new BehaviorSubject('');
+  
+  get filter(): string {
+    return this.filterChange.value;
+  }
+
+  set filter(filter: string) {
+    console.log('Filtro actualizado:', filter);
+    this.filterChange.next(filter);
+  }
+
+  filteredData: AdminEmployees[] = [];
+  renderedData: AdminEmployees[] = [];
+
+  constructor(
+    public exampleDatabase: EmployeesService,
+    public paginator: MatPaginator,
+    public _sort: MatSort,
+    public employeesArray: any[]
+  ) {
+    super();
+    
+    // Resetear a la primera página cuando cambia el filtro.
+    this.filterChange.subscribe(() => {
+      console.log('Cambio en filtro, reiniciando paginador.');
+      this.paginator.pageIndex = 0;
+    });
+
+    // Configuración predeterminada de ordenamiento.
+    this._sort.active = 'hourFrom';
+    this._sort.direction = 'asc';
+
+    console.log('DataSource inicializada:', {
+      employeesArray: this.employeesArray,
+      sortActive: this._sort.active,
+      sortDirection: this._sort.direction
+    });
+  }
+
+  /** Conexión a la fuente de datos */
+  connect(): Observable<AdminEmployees[]> {
+    const displayDataChanges: Observable<any>[] = [
+      this.exampleDatabase.dataChange,
+      this._sort.sortChange,
+      this.filterChange,
+    ];
+  
+    // Solo agregar paginator.page si paginator está definido
+    if (this.paginator) {
+      displayDataChanges.push(this.paginator.page.pipe(map(() => null))); // Evita el error de tipo
+    }
+  
+    return merge(...displayDataChanges).pipe(
+      map(() => {
+        console.log('Filtro actual:', this.filter);
+        console.log('Array de empleados antes del filtrado:', this.employeesArray);
+  
+        // Filtrar datos
+        this.filteredData = this.employeesArray.slice().filter((employees: AdminEmployees) => {
+          const searchStr = (
+            employees.lastName +
+            employees.firstName +
+            employees.highKeyId +
+            employees.payRollId +
+            employees.position +
+            employees.hourFrom +
+            employees.in +
+            employees.out +
+            employees.break +
+            employees.totalHours
+          ).toLowerCase();
+          return searchStr.includes(this.filter.toLowerCase());
+        });
+  
+        console.log('Array de empleados después del filtrado:', this.filteredData);
+  
+        // Ordenar los datos filtrados
+        const sortedData = this.sortData(this.filteredData.slice());
+        console.log('Datos ordenados:', sortedData);
+  
+        // Aplicar paginación solo si paginator está definido
+        if (this.paginator) {
+          const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
+          this.renderedData = sortedData.slice(startIndex, startIndex + this.paginator.pageSize);
+          console.log('Datos renderizados (paginados):', this.renderedData);
+        } else {
+          this.renderedData = sortedData;
+          console.warn('Paginator no definido, mostrando todos los datos.');
+        }
+  
+        return this.renderedData;
+      })
+    );
+  }
+  
+
+  disconnect() {
+    console.log('Desconectando DataSource...');
+  }
+
+  /** Ordena los datos */
+  sortData(data: AdminEmployees[]): AdminEmployees[] {
+    if (!this._sort.active || this._sort.direction === '') {
+      console.warn('Sort no activo o sin dirección definida.');
+      return data;
+    }
+
+    return data.sort((a, b) => {
+      let propertyA: number | string = '';
+      let propertyB: number | string = '';
+
+      switch (this._sort.active) {
+        case 'firstName': [propertyA, propertyB] = [a.firstName, b.firstName]; break;
+        case 'lastName': [propertyA, propertyB] = [a.lastName, b.lastName]; break;
+        case 'highKeyID': [propertyA, propertyB] = [a.highKeyId, b.highKeyId]; break;
+        case 'position': [propertyA, propertyB] = [a.position, b.position]; break;
+        case 'totalHours': [propertyA, propertyB] = [a.totalHours, b.totalHours]; break;
+        case 'payRollID': [propertyA, propertyB] = [a.payRollId, b.payRollId]; break;
+        case 'hourFrom': [propertyA, propertyB] = [a.hourFrom, b.hourFrom]; break;
+        case 'in': [propertyA, propertyB] = [a.in, b.in]; break;
+        case 'out': [propertyA, propertyB] = [a.out, b.out]; break;
+      }
+
+      const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
+      const valueB = isNaN(+propertyB) ? propertyB : +propertyB;
+
+      return (valueA < valueB ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1);
+    });
+  }
+}
+  

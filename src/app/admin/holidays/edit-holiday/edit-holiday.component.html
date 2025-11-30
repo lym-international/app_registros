@@ -1,0 +1,94 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="'Edit Holiday'" [items]="['Holidays']" [active_item]="'Edit Holiday'">
+      </app-breadcrumb>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong> Edit Holiday</strong></h2>
+          </div>
+          <div class="body">
+            <form class="m-4" [formGroup]="holidayForm" (ngSubmit)="onSubmit()">
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Holiday No</mat-label>
+                    <input matInput formControlName="hNo" required>
+                    <mat-error *ngIf="holidayForm.get('hNo')?.hasError('required')">
+                      Holiday Number is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Holiday Name</mat-label>
+                    <input matInput formControlName="hName" required>
+                    <mat-error *ngIf="holidayForm.get('hName')?.hasError('required')">
+                      Holiday Name is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Holiday Date</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="date" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="holidayForm.get('date')?.hasError('required')">
+                      Please select date
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Location</mat-label>
+                    <input matInput formControlName="location" required>
+                    <mat-error *ngIf="holidayForm.get('location')?.hasError('required')">
+                      Location is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Shift</mat-label>
+                    <input matInput formControlName="shift" required>
+                    <mat-error *ngIf="holidayForm.get('shift')?.hasError('required')">
+                      Shift is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Details</mat-label>
+                    <textarea matInput formControlName="details"></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <button class="btn-space" [disabled]="!holidayForm.valid " mat-raised-button
+                    color="primary">Submit</button>
+                  <button type="button" mat-raised-button color="warn">Cancel</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

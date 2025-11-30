@@ -1,0 +1,91 @@
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { Employees } from './employees.model';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { UnsubscribeOnDestroyAdapter } from '@shared';
+@Injectable()
+export class EmployeesService extends UnsubscribeOnDestroyAdapter {
+  public url: any[] = []; 
+  private readonly API_URL = 'assets/data/employees.json';
+  isTblLoading = true;
+  dataChange: BehaviorSubject<Employees[]> = new BehaviorSubject<Employees[]>(
+    []
+  );
+
+  private employeesApi: any // Jairo
+  // Temporarily stores data from dialogs
+  dialogData!: Employees;
+  constructor(private httpClient: HttpClient) {
+    super();
+  }
+  get data(): Employees[] {
+    
+    return this.dataChange.value;
+  }
+  getDialogData() {
+    return this.dialogData;
+  }
+  setEmployeesApi(apiEmployees: any){
+    this.employeesApi = apiEmployees; 
+    // console.log("llamado al servicio", this.employeesApi);
+  }
+  /** CRUD METHODS */
+  
+ /*  getAllEmployeess(): void {
+
+    // console.log("this.employeesApi", this.employeesApi);    
+    this.subs.sink = this.httpClient.get<Employees[]>(this.API_URL).subscribe({
+      next: (data) => {
+        this.isTblLoading = false;
+        this.dataChange.next(data);
+        //console.log('DATA ->',data)
+      },
+      error: (error: HttpErrorResponse) => {
+        this.isTblLoading = false;
+        console.log(error.name + ' ' + error.message);
+      },
+    });
+  } */
+
+  addEmployees(employees: Employees): void {
+    this.dialogData = employees;
+
+    // this.httpClient.post(this.API_URL, employees)
+    //   .subscribe({
+    //     next: (data) => {
+    //       this.dialogData = employees;
+    //     },
+    //     error: (error: HttpErrorResponse) => {
+    //        // error code here
+    //     },
+    //   });
+  }
+  
+  //Actualizar empleados (no aplica en LyM)
+  /*updateEmployees(employees: Employees): void {
+    this.dialogData = employees;
+
+    // this.httpClient.put(this.API_URL + employees.id, employees)
+    //     .subscribe({
+    //       next: (data) => {
+    //         this.dialogData = employees;
+    //       },
+    //       error: (error: HttpErrorResponse) => {
+    //          // error code here
+    //       },
+    //     });
+  }*/
+  deleteEmployees(id: number): void {
+    console.log(id);
+
+    // this.httpClient.delete(this.API_URL + id)
+    //     .subscribe({
+    //       next: (data) => {
+    //         console.log(id);
+    //       },
+    //       error: (error: HttpErrorResponse) => {
+    //          // error code here
+    //       },
+    //     });
+  }
+}

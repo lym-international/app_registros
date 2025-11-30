@@ -1,0 +1,81 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          {{dialogTitle}}
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="holidayForm" (ngSubmit)="submit">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Holiday Name</mat-label>
+            <input matInput formControlName="hName" required>
+            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>article</mat-icon>
+            <mat-error *ngIf="holidayForm.get('hName')?.hasError('required')">
+              Holiday Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="holidayForm.get('date')?.hasError('required')">
+              Please select date
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Location</mat-label>
+            <input matInput formControlName="location" required>
+            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>place</mat-icon>
+            <mat-error *ngIf="holidayForm.get('location')?.hasError('required')">
+              Location is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Shift</mat-label>
+            <input matInput formControlName="shift" required>
+            <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>checklist</mat-icon>
+            <mat-error *ngIf="holidayForm.get('shift')?.hasError('required')">
+              Shift is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>details</mat-label>
+            <textarea matInput formControlName="details"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row" align="end">
+            <button mat-raised-button color="primary" [disabled]="!holidayForm.valid" [mat-dialog-close]="1"
+              (click)="confirmAdd()">Save</button>
+            <button mat-raised-button color="warn" (click)="onNoClick()" tabindex="-1">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,299 @@
+.tarjeta {
+    margin: 20px 0;
+    width: 80%;
+    color: #5B626B;
+    font-weight: 500;
+    font-size: medium;
+}
+
+.tarjeta-pequena {
+    margin: 20px 0;
+    /* width: 50%; */
+    color: white;
+    font-weight: 500;
+    background: linear-gradient(135deg, #051e2f 60%, rgb(30, 168, 255) 100%);
+}
+
+.tarjeta-indicadores {
+    margin: auto;
+    width: 20%;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 10px;
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+.column {
+    /* padding: 10px; */
+    vertical-align: super;
+    margin-top: -20px;
+}
+
+.sub-column {
+    display: inline-block;
+    grid-template-columns: repeat(2, 1fr);
+    /* grid-template-columns: 1fr; */
+    gap: 10px;
+    /* padding: 10px; */
+}
+
+.sub-sub-column {
+    display: grid;
+    /* padding: 20px; */
+}
+
+.column-check {
+    text-align: center;
+}
+
+.separador {
+    color: #004676;
+    width: 50%;
+    margin: 50px auto 70px auto;
+}
+
+.content {
+    position: relative;
+}
+
+.home-link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 10px;
+    margin-right: 20px;
+}
+
+.home-icon {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 10px;
+    color: black;
+}
+
+.home-text {
+    font-size: 1.2rem;
+}
+
+@media (max-width: 500px) {
+    .content-block {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .container {
+        grid-template-columns: 1fr;
+        padding-left: 2px;
+        padding-right: 2px;
+        // width: 100%; 
+    }
+
+    .sub-columns {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .contenedorSM {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+    }
+
+    .separador {
+        color: #004676;
+        width: 50%;
+        margin: 3px auto 30px auto;
+    }
+
+    .sub-sub-column {
+        display: grid;
+        margin-top: -25px;
+    }
+
+    .order-event-info {
+        display: flex;
+        justify-content: space-between;
+        margin-top: -10px;
+        
+    }
+
+    .event-date {
+        text-align: left;
+    }
+
+    .order-number {
+        text-align: right;
+    }
+
+    .ocultarMovil {
+        display: none;
+    }
+
+    .home-link {
+        margin-top: -40px;
+    }
+
+    .encabezado1, .mobile-label1 {
+        display: none;
+    }
+
+    .celda1 {
+        display: inline-block;
+        width: 100%;
+        vertical-align: top;
+        padding: 5px;
+        box-sizing: border-box;
+    }
+
+    .celda1:first-child {
+        margin-right: -4px;
+    }
+
+    .tbl-header-btn {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        
+    }
+
+    .tbl-header-btn1 {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 0px;
+        margin-bottom: 10px;
+        padding-left: 130px;
+        padding-right: 0px;
+    }
+    .mat-checkbox {
+        display: block;
+        margin-top: 10px;
+    }
+
+    .celda1 {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .mat-cell {
+        padding: 10px;
+    }
+}
+
+@media (min-width: 501px) {
+    .ocultarMovil {
+        display: block;
+    }
+
+    .ocultarMovilE {
+        display: none;
+    }
+
+    .home-link {
+        margin-top: 50px;
+    }
+
+    .materialTableHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 0px;
+    }
+
+    .header-buttons-left {
+        display: flex;
+        align-items: center;
+        margin-top: 0;
+    }
+
+    .tbl-search-box {
+        display: flex;
+        align-items: center;
+        margin-top: 0;
+    }
+
+    .card {
+        margin-top: 20px;
+        padding: 10px;
+    }
+}
+
+.order-event-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: -20px;
+    margin-bottom: 10px;
+}
+
+.event-date {
+    text-align: left;
+    flex: 1;
+}
+
+.order-number {
+    margin-left: auto;
+    text-align: right;
+    flex: 1;
+}
+
+//---------------------------
+/* Contenedor principal */
+.info-container {
+    display: flex;
+    flex-direction: column; /* Alinea los elementos en una columna */
+    margin-left: 0px; /* Ajusta el margen izquierdo del contenedor */
+}
+
+/* Detalles de información */
+.info-details {
+    display: flex;
+    flex-direction: column; /* Alinea los elementos en una columna */
+    margin-left: 0px; /* Agrega margen izquierdo para alinear con el checkbox */
+}
+
+/* Espaciado entre las filas */
+.position-hourFrom {
+    margin-top: 5px; /* Ajusta el espaciado superior */
+}
+
+.in-to {
+    margin-top: 10px; /* Ajusta el espaciado superior */
+}
+
+.total-hours {
+    margin-top: 10px; /* Ajusta el espaciado superior */
+}
+
+/* Opcional: ajuste del tamaño del checkbox y su alineación vertical */
+mat-checkbox {
+    margin-right: 10px; /* Espacio a la derecha del checkbox */
+    align-self: center; /* Alinea el checkbox verticalmente en el centro */
+}
+
+/* Contenedor para checkbox y texto */
+.checkbox-info {
+    display: flex;
+    align-items: center; /* Alinea verticalmente los elementos en el centro */
+}
+
+/* Opcional: Ajusta el margen derecho del checkbox para espacio entre el checkbox y el texto */
+mat-checkbox {
+    margin-right: 10px; /* Espacio entre el checkbox y el texto */
+}
+
+/* Estilo para el texto */
+.position-hourFrom {
+    font-size: 14px; /* Ajusta el tamaño de fuente según sea necesario */
+    color: #333; /* Ajusta el color del texto si es necesario */
+}
+
+

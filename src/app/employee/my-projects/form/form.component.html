@@ -1,0 +1,79 @@
+<div class="addContainer">
+  <div *ngIf="isDetails" class="contact-details">
+    <div class="modalHeader">
+      <div class="contact-details-name mb-2">{{myProjects.title}}</div>
+      <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div mat-dialog-content>
+      <mat-card-content>
+        <div class="row mt-5" style="width: 98%;">
+          <div class="col-5 m-b-10">Client Name:</div>
+          <div class="col-7 pro-left m-b-10">{{ myProjects.title }}</div>
+          <div class="col-5 m-b-10">Project Start Date:</div>
+          <div class="col-7 pro-left m-b-10"> <span class="material-icons-outlined project-icon2">
+              date_range
+            </span>{{ myProjects.startDate | date }}</div>
+          <div class="col-5 m-b-10">Project End Date:</div>
+          <div class="col-7 pro-left m-b-10"> <span class="material-icons-outlined project-icon2">
+              date_range
+            </span>{{ myProjects.endDate | date }}</div>
+          <div class="col-5 m-b-10">Project DeadLine:</div>
+          <div class="col-7 pro-left m-b-10"> <span class="material-icons-outlined project-icon2">
+              date_range
+            </span>{{ myProjects.deadLine | date }}</div>
+          <div class="col-5 m-b-10">Team:</div>
+          <div class="col-7 pro-left">
+            <ul class="list-unstyled order-list">
+              <li class="avatar avatar-sm"><img src="assets/images/user/user1.jpg" alt="user" class="rounded-circle">
+              </li>
+              <li class="avatar avatar-sm"><img src="assets/images/user/user2.jpg" alt="user" class="rounded-circle">
+              </li>
+              <li class="avatar avatar-sm"><img src="assets/images/user/user3.jpg" alt="user" class="rounded-circle">
+              </li>
+              <li class="avatar avatar-sm"><span class="badge">+4</span></li>
+            </ul>
+          </div>
+
+          <div class="col-5 m-b-10">Priority:</div>
+          <div class="col-7 pro-lef mb-2">
+            <ng-template [ngIf]="myProjects.priority === '1'">
+              <span class="badge badge-solid-red">High</span>
+            </ng-template>
+            <ng-template [ngIf]="myProjects.priority === '0'"><span class="badge badge-solid-blue">Medium</span>
+            </ng-template>
+            <ng-template [ngIf]="myProjects.priority === '-1'"> <span class="badge badge-solid-green">Low</span>
+            </ng-template>
+          </div>
+          <div class="col-5 m-b-10">Comments:</div>
+          <div class="col-7 pro-left m-b-10">25</div>
+          <div class="col-5 m-b-10">Bug:</div>
+          <div class="col-7 pro-left m-b-10">11</div>
+          <div class="col-5 m-b-10">Progress:</div>
+          <div class="col-7 pro-lef mb-2">
+            <mat-progress-bar mode="determinate" value="{{ myProjects.progress }}" style="width: 50%;">
+            </mat-progress-bar>
+          </div>
+          <div class="col-5 m-b-10">Status:</div>
+          <div class="col-7 pro-lef mb-2">
+            <div *ngIf="myProjects.status==='Active'">
+              <span class="badge badge-pill badge-primary col-green">
+                {{myProjects.status}}</span>
+            </div>
+            <div *ngIf="myProjects.status==='Hold'">
+              <span class="badge badge-pill badge-primary col-orange">
+                {{myProjects.status}}</span>
+            </div>
+            <div *ngIf="myProjects.status==='Deactive'">
+              <span class="badge badge-pill badge-primary col-red">
+                {{myProjects.status}}</span>
+            </div>
+          </div>
+          <div class="col-5 m-b-10">Project Details:</div>
+          <div class="col-7 pro-left m-b-10">{{ myProjects.details }}</div>
+        </div>
+      </mat-card-content>
+    </div>
+  </div>
+</div>

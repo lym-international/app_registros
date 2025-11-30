@@ -1,0 +1,195 @@
+<div class="addContainer">
+    <div class="modalHeader">
+        <div class="editRowModal">
+            <div class="modalHeader clearfix">
+                <div class="modal-about">
+                    {{dialogTitle}}
+                </div>
+            </div>
+        </div>
+        <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+    </div>
+    <div class="row searchBar">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div style="width: 800px;" class="materialTableHeader">
+                    <div class="left">
+                        <ul class="header-buttons-left ms-0">
+                            <li class="tbl-title">
+                                <!--<h2>Employees</h2>-->
+                            </li>
+                            <!--BUSCADOR-->
+                            <!--
+                            <li class="tbl-search-box">
+                                <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                                <input placeholder="Highkey Id" type="text" #filter class="browser-default search-field" aria-label="Search box">
+                                <button mat-button type="button" (click)="searchByHighkeyId()" style="background-color: aliceblue; margin-left: 9px;">Search</button>
+                            </li>
+                            -->
+                            <li class="tbl-search-box">
+                                <!--<label for="search-input"><i class="material-icons search-icon">search</i></label> -->
+                                <input style="width: 120px; margin-right: 5px;" placeholder="Highkey Id" type="text" #highKeyIdInput class="browser-default search-field" aria-label="Search box">
+
+                                <input style="width: 120px; margin-right: 5px;" placeholder="Payroll" type="text" #payrollInput class="browser-default search-field" aria-label="Search box">
+
+                                <input style="width: 180px; margin-right: 5px;" placeholder="First Name" type="text" #firstNameInput class="browser-default search-field" aria-label="Search box">
+
+                                <input style="width: 180px; margin-right: 5px;" placeholder="Last Name" type="text" #lastNameInput class="browser-default search-field" aria-label="Search box">
+
+                                <button mat-button type="button" (click)="searchBy()" style="background-color: aliceblue; margin-left: 9px;">Search</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div mat-dialog-content>
+        <form class="register-form m-4" [formGroup]="employeesForm" (ngSubmit)="submit">
+
+            <!--ANTERIORES INPUTS PAR ALA BUSQUEDA SOLO CON HIGHKEYID-->
+            <!--
+            <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>FirstName</mat-label>
+                        <input matInput formControlName="firstName" required>
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>face</mat-icon>
+                        <mat-error *ngIf="employeesForm.get('FirsName')?.hasError('required')">
+                            FirstName is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>LastName</mat-label>
+                        <input matInput formControlName="lastName" required>
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>face</mat-icon>
+                        <mat-error *ngIf="employeesForm.get('LastName')?.hasError('required')">
+                            LastName is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            -->
+            <!--
+            <div class="row">
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Mobile</mat-label>
+                        <input matInput formControlName="phone" type="number">
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>phone</mat-icon>
+                    </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Email</mat-label>
+                        <input matInput formControlName="email">
+                        <mat-icon class="material-icons-two-tone color-icon p-3" matSuffix>email</mat-icon>
+                    </mat-form-field>
+                </div>
+            </div>
+            -->
+
+            <!--TABLA DE EMPLEADOS-->
+            <div class="row clearfix" style="margin: -20px 60px 0px 60px">
+                <div style="width:100%">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                        <div class="card">
+                            <div class="header">
+                                <h2 style="color: #1A202E;">Select a employee</h2>
+                            </div>
+                            <ng-scrollbar style="height: 210px" visibility="hover">
+                                <div class="tableBody">
+                                    <div class="responsive_table">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="center">Select</th>
+                                                    <th class="center">HighKeyId</th>
+                                                    <th class="center">Payroll</th>
+                                                    <th class="center">FirstName</th>
+                                                    <th class="center">LastName</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container *ngFor="let employee of formData; let i = index">
+                                                    <tr>
+                                                        <td class="center">
+                                                            <!--<input type="checkbox" formControlName="selected" (click)="handleRowClickEMP($event, i)" /> -->
+                                                            <input type="checkbox" [checked]="employee.selected" (click)="handleRowClickEMP($event, i)" />
+                                                        </td>
+                                                        <td class="center">{{ employee.data.employeeId }}</td>
+                                                        <td class="center">{{ employee.data.payrollid }}</td>
+                                                        <td class="center">{{ employee.data.firstname }}</td>
+                                                        <td class="center">{{ employee.data.lastname }}</td>
+                                                    </tr>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </ng-scrollbar>
+                        </div>
+                    </div>
+                </div>
+
+
+                <hr style="color:#004676; width:80%; margin: 20px auto">
+
+                <!--TABLA POSICIONES-->
+                <div class="row clearfix" style="margin-top: 10px; margin-right: 0px; margin-left: 0px">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                        <div class="card">
+                            <div class="header">
+                                <h2 style="color: #1A202E;">Select a Position</h2>
+                            </div>
+                            <ng-scrollbar style="height: 210px" visibility="hover">
+                                <div class="tableBody">
+                                    <div class="responsive_table">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="center">Select</th>
+                                                    <th class="center">Position</th>
+                                                    <th class="center">Time</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container *ngFor="let position of positions | keyvalue">
+                                                    <ng-container *ngFor="let hour of position.value.hours | keyvalue">
+                                                        <tr>
+                                                            <td class="center">
+                                                                <!--para tomar únicamente el valor de la posición, debe ser: (change)="handleCheckboxChange($event, position.key)", si se le quita el .key muestra todo el array con horas-->
+                                                                <!--<input type="checkbox" class="check_box" [checked]="isRowSelected(position, hour)" (change)="handleCheckboxChange($event, position, hour)" /> -->
+                                                                <input type="checkbox" class="check_box" [checked]="position.key === selectedPosition && hour.key === selectedHour" (change)="handleCheckboxChange($event, position, hour)" />
+                                                            </td>
+                                                            <td class="center"> {{ position.key }}</td>
+                                                            <td class="center"> {{ formatHourForDisplay(hour.key) }} </td>
+                                                        </tr>
+                                                    </ng-container>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </ng-scrollbar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row ">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2 ">
+                    <div class="example-button-row " align="end ">
+                        <button mat-raised-button color="primary" [disabled]="!employeesForm.valid || !isTableSelected" [mat-dialog-close]="1 " (click)="confirmAdd()">Save</button>
+                        <button mat-raised-button color="warn" (click)="onNoClick() " tabindex="-1 ">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

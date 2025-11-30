@@ -1,0 +1,177 @@
+[{
+    "id": "001",
+    "img": "assets/images/user/user1.jpg",
+    "name": "Jay Soni",
+    "jobType": "Full Time",
+    "status": "Open",
+    "download": "2022-02-10T14:22:18Z",
+    "department": "Java",
+    "title": "Java Developer 2+ Yeaers of experience",
+    "role": "Android Developer"
+  },
+  {
+    "id": "002",
+    "img": "assets/images/user/user2.jpg",
+    "name": "Cara Stevens",
+    "jobType": "Part Time",
+    "status": "Cancelled",
+    "download": "2022-02-12T14:22:18Z",
+    "department": "Designing",
+    "title": "Android Developer 4+ Yeaers of experience",
+    "role": "Java Developer"
+  },
+  {
+    "id": "003",
+    "img": "assets/images/user/user3.jpg",
+    "name": "Grace Patton",
+    "jobType": "Internship",
+    "status": "Open",
+    "download": "2022-03-18T14:22:18Z",
+    "department": "Marketing",
+    "title": "Web Designer Fresher",
+    "role": "IOS Developer"
+  },
+  {
+    "id": "004",
+    "img": "assets/images/user/user4.jpg",
+    "name": "Jerome Shortle",
+    "jobType": "Other",
+    "status": "Closed",
+    "download": "2022-03-05T14:22:18Z",
+    "department": "Java",
+    "title": "Tester with 1+ years of experience",
+    "role": "Android Developer"
+  },
+  {
+    "id": "005",
+    "img": "assets/images/user/user5.jpg",
+    "name": "Isaiah Perkins",
+    "jobType": "Full Time",
+    "status": "Closed",
+    "download": "2022-02-27T14:22:18Z",
+    "department": "Accounting",
+    "title": "PHP Developer Fresher",
+    "role": "Web Designer"
+  },
+  {
+    "id": "006",
+    "img": "assets/images/user/user6.jpg",
+    "name": "Benedict Gildon",
+    "jobType": "Full Time",
+    "status": "Open",
+    "download": "2022-04-17T14:22:18Z",
+    "department": "Developing",
+    "title": "IOS Developer with 2+ years of experience",
+    "role": "Tester"
+  },
+  {
+    "id": "007",
+    "img": "assets/images/user/user7.jpg",
+    "name": "Ralph Twitty",
+    "jobType": "Full Time",
+    "status": "Cancelled",
+    "download": "2022-01-11T14:22:18Z",
+    "department": "Tesing",
+    "title": "Angular developer fresher",
+    "role": "Web Designer"
+  },
+  {
+    "id": "008",
+    "img": "assets/images/user/user8.jpg",
+    "name": "Sally Wolfe",
+    "jobType": "Part Time",
+    "status": "Closed",
+    "download": "2022-02-07T14:22:18Z",
+    "department": "Tesing",
+    "title": "Android Developer Fresher",
+    "role": "Android Developer"
+  },
+  {
+    "id": "009",
+    "img": "assets/images/user/user9.jpg",
+    "name": "Ned Francis",
+    "jobType": "Part Time",
+    "status": "Open",
+    "download": "2022-03-21T14:22:18Z",
+    "department": "Java",
+    "title": "Java Developer 7+ Yeaers of experience",
+    "role": "Web Designer"
+  },
+  {
+    "id": "010",
+    "img": "assets/images/user/user10.jpg",
+    "name": "Matilda Payne",
+    "jobType": "Part Time",
+    "status": "Closed",
+    "download": "2022-02-26T14:22:18Z",
+    "department": "Designing",
+    "title": "Java Team Leader",
+    "role": "Tester"
+  },
+  {
+    "id": "011",
+    "img": "assets/images/user/user11.jpg",
+    "name": "Julia Sandoval",
+    "jobType": "Other",
+    "status": "Cancelled",
+    "download": "2022-05-02T14:22:18Z",
+    "department": "Marketing",
+    "title": "Fullstack Developer with 2+ years of experience",
+    "role": "Tester"
+  },
+  {
+    "id": "012",
+    "img": "assets/images/user/user8.jpg",
+    "name": "Eugene Gregory",
+    "jobType": "Full Time",
+    "status": "Closed",
+    "download": "2022-05-03T14:22:18Z",
+    "department": "Java",
+    "title": "IOS Developer",
+    "role": "Web Designer"
+  },
+  {
+    "id": "013",
+    "img": "assets/images/user/user7.jpg",
+    "name": "Troy Foster",
+    "jobType": "Part Time",
+    "status": "Open",
+    "download": "2022-04-25T14:22:18Z",
+    "department": "Java",
+    "title": "Graphics Designer Fresher",
+    "role": "Java Developer"
+  },
+  {
+    "id": "014",
+    "img": "assets/images/user/user2.jpg",
+    "name": "Pearl Lowe",
+    "jobType": "Internship",
+    "status": "Closed",
+    "download": "2022-03-22T14:22:18Z",
+    "department": "Accounting",
+    "title": "Android Developer 4+ Yeaers of experience",
+    "role": "IOS Developer"
+  },
+  {
+    "id": "015",
+    "img": "assets/images/user/user6.jpg",
+    "name": "John Doe",
+    "jobType": "Other",
+    "status": "Open",
+    "download": "2022-04-15T14:22:18Z",
+    "department": "Tesing",
+    "title": "PHP Developer With 3+ Years Of Experience",
+    "role": "Web Designer"
+  },
+  {
+    "id": "016",
+    "img": "assets/images/user/user5.jpg",
+    "name": "Sarah Smith",
+    "jobType": "Full Time",
+    "status": "Closed",
+    "download": "2022-02-25T14:22:18Z",
+    "department": "Marketing",
+    "title": "VueJs Developer Fresher",
+    "role": "Web Designer"
+  }
+]

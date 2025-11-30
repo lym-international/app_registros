@@ -1,0 +1,125 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="'Expense Report'" [items]="['Reports']" [active_item]="'Expense Report'">
+      </app-breadcrumb>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="tabbable-line">
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="card">
+                <div class="materialTableHeader">
+                  <div class="left">
+                    <ul class="header-buttons-left ms-0">
+                      <li class="tbl-title">
+                        <h2>Expense Report</h2>
+                      </li>
+                      <li class="tbl-search-box">
+                        <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                        <input placeholder="Search" type="text" #filter class="browser-default search-field"
+                          aria-label="Search box">
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="body overflow-auto">
+                  <div class="responsive_table">
+                    <table mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
+                      <!-- ID Column -->
+                      <ng-container matColumnDef="id">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Id
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="invoiceNo">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Invoice No
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> <span class="mobile-label">Invoice No:</span>{{row.invoiceNo}}
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="date">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Date
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                          <span class="mobile-label">Date:</span> {{row.date | date: 'MM/dd/yyyy'}}</mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="expense">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Expense
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> <span class="mobile-label">Expense:</span>{{row.expense}}
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="img">
+                        <mat-header-cell mat-header-cell *matHeaderCellDef>
+                          Expense By
+                        </mat-header-cell>
+                        <mat-cell mat-cell *matCellDef="let row" class="table-img"><span class="mobile-label"> Expense
+                            By:</span> <img [src]="row.img" class="ms-2 me-2" />
+                          {{row.name}}
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="amount">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Amount
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row" class="column-nowrap"> <span
+                            class="mobile-label">Amount:</span>{{row.amount}}
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="pmode">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Payment Mode
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row"><span class="mobile-label">Payment Mode:</span> {{row.pmode}}
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="status">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> Status
+                        </mat-header-cell>
+                        <mat-cell mat-cell *matCellDef="let row">
+                          <span class="mobile-label">Status:</span>
+                          <div *ngIf="row.status==='Paid'">
+                            <span class="badge badge-solid-green">
+                              {{row.status}}</span>
+                          </div>
+                          <div *ngIf="row.status==='Unpaid'">
+                            <span class="badge badge-solid-red">
+                              {{row.status}}</span>
+                          </div>
+                        </mat-cell>
+                      </ng-container>
+                      <ng-container matColumnDef="paidTo">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Paid To
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row"><span class="mobile-label">Paid To:</span> {{row.paidTo}}
+                        </mat-cell>
+                      </ng-container>
+                      <mat-header-row *matHeaderRowDef="displayedColumns">
+                      </mat-header-row>
+                      <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'" matRipple>
+                      </mat-row>
+                    </table>
+                    <!-- Loading spinner -->
+                    <div *ngIf="exampleDatabase?.isTblLoading" class="tbl-spinner">
+                      <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
+                      </mat-progress-spinner>
+                    </div>
+                    <div *ngIf="!exampleDatabase?.isTblLoading" class="no-results"
+                      [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
+                      No results
+                    </div>
+                    <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
+                      [pageSizeOptions]="[5, 10, 25, 100]">
+                    </mat-paginator>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
