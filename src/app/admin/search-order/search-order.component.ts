@@ -258,7 +258,6 @@ export class SearchOrderComponent implements OnInit {
   navegar() {
     this.currentRole = this.userRoleService.getSelectedRole();
     if(this.currentRole){
-      console.log('Jairo Navegando', this.currentRole)
       this.router.navigate(['/admin/employees/admin-employees/']);
     }else{   
       if (this.selectedRole === 'Employee') {
