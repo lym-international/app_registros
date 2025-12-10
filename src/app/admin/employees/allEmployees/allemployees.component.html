@@ -521,6 +521,11 @@
       <div id="mapModal" #mapModal class="modal" style="display: none; top: 10%; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center;" (click)="closeMapModal()">
         <div class="modal-content" style="width: 50%; height: 60%; background-color: white; position: relative; padding: 10px;" (click)="$event.stopPropagation()">
           <span class="close" (click)="closeMapModal()" style="position: absolute; top: 10px; right: 10px; cursor: pointer; background: #ddd; padding: 5px 10px; border-radius: 3px;">&times; Close</span>
+          <div *ngIf="distanceInfo" style="padding: 10px; background-color: #f0f0f0; margin-bottom: 10px; border-radius: 5px;">
+            <h4 style="margin: 0 0 10px 0;">Distances from Event Location:</h4>
+            <p *ngIf="distanceInfo.checkin" style="margin: 5px 0;"><strong>Check-in:</strong> {{distanceInfo.checkin}}</p>
+            <p *ngIf="distanceInfo.checkout" style="margin: 5px 0;"><strong>Check-out:</strong> {{distanceInfo.checkout}}</p>
+            </div>
           <div style="height: calc(100% - 40px);">
             <google-map
               [center]="center"
