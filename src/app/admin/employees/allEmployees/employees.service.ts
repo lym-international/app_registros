@@ -31,7 +31,7 @@ export class EmployeesService extends UnsubscribeOnDestroyAdapter {
   }
   /** CRUD METHODS */
   
-  getAllEmployeess(): void {
+ /*  getAllEmployeess(): void {
 
     // console.log("this.employeesApi", this.employeesApi);    
     this.subs.sink = this.httpClient.get<Employees[]>(this.API_URL).subscribe({
@@ -45,7 +45,7 @@ export class EmployeesService extends UnsubscribeOnDestroyAdapter {
         console.log(error.name + ' ' + error.message);
       },
     });
-  }
+  } */
 
   addEmployees(employees: Employees): void {
     this.dialogData = employees;

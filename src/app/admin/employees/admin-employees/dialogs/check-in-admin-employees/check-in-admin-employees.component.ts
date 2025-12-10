@@ -1,15 +1,6 @@
-
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
-import {
-  UntypedFormControl,
-  Validators,
-  UntypedFormGroup,
-  UntypedFormBuilder,
-  FormControl,
-  FormGroup,
-} from '@angular/forms';
-//import { CheckInAdminEmployeesModel } from './check-in-admin-employees.model';
+import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormBuilder, FormGroup } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { GeolocationService } from 'app/_services/geolocation.service';
 import { ShareScheduledTimeService } from 'app/_services/share-scheduled-time.service';
@@ -25,72 +16,26 @@ export interface DialogData {
   templateUrl: './check-in-admin-employees.component.html',
   styleUrls: ['./check-in-admin-employees.component.scss']
 })
-export class CheckInAdminEmployeesComponent implements OnInit{
+export class CheckInAdminEmployeesComponent implements OnInit {
   action: string;
   dialogTitle: string;
   checkInForm: UntypedFormGroup;
-  //checkIn: CheckInAdminEmployeesModel;
   showDeleteBtn = false;
-  fechaInicio: FormControl;
-  public dataCheckIn!: any;
+  fechaInicio: UntypedFormControl;
   inputDisabled = true;
   latitud: number;
   longitud: number;
   shareHourFromFormatted: string;
-  dateStart:Date;
+  dateStart: Date;
   actualTime: Date;
   schedule: any;
-  
-  ngOnInit(): void {
-    this.actualTime = new Date();
-
-    this.checkInForm.patchValue({
-      startDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
-    });
-    
-    this.dateStart = this.shareScheduledTimeService.getScheduleDate();
-    const scheduleTime = new Date(this.dateStart);
-    console.log("scheduleTime", scheduleTime)
-    console.log("actualTime", this.actualTime)
-    const timeDifferenceInMinutes = (scheduleTime.getTime() - this.actualTime.getTime()) / (1000 * 60);
-    console.log('Diferencia entre scheduleTime y la actualTime en mins: ',timeDifferenceInMinutes)
-    
-    this.shareTimeDifferenceInMinutesService.setTimeDifference(timeDifferenceInMinutes);
-    
-      if (timeDifferenceInMinutes >= 20) {
-        console.log("La hora actual es menor o igual que el scheduleTime en 20 mins.");
-        console.log("scheduleTime:", scheduleTime);
-        // this.checkInForm.patchValue({ startDate: scheduleTime.getTime() });
-
-      this.fechaInicio = new FormControl(scheduleTime);
-      this.checkInForm = new FormGroup({
-      startDate: this.fechaInicio
-      });
-        
-      } else {
-        console.log("La hora actual es mayor que el scheduleTime (comparando scheduleTime desde -20 mins).");
-        // console.log("Hora actual:", this.actualTime);
-        this.fechaInicio = new FormControl(new Date());
-        this.checkInForm = new FormGroup({
-        startDate: this.fechaInicio
-        });
-      }
-
-
-    this.shareScheduledTimeService.getScheduleDateObservable().subscribe((selectedDate) => {
-      console.log('Activa el subscribe en  checkinEmployee')
-      if (selectedDate) {
-        console.log("selectedDate", selectedDate) 
-      }
-    });
-  }
 
   constructor(
     public dialogRef: MatDialogRef<CheckInAdminEmployeesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private fb: UntypedFormBuilder,
     private geolocationService: GeolocationService,
-    private shareScheduledTimeService : ShareScheduledTimeService,
+    private shareScheduledTimeService: ShareScheduledTimeService,
     private shareTimeDifferenceInMinutesService: ShareTimeDifferenceInMinutesService,
   ) {
     this.action = data.action;
@@ -98,23 +43,60 @@ export class CheckInAdminEmployeesComponent implements OnInit{
       this.showDeleteBtn = true;
     } else {
       this.dialogTitle = 'CheckIn date:';
-      //const blankObject = {} as CheckInAdminEmployeesModel;
-      //this.checkIn = new CheckInAdminEmployeesModel(blankObject);
       this.showDeleteBtn = false;
     }
     this.checkInForm = this.createContactForm();
-    //console.log('Propiedades modalCheckIn ==>',this.checkInForm.controls)
   }
-  
+
+  ngOnInit(): void {
+    this.actualTime = new Date();
+
+    this.checkInForm.patchValue({
+      startDate: formatDate(new Date(), 'yyyy-MM-dd', 'en'),
+    });
+
+    this.dateStart = this.shareScheduledTimeService.getScheduleDate();
+    const scheduleTime = new Date(this.dateStart);
+    const timeDifferenceInMinutes = (scheduleTime.getTime() - this.actualTime.getTime()) / (1000 * 60);
+    this.shareTimeDifferenceInMinutesService.setTimeDifference(timeDifferenceInMinutes);
+
+    if (timeDifferenceInMinutes >= 20) {
+      this.fechaInicio = new UntypedFormControl(scheduleTime);
+      this.checkInForm = new FormGroup({
+        startDate: this.fechaInicio
+      });
+    } else {
+      this.fechaInicio = new UntypedFormControl(new Date());
+      this.checkInForm = new FormGroup({
+        startDate: this.fechaInicio
+      });
+    }
+
+    this.shareScheduledTimeService.getScheduleDateObservable().subscribe((selectedDate) => {
+      if (selectedDate) {
+        console.log("selectedDate", selectedDate);
+      }
+    });
+
+    // Suscríbete al observable de coordenadas
+    this.geolocationService.getCoordinatesObservable().subscribe(
+      (coordinates) => {
+        this.latitud = coordinates.latitude;
+        this.longitud = coordinates.longitude;
+        console.log("Coordenadas recibidas: ", coordinates);
+      },
+      (error) => {
+        console.error("Error obteniendo las coordenadas: ", error);
+      }
+    );
+  }
+
   formControl = new UntypedFormControl('', [
     Validators.required,
-    // Validators.email,
   ]);
 
-  // Paso 2: Crear el EventEmitter
-  checkInUpdated: EventEmitter<any> = new EventEmitter<any>(); //
+  checkInUpdated: EventEmitter<any> = new EventEmitter<any>();
 
-  
   getErrorMessage() {
     return this.formControl.hasError('required')
       ? 'Required field'
@@ -123,42 +105,45 @@ export class CheckInAdminEmployeesComponent implements OnInit{
       : '';
   }
 
-  // ... (Other methods in the component)
-
   createContactForm(): UntypedFormGroup {
     return this.fb.group({
-      //id: [this.checkIn.id],
-      //title: [this.checkIn.title],
-      //category: [this.checkIn.category],
-      //startDate: [this.checkIn.startDate, [Validators.required]],
-      //endDate: [this.checkIn.endDate],
-      //details: [this.checkIn.details],
+      // Agrega tus controles de formulario aquí
     });
   }
 
   submit() {
-    // This method is not implemented yet, you can add the desired functionality here.
+    // Implementa la funcionalidad de enviar aquí
   }
 
   deleteEvent() {
-    // This method is not implemented yet, you can add the desired functionality here.
+    // Implementa la funcionalidad de eliminar aquí
   }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
-
-  public confirmAdd(): void {
+  public async confirmAdd(): Promise<void> {
     const startDate = this.fechaInicio.value;
-    this.schedule= {
-      startDate: startDate,
-      actualTime:this.actualTime
+    try {
+      const coordinates = await this.geolocationService.getCurrentLocationB();
+      const result = { startDate, coordinates };
+      this.dialogRef.close(result);
+    } catch (error) {
+      console.error("Error obteniendo las coordenadas: ", error);
+      // Manejar el error si es necesario
     }
-    startDate.actualTime = this.actualTime
-    console.log("schedule", this.schedule)
-     this.dialogRef.close(this.schedule);
-    
+    //this.checkoutValidatorService.setCheckoutDate(endDate);
+  }
+
+  public confirmAdd1(): void {
+    const startDate = this.fechaInicio.value;
+    this.schedule = {
+      startDate: startDate,
+      actualTime: this.actualTime
+    }
+    startDate.actualTime = this.actualTime;
+    this.dialogRef.close(this.schedule);
+
     this.geolocationService.getCurrentLocation();
   }
-  
 }

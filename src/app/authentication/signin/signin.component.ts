@@ -10,6 +10,7 @@ import {
 import { Role, AuthService } from '@core';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { AuthenticationService } from 'app/_services/authentication.service'; //Jairo
+import Swal from 'sweetalert2';
 
 
 
@@ -54,24 +55,6 @@ export class SigninComponent
     }); 
   } 
 
-  /*get f() {
-    return this.authForm.controls;
-  }*/
-
-  
-
-  /*adminSet() {
-    this.authForm.get('username')?.setValue('admin@software.com');
-    this.authForm.get('password')?.setValue('admin@123');
-  }
-  employeeSet() {
-    this.authForm.get('username')?.setValue('employee@software.com');
-    this.authForm.get('password')?.setValue('employee@123');
-  }
-  clientSet() {
-    this.authForm.get('username')?.setValue('client@software.com');
-    this.authForm.get('password')?.setValue('client@123');
-  } */
   
   
   onSubmit() {
@@ -85,10 +68,22 @@ export class SigninComponent
         
       const username = this.authForm.get('username')?.value.toLowerCase();
       const password = this.authForm.get('password')?.value;
-      //console.log('Username:', username);
-      //console.log('Password:', password); 
     
-      this.authenticationService.login(username, password); //jairo
+      // this.authenticationService.login(username, password); //jairo
+      this.authenticationService.login(username, password).catch((error) => {
+        switch (error.code) {
+          case 'auth/wrong-password':
+            Swal.fire('Warning', 'The password is invalid or the user does not have a password.', 'warning');
+            break;
+          case 'auth/too-many-requests':
+            Swal.fire('Warning', 'Too many unsuccessful login attempts. Please try again later.', 'warning');
+            break;
+          default:
+            Swal.fire('Warning', error.message, 'warning');
+            break;
+        }
+      });
+      
       
     } 
   }

@@ -7,10 +7,9 @@ import { AuthenticationService } from './_services/authentication.service';//Jai
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  currentUrl!: string;
 
-  constructor(public _router: Router, private authService: AuthenticationService
-    ) {
+  currentUrl!: string;
+  constructor(public _router: Router, private authService: AuthenticationService) {
     this.authService.initialize();
     this._router.events.subscribe((routerEvent: Event) => {
       if (routerEvent instanceof NavigationStart) {

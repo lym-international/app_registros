@@ -1,24 +1,27 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class GeolocationService {
-  private coordinatesSubject = new Subject<{ latitude: number; longitude: number }>();
+  public coordinatesSubject = new Subject<{ latitude: number; longitude: number }>();
+
+  constructor(private http: HttpClient) {}
 
   getCurrentLocation(): void {
     if ('geolocation' in navigator) {
-      const timeoutDuration = 0; // Tiempo de espera en milisegundos
+      const timeoutDuration = 4000; // Tiempo de espera en milisegundos
       const geolocationOptions = { timeout: timeoutDuration };
-  
+
       const timeoutId = setTimeout(() => {
         // Tiempo de espera agotado
         const timeoutError = new Error('Tiempo de espera agotado al obtener la ubicación.');
         this.coordinatesSubject.error(timeoutError);
       }, timeoutDuration);
-  
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
           clearTimeout(timeoutId); // Borra el temporizador si la ubicación se obtiene con éxito
@@ -41,28 +44,42 @@ export class GeolocationService {
       this.coordinatesSubject.error(new Error('Geolocation is not available in this browser.'));
     }
   }
+
+  getCurrentLocationB(): Promise<{latitude: number, longitude: number}> {
+    return new Promise((resolve, reject) => {
+      if ('geolocation' in navigator) {
+        const timeoutDuration = 4000; // Tiempo de espera en milisegundos
+        const geolocationOptions = { timeout: timeoutDuration };
   
-  /*
-  getCurrentLocation(): void {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const coordinates = { latitude: position.coords.latitude, longitude: position.coords.longitude };
-          this.coordinatesSubject.next(coordinates);
-          
-          //console.log('Coordenadas emitidas (servicio):', coordinates);
-        },
-        (error) => {
-          this.coordinatesSubject.error(error);
-        },
-        { timeout: 3000 }
-      );
-    } else {
-      this.coordinatesSubject.error(new Error('Geolocation is not available in this browser.'));
-    }
-    
+        const timeoutId = setTimeout(() => {
+          // Tiempo de espera agotado
+          reject(new Error('Tiempo de espera agotado al obtener la ubicación.'));
+        }, timeoutDuration);
+  
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            clearTimeout(timeoutId); // Borra el temporizador si la ubicación se obtiene con éxito
+            const coordinates = { latitude: position.coords.latitude, longitude: position.coords.longitude };
+            resolve(coordinates);
+          },
+          (error) => {
+            clearTimeout(timeoutId); // Borra el temporizador si se produce un error
+            // Manejar otros tipos de errores y mostrar mensajes específicos
+            if (error.code === 3) {
+              reject(new Error('Tiempo de espera agotado al obtener la ubicación.'));
+            } else {
+              reject(error);
+            }
+          },
+          geolocationOptions
+        );
+      } else {
+        reject(new Error('Geolocation is not available in this browser.'));
+      }
+    });
   }
-*/
+  
+
   getCoordinatesObservable() {
     return this.coordinatesSubject.asObservable();
   }

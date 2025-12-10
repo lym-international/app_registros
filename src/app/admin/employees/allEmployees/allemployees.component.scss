@@ -211,3 +211,38 @@
 .text-red {
     color: red !important;
 }
+
+
+
+//--------------------------------------------------
+.modalAprove {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 300px;
+    height: 100%;
+    background-color: white;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    padding: 16px;
+    z-index: 1000;
+}
+
+.modalAprove-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.modalAprove-content h2 {
+    margin-bottom: 16px;
+}
+
+.modalAprove-content mat-form-field,
+.modalAprove-content mat-checkbox,
+.modalAprove-content button {
+    margin-bottom: 16px;
+}
+
+.custom-close-button {
+    color: #0b55c4; 
+}
+

@@ -1,52 +1,80 @@
 <section class="content">
     <div class="content-block">
+        <a [routerLink]="'/admin/search-order'" class="home-link">
+            <i class="fa fa-home home-icon"></i>
+          </a>
         <div class="block-header ocultarMovil">
-            <!-- breadcrumb -->
-            <app-breadcrumb [title]="'Dashboard employee'" [items]="['Search order']" [active_item]="'Dashboard employee'"></app-breadcrumb>
+            <!-- <app-breadcrumb [items]="['Search order']" [active_item]="'Dashboard employee'"></app-breadcrumb> -->
+        </div>
+
+        <!-- Mostrar solo en vista móvil -->
+        <div class="block-header ocultarMovilE">
+            <!-- <app-breadcrumb></app-breadcrumb> -->
         </div>
 
         <div class="container">
-            <!---->
-            <div class="column" style="padding-top: 40px;">
-                <div class="card">
-                    <div class="card-statistic-3">
-                        <div class="card-icon card-icon-large"><i class="fa fa-globe"></i></div>
-                        <div class="tarjeta">
-                            <span style="font-size: large; color: #1A202E; font-weight: 700;">{{dataEmployees.data.clientName}}</span>
-                            <br/> <br/> {{dataEmployees.data.place}}
-                            <br/> <br/> {{dataEmployees.data.address}}
-                            <br/> <br/> {{dataEmployees.data.city}} {{dataEmployees.data.state}} {{dataEmployees.data.zipcode}}
-                            <br/> <br/> Order Number: {{dataEmployees.data.orderId}}
-                            <br/> <br/> Event date: {{dataEmployees.data.startDate}}
+            <!-- <div *ngIf="dataEmployees?.data; else noOrderAssigned"> -->
+                <div  *ngIf="dataEmployees?.data; else noOrderAssigned"  class="column" style="padding-top: 40px;">
+                    <div class="card">
+                        <div class="card-statistic-3">
+                            <div class="card-icon card-icon-large"><i class="fa fa-globe"></i></div>
+                            <div class="tarjeta">
+                                <span
+                                    style="font-size: large; color: #1A202E; font-weight: 700;">{{dataEmployees.data.clientName}}</span>
+                                <br /> <br /> {{dataEmployees.data.place}}
+                                <br /> <br /> {{dataEmployees.data.address}}
+                                <br /> <br /> {{dataEmployees.data.city}} {{dataEmployees.data.state}}
+                                {{dataEmployees.data.zipcode}}
+                                <br /> <br /> Order Number: {{dataEmployees.data.orderId}}
+                                <br /> <br /> Event date: {{dataEmployees.data.startDate}}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="column" style="margin: auto;">
-                <div class="sub-column">
-                    <div class="sub-sub-column">
-                        <mat-card class="tarjeta-pequena" style="background: linear-gradient(135deg, #16033a 60%, rgb(255, 255, 255) 100%);">
-                            <mat-card-content>
-                                <mat-card-title>Highkey ID: {{dataUser.highkeyId}}</mat-card-title>
-                            </mat-card-content>
-                        </mat-card>
-                    </div>
-                    <div class="sub-sub-column">
-                        <mat-card class="tarjeta-pequena" style="background: linear-gradient(135deg, #16033a 60%, rgb(255, 255, 255) 100%);">
-                            <mat-card-content>
-                                <mat-card-title>Total hours worked: {{totalHoursSum}}</mat-card-title>
-                                <!--{{dataEmployees.data.clientName ? dataEmployees.data.clientName : dataEmployees.data.company}} -->
-                            </mat-card-content>
-                        </mat-card>
+                <div class="column" style="margin: auto;">
+                    <div class="sub-column">
+                        <div class="sub-sub-column">
+                            <mat-card class="tarjeta-pequena"
+                                style="background: linear-gradient(135deg, #16033a 60%, rgb(255, 255, 255) 100%);">
+                                <mat-card-content>
+                                    <mat-card-title>Highkey ID: {{dataUser.highkeyId}}</mat-card-title>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                        <div class="sub-sub-column">
+                            <mat-card class="tarjeta-pequena"
+                                style="background: linear-gradient(135deg, #16033a 60%, rgb(255, 255, 255) 100%);">
+                                <mat-card-content>
+                                    <mat-card-title>Total hours worked: {{totalHoursSum}}</mat-card-title>
+                                    <!--{{dataEmployees.data.clientName ? dataEmployees.data.clientName : dataEmployees.data.company}} -->
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
                     </div>
                 </div>
-            </div>
+            <!-- </div> -->
+            <ng-template #noOrderAssigned>
+                <div class="column" style="padding-top: 40px; display: flex; justify-content: flex-end; align-items: center; height: 400px;">
+                    <div class="card" style="padding: 40px; text-align: center;">
+                        <div class="card-statistic-3">
+                            <div class="card-icon card-icon-large"><i class="fa fa-globe"></i></div>
+                            <!-- <div class="tarjeta">
+                                <span style="font-size: x-large; color: #1A202E; font-weight: 700;">You are not assigned to any order</span>
+                            </div> -->
+                            <div class="tarjetanoShitf" style="margin-right: 30px; text-align: center;">
+                                <span style="font-size: x-large; color: #1A202E; font-weight: 500;">No shift assigned</span>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+            
+
         </div>
 
         <hr class="separador" id="buttonsSection" />
-
-        <div class="row">
+ <!-- *ngIf="dataEmployees?.data && dataSource" -->
+        <div  class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="materialTableHeader">
@@ -57,7 +85,8 @@
                                 </li>
                                 <li class="tbl-search-box">
                                     <label for="search-input"><i class="material-icons search-icon">search</i></label>
-                                    <input placeholder="Search" type="text" #filter class="browser-default search-field" aria-label="Search box">
+                                    <input placeholder="Search" type="text" #filter class="browser-default search-field"
+                                        aria-label="Search box">
                                 </li>
                             </ul>
                         </div>
@@ -66,53 +95,29 @@
 
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" *ngIf="showCheckInButton" matTooltip="CHECKIN">
-                                        <button mat-mini-fab color="primary" (click)="checkInModal(getSelectedRows())"> 
-                                            <mat-icon class="col-white">how_to_reg</mat-icon>
+                                        <button mat-mini-fab color="primary" (click)="checkInModal(getSelectedRows())">
+                                            <!--<mat-icon class="col-white">how_to_reg</mat-icon>-->
+                                            IN
                                         </button>
                                     </div>
                                 </li>
 
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" *ngIf="showCheckOutButton" matTooltip="CHECKOUT">
-                                        <button mat-mini-fab color="primary" (click)="checkOutModal(getSelectedRows())"> 
-                                            <mat-icon class="col-white">logout</mat-icon>
+                                        <button mat-mini-fab color="primary" (click)="checkOutModal(getSelectedRows())">
+                                            <!--<mat-icon class="col-white">logout</mat-icon>-->
+                                            OUT
                                         </button>
                                     </div>
                                 </li>
 
                                 <li class="tbl-header-btn">
                                     <div class="m-l-10" *ngIf="showBreakButton" matTooltip="BREAK">
-                                        <button mat-mini-fab color="primary" (click)="breakModal(getSelectedRows())"> 
+                                        <button mat-mini-fab color="primary" (click)="breakModal(getSelectedRows())">
                                             <mat-icon class="col-white">coffee</mat-icon>
                                         </button>
                                     </div>
                                 </li>
-
-                                <li class="tbl-header-btn">
-                                    <div class="m-l-10" [hidden]=!selection.hasValue() matTooltip="DELETE: IN, OUT, BREAK">
-                                        <button mat-mini-fab color="warn" (click)="deleteInTime(getSelectedRows())">
-                                        <mat-icon class="col-white">refresh</mat-icon>
-                                      </button>
-                                    </div>
-                                </li>
-
-
-
-                                <!--<li class="tbl-header-btn">
-                                    <div class="m-l-10" matTooltip="REFRESH">
-                                        <button mat-mini-fab color="primary" (click)="refresh()">
-                      <mat-icon class="col-white">refresh</mat-icon>
-                    </button>
-                                    </div>
-                                </li>-->
-
-
-
-                                <!--<li>
-                                    <div class="export-button m-l-10" matTooltip="XLSX">
-                                        <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
-                                    </div>
-                                </li> -->
                             </ul>
                         </div>
                     </div>
@@ -124,83 +129,61 @@
 
                                 <ng-container matColumnDef="select">
                                     <mat-header-cell *matHeaderCellDef [ngClass]="'tbl-col-width-per-7'">
-                                        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [ngClass]="'tbl-checkbox'">
+                                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                                            [checked]="selection.hasValue() && isAllSelected()"
+                                            [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                            [ngClass]="'tbl-checkbox'">
                                         </mat-checkbox>
                                     </mat-header-cell>
                                     <mat-cell *matCellDef="let row" [ngClass]="'tbl-col-width-per-7'">
-                                        <mat-checkbox (click)="onCheckboxClick(row)" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [ngClass]="'tbl-checkbox'">
+                                        <mat-checkbox (click)="onCheckboxClick(row)"
+                                            (change)="$event ? selection.toggle(row) : null"
+                                            [checked]="selection.isSelected(row)" [ngClass]="'tbl-checkbox'">
                                         </mat-checkbox>
                                     </mat-cell>
                                 </ng-container>
 
-                                <!-- ID Column -->
-                                <!--<ng-container matColumnDef="id">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
-                                    <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
-                                </ng-container> -->
-
-                                <!--<ng-container matColumnDef="lastName">
-                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>LastName</mat-header-cell>
-                                    <mat-cell class="celda" *matCellDef="let row"> <span class="mobile-label">LastName:</span>{{row.lastName}}</mat-cell>
-                                </ng-container>
-                                <ng-container matColumnDef="firstName">
-                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>FirstName</mat-header-cell>
-                                    <mat-cell class="celda" *matCellDef="let row"> <span class="mobile-label">FirstName:</span>{{row.firstName}}</mat-cell>   
-                                </ng-container>
-                                <ng-container matColumnDef="highKeyID">
-                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>HighKey ID</mat-header-cell>
-                                    <mat-cell class="celda" *matCellDef="let row"> <span class="mobile-label">HighKeyId:</span>{{row.highKeyId}}</mat-cell> 
-                                </ng-container>
-                                <ng-container matColumnDef="payRollID">
-                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>PayRoll ID</mat-header-cell>
-                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">PayRoll ID:</span>{{row.payRollId}}</mat-cell>
-                                </ng-container> -->
-
                                 <ng-container matColumnDef="position">
-                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Position</mat-header-cell>
-                                    <mat-cell class="celda" *matCellDef="let row"> <span class="mobile-label">Position:</span>{{row.position}}</mat-cell>
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef
+                                        mat-sort-header>Position</mat-header-cell>
+                                    <mat-cell class="celda" *matCellDef="let row"> <span
+                                            class="mobile-label">Position:</span>{{row.position}}</mat-cell>
 
                                 </ng-container>
                                 <ng-container matColumnDef="hourFrom">
-                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Scheduled time</mat-header-cell>
-                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Scheduled time:</span>{{row.hourFromFormatted}}</mat-cell>
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Scheduled
+                                        time</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Scheduled
+                                            time:</span>{{row.hourFromFormatted}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="in">
-                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>In</mat-header-cell>
-                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">In:</span>{{row.in}}</mat-cell>
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef
+                                        mat-sort-header>In</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span
+                                            class="mobile-label">In:</span>{{row.in}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="out">
-                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Out</mat-header-cell>
-                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Out:</span>{{row.out}}</mat-cell>
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef
+                                        mat-sort-header>Out</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span
+                                            class="mobile-label">Out:</span>{{row.out}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="break">
-                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Break</mat-header-cell>
-                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Break:</span>{{row.break}}</mat-cell>
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef
+                                        mat-sort-header>Break</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span
+                                            class="mobile-label">Break:</span>{{row.break}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="totalHours">
-                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Total Hours</mat-header-cell>
-                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Total Hours:</span>{{row.totalHours}}</mat-cell>
+                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Total
+                                        Hours</mat-header-cell>
+                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Total
+                                            Hours:</span>{{row.totalHours}}</mat-cell>
                                 </ng-container>
-                                <!--<ng-container matColumnDef="uniform">
-                                    <mat-header-cell class="encabezado" *matHeaderCellDef mat-sort-header>Uniform</mat-header-cell>
-                                    <mat-cell class="celda2" *matCellDef="let row"> <span class="mobile-label">Uniform:</span>{{row.uniform}}</mat-cell>
-                                </ng-container>
-                                -->
-
-
-                                <!--<ng-container matColumnDef="actions">
-                                    <mat-header-cell class="pr-0" *matHeaderCellDef></mat-header-cell>
-                                    <mat-cell class="celda" *matCellDef="let row; let i=index;" class="pr-0">
-                                        <button mat-icon-button color="accent" class="tbl-action-btn" matTooltip="Delete In,Out,Break"> -->
-                                <!--Adicionar los siguientes eventos para que elimine la fila: (click)="$event.stopPropagation()" (click)="deleteItem(i, row)"-->
-                                <!--<app-feather-icons [icon]="'refresh-ccw'" [class]="'tbl-fav-delete'"></app-feather-icons>
-                                        </button>
-                                    </mat-cell>
-                                </ng-container> -->
-
 
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                                <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'" matRipple>
+                                <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'"
+                                    matRipple>
                                     <!--(click)="editCall(row)"-->
                                 </mat-row>
                             </table>
@@ -211,14 +194,15 @@
                             </div>
 
 
-                            <mat-paginator #paginator [length]="dataSource.filteredData?.length || 0" [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+                            <mat-paginator #paginator [length]="dataSource.filteredData?.length || 0" [pageIndex]="0"
+                                [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
                             </mat-paginator>
-
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
+        </div>
+
+    </div>
 </section>
