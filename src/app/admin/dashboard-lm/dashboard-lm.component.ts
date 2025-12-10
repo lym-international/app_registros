@@ -133,7 +133,10 @@ export class DashboardLmComponent implements OnInit {
         if (data.employees && Array.isArray(data.employees)) {
           this.checkIn = data.employees.filter((employee) => employee.checkin === true).length;
           this.checkOut = data.employees.filter((employee) => employee.checkout === true).length;
-          this.noShow = data.employees.filter((employee) => employee.status === 'No show').length;
+          // this.noShow = data.employees.filter((employee) => employee.status === 'No show').length;
+          const validStatuses = ['No show', 'Call out'];
+          this.noShow = data.employees.filter((employee) => validStatuses.includes(employee.status)).length;
+
 
           this.totalConfirmed = data.employees.filter((employee) => {
             return employee.employee && employee.employee.status === 'Confirmed';
@@ -176,10 +179,15 @@ export class DashboardLmComponent implements OnInit {
             if (employee.checkout) {
               positions[positionName].hours[hourFrom].totalCheckout++;
             }
-
-            if (employee.status === 'No show') {
+            
+            // if (employee.status === 'No show') {
+            //   positions[positionName].hours[hourFrom].totalnoShow++;
+            // }
+            const noShowStatuses = ['No show', 'Call out'];
+            if (noShowStatuses.includes(employee.status)) {
               positions[positionName].hours[hourFrom].totalnoShow++;
             }
+
           }
         });
 

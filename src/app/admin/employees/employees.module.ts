@@ -24,6 +24,7 @@ import { AllActionsComponent } from './allEmployees/dialogs/all-actions/all-acti
 import { AddExistingEmployeeComponent } from './allEmployees/dialogs/add-existing-employee/add-existing-employee.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { SharingCloseOrderService } from 'app/_services/sharing-close-order.serv
     SharedModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
-    NgScrollbarModule
+    NgScrollbarModule,
+    GoogleMapsModule
   ],
   providers: [EmployeesService, DatePipe, SharingCloseOrderService],
 })

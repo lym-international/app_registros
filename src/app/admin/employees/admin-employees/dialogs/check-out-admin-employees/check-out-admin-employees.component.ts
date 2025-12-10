@@ -109,6 +109,9 @@ export class CheckOutAdminEmployeesComponent implements OnInit{
       this.dialogRef.close(result);
     } catch (error) {
       console.error("Error obteniendo las coordenadas: ", error);
+      
+      const result = { endDate, coordinates: null }; // Las coordenadas son nulas.
+      this.dialogRef.close(result); // Cerrar el diálogo con la fecha y sin coordenadas.
       // Manejar el error si es necesario
     }
     //this.checkoutValidatorService.setCheckoutDate(endDate);

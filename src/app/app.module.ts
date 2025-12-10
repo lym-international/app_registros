@@ -18,11 +18,7 @@ import { JwtInterceptor } from './core/interceptor/jwt.interceptor';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import {
-  HttpClientModule,
-  HTTP_INTERCEPTORS,
-  HttpClient,
-} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { NgScrollbarModule } from 'ngx-scrollbar';
@@ -34,51 +30,47 @@ import { CloseEventComponent } from './close-event/close-event.component';
 import { OcultarSidebarService } from './_services/ocultar-sidebar.service'; // Diego
 import { TimesheetComponent } from './timesheet/timesheet.component'; //Jairo
 import { AuthenticationService } from './_services/authentication.service'; //Jairo
+import { GoogleMapsModule } from '@angular/google-maps';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
 }
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    HeaderComponent,
-    PageLoaderComponent,
-    SidebarComponent,
-    RightSidebarComponent,
-    AuthLayoutComponent,
-    MainLayoutComponent,
-    CloseEventComponent,
-    TimesheetComponent,
-  ],
-  imports: [
-    BrowserModule,
-    AngularFireModule.initializeApp(environment_A.firebase), //Jairo
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    HttpClientModule,
-    NgScrollbarModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: createTranslateLoader,
-        deps: [HttpClient],
-      },
-    }),
-    LoadingBarRouterModule,
-    // core & shared
-    CoreModule,
-    SharedModule,
-  ],
-  providers: [
-    AuthenticationService, //Jairo
-    OcultarSidebarService, //Diego
-    { provide: LocationStrategy, useClass: HashLocationStrategy },
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    fakeBackendProvider,
-
-  ],
-  bootstrap: [AppComponent],
-})
+@NgModule({ declarations: [
+        AppComponent,
+        HeaderComponent,
+        PageLoaderComponent,
+        SidebarComponent,
+        RightSidebarComponent,
+        AuthLayoutComponent,
+        MainLayoutComponent,
+        CloseEventComponent,
+        TimesheetComponent,
+        
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        AngularFireModule.initializeApp(environment_A.firebase), //Jairo
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        NgScrollbarModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: createTranslateLoader,
+                deps: [HttpClient],
+            },
+        }),
+        LoadingBarRouterModule,
+        // core & shared
+        CoreModule,
+        SharedModule,
+        GoogleMapsModule], providers: [
+        AuthenticationService, //Jairo
+        OcultarSidebarService, //Diego
+        { provide: LocationStrategy, useClass: HashLocationStrategy },
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        fakeBackendProvider,
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {}

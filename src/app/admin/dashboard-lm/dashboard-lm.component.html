@@ -237,7 +237,7 @@
                     <div class="card-statistic-3">
                         <div class="card-icon card-icon-large"><i class="fa fa-check"></i></div>
                         <div class="card-content">
-                            <h4 class="card-title">Noshow</h4>
+                            <h4 class="card-title">Noshow / Callout</h4>
                             <span class="data-1">{{noShow}}</span>
                             <mat-progress-bar mode="determinate" class="progress-m progress-round progress-shadow violet-progress mt-2 mb-2" value={{porcentajeNoshow}}>
                             </mat-progress-bar>
@@ -455,7 +455,7 @@
                                         <th class="column-check" matTooltip="(CheckIn/Confirmed)*100" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">%In</th>
                                         <th class="column-check" matTooltip="CheckOut" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">Out</th>
                                         <th class="column-check" matTooltip="(CheckOut/CheckIn)*100" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">%Out</th>
-                                        <th class="column-check" matTooltip="NoShow" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">NSh</th>
+                                        <th class="column-check" matTooltip="NoShow + Call Out" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">NSh</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -521,7 +521,8 @@
                                             <th class="column-check" matTooltip="(CheckIn/Confirmed)*100" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">CheckIn %</th>
                                             <th class="column-check">CheckOut</th>
                                             <th class="column-check" matTooltip="(CheckOut/CheckIn)*100" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">CheckOut %</th>
-                                            <th class="column-check">Noshow</th>
+                                            <!-- <th class="column-check">Noshow</th> -->
+                                            <th class="column-check" matTooltip="No show + Call out" [matTooltipPosition]="'above'" [matTooltipClass]="'custom-tooltip'">N S</th>
                                         </tr>
                                     </thead>
                                     <tbody>

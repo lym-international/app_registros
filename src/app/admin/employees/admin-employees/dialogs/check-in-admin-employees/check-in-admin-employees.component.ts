@@ -126,10 +126,16 @@ export class CheckInAdminEmployeesComponent implements OnInit {
     const startDate = this.fechaInicio.value;
     try {
       const coordinates = await this.geolocationService.getCurrentLocationB();
+      console.log("", startDate)
       const result = { startDate, coordinates };
       this.dialogRef.close(result);
     } catch (error) {
       console.error("Error obteniendo las coordenadas: ", error);
+
+    // Si ocurre un error, envía solo el startDate
+    const result = { startDate }; // Solo envía startDate sin las coordenadas
+    this.dialogRef.close(result);
+      // this.dialogRef.close();
       // Manejar el error si es necesario
     }
     //this.checkoutValidatorService.setCheckoutDate(endDate);

@@ -168,7 +168,7 @@ export class AllActionsComponent implements OnInit{
     this.dialogRef.close();
   }
 
-  public async confirmAdd(): Promise<void> {
+  public async confirmAddbien(): Promise<void> {
     // const endDate = this.fechaSalida.value;
     const startDate = this.fechaInicio.value;
     const endDate = this.fechaSalida.value;
@@ -185,11 +185,47 @@ export class AllActionsComponent implements OnInit{
       this.dialogRef.close(result);
     } catch (error) {
       console.error("Error obteniendo las coordenadas: ", error);
+
+      const result = { startDate: startDate,
+        endDate: endDate,
+        break: _break,
+        coordinates: null }; // Las coordenadas son nulas.
+      this.dialogRef.close(result);
       // Manejar el error si es necesario
     }
     //this.checkoutValidatorService.setCheckoutDate(endDate);
   }
 
+  public async confirmAdd(): Promise<void> {
+    const startDate = this.fechaInicio.value;
+    const endDate = this.fechaSalida.value;
+    const _break = this.allActionsForm.value.break;
+  
+    try {
+      const coordinates = await this.geolocationService.getCurrentLocationB();
+      const result = {
+        startDate: startDate,
+        endDate: endDate,
+        break: _break,
+        coordinates,
+      };
+      this.dialogRef.close(result);
+    } catch (error) {
+      console.error("Error obteniendo las coordenadas: ", error);
+  
+      // Coordenadas por defecto
+      const defaultCoordinates = { latitude: 39.354368, longitude: -76.7459328 };
+  
+      const result = {
+        startDate: startDate,
+        endDate: endDate,
+        break: _break,
+        coordinates: defaultCoordinates, // Usa las coordenadas por defecto
+      };
+      this.dialogRef.close(result);
+    }
+  }
+  
   public confirmAdd1(): void {
     const startDate = this.fechaInicio.value;
     const endDate = this.fechaSalida.value;

@@ -14,6 +14,7 @@ import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { LanguageService, InConfiguration, AuthService } from '@core';
 import { AuthenticationService } from 'app/_services/authentication.service';
 import { FontAwesomeComponent } from 'app/icons/font-awesome/font-awesome.component';
+import { OrderDataService } from 'app/_services/orderData.service';
 
 
 interface Notifications {
@@ -56,6 +57,7 @@ export class HeaderComponent
     private router: Router,
     public languageService: LanguageService,
     public authenticationService: AuthenticationService,
+    public orderDataService : OrderDataService,
     
   ) {
     super();
@@ -151,6 +153,7 @@ export class HeaderComponent
       //  https://highkeystaff.web.app/dashboard
       // http://localhost:4200/dashboard
        window.location.href= 'https://highkeystaff.web.app/dashboard'
+      // window.location.href= 'https://highkeystaff-test.web.app'
       // window.location.href = `https://register.highkeystaff.com/#/authentication/signin/?token=${token}`;
     } else {
       console.error('Token de acceso no presente en sessionStorage.');
@@ -205,6 +208,7 @@ export class HeaderComponent
   logout() {
 
   this.authenticationService.logout(); //jairo
+  this.orderDataService.clearSelectedOrder();
 
     /* this.subs.sink = this.authService.logout().subscribe((res) => {
       if (!res.success) {
