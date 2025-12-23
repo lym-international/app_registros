@@ -94,36 +94,44 @@ export class SearchOrderComponent implements OnInit {
     }
   }
 
-  
   getOrders() {
     this.ordSvc.getOrders().subscribe(
       (data) => {
         this.orders = data;
-  
+
         this.orders.sort((a, b) => {
-          // Verifica si ambos tienen ordN
-          if (a.data.ordNo && b.data.ordNo) {
-            return b.data.ordNo - a.data.ordNo; // Ordena por ordN de manera descendente
+          // Extraer año y número del orderId (formato: "2026-150" o "2025-2132")
+          const getOrderParts = (orderId: string) => {
+            if (!orderId || typeof orderId !== 'string') {
+              return { year: 0, number: 0 };
+            }
+            const parts = orderId.split('-');
+            return {
+              year: parseInt(parts[0]) || 0,
+              number: parseInt(parts[1]) || 0
+            };
+          };
+
+          const orderA = getOrderParts(a.data.orderId);
+          const orderB = getOrderParts(b.data.orderId);
+
+          // Primero ordenar por año (descendente - más reciente primero)
+          if (orderA.year !== orderB.year) {
+            return orderB.year - orderA.year;
           }
-          // Si uno tiene ordN y el otro no, prioriza el que tiene ordN
-          if (a.data.ordNo && !b.data.ordNo) {
-            return -1;
-          }
-          if (!a.data.ordNo && b.data.ordNo) {
-            return 1;
-          }
-          // Si ninguno tiene ordN, ordena por ordNumb de manera descendente
-          return b.data.ordNumb - a.data.ordNumb;
+
+          // Si el año es igual, ordenar por número (descendente)
+          return orderB.number - orderA.number;
         });
-  
+
+        //console.log('✅ Órdenes ordenadas. Primera:', this.orders[0]?.data?.orderId);
         sessionStorage.setItem('currentOrders', JSON.stringify(this.orders));
       },
       (error) => {
         console.log('Error fetching orders:', error);
       }
     );
-  }
-  
+  }  
 
   getOrderByHKid(hkId: string) {
     this.ordSvc.getOrderByHKid(hkId).subscribe(
@@ -215,10 +223,9 @@ export class SearchOrderComponent implements OnInit {
       inputValue = inputValue.substring(0, 4) + '-' + inputValue.substring(4); // Formatea el número de orden
     }
     this.orderNumber = inputValue;
-    // console.log('Orden a buscar:', this.orderNumber);
   
     // Validar el formato del número de orden
-    const orderNumberPattern = /^\d{4}-\d{2,4}$/; // Expresión regular para el formato
+    const orderNumberPattern = /^\d{4}-\d{1,4}$/; // Expresión regular para el formato
     if (!orderNumberPattern.test(this.orderNumber)) {
       // console.log('Formato de número de orden inválido. Debe ser como 2025-94 o 2024-1234.');
       return; // Detener la ejecución si el formato no es válido
