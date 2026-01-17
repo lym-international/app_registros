@@ -249,42 +249,46 @@ export class AddExistingEmployeeComponent {
 
   public confirmAdd(): void {
     if (this.selectedPosition && this.selectedHour) {
-      // Si hay una fila seleccionada, agrega la posición y la hora al objeto formData
-      //this.formData = this.employeesForm.value;
-
       const newPositionName = this.selectedPosition;
       const objetoSeleccionado = this.formData.find(
         (item) => item.selected === true
       );
-      // Ahora objetoSeleccionado contiene el objeto con selected: true
+      
+      if (!objetoSeleccionado) {
+        console.log('No se ha seleccionado ningún empleado');
+        return;
+      }
+      
       const posicionSeleccionada = this.formData.indexOf(objetoSeleccionado);
-      // Ahora posicionSeleccionada contiene la posición del objeto seleccionado
       console.log('Empleado seleccionado:', objetoSeleccionado);
-      //console.log('this.formData.positions: ', this.formData[posicionSeleccionada].data.positions)
-      // Verifica si el nombre de la posición ya existe en formData.positions
-      const positionExists = this.formData[
-        posicionSeleccionada
-      ].data.positions.some((position) => position.name === newPositionName);
+      
+      // ✅ VALIDAR que positions existe, si no, inicializarlo
+      if (!objetoSeleccionado.data.positions) {
+        objetoSeleccionado.data.positions = [];
+      }
+      
+      // Verifica si el nombre de la posición ya existe
+      const positionExists = objetoSeleccionado.data.positions.some(
+        (position) => position.name === newPositionName
+      );
 
       if (!positionExists) {
-        // Si la posición no existe, crea un nuevo objeto de posición y agrégalo al array
         const newPosition = {
-          rate: this.selectedRate, // Define el valor que corresponda a la tasa de la nueva posición
+          rate: this.selectedRate,
           name: newPositionName,
         };
         objetoSeleccionado.data.positions.push(newPosition);
       }
-      // Asegúrate de que this.formData.position y this.formData.hourFrom estén actualizados según los valores del formulario
+      
+      // Actualizar datos
       objetoSeleccionado.data.position = this.selectedPosition;
       objetoSeleccionado.data.hourFrom = this.selectedHour;
       objetoSeleccionado.data.rate = this.selectedRate;
       objetoSeleccionado.data.id = objetoSeleccionado.id;
-      // Puedes imprimir el array actualizado para verificarlo
-      //console.log('formData.positions:', objetoSeleccionado.data.position);
+      
       console.log('Objeto Seleccionado=> ', objetoSeleccionado.data);
       this.dialogRef.close(objetoSeleccionado.data);
     } else {
-      // Si no hay fila seleccionada, muestra un mensaje de error o toma la acción apropiada
       console.log('No se ha seleccionado ninguna fila');
     }
   }

@@ -5,6 +5,7 @@ import {
   OnInit,
   ViewChild,
   Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { EmployeesService } from './employees.service';
 import { HttpClient } from '@angular/common/http';
@@ -174,7 +175,8 @@ export class AllemployeesComponent
     private ordSvc: OrderService,
     private regSvc: RegistrationService,
     private geolocationService: GeolocationService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private cdr: ChangeDetectorRef
   ) {
     super();
   }
