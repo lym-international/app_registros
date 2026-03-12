@@ -20,6 +20,7 @@
                             <br/> <br/> <span class="title-data-mobile">Total hours: </span>{{totalHoursSum}}
                             <br/> <br/> <span class="title-data-mobile">Event date: </span>{{dataEmployees.data.startDate}}
                             <br/> <br/> <span class="title-data-mobile">Status Order: </span>{{statusOrder}}
+                           
                         </div>
                     </div>
                 </div>
@@ -28,9 +29,9 @@
         <!--FIN VISIBILIDAD MOVILES DATA-->
 
         <!--INICIO VISIBILIDAD ESCRITORIO TARJETAS-->
-        <div class="container d-none d-md-flex">
+       <div class="container d-none d-md-flex">
             <div class="column">
-                <div class="sub-column">
+                <div class="sub-column" style="grid-template-columns: repeat(6, 1fr);">
                     <div class="sub-sub-column">
                         <mat-card class="tarjeta-pequena">
                             <mat-card-content>
@@ -63,6 +64,13 @@
                             </mat-card-content>
                         </mat-card>
                     </div>
+
+                    <!--<button mat-raised-button color="primary" (click)="generatePdfWithSignature()" 
+                            *ngIf="dataEmployees?.data?.approvalSignature">
+                        <mat-icon>file_download</mat-icon>
+                        Ts Firmado
+                    </button>-->
+
                     <div class="sub-sub-column" (click)="closeOrder()" *ngIf="isUserRoleValid()" style="cursor: pointer;">
                         <mat-card class="tarjeta-pequena-2" style="background-color: #f0f0f0;">
                             <mat-card-content>
@@ -78,6 +86,32 @@
                             </mat-card-content>
                         </mat-card>
                     </div>
+
+                   <!-- Si NO está aprobado: botón para abrir modal de aprobación -->
+                        <div class="sub-sub-column" (click)="openApprovalConfirm()"
+                                *ngIf="!dataEmployees?.data?.approvalSignature" style="cursor: pointer;">
+                            <mat-card class="tarjeta-accion-blue" style="transform: scale(0.85); transform-origin: center;">
+                                <mat-card-content style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                    <mat-icon style="color: white; font-size: 18px; width: 18px; height: 18px;">how_to_reg</mat-icon>
+                                    <mat-card-title style="font-size: 13px; color: white; margin: 0;">
+                                        Customer Approval
+                                    </mat-card-title>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+
+                        <!-- Si YA está aprobado: botón para verificar -->
+                        <div class="sub-sub-column" (click)="verifyApprovalIntegrity(dataEmployees.data)"
+                                *ngIf="dataEmployees?.data?.approvalSignature" style="cursor: pointer;">
+                            <mat-card class="tarjeta-accion-green" style="transform: scale(0.85); transform-origin: center;">
+                                <mat-card-content style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                    <mat-icon style="color: white; font-size: 18px; width: 18px; height: 18px;">verified_user</mat-icon>
+                                    <mat-card-title style="font-size: 13px; color: white; margin: 0;">
+                                        Verify Approval
+                                    </mat-card-title>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
                     
                     <!-- <div class="sub-sub-column">
                         <mat-card class="tarjeta-pequena">
@@ -91,7 +125,6 @@
                 </div>
             </div>
         </div>
-        
         <!--FIN VISIBILIDAD MOVILES TARJETAS-->
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -181,6 +214,14 @@
                                     </div>
                                 </li>
 
+                                <li class="tbl-header-btn">
+                                    <div class="m-l-10" *ngIf="showRemoveBreakButton" matTooltip="REMOVE BREAK">
+                                        <button mat-mini-fab color="accent" (click)="removeBreakModal(getSelectedRows())"> 
+                                            <mat-icon class="col-white">no_meals</mat-icon>
+                                        </button>
+                                    </div>
+                                </li>
+
                                <!--  <li class="tbl-header-btn">
                                     <div class="m-l-10" *ngIf="showNoShowButton" matTooltip="NOSHOW">
                                         <button mat-mini-fab color="warn" (click)="outEmployee(getSelectedRows())"> 
@@ -193,6 +234,7 @@
                                       <mat-menu #menu="matMenu">
                                         <button mat-menu-item (click)="outEmployee(getSelectedRows(), 'No show')">NO SHOW</button>
                                         <button mat-menu-item (click)="outEmployee(getSelectedRows(), 'Call out')">CALL OUT</button>
+                                        <button mat-menu-item (click)="outEmployee(getSelectedRows(), 'Last minute')">LAST MINUTE</button>
                                       </mat-menu>                                  
                                       <button mat-mini-fab color="warn" [matMenuTriggerFor]="menu">
                                         <mat-icon class="col-white">visibility_off</mat-icon>
@@ -424,19 +466,60 @@
   </mat-dialog-content> -->
 
   <!-- Botón para abrir el modal -->
-  <button mat-mini-fab color="primary" (click)="toggleModalAprove()"> 
+  <!--<button mat-mini-fab color="primary" (click)="toggleModalAprove()"> 
     <mat-icon class="col-white">open_in_new</mat-icon>
-</button>
+</button>-->
+
+<!-- REEMPLAZAR el modal modalAprove existente por este: -->
+
+<!-- Popup de confirmación de aprobación -->
+    <div *ngIf="isConfirmApproveOpen" 
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; justify-content: center; align-items: center;">
+        <div style="background: white; border-radius: 12px; padding: 32px; width: 380px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); text-align: center;">
+            
+            <mat-icon style="font-size: 48px; width: 48px; height: 48px; color: #1A202D; margin-bottom: 16px;">task_alt</mat-icon>
+            
+            <h3 style="margin: 0 0 8px 0; color: #1A202D; font-size: 20px; font-weight: 700;">Confirm Approval</h3>
+            <p style="color: #666; margin: 0 0 24px 0; font-size: 14px; line-height: 1.5;">
+                Are you sure you want to approve this timesheet? <br>
+                This action will digitally sign the document.
+            </p>
+
+            <!-- Spinner mientras se sube el PDF -->
+            <div *ngIf="isUploadingPdf" style="margin-bottom: 16px;">
+                <mat-spinner diameter="28" style="margin: 0 auto 8px auto;"></mat-spinner>
+                <small style="color: #888;">Preparing document...</small>
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button mat-raised-button 
+                        (click)="cancelApproval()" 
+                        [disabled]="isSaving"
+                        style="min-width: 110px; border-radius: 8px;">
+                    No, Cancel
+                </button>
+                <button mat-raised-button 
+                        color="primary" 
+                        (click)="confirmApproval()" 
+                        [disabled]="isSaving"
+                        style="min-width: 110px; border-radius: 8px;">
+                    <ng-container *ngIf="isSaving; else confirmText">
+                        <mat-spinner diameter="20" style="display: inline-block;"></mat-spinner>
+                    </ng-container>
+                    <ng-template #confirmText>Yes, Approve</ng-template>
+                </button>
+            </div>
+        </div>
+    </div>
 
 <!-- Modal -->
-<div *ngIf="isModalAproveOpen" class="modalAprove">
+<!--<div *ngIf="isModalAproveOpen" class="modalAprove">
     <div class="modalAprove-content">
         <h4 style="display: flex; justify-content: space-between; align-items: center;">APPROVE
             <button mat-icon-button class="custom-close-button" style="margin-left: auto;" (click)="toggleModalAprove()">
                 <mat-icon>close</mat-icon>
             </button>
         </h4>
-        <!-- <small>comments</small> -->
         <mat-form-field>
             <textarea matInput placeholder="Add Comments" [(ngModel)]="modalAproveComments"></textarea>
         </mat-form-field>
@@ -447,12 +530,11 @@
             </ng-container>
             <ng-template #saveText>Save</ng-template>
         </button>
-        <!-- Mostrar los comentarios si existen -->
         <div *ngIf="modalAproveComments">
             <label>Comments: {{ modalAproveComments }}</label>
         </div>
     </div>
-</div>
+</div>-->
 
 
 

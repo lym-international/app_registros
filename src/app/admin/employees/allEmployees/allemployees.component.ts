@@ -53,6 +53,8 @@ import { RegistrationService } from 'app/_services/registration.service';
 import { GeolocationService } from 'app/_services/geolocation.service';
 import { UsersService } from 'app/_services/users.service';
 import { style } from '@angular/animations';
+import { ApprovalSignatureService } from 'app/_services/approval-signature.service';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 
 // import { MapMarker } from '@angular/google-maps';
 
@@ -104,6 +106,7 @@ export class AllemployeesComponent
   showCheckOutButton = false;
   showBreakButton = false;
   showNoShowButton = false;
+  showRemoveBreakButton = false;
   public dataUser!: any;
   groupEmployees = [];
   public timeSheet: any = {};
@@ -158,7 +161,17 @@ export class AllemployeesComponent
   statusWeek: string;
   yearWeek: number;
 
-   distanceInfo: { checkin?: string; checkout?: string } = {};
+  distanceInfo: { checkin?: string; checkout?: string } = {};
+
+  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+  isApprovalTampered: boolean = false;
+
+  isConfirmApproveOpen = false;
+  isUploadingPdf = false;
+  pendingPdfBlob: Blob | null = null;
+  pendingPdfUrl: string | null = null;
+  pendingPdfPath: string | null = null;
+  pendingUploadPromise: Promise<void> | null = null;
 
   constructor(
     private datePipe: DatePipe,
@@ -176,12 +189,14 @@ export class AllemployeesComponent
     private regSvc: RegistrationService,
     private geolocationService: GeolocationService,
     private usersService: UsersService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private approvalSignatureSvc: ApprovalSignatureService,
+    private storage: AngularFireStorage,
   ) {
     super();
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.initializeOrderData();
     this.initializeUserData();
     this.initializeQueryParams();
@@ -189,6 +204,10 @@ export class AllemployeesComponent
     this.getEmployees();
     this.loadData();
     this.getEventLocation();
+
+    if (this.dataEmployees && this.dataEmployees.data) {
+      await this.verifyApprovalIntegrity(this.dataEmployees.data);
+    }
 
     // this.updateDataOrder()
   }
@@ -201,7 +220,7 @@ export class AllemployeesComponent
       },
       (error) => {
         console.error('Error al obtener la orden:', error);
-      }
+      },
     );
   }
 
@@ -258,7 +277,7 @@ export class AllemployeesComponent
       (error) => {
         console.error('Error al cerrar la orden:', error);
         this.loadingStatus = false;
-      }
+      },
     );
   }
 
@@ -374,7 +393,7 @@ export class AllemployeesComponent
         this.updateButtonsBasedOnSelection();
       } else {
         // Si no hay selección, ocultar todos los botones
-        this.setButtonVisibility(false, false, false, false);
+        this.setButtonVisibility(false, false, false, false, false);
       }
     }, 0);
   }
@@ -383,7 +402,7 @@ export class AllemployeesComponent
     const selectedRows = this.selection.selected;
 
     if (selectedRows.length === 0) {
-      this.setButtonVisibility(false, false, false, false);
+      this.setButtonVisibility(false, false, false, false, false);
       return;
     }
 
@@ -393,14 +412,19 @@ export class AllemployeesComponent
       const { dateCheckin, dateCheckout, break: breakTime } = row;
 
       if (!dateCheckin && !dateCheckout) {
-        this.setButtonVisibility(true, false, false, true);
+        this.setButtonVisibility(true, false, false, true, false);
       } else if (dateCheckin && !dateCheckout) {
-        this.setButtonVisibility(false, true, true, false);
+        this.setButtonVisibility(false, true, true, false, false);
       } else if (dateCheckout && (!breakTime || breakTime === '0')) {
-        this.setButtonVisibility(false, false, true, false);
+        this.setButtonVisibility(false, false, true, false, false);
+        
+      }
+      else if (dateCheckout && breakTime && breakTime !== '0') {
+      // 👈 NUEVO: Si tiene checkout Y break, mostrar botón de remover break
+      this.setButtonVisibility(false, false, true, false, true);
       } else {
         // Si ya tiene todo (checkin, checkout y break)
-        this.setButtonVisibility(false, false, false, false);
+        this.setButtonVisibility(false, false, false, false, false);
       }
       return;
     }
@@ -410,34 +434,39 @@ export class AllemployeesComponent
     const allWithCheckin = selectedRows.every((row) => row.dateCheckin);
     const allWithCheckout = selectedRows.every((row) => row.dateCheckout);
     const anyWithoutBreak = selectedRows.some(
-      (row) => !row.break || row.break === '0'
+      (row) => !row.break || row.break === '0',
+    );
+    const anyWithBreak = selectedRows.some(
+      (row) => row.break && row.break !== '0'
     );
 
     if (allWithoutCheckin) {
-      // Todos sin check-in
-      this.setButtonVisibility(true, false, false, true);
+      this.setButtonVisibility(true, false, false, true, false); // 👈 Agregado parámetro
     } else if (allWithCheckin && !allWithCheckout) {
-      // Todos con check-in pero sin check-out
-      this.setButtonVisibility(false, true, true, false);
+      this.setButtonVisibility(false, true, true, false, false); // 👈 Agregado parámetro
     } else if (allWithCheckout && anyWithoutBreak) {
-      // Todos con check-out pero algunos sin break
-      this.setButtonVisibility(false, false, true, false);
+      this.setButtonVisibility(false, false, true, false, false); // 👈 Agregado parámetro
+    } else if (allWithCheckout && anyWithBreak) {
+      // 👈 NUEVO: Si todos tienen checkout y alguno tiene break
+      this.setButtonVisibility(false, true, true, false, true);
     } else {
-      // Estado mixto - mostrar todos los botones disponibles
-      this.setButtonVisibility(false, true, true, false);
+      this.setButtonVisibility(false, true, true, false, false); // 👈 Agregado parámetro
     }
+
   }
 
   private setButtonVisibility(
     checkIn: boolean,
     checkOut: boolean,
     breakButton: boolean,
-    noShow: boolean
+    noShow: boolean,
+    removeBreak: boolean
   ) {
     this.showCheckInButton = checkIn;
     this.showCheckOutButton = checkOut;
     this.showBreakButton = breakButton;
     this.showNoShowButton = noShow;
+    this.showRemoveBreakButton = removeBreak;
   }
 
   getEmployees() {
@@ -450,7 +479,7 @@ export class AllemployeesComponent
       (error) => {
         console.error('Error fetching employees:', error);
         this.isTblLoading = false;
-      }
+      },
     );
   }
 
@@ -531,7 +560,7 @@ export class AllemployeesComponent
     this.dataSource = new ExampleDataSource(
       this.paginator,
       this.sort,
-      this.employeesArray
+      this.employeesArray,
     );
 
     if (this.statusOrder !== 'closed' && !this.updateRegistrationCalled) {
@@ -572,12 +601,12 @@ export class AllemployeesComponent
       (response) => {
         console.log(
           'Employees array updated successfully:',
-          this.employeesArray
+          this.employeesArray,
         );
       },
       (error) => {
         console.error('Failed to update employees array:', error);
-      }
+      },
     );
   }
 
@@ -587,7 +616,7 @@ export class AllemployeesComponent
       employees.forEach((employee) => {
         if (employee.status !== 'Rejected' && employee.status !== 'SMS Sent') {
           this.employeesArray.push(
-            this.createEmployeeRegist(employee, hourFrom, position, startDate)
+            this.createEmployeeRegist(employee, hourFrom, position, startDate),
           );
         }
       });
@@ -597,7 +626,7 @@ export class AllemployeesComponent
   private updateEmployees(
     items: any[],
     startDate: string,
-    employeesArray: any[]
+    employeesArray: any[],
   ) {
     items.forEach((item) => {
       const { hourFrom, employees, position } = item;
@@ -630,8 +659,8 @@ export class AllemployeesComponent
                   e.employee.data.employeeId ===
                     existingEmployee.employee.data.employeeId &&
                   (e.hourFrom === existingEmployee.hourFrom ||
-                    e.dateStart === existingEmployee.dateStart)
-              )
+                    e.dateStart === existingEmployee.dateStart),
+              ),
           );
 
           // Busca empleado con el mismo employeeId y hourFrom o dateStart
@@ -640,7 +669,7 @@ export class AllemployeesComponent
               existingEmployee.employee.data.employeeId ===
                 employee.data.employeeId &&
               (existingEmployee.hourFrom === hourFrom ||
-                existingEmployee.dateStart === startDate)
+                existingEmployee.dateStart === startDate),
           );
 
           // console.log("existingEmployeeIndex", existingEmployeeIndex);
@@ -648,7 +677,12 @@ export class AllemployeesComponent
           if (existingEmployeeIndex === -1) {
             // Si no existe, lo agrega al arreglo
             this.employeesArray.push(
-              this.createEmployeeRegist(employee, hourFrom, position, startDate)
+              this.createEmployeeRegist(
+                employee,
+                hourFrom,
+                position,
+                startDate,
+              ),
             );
           } else {
             // console.log("Empleado duplicado encontrado, no se agregará uno nuevo");
@@ -662,7 +696,7 @@ export class AllemployeesComponent
     employee: any,
     hourFrom: string,
     position: string,
-    startDate: string
+    startDate: string,
   ) {
     const hourFromFormatted = this.formatHour(hourFrom);
     return {
@@ -698,7 +732,7 @@ export class AllemployeesComponent
       item.employees.map((employee) => ({
         ...employee,
         hourFrom: item.hourFrom,
-      }))
+      })),
     );
 
     this.employeesArray = this.employeesArray.filter((employee) => {
@@ -708,7 +742,7 @@ export class AllemployeesComponent
           dataEmployee.data.employeeId === highKeyId &&
           dataEmployee.hourFrom === hourFrom &&
           dataEmployee.status !== 'Rejected' &&
-          dataEmployee.status !== 'SMS Sent'
+          dataEmployee.status !== 'SMS Sent',
       );
     });
   }
@@ -742,7 +776,7 @@ export class AllemployeesComponent
           latitudeOut: '-',
           longitudeOut: '-',
         },
-      }
+      },
     );
 
     this.updateEmployeesOnServer(updatedEmployees);
@@ -776,7 +810,7 @@ export class AllemployeesComponent
   private updateEmployeeStatus(
     selectedRows: Employees[],
     status: string,
-    overrides: any
+    overrides: any,
   ) {
     return this.employeesArray.map((employee) => {
       if (
@@ -784,7 +818,7 @@ export class AllemployeesComponent
           (row) =>
             row.employee.data.employeeId ===
               employee.employee.data.employeeId &&
-            row.hourFrom === employee.hourFrom
+            row.hourFrom === employee.hourFrom,
         )
       ) {
         return { ...employee, ...overrides, status };
@@ -797,7 +831,7 @@ export class AllemployeesComponent
   mergeEmployeesData(newEmployeesData: any[]) {
     return newEmployeesData.map((newEmployee) => {
       const existingEmployee = this.employeesArray.find(
-        (emp) => emp.orderId === newEmployee.orderId
+        (emp) => emp.orderId === newEmployee.orderId,
       );
       return existingEmployee
         ? { ...existingEmployee, ...newEmployee }
@@ -838,7 +872,7 @@ export class AllemployeesComponent
           'snackbar-success',
           'Successful update!!!',
           'bottom',
-          'center'
+          'center',
         );
       },
       (error) => {
@@ -847,9 +881,9 @@ export class AllemployeesComponent
           'snackbar-error',
           'Failed to update employees.',
           'bottom',
-          'center'
+          'center',
         );
-      }
+      },
     );
   }
 
@@ -892,14 +926,14 @@ export class AllemployeesComponent
           (row) =>
             row.employee.data.employeeId ===
               employee.employee.data.employeeId &&
-            row.hourFrom === employee.hourFrom
+            row.hourFrom === employee.hourFrom,
         )
       ) {
         let updatedHours = 0;
         if (employee.empExactHours) {
           updatedHours = this.calculateRegularHoursAll(
             dateCheckinRounded,
-            dateCheckoutRounded
+            dateCheckoutRounded,
           );
         } else {
           updatedHours = this.calculateHoursWorkedAll(
@@ -907,7 +941,7 @@ export class AllemployeesComponent
             checkInTimestamp,
             dateCheckinRounded,
             checkOutTimestamp,
-            dateCheckoutRounded
+            dateCheckoutRounded,
           );
 
           const dateCheckin = new Date(dateCheckinRounded * 1000);
@@ -1001,7 +1035,7 @@ export class AllemployeesComponent
           (row) =>
             row.employee.data.employeeId ===
               employee.employee.data.employeeId &&
-            row.hourFrom === employee.hourFrom
+            row.hourFrom === employee.hourFrom,
         )
       ) {
         let updatedHours = 0;
@@ -1011,14 +1045,14 @@ export class AllemployeesComponent
           // Calcular diferencia entre check-out y check-in (en horas)
           const exactHours = this.calculateTimeDifference(
             checkInTimestamp,
-            checkOutTimestamp
+            checkOutTimestamp,
           );
           // Restar el break con 2 decimales
           updatedHours = Number((exactHours - breakHours).toFixed(2));
         } else if (employee.empExactHours) {
           updatedHours = this.calculateRegularHoursAll(
             dateCheckinRounded,
-            dateCheckoutRounded
+            dateCheckoutRounded,
           );
 
           // Si hay break, aplicar la deducción con el roundHours
@@ -1031,7 +1065,7 @@ export class AllemployeesComponent
             checkInTimestamp,
             dateCheckinRounded,
             checkOutTimestamp,
-            dateCheckoutRounded
+            dateCheckoutRounded,
           );
 
           const dateCheckin = new Date(dateCheckinRounded * 1000);
@@ -1083,7 +1117,7 @@ export class AllemployeesComponent
         },
         (error) => {
           reject(error);
-        }
+        },
       );
     });
   }
@@ -1121,7 +1155,7 @@ export class AllemployeesComponent
       const isSelected = selectedRows.some(
         (row) =>
           row.employee.data.employeeId === employee.employee.data.employeeId &&
-          row.hourFrom === employee.hourFrom
+          row.hourFrom === employee.hourFrom,
       );
 
       if (isSelected) {
@@ -1150,7 +1184,7 @@ export class AllemployeesComponent
       'snackbar-success',
       'Successful CheckIn...!!!',
       'bottom',
-      'center'
+      'center',
     );
   }
 
@@ -1231,7 +1265,7 @@ export class AllemployeesComponent
       const isSelected = selectedRows.some(
         (row) =>
           row.employee.data.employeeId === employee.employee.data.employeeId &&
-          row.hourFrom === employee.hourFrom
+          row.hourFrom === employee.hourFrom,
       );
       if (isSelected) {
         const roundedHours = employee.empExactHours
@@ -1239,7 +1273,7 @@ export class AllemployeesComponent
           : this.calculateHoursWorked(
               employee,
               checkOutTimestamp,
-              dateCheckoutRounded
+              dateCheckoutRounded,
             );
 
         return {
@@ -1271,7 +1305,7 @@ export class AllemployeesComponent
       'snackbar-success',
       'Successful CheckOut...!!!',
       'bottom',
-      'center'
+      'center',
     );
   }
 
@@ -1284,7 +1318,7 @@ export class AllemployeesComponent
       const isSelected = selectedRows.some(
         (row) =>
           row.employee.data.employeeId === employee.employee.data.employeeId &&
-          row.hourFrom === employee.hourFrom
+          row.hourFrom === employee.hourFrom,
       );
 
       if (isSelected) {
@@ -1306,7 +1340,7 @@ export class AllemployeesComponent
       'snackbar-success',
       'Employee marked successfully...!!!',
       'bottom',
-      'center'
+      'center',
     );
   }
 
@@ -1340,7 +1374,7 @@ export class AllemployeesComponent
           row.employee.data.employeeId === employee.employee.data.employeeId &&
           row.hourFrom === employee.hourFrom &&
           employee.dateCheckin !== null &&
-          employee.dateCheckin !== undefined
+          employee.dateCheckin !== undefined,
 
         // employee.dateCheckout !== null &&
         // dateCheckin
@@ -1355,12 +1389,12 @@ export class AllemployeesComponent
           const roundedHours = employee.empExactHours
             ? this.calculateRegularHours(
                 employee,
-                employee.dateCheckoutRounded._seconds
+                employee.dateCheckoutRounded._seconds,
               )
             : this.calculateHoursWorked(
                 employee,
                 employee.dateCheckout._seconds,
-                employee.dateCheckoutRounded._seconds
+                employee.dateCheckoutRounded._seconds,
               );
 
           const totalHours = roundedHours.toFixed(2);
@@ -1389,7 +1423,7 @@ export class AllemployeesComponent
       'snackbar-success',
       'Successful break...!!!',
       'bottom',
-      'center'
+      'center',
     );
   }
 
@@ -1421,7 +1455,7 @@ export class AllemployeesComponent
           row.employee.data.employeeId === employee.employee.data.employeeId &&
           row.hourFrom === employee.hourFrom &&
           employee.dateCheckin !== null &&
-          employee.dateCheckin !== undefined
+          employee.dateCheckin !== undefined,
       );
 
       if (isSelected) {
@@ -1435,7 +1469,7 @@ export class AllemployeesComponent
             // Cálculo exacto sin roundHours, pero con redondeo a 2 decimales
             const exactHours = this.calculateTimeDifference(
               employee.dateCheckin._seconds,
-              employee.dateCheckout._seconds
+              employee.dateCheckout._seconds,
             );
             // Restar tiempo de break exacto (en horas) con redondeo a 2 decimales
             const breakHours = Number(result.break / 60);
@@ -1448,7 +1482,7 @@ export class AllemployeesComponent
             const roundedHours = this.calculateHoursWorked(
               employee,
               employee.dateCheckout._seconds,
-              employee.dateCheckoutRounded._seconds
+              employee.dateCheckoutRounded._seconds,
             );
 
             const totalHours = roundedHours.toFixed(2);
@@ -1480,7 +1514,126 @@ export class AllemployeesComponent
       'snackbar-success',
       'Successful break...!!!',
       'bottom',
-      'center'
+      'center',
+    );
+  }
+
+  async removeBreakModal(selectedRows: Employees[]) {
+    if (selectedRows.length === 0) {
+      this.showNotification(
+        'snackbar-warning',
+        'No employees selected',
+        'bottom',
+        'center'
+      );
+      return;
+    }
+
+    // Filtrar solo empleados que tengan break asignado
+    const employeesWithBreak = selectedRows.filter(
+      row => row.break && Number(row.break) > 0
+    );
+
+    if (employeesWithBreak.length === 0) {
+      this.showNotification(
+        'snackbar-warning',
+        'Selected employees do not have break time assigned',
+        'bottom',
+        'center'
+      );
+      return;
+    }
+
+    this.isTblLoading = true;
+
+    const updatedEmployees = this.employeesArray.map((employee) => {
+      const isSelected = selectedRows.some(
+        (row) =>
+          row.employee.data.employeeId === employee.employee.data.employeeId &&
+          row.hourFrom === employee.hourFrom &&
+          employee.break && Number(employee.break) > 0
+      );
+
+      if (isSelected) {
+        let newHours = 0;
+
+        // Verificar que tenga checkout
+        if (
+          employee.dateCheckout !== null &&
+          employee.dateCheckout !== undefined &&
+          employee.dateCheckin !== null &&
+          employee.dateCheckin !== undefined
+        ) {
+          if (this.exactHourPayment) {
+            // Cálculo exacto: diferencia entre checkout e checkin SIN restar break
+            newHours = this.calculateTimeDifference(
+              employee.dateCheckin._seconds,
+              employee.dateCheckout._seconds
+            );
+            newHours = Number(newHours.toFixed(2));
+          } else {
+            // Cálculo con redondeo pero SIN restar break
+            // Calculamos las horas brutas entre checkin y checkout redondeados
+            const secondsWorked = employee.dateCheckoutRounded._seconds - employee.dateCheckinRounded._seconds;
+            const hoursWorked = secondsWorked / 3600;
+            let roundedHours = this.roundHours(hoursWorked);
+
+            // Aplicar regla de mínimo 5 horas si es necesario
+            if (roundedHours < 5) {
+              const dateCheckin = new Date(employee.dateCheckin._seconds * 1000);
+              const late = this.validateCheckout(employee.hourFrom, dateCheckin);
+
+              if (late < 8) {
+                roundedHours = 5;
+              }
+            }
+
+            newHours = roundedHours;
+          }
+
+          console.log(`Empleado ${employee.employee.data.firstname}: Break anterior: ${employee.break}, Horas anteriores: ${employee.hours}, Nuevas horas: ${newHours.toFixed(2)}`);
+
+          return {
+            ...employee,
+            break: '0', // 👈 Eliminar el break
+            hours: Number(newHours).toFixed(2), // 👈 Actualizar horas
+            updateUser: this.dataUser.email,
+          };
+        } else {
+          console.log(`Empleado ${employee.employee.data.firstname} no tiene checkin/checkout completo`);
+        }
+      }
+
+      return employee;
+    });
+
+    // Actualizar en el servidor
+    this.regSvc.updateRegistration(this.orderId, updatedEmployees).subscribe(
+      (response) => {
+        console.log('Employees array updated successfully:', response);
+        
+        // 👇 ESTAS SON LAS LÍNEAS CLAVE QUE FALTABAN
+        this.getEmployees(); // Recargar datos desde el servidor
+        this.removeSelectedRows(); // Limpiar selección
+        
+        this.isTblLoading = false;
+        this.showNotification(
+          'snackbar-success',
+          `Break removed and hours recalculated for ${employeesWithBreak.length} employee(s)!`,
+          'bottom',
+          'center'
+        );
+      },
+      (error) => {
+        console.error('Error al actualizar:', error);
+        this.isTblLoading = false;
+        this.showNotification(
+          'snackbar-error',
+          'Failed to update employees.',
+          'bottom',
+          'center'
+        );
+      }
     );
   }
 
@@ -1489,12 +1642,12 @@ export class AllemployeesComponent
     checkInTimestamp: number,
     dateCheckinRounded: number,
     checkOutTimestamp: number,
-    dateCheckoutRounded: number
+    dateCheckoutRounded: number,
   ): number {
     if (this.exactHourPayment) {
       return this.calculateExactHourPaymentAll(
         checkInTimestamp,
-        checkOutTimestamp
+        checkOutTimestamp,
       );
     }
 
@@ -1512,7 +1665,7 @@ export class AllemployeesComponent
       } else if (late > lateThreshold) {
         roundedHours = this.calculateRegularHoursAll(
           dateCheckinRounded,
-          dateCheckoutRounded
+          dateCheckoutRounded,
         );
       }
     }
@@ -1525,13 +1678,13 @@ export class AllemployeesComponent
     checkInTimestamp: number,
     dateCheckinRounded: number,
     checkOutTimestamp: number,
-    dateCheckoutRounded: number
+    dateCheckoutRounded: number,
   ): number {
     if (this.exactHourPayment) {
       // Cálculo exacto sin roundHours pero con redondeo a 2 decimales
       return this.calculateExactHourPaymentAll(
         checkInTimestamp,
-        checkOutTimestamp
+        checkOutTimestamp,
       );
     }
 
@@ -1549,7 +1702,7 @@ export class AllemployeesComponent
       } else if (late > lateThreshold) {
         roundedHours = this.calculateRegularHoursAll(
           dateCheckinRounded,
-          dateCheckoutRounded
+          dateCheckoutRounded,
         );
       }
     }
@@ -1560,7 +1713,7 @@ export class AllemployeesComponent
   calculateHoursWorked_bn(
     employee: Employees,
     checkOutTimestamp: number,
-    dateCheckoutRounded: number
+    dateCheckoutRounded: number,
   ): number {
     if (this.exactHourPayment) {
       return this.calculateExactHourPayment(employee, checkOutTimestamp);
@@ -1586,7 +1739,7 @@ export class AllemployeesComponent
       } else if (late > lateThreshold) {
         roundedHours = this.calculateRegularHours(
           employee,
-          dateCheckoutRounded
+          dateCheckoutRounded,
         );
       }
     }
@@ -1597,13 +1750,13 @@ export class AllemployeesComponent
   calculateHoursWorked(
     employee: Employees,
     checkOutTimestamp: number,
-    dateCheckoutRounded: number
+    dateCheckoutRounded: number,
   ): number {
     if (this.exactHourPayment) {
       // Aquí calculamos las horas exactas sin roundHours, pero con redondeo a 2 decimales
       let exactHours = this.calculateTimeDifference(
         employee.dateCheckin._seconds,
-        checkOutTimestamp
+        checkOutTimestamp,
       );
 
       // Si hay tiempo de descanso, lo restamos sin redondear con roundHours
@@ -1639,7 +1792,7 @@ export class AllemployeesComponent
       } else if (late > lateThreshold) {
         roundedHours = this.calculateRegularHours(
           employee,
-          dateCheckoutRounded
+          dateCheckoutRounded,
         );
       }
     }
@@ -1658,45 +1811,45 @@ export class AllemployeesComponent
 
   calculateRegularHoursAll(
     dateCheckinRounded: number,
-    dateCheckoutRounded: number
+    dateCheckoutRounded: number,
   ): number {
     return this.calculateTimeDifference(
       dateCheckinRounded,
-      dateCheckoutRounded
+      dateCheckoutRounded,
     );
   }
 
   calculateRegularHours(
     employee: Employees,
-    dateCheckoutRounded: number
+    dateCheckoutRounded: number,
   ): number {
     return this.calculateTimeDifference(
       employee.dateCheckinRounded._seconds,
-      dateCheckoutRounded
+      dateCheckoutRounded,
     );
   }
 
   //Aplica solo para dos clientes específicos
   calculateExactHourPaymentAll(
     checkInTimestamp: number,
-    checkOutTimestamp: number
+    checkOutTimestamp: number,
   ): number {
     return this.calculateTimeDifference(checkInTimestamp, checkOutTimestamp);
   }
 
   calculateExactHourPayment(
     employee: Employees,
-    checkOutTimestamp: number
+    checkOutTimestamp: number,
   ): number {
     return this.calculateTimeDifference(
       employee.dateCheckin._seconds,
-      checkOutTimestamp
+      checkOutTimestamp,
     );
   }
 
   calculateTimeDifference(
     startTimestamp: number,
-    endTimestamp: number
+    endTimestamp: number,
   ): number {
     const secondsWorked = endTimestamp - startTimestamp;
     // console.log("salida - entrada", endTimestamp,  startTimestamp)
@@ -1754,7 +1907,7 @@ export class AllemployeesComponent
     };
   }
 
-  async getDocumentDefinition() {
+  async getDocumentDefinition_bn() {
     const getImageAsBase64 = async (url) => {
       const response = await fetch(url);
       const blob = await response.blob();
@@ -1779,7 +1932,7 @@ export class AllemployeesComponent
 
     const generated = this.datePipe.transform(Date.now(), 'MMMM d, y');
     const logoBase64 = await getImageAsBase64(
-      'https://firebasestorage.googleapis.com/v0/b/highkeystaff.appspot.com/o/Emails%2Flogolm-min.png?alt=media&token=7f1badc5-9f07-476c-82b0-7a16a3254ff0'
+      'https://firebasestorage.googleapis.com/v0/b/highkeystaff.appspot.com/o/Emails%2Flogolm-min.png?alt=media&token=7f1badc5-9f07-476c-82b0-7a16a3254ff0',
     );
     await this.loadTimesheet();
 
@@ -1795,7 +1948,7 @@ export class AllemployeesComponent
           {
             ...options,
             timeZone: 'UTC',
-          }
+          },
         )
       : '';
     return {
@@ -2004,6 +2157,367 @@ export class AllemployeesComponent
     };
   }
 
+  // MODIFICAR TU MÉTODO getDocumentDefinition() ACTUAL
+
+  // Cambiar la firma del método para aceptar un parámetro opcional:
+  async getDocumentDefinition(frozenDate?: string) {
+    const getImageAsBase64 = async (url) => {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    };
+
+    this.employeesArray.sort((a, b) => {
+      const lastNameA = (a.lastname || '').toLowerCase();
+      const lastNameB = (b.lastname || '').toLowerCase();
+      const firstNameA = (a.firstname || '').toLowerCase();
+      const firstNameB = (b.firstname || '').toLowerCase();
+      return (
+        lastNameA.localeCompare(lastNameB) ||
+        firstNameA.localeCompare(firstNameB)
+      );
+    });
+
+    const generated = this.datePipe.transform(Date.now(), 'MMMM d, y');
+    const logoBase64 = await getImageAsBase64(
+      'https://firebasestorage.googleapis.com/v0/b/highkeystaff.appspot.com/o/Emails%2Flogolm-min.png?alt=media&token=7f1badc5-9f07-476c-82b0-7a16a3254ff0',
+    );
+    await this.loadTimesheet();
+
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    };
+    const date = this.dataEmployees.data.startDate
+      ? new Date(this.dataEmployees.data.startDate).toLocaleDateString(
+          'en-US',
+          {
+            ...options,
+            timeZone: 'UTC',
+          },
+        )
+      : '';
+
+    return {
+      pageMargins: [40, 180, 40, 60],
+      header: {
+        margin: [40, 40, 40, 0],
+        columns: [
+          {
+            image: logoBase64,
+            width: 100,
+            height: 50,
+            alignment: 'left',
+          },
+          {
+            margin: [-95, 45, 5, 0],
+            stack: [
+              { text: 'T: 410-922-6140', fontSize: 8.5, bold: true },
+              { text: 'operations@stafflm.com', fontSize: 8.5 },
+              { text: 'www.stafflm.com', fontSize: 8.5 },
+            ],
+            alignment: 'left',
+          },
+          {
+            margin: [-35, -15, 0, 0],
+            stack: [
+              { text: 'TIMESHEET', bold: true, fontSize: 15 },
+              {
+                text: `Date:          ${date}`,
+                bold: true,
+                fontSize: 11.5,
+                margin: [2, 5, 0, 0],
+              },
+              {
+                text: `HK Order:  ${this.dataEmployees.data.ordNum}`,
+                fontSize: 11.5,
+                bold: true,
+                margin: [2, 5, 0, 0],
+              },
+              {
+                text: `Customer: ${this.dataEmployees.data.company}`,
+                bold: true,
+                fontSize: 11.5,
+                margin: [2, 5, 0, 0],
+              },
+              {
+                text: `Place:         ${this.dataEmployees.data.place}`,
+                bold: true,
+                fontSize: 11.5,
+                margin: [2, 5, 0, 0],
+              },
+              {
+                text: `Address:     ${this.dataEmployees.data.address}`,
+                bold: true,
+                margin: [2, 5, 0, 0],
+                fontSize: 11.5,
+              },
+              {
+                text: ` ${this.dataEmployees.data.city}, ${this.dataEmployees.data.state}, ${this.dataEmployees.data.zipcode}`,
+                bold: true,
+                margin: [65, 5, 0, 0],
+              },
+            ],
+            alignment: 'left',
+          },
+        ],
+      },
+      content: [
+        this.getEmployeesObject(this.employeesArray),
+        {
+          canvas: [{ type: 'rect', x: 473.5, y: -5, w: 59, h: 30 }],
+          width: 'right',
+          fontSize: 9,
+          margin: [0, 5, 0, 0],
+        },
+        {
+          text:
+            this.timeSheet.total > 0
+              ? `TOTAL HOURS:   ${this.timeSheet.total}`
+              : '',
+          margin: [395, -20, 5, 0],
+          fontSize: 11,
+        },
+        { text: 'NOTE:', alignment: 'left', margin: [0, 30, 0, 0] },
+        {
+          canvas: [{ type: 'rect', x: 10, y: 10, w: 400, h: 80 }],
+          alignment: 'left',
+          margin: [0, 10, 0, 10],
+        },
+        {
+          text: 'The time as shown on the Time-Sheet are correct and the work has been performed to our satisfaction. Employee certifies that this form is true and accurate and that no injuries were sustained during this assigment and will not solicit permanent, part time, independent contract with any of our clients.',
+          fontSize: 10,
+          alignment: 'left',
+          margin: [0, 10, 0, 10],
+        },
+        {
+          text: `_______________________________________\n Authorized Representative of Costumer\n ${this.dataEmployees.data.company}`,
+          alignment: 'left',
+          margin: [30, 10, 0, 10],
+        },
+        {
+          text: 'Invoice #',
+          alignment: 'center',
+          margin: [240, -45, 5, 0],
+          fontSize: 8,
+        },
+        {
+          canvas: [{ type: 'rect', x: 0, y: 0, w: 105, h: 35 }],
+          width: 'right',
+          fontSize: 9,
+          margin: [400, -20, 0, 0],
+        },
+      ],
+      footer: (currentPage, pageCount) => {
+        // USAR LA FECHA CONGELADA SI SE PROPORCIONA, SI NO, USAR FECHA ACTUAL
+        const footerDate = frozenDate || new Date().toLocaleString();
+
+        if (currentPage === pageCount) {
+          return {
+            columns: [
+              { text: '', width: '*' },
+              {
+                text: `${currentPage.toString()} of ${pageCount}`,
+                alignment: 'center',
+                width: 'auto',
+                margin: [0, 10],
+              },
+              {
+                text: `${footerDate}`, // <-- Usa la fecha congelada o actual
+                alignment: 'right',
+                margin: [0, 10, 20, 0],
+                fontSize: 8,
+              },
+            ],
+          };
+        }
+
+        return {
+          text: `${currentPage.toString()} of ${pageCount}`,
+          alignment: 'center',
+          margin: [0, 10],
+        };
+      },
+      info: {
+        title: `Timesheet ${this.dataEmployees.data.company}_${this.dataEmployees.data.orderId}_${this.dataEmployees.data.startDate}`,
+      },
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 20, 0, 10],
+          decoration: 'underline',
+        },
+        name: { bold: true, fontSize: 10 },
+        tableHeader: { bold: true, fontSize: 10.5, alignment: 'center' },
+        signature: { margin: [20, 0, 0, 20], fontSize: 10 },
+      },
+    };
+  }
+
+  // NUEVO MÉTODO: Extrae la lógica de preparación que usa generatePdf()
+  private preparePdfDataFromGeneratePdf(): void {
+    this.employeesArray.sort((a, b) => {
+      const lastNameA = (a.lastName || '').toLowerCase();
+      const lastNameB = (b.lastName || '').toLowerCase();
+      const firstNameA = (a.firstName || '').toLowerCase();
+      const firstNameB = (b.firstName || '').toLowerCase();
+      return (
+        lastNameA.localeCompare(lastNameB) ||
+        firstNameA.localeCompare(firstNameB)
+      );
+    });
+
+    this.groupEmployees = [];
+    const positions = [];
+
+    const convertTimestampToTime = (timestamp: any): string => {
+      if (
+        timestamp &&
+        timestamp._seconds &&
+        timestamp._nanoseconds !== undefined
+      ) {
+        const date = new Date(timestamp._seconds * 1000);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const period = hours >= 12 ? 'PM' : 'AM';
+        const formattedHours = (hours % 12 === 0 ? 12 : hours % 12)
+          .toString()
+          .padStart(2, '0');
+        const formattedMinutes = minutes.toString().padStart(2, '0');
+        return `${formattedHours}:${formattedMinutes} ${period}`;
+      }
+      return '';
+    };
+
+    const employeesToShow = this.employeesArray.filter(
+      (emp) => emp.status !== 'No show',
+    );
+
+    employeesToShow.forEach((employee) => {
+      const foundPosition = positions.find(
+        (group) =>
+          group.name == employee.position && group.hour == employee.hourFrom,
+      );
+      if (!foundPosition) {
+        const positionsArray = this.employeesArray.filter(
+          (emps) =>
+            emps.position == employee.position &&
+            emps.hourFrom == employee.hourFrom,
+        );
+        const totalHours = positionsArray.reduce(
+          (total, position) => total + Number(position.hours),
+          0,
+        );
+        positions.push({
+          name: employee.position,
+          hour: employee.hourFrom,
+          total: totalHours,
+        });
+      }
+    });
+
+    positions.forEach((position) => {
+      const formattedHour = new Date(
+        `1970-01-01T${position.hour}:00`,
+      ).toLocaleString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+      });
+
+      const roundedTotal = position.total.toFixed(2);
+
+      this.groupEmployees.push([
+        {
+          colSpan: 9,
+          text: `      ${position.name} - ${formattedHour}     /     Hours by position: ${roundedTotal}`,
+          bold: true,
+          margin: [25, 8, 0, 8],
+          fontSize: 12,
+        },
+        '-',
+        '-',
+        '-',
+        '-',
+        '-',
+        '-',
+        '-',
+      ]);
+
+      const employees = employeesToShow.filter(
+        (employee) =>
+          employee.position == position.name &&
+          employee.hourFrom == position.hour,
+      );
+
+      employees.forEach((emp, index) => {
+        let dateFrom, dateTo;
+        if (emp.status == 'No show') {
+          dateFrom = 'No show';
+          emp.hours = 0;
+          emp.break = 'No show';
+          dateTo = 'No show';
+        } else {
+          dateFrom = emp.checkin
+            ? convertTimestampToTime(emp.dateCheckin)
+            : '-';
+          dateTo = emp.checkout
+            ? convertTimestampToTime(emp.dateCheckout)
+            : '-';
+          emp.break = emp.checkout ? emp.break : 'No checkout';
+        }
+
+        const [firstLastname, secondLastname] =
+          emp.employee.data.lastname.split(' ');
+        const formattedLastname = secondLastname
+          ? `${firstLastname.charAt(0).toUpperCase()}${firstLastname
+              .slice(1)
+              .toLowerCase()} ${secondLastname.charAt(0).toUpperCase()}.`
+          : firstLastname.charAt(0).toUpperCase() +
+            firstLastname.slice(1).toLowerCase();
+
+        const [firstFirstname, secondFirstname] =
+          emp.employee.data.firstname.split(' ');
+        const formattedFirstname = secondFirstname
+          ? `${firstFirstname.charAt(0).toUpperCase()}${firstFirstname
+              .slice(1)
+              .toLowerCase()} ${secondFirstname.charAt(0).toUpperCase()}.`
+          : firstFirstname.charAt(0).toUpperCase() +
+            firstFirstname.slice(1).toLowerCase();
+
+        this.groupEmployees.push([
+          { text: index + 1, fontSize: 10 },
+          { text: formattedLastname, fontSize: 11 },
+          { text: formattedFirstname, fontSize: 11 },
+          {
+            text: emp.employee.data.employeeId
+              ? emp.employee.data.employeeId
+              : '0',
+            fontSize: 11,
+          },
+          {
+            text: emp.employee.data.payrollid
+              ? emp.employee.data.payrollid
+              : '0',
+            fontSize: 11,
+          },
+          { text: dateFrom, fontSize: 11 },
+          { text: emp.break, fontSize: 11 },
+          { text: dateTo, fontSize: 11 },
+          { text: emp.hours, fontSize: 11 },
+        ]);
+      });
+    });
+  }
+
   generatePdf() {
     this.employeesArray.sort((a, b) => {
       const lastNameA = (a.lastName || '').toLowerCase();
@@ -2166,6 +2680,28 @@ export class AllemployeesComponent
     });
   }
 
+  generatePdf_so() {
+    this.employeesArray.sort((a, b) => {
+      const lastNameA = (a.lastName || '').toLowerCase();
+      const lastNameB = (b.lastName || '').toLowerCase();
+      const firstNameA = (a.firstName || '').toLowerCase();
+      const firstNameB = (b.firstName || '').toLowerCase();
+      return (
+        lastNameA.localeCompare(lastNameB) ||
+        firstNameA.localeCompare(firstNameB)
+      );
+    });
+
+    this.groupEmployees = [];
+    const positions = [];
+
+    // ... todo el código actual que ya funciona bien ...
+
+    this.getDocumentDefinition().then((result) => {
+      pdfMake.createPdf(result).open();
+    });
+  }
+
   addHours(numOfHours, date = new Date()) {
     // console.log("adhours", numOfHours, "date", date)
     const defaultHours = 5;
@@ -2190,7 +2726,7 @@ export class AllemployeesComponent
           .toPromise();
         const positionData = this.findPositionData(
           this.orderData,
-          result.position
+          result.position,
         );
         // console.log("PositionDat",positionData);
         if (!positionData) throw new Error('Position data not found.');
@@ -2206,20 +2742,20 @@ export class AllemployeesComponent
                 await this.addAndProcessEmployee(
                   result,
                   startDate,
-                  positionData
+                  positionData,
                 );
               } else {
                 this.showNotification(
                   'snackbar-danger',
                   `Employee is already assigned in order number ${this.orderAssigned} at this time.`,
                   'top',
-                  'center'
+                  'center',
                 );
               }
             },
             (error) => {
               console.error('Error verifying concurrency:', error);
-            }
+            },
           );
       } catch (error) {
         console.error('Error:', error);
@@ -2240,7 +2776,7 @@ export class AllemployeesComponent
       'snackbar-success',
       'Successful Add Employee...!!!',
       'bottom',
-      'center'
+      'center',
     );
     this.getEmployees();
     this.removeSelectedRows();
@@ -2273,7 +2809,7 @@ export class AllemployeesComponent
     result: any,
     startDate: string,
     horaInicio: string,
-    positionData
+    positionData,
   ) {
     const addEmployeeRegist = {
       hours: 0,
@@ -2304,7 +2840,7 @@ export class AllemployeesComponent
       'snackbar-success',
       'Successful Add Employee...!!!',
       'bottom',
-      'center'
+      'center',
     );
   }
 
@@ -2319,7 +2855,7 @@ export class AllemployeesComponent
         'snackbar-success',
         'Successful update!!!',
         'bottom',
-        'center'
+        'center',
       );
     } catch (error) {
       console.error('Error updating employees array:', error);
@@ -2327,7 +2863,7 @@ export class AllemployeesComponent
         'snackbar-error',
         'Failed to update employees.',
         'bottom',
-        'center'
+        'center',
       );
     }
   }
@@ -2350,7 +2886,7 @@ export class AllemployeesComponent
           'snackbar-success',
           `Successful Add Employee with highkeyId : ${highKeyid}`,
           'bottom',
-          'center'
+          'center',
         );
         this.getEmployees();
         this.removeSelectedRows();
@@ -2449,7 +2985,8 @@ export class AllemployeesComponent
 
       const itemIndex = orderData.data.items.findIndex(
         (item) =>
-          item.position === result.position && item.hourFrom === result.hourFrom
+          item.position === result.position &&
+          item.hourFrom === result.hourFrom,
       );
 
       if (itemIndex !== -1) {
@@ -2473,7 +3010,7 @@ export class AllemployeesComponent
         'snackbar-success',
         'Order updated successfully.',
         'top',
-        'center'
+        'center',
       );
     } catch (error) {
       console.error('Error updating order data:', error);
@@ -2481,7 +3018,7 @@ export class AllemployeesComponent
         'snackbar-danger',
         'Error updating order data.',
         'top',
-        'center'
+        'center',
       );
     }
   }
@@ -2494,7 +3031,8 @@ export class AllemployeesComponent
 
       const itemIndex = orderData.data.items.findIndex(
         (item) =>
-          item.position === result.position && item.hourFrom === result.hourFrom
+          item.position === result.position &&
+          item.hourFrom === result.hourFrom,
       );
 
       if (itemIndex !== -1) {
@@ -2702,7 +3240,7 @@ export class AllemployeesComponent
 
   // Extrae las coordenadas de una URL de Google Maps
   extractCoordinatesFromURL(
-    url: string
+    url: string,
   ): { latitude: number; longitude: number } | null {
     console.log('llama a estraccions', url);
     // Coincidir con el formato de coordenadas en la URL proporcionada
@@ -2749,7 +3287,7 @@ export class AllemployeesComponent
         'warning',
         'No locations available to display the map.',
         'top',
-        'center'
+        'center',
       );
       return;
     }
@@ -2783,7 +3321,7 @@ export class AllemployeesComponent
     ) {
       lat = parseFloat(selectedRows.checkOutCoordinates.latitudeOut as string);
       long = parseFloat(
-        selectedRows.checkOutCoordinates.longitudeOut as string
+        selectedRows.checkOutCoordinates.longitudeOut as string,
       );
     } else if (
       this.isValidCoordinate(this.latitudeEvent) &&
@@ -2796,7 +3334,7 @@ export class AllemployeesComponent
         'warning',
         'No locations available to display the map.',
         'top',
-        'center'
+        'center',
       );
       return;
     }
@@ -2825,7 +3363,7 @@ export class AllemployeesComponent
       this.addMarker(
         parseFloat(checkinCoordinates.latitude),
         parseFloat(checkinCoordinates.longitude),
-        'Checkin/Checkout'
+        'Checkin/Checkout',
       );
     } else {
       // Si no son iguales, añade los marcadores por separado
@@ -2836,7 +3374,7 @@ export class AllemployeesComponent
         this.addMarker(
           parseFloat(checkinCoordinates.latitude),
           parseFloat(checkinCoordinates.longitude),
-          'Checkin'
+          'Checkin',
         );
       }
 
@@ -2847,7 +3385,7 @@ export class AllemployeesComponent
         this.addMarker(
           parseFloat(checkOutCoordinates.latitudeOut),
           parseFloat(checkOutCoordinates.longitudeOut),
-          'Checkout'
+          'Checkout',
         );
       }
     }
@@ -2887,7 +3425,7 @@ export class AllemployeesComponent
           this.latitudeEvent,
           this.longitudeEvent,
           parseFloat(checkinCoordinates.latitude),
-          parseFloat(checkinCoordinates.longitude)
+          parseFloat(checkinCoordinates.longitude),
         );
         checkinDistance = this.formatDistance(distance);
       }
@@ -2898,7 +3436,7 @@ export class AllemployeesComponent
         parseFloat(checkinCoordinates.longitude),
         `Checkin/Checkout${
           checkinDistance ? ' - ' + checkinDistance + ' from event' : ''
-        }`
+        }`,
       );
     }
     // CASO 2: Coordenadas diferentes
@@ -2916,7 +3454,7 @@ export class AllemployeesComponent
             this.latitudeEvent,
             this.longitudeEvent,
             parseFloat(checkinCoordinates.latitude),
-            parseFloat(checkinCoordinates.longitude)
+            parseFloat(checkinCoordinates.longitude),
           );
           checkinDistance = this.formatDistance(distance);
         }
@@ -2926,7 +3464,7 @@ export class AllemployeesComponent
           parseFloat(checkinCoordinates.longitude),
           `Checkin${
             checkinDistance ? ' - ' + checkinDistance + ' from event' : ''
-          }`
+          }`,
         );
       }
 
@@ -2943,7 +3481,7 @@ export class AllemployeesComponent
             this.latitudeEvent,
             this.longitudeEvent,
             parseFloat(checkOutCoordinates.latitudeOut),
-            parseFloat(checkOutCoordinates.longitudeOut)
+            parseFloat(checkOutCoordinates.longitudeOut),
           );
           checkoutDistance = this.formatDistance(distance);
         }
@@ -2953,7 +3491,7 @@ export class AllemployeesComponent
           parseFloat(checkOutCoordinates.longitudeOut),
           `Checkout${
             checkoutDistance ? ' - ' + checkoutDistance + ' from event' : ''
-          }`
+          }`,
         );
       }
     }
@@ -3019,7 +3557,7 @@ export class AllemployeesComponent
       if (result === 1) {
         // When using an edit things are little different, firstly we find record inside DataService by id
         const foundIndex = this.exampleDatabase?.dataChange.value.findIndex(
-          (x) => x.id === this.id
+          (x) => x.id === this.id,
         );
         // Then you update that record using data from dialogData (values you enetered)
         if (foundIndex !== undefined && this.exampleDatabase !== undefined) {
@@ -3031,7 +3569,7 @@ export class AllemployeesComponent
             'black',
             'Edit Record Successfully...!!!',
             'bottom',
-            'center'
+            'center',
           );
         }
       }
@@ -3046,10 +3584,10 @@ export class AllemployeesComponent
 
   isAllSelected() {
     const numSelected = this.selection.selected.filter(
-      (row) => row.status !== 'No show'
+      (row) => row.status !== 'No show',
     ).length;
     const numRows = this.dataSource.filteredData.filter(
-      (row) => row.status !== 'No show'
+      (row) => row.status !== 'No show',
     ).length;
     return numSelected === numRows && numRows > 0;
   }
@@ -3069,14 +3607,14 @@ export class AllemployeesComponent
     if (this.selection.hasValue()) {
       this.updateButtonsBasedOnSelection();
     } else {
-      this.setButtonVisibility(false, false, false, false);
+      this.setButtonVisibility(false, false, false, false, false);
     }
   }
 
   // Verifica y establece los botones de check-in, no-show, check-out y break
   toggleCheckInOutButtons() {
     const allSelectedWithNullCheckin = this.dataSource.renderedData.every(
-      (row) => row.dateCheckin === null || row.dateCheckin === undefined
+      (row) => row.dateCheckin === null || row.dateCheckin === undefined,
     );
     // console.log('this.dataSource.renderedData 2: ', this.dataSource.renderedData);
     // console.log('allSelectedWithNullCheckin: ', allSelectedWithNullCheckin);
@@ -3110,7 +3648,7 @@ export class AllemployeesComponent
     const totalSelect = this.selection.selected.length;
     this.selection.selected.forEach((item) => {
       const index: number = this.dataSource.renderedData.findIndex(
-        (d) => d === item
+        (d) => d === item,
       );
       // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
       this.exampleDatabase?.dataChange.value.splice(index, 1);
@@ -3136,7 +3674,7 @@ export class AllemployeesComponent
           return;
         }
         this.dataSource.filter = this.filter.nativeElement.value;
-      }
+      },
     );
   }
 
@@ -3169,7 +3707,7 @@ export class AllemployeesComponent
     text: string,
     placementFrom: MatSnackBarVerticalPosition,
     //customVerticalPosition: any,
-    placementAlign: MatSnackBarHorizontalPosition
+    placementAlign: MatSnackBarHorizontalPosition,
   ) {
     this.snackBar.open(text, '', {
       duration: 5000,
@@ -3201,7 +3739,7 @@ export class AllemployeesComponent
     }
   }
 
-  async saveModalAprove() {
+  async saveModalAprove_bn() {
     this.isSaving = true;
 
     const currentDate = new Date();
@@ -3219,7 +3757,7 @@ export class AllemployeesComponent
       console.log(
         'Orden actualizada correctamente',
         this.orderId,
-        dataToUpdate
+        dataToUpdate,
       );
 
       // Cerrar el modal después de la actualización
@@ -3234,6 +3772,538 @@ export class AllemployeesComponent
     }
   }
 
+  
+
+  async generatePdfAsBlob(frozenDate?: string): Promise<Blob> {
+    // Preparar datos exactamente igual que generatePdf()
+    this.employeesArray.sort((a, b) => {
+      const lastNameA = (a.lastName || '').toLowerCase();
+      const lastNameB = (b.lastName || '').toLowerCase();
+      const firstNameA = (a.firstName || '').toLowerCase();
+      const firstNameB = (b.firstName || '').toLowerCase();
+      return (
+        lastNameA.localeCompare(lastNameB) ||
+        firstNameA.localeCompare(firstNameB)
+      );
+    });
+
+    this.groupEmployees = [];
+    const positions = [];
+
+    const convertTimestampToTime = (timestamp: any): string => {
+      if (
+        timestamp &&
+        timestamp._seconds &&
+        timestamp._nanoseconds !== undefined
+      ) {
+        const date = new Date(timestamp._seconds * 1000);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const period = hours >= 12 ? 'PM' : 'AM';
+        const formattedHours = (hours % 12 === 0 ? 12 : hours % 12)
+          .toString()
+          .padStart(2, '0');
+        const formattedMinutes = minutes.toString().padStart(2, '0');
+        return `${formattedHours}:${formattedMinutes} ${period}`;
+      }
+      return '';
+    };
+
+    const employeesToShow = this.employeesArray.filter(
+      (emp) => emp.status !== 'No show'
+    );
+
+    employeesToShow.forEach((employee) => {
+      const foundPosition = positions.find(
+        (group) =>
+          group.name == employee.position && group.hour == employee.hourFrom
+      );
+      if (!foundPosition) {
+        const positionsArray = this.employeesArray.filter(
+          (emps) =>
+            emps.position == employee.position &&
+            emps.hourFrom == employee.hourFrom
+        );
+        const totalHours = positionsArray.reduce(
+          (total, position) => total + Number(position.hours),
+          0
+        );
+        positions.push({
+          name: employee.position,
+          hour: employee.hourFrom,
+          total: totalHours,
+        });
+      }
+    });
+
+    positions.forEach((position) => {
+      const formattedHour = new Date(
+        `1970-01-01T${position.hour}:00`
+      ).toLocaleString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+      });
+
+      const roundedTotal = position.total.toFixed(2);
+
+      this.groupEmployees.push([
+        {
+          colSpan: 9,
+          text: `      ${position.name} - ${formattedHour}     /     Hours by position: ${roundedTotal}`,
+          bold: true,
+          margin: [25, 8, 0, 8],
+          fontSize: 12,
+        },
+        '-',
+        '-',
+        '-',
+        '-',
+        '-',
+        '-',
+        '-',
+      ]);
+
+      const employees = employeesToShow.filter(
+        (employee) =>
+          employee.position == position.name &&
+          employee.hourFrom == position.hour
+      );
+
+      employees.forEach((emp, index) => {
+        let dateFrom, dateTo;
+        if (emp.status == 'No show') {
+          dateFrom = 'No show';
+          emp.hours = 0;
+          emp.break = 'No show';
+          dateTo = 'No show';
+        } else {
+          dateFrom = emp.checkin
+            ? convertTimestampToTime(emp.dateCheckin)
+            : '-';
+          dateTo = emp.checkout
+            ? convertTimestampToTime(emp.dateCheckout)
+            : '-';
+          emp.break = emp.checkout ? emp.break : 'No checkout';
+        }
+
+        const [firstLastname, secondLastname] =
+          emp.employee.data.lastname.split(' ');
+        const formattedLastname = secondLastname
+          ? `${firstLastname.charAt(0).toUpperCase()}${firstLastname
+              .slice(1)
+              .toLowerCase()} ${secondLastname.charAt(0).toUpperCase()}.`
+          : firstLastname.charAt(0).toUpperCase() +
+            firstLastname.slice(1).toLowerCase();
+
+        const [firstFirstname, secondFirstname] =
+          emp.employee.data.firstname.split(' ');
+        const formattedFirstname = secondFirstname
+          ? `${firstFirstname.charAt(0).toUpperCase()}${firstFirstname
+              .slice(1)
+              .toLowerCase()} ${secondFirstname.charAt(0).toUpperCase()}.`
+          : firstFirstname.charAt(0).toUpperCase() +
+            firstFirstname.slice(1).toLowerCase();
+
+        this.groupEmployees.push([
+          { text: index + 1, fontSize: 10 },
+          { text: formattedLastname, fontSize: 11 },
+          { text: formattedFirstname, fontSize: 11 },
+          {
+            text: emp.employee.data.employeeId
+              ? emp.employee.data.employeeId
+              : '0',
+            fontSize: 11,
+          },
+          {
+            text: emp.employee.data.payrollid
+              ? emp.employee.data.payrollid
+              : '0',
+            fontSize: 11,
+          },
+          { text: dateFrom, fontSize: 11 },
+          { text: emp.break, fontSize: 11 },
+          { text: dateTo, fontSize: 11 },
+          { text: emp.hours, fontSize: 11 },
+        ]);
+      });
+    });
+
+    // Generar el PDF con o sin fecha congelada
+    const docDefinition = await this.getDocumentDefinition(frozenDate);
+    
+    // Retornar como Blob (Promise)
+    return new Promise<Blob>((resolve, reject) => {
+      const pdfDocGenerator = pdfMake.createPdf(docDefinition);
+      pdfDocGenerator.getBlob((blob) => {
+        resolve(blob);
+      });
+    });
+  }
+
+  async saveModalAprove() {
+  this.isSaving = true;
+
+  const currentDate = new Date();
+  const formattedDate = currentDate.toLocaleString();
+
+  try {
+    // 1. DATOS DE APROBACIÓN
+    const approvalData = {
+      approveComments: this.modalAproveComments,
+      approvedStatus: this.approveChecked,
+      approverEmail: this.dataUser.email,
+      approverName: `${this.dataUser.firstname} ${this.dataUser.lastname}`,
+      approvedDate: formattedDate,
+    };
+
+    // 2. GENERAR EL PDF USANDO EL MISMO MÉTODO QUE FUNCIONA BIEN
+    //    pero con la fecha congelada
+    console.log('📄 Generando PDF con fecha congelada...');
+    const pdfBlob = await this.generatePdfAsBlob(formattedDate);
+    console.log('✅ PDF generado correctamente como Blob');
+
+    // 3. CONVERTIR EL BLOB A ArrayBuffer para la firma
+    const pdfBuffer = await pdfBlob.arrayBuffer();
+
+    // 4. CONSTRUIR NOMBRE DEL ARCHIVO
+    const year = new Date().getFullYear();
+    const ordNum = this.dataEmployees.data.ordNum || 'UNKNOWN';
+    const startDate = this.dataEmployees.data.startDate || 'NO-DATE';
+    const pdfFileName = `timesheets/approved/${year}/Timesheet L&M _${ordNum}_${startDate}.pdf`;
+    
+    console.log('📝 Nombre del archivo:', pdfFileName);
+
+    // 5. SUBIR EL BLOB DIRECTAMENTE A FIREBASE STORAGE
+    const storageRef = this.storage.ref(pdfFileName);
+    const uploadTask = storageRef.put(pdfBlob, {
+      contentType: 'application/pdf'
+    });
+    
+    await uploadTask.snapshotChanges().toPromise();
+    
+    const pdfUrl = await storageRef.getDownloadURL().toPromise();
+    console.log('📤 PDF subido a Firebase Storage:', pdfUrl);
+
+    // 6. GENERAR LA FIRMA COMBINADA SHA-256
+    const combinedSignature = await this.approvalSignatureSvc.generateCombinedSignature(
+      pdfBuffer,
+      approvalData
+    );
+
+    // 7. GUARDAR DATOS EN LA BD
+    const dataToUpdate = {
+      ...approvalData,
+      approvalSignature: combinedSignature,
+      approvedPdfUrl: pdfUrl,
+      approvedPdfPath: pdfFileName,
+    };
+
+    await this.ordSvc.updateOrder1(this.orderId, dataToUpdate).toPromise();
+    
+    console.log('✅ Orden aprobada y firmada correctamente');
+    console.log('📋 Archivo:', pdfFileName);
+    console.log('🔐 Firma SHA-256:', combinedSignature);
+
+    sessionStorage.removeItem('currentOrders');
+    this.updateDataOrder();
+    this.toggleModalAprove();
+    
+    this.showNotification(
+      'snackbar-success',
+      'Timesheet approved and digitally signed!',
+      'bottom',
+      'center'
+    );
+  } catch (error) {
+    console.error('❌ Error al aprobar y firmar:', error);
+    
+    if (error.message) {
+      console.error('Detalles del error:', error.message);
+    }
+    
+    this.showNotification(
+      'snackbar-error',
+      'Error approving timesheet. Check console for details.',
+      'bottom',
+      'center'
+    );
+  } finally {
+    this.isSaving = false;
+  }
+}
+
+  async verifyApprovalIntegrity(orderData: any): Promise<void> {
+    if (!orderData.approvalSignature) {
+      console.log('📋 Esta orden no tiene firma digital.');
+      this.isApprovalTampered = false;
+      return;
+    }
+
+    // Verificar que exista la URL del PDF
+    if (!orderData.approvedPdfUrl) {
+      console.warn('⚠️ Esta orden tiene firma pero no tiene PDF guardado.');
+      this.isApprovalTampered = true;
+      return;
+    }
+
+    try {
+      // 1. EXTRAER LOS DATOS DE APROBACIÓN DE LA BD
+      const savedApprovalData = {
+        approveComments: orderData.approveComments,
+        approvedStatus: orderData.approvedStatus,
+        approverEmail: orderData.approverEmail,
+        approverName: orderData.approverName,
+        approvedDate: orderData.approvedDate,
+      };
+
+      // 2. DESCARGAR EL PDF DESDE FIREBASE STORAGE
+      console.log('📥 Descargando PDF desde Storage...');
+      const response = await fetch(orderData.approvedPdfUrl);
+
+      if (!response.ok) {
+        throw new Error(`Error downloading PDF: ${response.status}`);
+      }
+
+      const savedPdfBuffer = await response.arrayBuffer();
+      console.log('✅ PDF descargado correctamente');
+
+      // 3. VERIFICAR LA FIRMA COMBINADA (PDF + DATOS)
+      const isValid = await this.approvalSignatureSvc.verifyCombinedSignature(
+        savedPdfBuffer,
+        savedApprovalData,
+        orderData.approvalSignature,
+      );
+
+      if (isValid) {
+        console.log(
+          '✅ Firma válida: El timesheet y los datos NO han sido modificados.',
+        );
+        this.isApprovalTampered = false;
+      } else {
+        console.warn(
+          '⚠️ ALERTA DE SEGURIDAD: El timesheet o los datos de aprobación fueron modificados.',
+        );
+        this.isApprovalTampered = true;
+
+        // Mostrar alerta visual al usuario
+        this.showNotification(
+          'snackbar-danger',
+          '⚠️ WARNING: This timesheet has been tampered with!',
+          'top',
+          'center',
+        );
+      }
+    } catch (error) {
+      console.error('❌ Error al verificar la firma:', error);
+      this.isApprovalTampered = true;
+
+      this.showNotification(
+        'snackbar-error',
+        'Error verifying signature. PDF may be unavailable.',
+        'top',
+        'center',
+      );
+    }
+  }
+
+  generatePdfWithSignature() {
+    const orderData = this.dataEmployees.data;
+
+    if (orderData.approvalSignature && orderData.approvedPdfUrl) {
+      // Abrir el PDF directamente desde Firebase Storage
+      window.open(orderData.approvedPdfUrl, '_blank');
+      console.log('📄 Abriendo PDF firmado original desde Storage');
+    } else if (orderData.approvalSignature && !orderData.approvedPdfUrl) {
+      // Tiene firma pero no tiene URL (órdenes antiguas)
+      this.showNotification(
+        'snackbar-warning',
+        'This order has a signature but no PDF stored. Please re-approve to generate it.',
+        'top',
+        'center',
+      );
+    } else {
+      // No está firmado, generar PDF normal actual
+      this.generatePdf();
+    }
+  }
+
+  // Método para descargar el PDF firmado
+  async downloadSignedPdf() {
+    const orderData = this.dataEmployees.data;
+
+    if (!orderData.approvedPdfUrl) {
+      this.showNotification(
+        'snackbar-warning',
+        'No signed PDF available for download.',
+        'top',
+        'center',
+      );
+      return;
+    }
+
+    try {
+      // Descargar el PDF
+      const response = await fetch(orderData.approvedPdfUrl);
+      const blob = await response.blob();
+
+      // Crear un link de descarga
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Timesheet_${this.dataEmployees.data.ordNum}_Signed.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      this.showNotification(
+        'snackbar-success',
+        'Signed PDF downloaded successfully!',
+        'bottom',
+        'center',
+      );
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      this.showNotification(
+        'snackbar-error',
+        'Error downloading PDF.',
+        'bottom',
+        'center',
+      );
+    }
+  }
+
+  async openApprovalConfirm() {
+    this.isConfirmApproveOpen = true;
+    this.isUploadingPdf = true;
+    this.pendingPdfBlob = null;
+    this.pendingPdfUrl = null;
+    this.pendingPdfPath = null;
+
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleString();
+
+    const year = currentDate.getFullYear();
+    const ordNum = this.dataEmployees.data.ordNum || 'UNKNOWN';
+    const startDate = this.dataEmployees.data.startDate || 'NO-DATE';
+    this.pendingPdfPath = `timesheets/approved/${year}/Timesheet L&M _${ordNum}_${startDate}.pdf`;
+
+    // Subir en background mientras el usuario ve el popup
+    this.pendingUploadPromise = (async () => {
+        try {
+            const pdfBlob = await this.generatePdfAsBlob(formattedDate);
+            this.pendingPdfBlob = pdfBlob;
+
+            const storageRef = this.storage.ref(this.pendingPdfPath);
+            const uploadTask = storageRef.put(pdfBlob, { contentType: 'application/pdf' });
+            await uploadTask.snapshotChanges().toPromise();
+
+            this.pendingPdfUrl = await storageRef.getDownloadURL().toPromise();
+            console.log('✅ PDF listo en Storage:', this.pendingPdfUrl);
+        } catch (error) {
+            console.error('❌ Error subiendo PDF:', error);
+            this.pendingPdfUrl = null;
+        } finally {
+            this.isUploadingPdf = false;
+        }
+    })();
+  }
+
+  async confirmApproval() {
+    this.isSaving = true;
+
+    try {
+        // Esperar que termine la subida si aún no terminó
+        if (this.pendingUploadPromise) {
+            await this.pendingUploadPromise;
+        }
+
+        if (!this.pendingPdfUrl) {
+            throw new Error('PDF upload failed. Cannot approve.');
+        }
+
+        const currentDate = new Date();
+        const formattedDate = currentDate.toLocaleString();
+
+        const approvalData = {
+            approveComments: '',
+            approvedStatus: true,
+            approverEmail: this.dataUser.email,
+            approverName: `${this.dataUser.firstname} ${this.dataUser.lastname}`,
+            approvedDate: formattedDate,
+        };
+
+        // Generar firma SHA-256
+        const pdfBuffer = await this.pendingPdfBlob.arrayBuffer();
+        const combinedSignature = await this.approvalSignatureSvc.generateCombinedSignature(
+            pdfBuffer,
+            approvalData
+        );
+
+        const dataToUpdate = {
+            ...approvalData,
+            approvalSignature: combinedSignature,
+            approvedPdfUrl: this.pendingPdfUrl,
+            approvedPdfPath: this.pendingPdfPath,
+        };
+
+        await this.ordSvc.updateOrder1(this.orderId, dataToUpdate).toPromise();
+
+        console.log('✅ Timesheet aprobado y firmado');
+        sessionStorage.removeItem('currentOrders');
+        this.updateDataOrder();
+
+        this.showNotification(
+            'snackbar-success',
+            'Timesheet approved and digitally signed!',
+            'bottom',
+            'center'
+        );
+    } catch (error) {
+        console.error('❌ Error al confirmar aprobación:', error);
+        this.showNotification(
+            'snackbar-error',
+            'Error approving timesheet.',
+            'bottom',
+            'center'
+        );
+    } finally {
+        this.isSaving = false;
+        this.isConfirmApproveOpen = false;
+        this.pendingPdfBlob = null;
+        this.pendingPdfUrl = null;
+        this.pendingUploadPromise = null;
+    }
+  }
+
+  async cancelApproval() {
+    // Si ya se subió el PDF, eliminarlo de Storage
+    if (this.pendingPdfPath) {
+        try {
+            // Esperar que termine la subida para poder eliminarla
+            if (this.pendingUploadPromise) {
+                await this.pendingUploadPromise;
+            }
+            if (this.pendingPdfUrl) {
+                const storageRef = this.storage.ref(this.pendingPdfPath);
+                await storageRef.delete().toPromise();
+                console.log('🗑️ PDF eliminado de Storage por cancelación');
+            }
+        } catch (error) {
+            console.warn('⚠️ No se pudo eliminar el PDF de Storage:', error);
+        }
+    }
+
+    this.isConfirmApproveOpen = false;
+    this.isUploadingPdf = false;
+    this.pendingPdfBlob = null;
+    this.pendingPdfUrl = null;
+    this.pendingPdfPath = null;
+    this.pendingUploadPromise = null;
+  }
+
+
   /**
    * Calcula la distancia entre dos puntos geográficos usando la fórmula de Haversine
    * @param lat1 Latitud del primer punto
@@ -3242,11 +4312,12 @@ export class AllemployeesComponent
    * @param lon2 Longitud del segundo punto
    * @returns Distancia en metros
    */
+
   calculateDistance(
     lat1: number,
     lon1: number,
     lat2: number,
-    lon2: number
+    lon2: number,
   ): number {
     const R = 6371e3; // Radio de la Tierra en metros
     const φ1 = (lat1 * Math.PI) / 180; // Convertir latitud 1 a radianes
@@ -3295,7 +4366,7 @@ export class ExampleDataSource extends DataSource<Employees> {
     public paginator: MatPaginator,
     public _sort: MatSort,
 
-    public employeesArray: any[]
+    public employeesArray: any[],
   ) {
     super();
     // Reset to the first page when the user changes the filter.
@@ -3357,13 +4428,13 @@ export class ExampleDataSource extends DataSource<Employees> {
         const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
         this.renderedData = sortedData.splice(
           startIndex,
-          this.paginator.pageSize
+          this.paginator.pageSize,
         );
 
         console.log('this.renderedData', this.renderedData);
 
         return this.renderedData;
-      })
+      }),
     );
   }
 
@@ -3414,6 +4485,4 @@ export class ExampleDataSource extends DataSource<Employees> {
       );
     });
   }
-
-  
 }

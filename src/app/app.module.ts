@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire/compat'; //Jairo
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -50,6 +51,7 @@ export function createTranslateLoader(http: HttpClient) {
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
         AngularFireModule.initializeApp(environment_A.firebase), //Jairo
+        AngularFireStorageModule,
         BrowserAnimationsModule,
         AppRoutingModule,
         NgScrollbarModule,
