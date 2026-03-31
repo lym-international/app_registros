@@ -11,11 +11,9 @@ import { AdvanceControlsComponent } from './advance-controls/advance-controls.co
 
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
-import {
-  OwlDateTimeModule,
-  OwlNativeDateTimeModule,
-  OWL_DATE_TIME_LOCALE,
-} from '@danielmoncada/angular-datetime-picker';
+//import {  OwlDateTimeModule,  OwlNativeDateTimeModule,  OWL_DATE_TIME_LOCALE,} from '@danielmoncada/angular-datetime-picker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { ComponentsModule } from '../shared/components/components.module';
 import { SharedModule } from '../shared/shared.module';
 
@@ -34,12 +32,14 @@ import { SharedModule } from '../shared/shared.module';
     FormsModule,
     ReactiveFormsModule,
     CKEditorModule,
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
+    //OwlDateTimeModule,
+    //OwlNativeDateTimeModule,
     NgxMaskDirective,
     NgxMaskPipe,
     ComponentsModule,
     SharedModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   providers: [provideNgxMask(),
     { provide: OWL_DATE_TIME_LOCALE, useValue: {hour12Timer: true} }]

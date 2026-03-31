@@ -13,7 +13,10 @@ import { ComponentsModule } from '@shared/components/components.module';
 import { SharedModule } from '@shared';
 import { DatePipe } from '@angular/common';
 import { CheckInComponent } from './allEmployees/dialogs/check-in/check-in.component';
-import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+//import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+
 import { CheckOutComponent } from './allEmployees/dialogs/check-out/check-out.component';
 import { BreakComponent } from './allEmployees/dialogs/break/break.component';
 import { AdminEmployeesComponent } from './admin-employees/admin-employees.component';
@@ -51,10 +54,12 @@ import { GoogleMapsModule } from '@angular/google-maps';
     EmployeesRoutingModule,
     ComponentsModule,
     SharedModule,
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
+    //OwlDateTimeModule,
+    //OwlNativeDateTimeModule,
     NgScrollbarModule,
-    GoogleMapsModule
+    GoogleMapsModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   providers: [EmployeesService, DatePipe, SharingCloseOrderService],
 })

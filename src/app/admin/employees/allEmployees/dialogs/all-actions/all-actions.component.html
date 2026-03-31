@@ -18,25 +18,39 @@
                     <!--Properties of owl-date-Time: https://www.npmjs.com/package/@danielmoncada/angular-datetime-picker?activeTab=readme-->
                     <mat-form-field class="example-full-width mb-3" appearance="outline">
                         <mat-label>CheckIn</mat-label>
-                        <input matInput formControlName="startDate" [owlDateTimeTrigger]="startDate" [owlDateTime]="startDate" placeholder="Choose a date" required>
-                        <mat-icon matSuffix [owlDateTimeTrigger]="startDate" class="date-icon">today</mat-icon>
+                        <!--<input matInput formControlName="startDate" [owlDateTimeTrigger]="startDate" [owlDateTime]="startDate" placeholder="Choose a date" required>
+                        <mat-icon matSuffix [owlDateTimeTrigger]="startDate" class="date-icon">today</mat-icon>-->
+                        <input matInput formControlName="startDate" [matDatepicker]="startDatePicker"
+       placeholder="Choose a date" required>
+<mat-datepicker-toggle matSuffix [for]="startDatePicker">
+  <mat-icon matDatepickerToggleIcon>today</mat-icon>
+</mat-datepicker-toggle>
+<mat-datepicker #startDatePicker [startAt]="dateStart"></mat-datepicker>
+
                         <mat-error *ngIf="allActionsForm.get('startDate')?.hasError('required')">
                             CheckIn is required!
                         </mat-error>
-                        <owl-date-time [hour12Timer]="true" [startAt]="dateStart" #startDate></owl-date-time>
+                        <!--<owl-date-time [hour12Timer]="true" [startAt]="dateStart" #startDate></owl-date-time>-->
+
                     </mat-form-field>
 
                     <mat-form-field class="example-full-width mb-3" appearance="outline">
                         <mat-label>CheckOut</mat-label>
-                        <input matInput formControlName="endDate" [owlDateTimeTrigger]="endDate" [owlDateTime]="endDate" placeholder="Choose a date" required>
-                        <mat-icon matSuffix [owlDateTimeTrigger]="endDate" class="date-icon">today</mat-icon>
+                        <!--<input matInput formControlName="endDate" [owlDateTimeTrigger]="endDate" [owlDateTime]="endDate" placeholder="Choose a date" required>
+                        <mat-icon matSuffix [owlDateTimeTrigger]="endDate" class="date-icon">today</mat-icon>-->
+                        <input matInput formControlName="startDate" [matDatepicker]="startDatePicker"
+       placeholder="Choose a date" required>
+<mat-datepicker-toggle matSuffix [for]="startDatePicker">
+  <mat-icon matDatepickerToggleIcon>today</mat-icon>
+</mat-datepicker-toggle>
+<mat-datepicker #startDatePicker [startAt]="dateStart"></mat-datepicker>
                         <mat-error *ngIf="allActionsForm.get('endDate')?.hasError('required')">
                             CheckOut is required!
                         </mat-error>
                         <mat-error *ngIf="allActionsForm.hasError('invalidDate')">
                             CheckOut must be greater than CheckIn.
                         </mat-error>
-                        <owl-date-time [hour12Timer]="true" #endDate></owl-date-time>
+                        <!--<owl-date-time [hour12Timer]="true" #endDate></owl-date-time>-->
                     </mat-form-field>
 
 

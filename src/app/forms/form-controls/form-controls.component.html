@@ -265,8 +265,11 @@
                 <h6>Basic datepicker</h6>
                 <mat-form-field class="example-full-width mb-3">
                   <mat-label>Choose a date</mat-label>
-                  <input matInput [owlDateTimeTrigger]="date1" [owlDateTime]="date1">
-                  <owl-date-time #date1></owl-date-time>
+                  <input matInput [matDatepicker]="date1Picker">
+<mat-datepicker-toggle matSuffix [for]="date1Picker"></mat-datepicker-toggle>
+<mat-datepicker #date1Picker></mat-datepicker>
+                  <!--<input matInput [owlDateTimeTrigger]="date1" [owlDateTime]="date1">
+                  <owl-date-time #date1></owl-date-time>-->
                 </mat-form-field>
               </div>
               <div class="col-2"></div>
@@ -274,9 +277,14 @@
                 <h6>Datetime picker with icon</h6>
                 <mat-form-field class="example-full-width mb-3">
                   <mat-label>Choose a date</mat-label>
-                  <input matInput [owlDateTimeTrigger]="date2" [owlDateTime]="date2">
+                  <input matInput [matDatepicker]="date2Picker">
+<mat-datepicker-toggle matSuffix [for]="date2Picker">
+  <mat-icon matDatepickerToggleIcon>today</mat-icon>
+</mat-datepicker-toggle>
+<mat-datepicker #date2Picker></mat-datepicker>
+                  <!--<input matInput [owlDateTimeTrigger]="date2" [owlDateTime]="date2">
                   <mat-icon matSuffix [owlDateTimeTrigger]="date2" class="date-icon">today</mat-icon>
-                  <owl-date-time #date2></owl-date-time>
+                  <owl-date-time #date2></owl-date-time>-->
                 </mat-form-field>
               </div>
             </div>
@@ -285,9 +293,11 @@
                 <h6>Time Picker</h6>
                 <mat-form-field class="example-full-width mb-3">
                   <mat-label>Choose a time</mat-label>
-                  <input matInput [owlDateTimeTrigger]="time1" [owlDateTime]="time1">
+                  <input matInput type="time" placeholder="Selecciona hora">
+<mat-icon matSuffix class="date-icon">schedule</mat-icon>
+                  <!--<input matInput [owlDateTimeTrigger]="time1" [owlDateTime]="time1">
                   <mat-icon matSuffix [owlDateTimeTrigger]="time1" class="date-icon">schedule</mat-icon>
-                  <owl-date-time [pickerType]="'timer'" #time1></owl-date-time>
+                  <owl-date-time [pickerType]="'timer'" #time1></owl-date-time>-->
                 </mat-form-field>
               </div>
             </div>

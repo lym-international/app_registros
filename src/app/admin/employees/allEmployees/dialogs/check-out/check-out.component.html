@@ -17,14 +17,20 @@
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 ">
                     <mat-form-field class="example-full-width mb-3" appearance="outline">
                         <mat-label>Date</mat-label>
-                        <input matInput formControlName="endDate" [owlDateTimeTrigger]="endDate" [owlDateTime]="endDate" placeholder="Choose a date" required>
-                        <mat-icon matSuffix [owlDateTimeTrigger]="endDate" class="date-icon">today</mat-icon>
+                        <!--<input matInput formControlName="endDate" [owlDateTimeTrigger]="endDate" [owlDateTime]="endDate" placeholder="Choose a date" required>
+                        <mat-icon matSuffix [owlDateTimeTrigger]="endDate" class="date-icon">today</mat-icon>-->
                         <!--
                         <mat-error *ngIf="checkOutForm.get('endDate')?.hasError('required')">
                             CheckOut is required!
                         </mat-error>
                         -->
                         <!-- Muestra el mensaje de error solo si showError es true -->
+                         <input matInput formControlName="endDate" [matDatepicker]="endDatePicker"
+       placeholder="Choose a date" required>
+<mat-datepicker-toggle matSuffix [for]="endDatePicker">
+  <mat-icon matDatepickerToggleIcon>today</mat-icon>
+</mat-datepicker-toggle>
+<mat-datepicker #endDatePicker></mat-datepicker>
 
                         <!-- Muestra el mensaje de error solo si el campo está vacío -->
                         <div *ngIf="showError && !checkOutForm.get('endDate')?.hasError('required')" style="color: red; font-size: 11px;">
@@ -59,7 +65,7 @@
                             CheckOut must be greater than CheckIn.
                         </mat-error>
                         -->
-                        <owl-date-time [hour12Timer]="true" #endDate></owl-date-time>
+                        <!--<owl-date-time [hour12Timer]="true" #endDate></owl-date-time>-->
 
                     </mat-form-field>
 
