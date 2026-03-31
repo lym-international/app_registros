@@ -8,8 +8,8 @@
             </div>
         </div>
         <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
-        <mat-icon>close</mat-icon>
-      </button>
+            <mat-icon>close</mat-icon>
+        </button>
     </div>
     <div mat-dialog-content>
         <form class="register-form m-4" [formGroup]="checkInForm">
@@ -19,12 +19,12 @@
                         <mat-label>Date</mat-label>
                         <!--<input matInput formControlName="startDate" [owlDateTimeTrigger]="startDate" placeholder="Choose a date" required [readonly]="inputDisabled" class="left-align-input" dir="auto">-->
                         <input matInput formControlName="startDate" [matDatepicker]="startDatePicker"
-       placeholder="Choose a date" required [readonly]="inputDisabled"
-       class="left-align-input" dir="auto">
-<mat-datepicker-toggle matSuffix [for]="startDatePicker">
-  <mat-icon matDatepickerToggleIcon>today</mat-icon>
-</mat-datepicker-toggle>
-<mat-datepicker #startDatePicker></mat-datepicker>
+                            placeholder="Choose a date" required [readonly]="inputDisabled" class="left-align-input"
+                            dir="auto">
+                        <mat-datepicker-toggle matSuffix [for]="startDatePicker">
+                            <mat-icon matDatepickerToggleIcon>today</mat-icon>
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #startDatePicker></mat-datepicker>
                         <!--<input matInput formControlName="startDate" [owlDateTimeTrigger]="startDate" [owlDateTime]="startDate" placeholder="Choose a date" required>-->
                         <!--<mat-icon matSuffix [owlDateTimeTrigger]="startDate" class="date-icon">today</mat-icon>-->
                         <mat-icon matSuffix class="date-icon">today</mat-icon>
@@ -38,15 +38,16 @@
             <div class="row">
                 <div class="col-xl-10 col-lg-10 col-md-12 col-sm-12">
                     <div class="example-button-row">
-                        <button mat-raised-button color="primary" [type]="submit" [disabled]="!checkInForm.valid" (click)="confirmAdd()">Save</button>
+                        <button mat-raised-button color="primary" [type]="submit" [disabled]="!checkInForm.valid"
+                            (click)="confirmAdd()">Save</button>
                         <button mat-raised-button color="warn" (click)="dialogRef.close()" tabindex="-1">Cancel</button>
                     </div>
                 </div>
                 <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12">
                     <div class="example-button-row" *ngIf="showDeleteBtn">
                         <button mat-mini-fab aria-label color="warn" (click)="deleteEvent()">
-                <mat-icon class="font-20">delete</mat-icon>
-              </button>
+                            <mat-icon class="font-20">delete</mat-icon>
+                        </button>
                     </div>
                 </div>
             </div>
