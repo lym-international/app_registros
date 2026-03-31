@@ -525,8 +525,14 @@ export class MainComponent implements OnInit {
           type: 'vertical',
           opacityFrom: 0.85,
           opacityTo: 0.55,
-          stops: [0, 100, 100, 100],
-        },
+
+          colorStops: [
+            { offset: 0, color: '#6777EF', opacity: 1 }, // Cambia el color por el de tu gráfico
+            { offset: 100, color: '#6777EF', opacity: 1 },
+            { offset: 100, color: '#6777EF', opacity: 1 },
+            { offset: 100, color: '#6777EF', opacity: 1 }
+          ] as any,
+        }
       },
       labels: [
         '01/01/2003',

@@ -320,8 +320,11 @@ export class ChartWidgetComponent implements OnInit {
           type: 'horizontal',
           opacityFrom: 1,
           opacityTo: 1,
-          stops: [0, 100, 100, 100],
-        },
+          colorStops: [
+            { offset: 0, color: '#FFA41B', opacity: 1 },
+            { offset: 100, color: '#35fdd8', opacity: 1 }
+          ]
+        } as any,
       },
       grid: {
         show: true,

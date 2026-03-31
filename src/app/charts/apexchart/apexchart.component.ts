@@ -218,8 +218,12 @@ export class ApexchartComponent {
           inverseColors: true,
           opacityFrom: 1,
           opacityTo: 1,
-          stops: [50, 0, 100, 100],
-        },
+          colorStops: [
+          { offset: 0, color: '#D8E3F0', opacity: 1 },
+          { offset: 50, color: '#BED1E6', opacity: 1 },
+          { offset: 100, color: '#BED1E6', opacity: 1 }
+        ]
+      } as any,
       },
       yaxis: {
         axisBorder: {
@@ -416,8 +420,12 @@ export class ApexchartComponent {
           type: 'horizontal',
           opacityFrom: 1,
           opacityTo: 1,
-          stops: [0, 100, 100, 100],
-        },
+          colorStops: [
+            { offset: 0, color: '#D8E3F0', opacity: 1 },
+            { offset: 50, color: '#BED1E6', opacity: 1 },
+            { offset: 100, color: '#BED1E6', opacity: 1 }
+          ]
+        } as any,
       },
       markers: {
         size: 4,
