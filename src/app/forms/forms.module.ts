@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsRoutingModule } from './forms-routing.module';
 import { EditorsComponent } from './editors/editors.component';
@@ -42,7 +42,8 @@ import { SharedModule } from '../shared/shared.module';
     MatNativeDateModule,
   ],
   providers: [provideNgxMask(),
-    { provide: OWL_DATE_TIME_LOCALE, useValue: {hour12Timer: true} }]
+    //{ provide: OWL_DATE_TIME_LOCALE, useValue: {hour12Timer: true} }]
+    { provide: LOCALE_ID, useValue: 'en-US' } ]
   /* providers: [
     // Configura OWL_DATE_TIME_LOCALE con 'en-US' y hour12Timer en true
     { provide: OWL_DATE_TIME_LOCALE, useValue: 'en-US' },
