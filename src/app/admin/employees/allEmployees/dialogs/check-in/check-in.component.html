@@ -8,35 +8,25 @@
             </div>
         </div>
         <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
-        <mat-icon>close</mat-icon>
-      </button>
+            <mat-icon>close</mat-icon>
+        </button>
     </div>
     <div mat-dialog-content>
         <form class="register-form m-4" [formGroup]="checkInForm">
             <div class="row">
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 ">
-                    <mat-form-field class="example-full-width mb-3" appearance="outline">
-                        <mat-label>Date</mat-label>
-                        <!--<input matInput formControlName="startDate" [owlDateTimeTrigger]="startDate" [owlDateTime]="startDate" placeholder="Choose a date" required>
-                        <mat-icon matSuffix [owlDateTimeTrigger]="startDate" class="date-icon">today</mat-icon>-->
-                        <input matInput formControlName="startDate" [matDatepicker]="startDatePicker"
-       placeholder="Choose a date" required>
-<mat-datepicker-toggle matSuffix [for]="startDatePicker">
-  <mat-icon matDatepickerToggleIcon>today</mat-icon>
-</mat-datepicker-toggle>
-<mat-datepicker #startDatePicker [startAt]="dateStart"></mat-datepicker>
-                        <mat-error *ngIf="checkInForm.get('startDate')?.hasError('required')">
-                            CheckIn is required!
-                        </mat-error>
-                        <!--<owl-date-time [hour12Timer]="true" [startAt]="dateStart" #startDate></owl-date-time>-->
-                        <!--<owl-date-time #startDate></owl-date-time> -->
-                    </mat-form-field>
+                    <app-datetime-picker
+                        formControlName="startDate"
+                        label="CheckIn"
+                        [required]="true">
+                    </app-datetime-picker>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xl-10 col-lg-10 col-md-12 col-sm-12">
                     <div class="example-button-row">
-                        <button mat-raised-button color="primary" [type]="submit" [disabled]="!checkInForm.valid" (click)="confirmAdd()">Save</button>
+                        <button mat-raised-button color="primary" [type]="submit" [disabled]="!checkInForm.valid"
+                            (click)="confirmAdd()">Save</button>
                         <button mat-raised-button color="warn" (click)="dialogRef.close()" tabindex="-1">Cancel</button>
                     </div>
                 </div>

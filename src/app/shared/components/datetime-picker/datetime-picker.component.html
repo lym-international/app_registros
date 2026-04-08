@@ -1,0 +1,59 @@
+<div class="dtp-wrapper">
+
+  <mat-form-field appearance="outline" class="dtp-field">
+    <mat-label>{{ label }}{{ required ? '*' : '' }}</mat-label>
+    <input matInput [value]="displayValue" readonly (click)="openPanel()">
+    <mat-icon matSuffix (click)="openPanel()" class="dtp-icon">today</mat-icon>
+  </mat-form-field>
+
+  <div class="dtp-backdrop" *ngIf="panelOpen" (click)="closePanel()"></div>
+
+  <div class="dtp-panel" *ngIf="panelOpen">
+
+    <!-- Sin header, directo al calendario -->
+    <mat-calendar
+      [selected]="dateControl.value"
+      (selectedChange)="dateControl.setValue($event)">
+    </mat-calendar>
+
+    <div class="dtp-divider"></div>
+
+    <div class="dtp-time-row">
+
+      <div class="dtp-spinner">
+        <button type="button" (click)="stepHour(1)">
+          <mat-icon>keyboard_arrow_up</mat-icon>
+        </button>
+        <span class="dtp-time-val">{{ hourControl.value }}</span>
+        <button type="button" (click)="stepHour(-1)">
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+      </div>
+
+      <span class="dtp-colon">•<br>•</span>
+
+      <div class="dtp-spinner">
+        <button type="button" (click)="stepMinute(1)">
+          <mat-icon>keyboard_arrow_up</mat-icon>
+        </button>
+        <span class="dtp-time-val">{{ paddedMinute }}</span>
+        <button type="button" (click)="stepMinute(-1)">
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+      </div>
+
+      <button type="button" class="dtp-ampm" (click)="toggleAmPm()">
+        {{ isPM ? 'PM' : 'AM' }}
+      </button>
+
+    </div>
+
+    <div class="dtp-divider"></div>
+
+    <div class="dtp-actions">
+      <button type="button" mat-button (click)="closePanel()">Cancel</button>
+      <button type="button" mat-button color="primary" (click)="confirmPanel()">Set</button>
+    </div>
+
+  </div>
+</div>
