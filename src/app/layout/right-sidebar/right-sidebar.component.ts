@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+
 import {
   Component,
   Inject,
@@ -7,6 +7,7 @@ import {
   AfterViewInit,
   Renderer2,
   ChangeDetectionStrategy,
+  DOCUMENT
 } from '@angular/core';
 import { ConfigService } from '@config';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';

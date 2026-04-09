@@ -1,6 +1,6 @@
 import { Direction } from '@angular/cdk/bidi';
-import { AfterViewInit, Component, Inject, Renderer2 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { AfterViewInit, Component, Inject, Renderer2, DOCUMENT } from '@angular/core';
+
 import { ConfigService } from '@config';
 import { DirectionService, InConfiguration } from '@core';
 

@@ -1,8 +1,8 @@
 import { Direction } from '@angular/cdk/bidi';
-import { Component, Inject, Renderer2 } from '@angular/core';
+import { Component, Inject, Renderer2, DOCUMENT } from '@angular/core';
 import { DirectionService, InConfiguration } from '@core';
 import { ConfigService } from '@config';
-import { DOCUMENT } from '@angular/common';
+
 
 @Component({
     selector: 'app-auth-layout',

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Router, NavigationEnd } from '@angular/router';
-import { DOCUMENT } from '@angular/common';
+
 import {
   Component,
   Inject,
@@ -8,6 +8,7 @@ import {
   OnInit,
   Renderer2,
   HostListener,
+  DOCUMENT
 } from '@angular/core';
 import { ROUTES } from './sidebar-items';
 import { AuthService, Role } from '@core';

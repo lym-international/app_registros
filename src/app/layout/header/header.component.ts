@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+
 import {
   Component,
   Inject,
@@ -7,6 +7,7 @@ import {
   Renderer2,
   Output,
   EventEmitter,
+  DOCUMENT
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfigService } from '@config';
