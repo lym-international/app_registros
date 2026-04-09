@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 
 @Component({
-  selector: 'app-chartjs',
-  templateUrl: './chartjs.component.html',
-  styleUrls: ['./chartjs.component.scss'],
+    selector: 'app-chartjs',
+    templateUrl: './chartjs.component.html',
+    styleUrls: ['./chartjs.component.scss'],
+    standalone: false
 })
 export class ChartjsComponent {
   constructor() {

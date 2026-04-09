@@ -23,9 +23,10 @@ import { TableExportUtil, TableElement } from '@shared';
 import { formatDate } from '@angular/common';
 
 @Component({
-  selector: 'app-jobs-list',
-  templateUrl: './jobs-list.component.html',
-  styleUrls: ['./jobs-list.component.scss'],
+    selector: 'app-jobs-list',
+    templateUrl: './jobs-list.component.html',
+    styleUrls: ['./jobs-list.component.scss'],
+    standalone: false
 })
 export class JobsListComponent
   extends UnsubscribeOnDestroyAdapter

@@ -5,9 +5,10 @@ import {
   Validators,
 } from '@angular/forms';
 @Component({
-  selector: 'app-edit-client',
-  templateUrl: './edit-client.component.html',
-  styleUrls: ['./edit-client.component.scss'],
+    selector: 'app-edit-client',
+    templateUrl: './edit-client.component.html',
+    styleUrls: ['./edit-client.component.scss'],
+    standalone: false
 })
 export class EditClientComponent {
   clientForm: UntypedFormGroup;

@@ -22,9 +22,10 @@ import { TableExportUtil, TableElement } from '@shared';
 import { formatDate } from '@angular/common';
 
 @Component({
-  selector: 'app-allpayment',
-  templateUrl: './allpayment.component.html',
-  styleUrls: ['./allpayment.component.scss'],
+    selector: 'app-allpayment',
+    templateUrl: './allpayment.component.html',
+    styleUrls: ['./allpayment.component.scss'],
+    standalone: false
 })
 export class AllpaymentComponent
   extends UnsubscribeOnDestroyAdapter

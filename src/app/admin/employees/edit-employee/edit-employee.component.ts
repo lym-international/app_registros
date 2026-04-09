@@ -5,9 +5,10 @@ import {
   Validators,
 } from '@angular/forms';
 @Component({
-  selector: 'app-edit-employee',
-  templateUrl: './edit-employee.component.html',
-  styleUrls: ['./edit-employee.component.scss'],
+    selector: 'app-edit-employee',
+    templateUrl: './edit-employee.component.html',
+    styleUrls: ['./edit-employee.component.scss'],
+    standalone: false
 })
 export class EditEmployeeComponent {
   docForm: UntypedFormGroup;

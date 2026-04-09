@@ -28,9 +28,10 @@ export interface DialogData {
 }
 
 @Component({
-  selector: 'app-add-existing-employee',
-  templateUrl: './add-existing-employee.component.html',
-  styleUrls: ['./add-existing-employee.component.scss'],
+    selector: 'app-add-existing-employee',
+    templateUrl: './add-existing-employee.component.html',
+    styleUrls: ['./add-existing-employee.component.scss'],
+    standalone: false
 })
 export class AddExistingEmployeeComponent {
   action: string;

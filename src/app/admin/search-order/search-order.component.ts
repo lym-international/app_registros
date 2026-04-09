@@ -10,9 +10,10 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { UserRoleService } from 'app/_services/UserRole.service';
 
 @Component({
-  selector: 'app-search-order',
-  templateUrl: './search-order.component.html',
-  styleUrls: ['./search-order.component.scss']
+    selector: 'app-search-order',
+    templateUrl: './search-order.component.html',
+    styleUrls: ['./search-order.component.scss'],
+    standalone: false
 })
 export class SearchOrderComponent implements OnInit {
 

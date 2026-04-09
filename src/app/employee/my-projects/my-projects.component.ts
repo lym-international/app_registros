@@ -15,9 +15,10 @@ import { FormComponent } from './form/form.component';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 
 @Component({
-  selector: 'app-my-projects',
-  templateUrl: './my-projects.component.html',
-  styleUrls: ['./my-projects.component.scss'],
+    selector: 'app-my-projects',
+    templateUrl: './my-projects.component.html',
+    styleUrls: ['./my-projects.component.scss'],
+    standalone: false
 })
 export class MyProjectsComponent
   extends UnsubscribeOnDestroyAdapter

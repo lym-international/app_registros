@@ -21,9 +21,10 @@ import { Direction } from '@angular/cdk/bidi';
 import { TableExportUtil, TableElement } from '@shared';
 
 @Component({
-  selector: 'app-all-clients',
-  templateUrl: './all-clients.component.html',
-  styleUrls: ['./all-clients.component.scss'],
+    selector: 'app-all-clients',
+    templateUrl: './all-clients.component.html',
+    styleUrls: ['./all-clients.component.scss'],
+    standalone: false
 })
 export class AllclientComponent
   extends UnsubscribeOnDestroyAdapter

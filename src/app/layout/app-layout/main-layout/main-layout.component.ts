@@ -5,9 +5,10 @@ import { ConfigService } from '@config';
 import { DirectionService, InConfiguration } from '@core';
 
 @Component({
-  selector: 'app-main-layout',
-  templateUrl: './main-layout.component.html',
-  styleUrls: [],
+    selector: 'app-main-layout',
+    templateUrl: './main-layout.component.html',
+    styleUrls: [],
+    standalone: false
 })
 export class MainLayoutComponent implements AfterViewInit {
   direction!: Direction;

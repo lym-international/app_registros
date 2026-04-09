@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 @Component({
-  selector: 'app-data-widget',
-  templateUrl: './data-widget.component.html',
-  styleUrls: ['./data-widget.component.scss'],
+    selector: 'app-data-widget',
+    templateUrl: './data-widget.component.html',
+    styleUrls: ['./data-widget.component.scss'],
+    standalone: false
 })
 export class DataWidgetComponent {
   constructor() {

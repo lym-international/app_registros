@@ -24,9 +24,10 @@ import { MatButton } from '@angular/material/button';
   //calendar: Calendar;
 }*/
 @Component({
-  selector: 'app-break',
-  templateUrl: './break.component.html',
-  styleUrls: ['./break.component.scss']
+    selector: 'app-break',
+    templateUrl: './break.component.html',
+    styleUrls: ['./break.component.scss'],
+    standalone: false
 })
 export class BreakComponent implements OnInit{ 
   dialogTitle: string;

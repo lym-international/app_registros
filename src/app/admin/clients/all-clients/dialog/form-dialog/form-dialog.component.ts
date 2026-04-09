@@ -15,9 +15,10 @@ export interface DialogData {
   clients: Clients;
 }
 @Component({
-  selector: 'app-form-dialog:not(b)',
-  templateUrl: './form-dialog.component.html',
-  styleUrls: ['./form-dialog.component.scss'],
+    selector: 'app-form-dialog:not(b)',
+    templateUrl: './form-dialog.component.html',
+    styleUrls: ['./form-dialog.component.scss'],
+    standalone: false
 })
 export class FormDialogComponent {
   action: string;

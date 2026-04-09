@@ -22,9 +22,10 @@ import { TableExportUtil, TableElement } from '@shared';
 import { formatDate } from '@angular/common';
 
 @Component({
-  selector: 'app-allholiday',
-  templateUrl: './all-holidays.component.html',
-  styleUrls: ['./all-holidays.component.scss'],
+    selector: 'app-allholiday',
+    templateUrl: './all-holidays.component.html',
+    styleUrls: ['./all-holidays.component.scss'],
+    standalone: false
 })
 export class AllHolidayComponent
   extends UnsubscribeOnDestroyAdapter

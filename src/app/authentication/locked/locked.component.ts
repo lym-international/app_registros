@@ -7,9 +7,10 @@ import {
 } from '@angular/forms';
 import { Role, AuthService } from '@core';
 @Component({
-  selector: 'app-locked',
-  templateUrl: './locked.component.html',
-  styleUrls: ['./locked.component.scss'],
+    selector: 'app-locked',
+    templateUrl: './locked.component.html',
+    styleUrls: ['./locked.component.scss'],
+    standalone: false
 })
 export class LockedComponent implements OnInit {
   authForm!: UntypedFormGroup;

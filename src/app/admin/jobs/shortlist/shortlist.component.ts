@@ -22,9 +22,10 @@ import { Direction } from '@angular/cdk/bidi';
 import { TableExportUtil, TableElement } from '@shared';
 
 @Component({
-  selector: 'app-shortlist',
-  templateUrl: './shortlist.component.html',
-  styleUrls: ['./shortlist.component.scss'],
+    selector: 'app-shortlist',
+    templateUrl: './shortlist.component.html',
+    styleUrls: ['./shortlist.component.scss'],
+    standalone: false
 })
 export class ShortlistComponent
   extends UnsubscribeOnDestroyAdapter

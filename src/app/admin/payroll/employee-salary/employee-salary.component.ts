@@ -23,9 +23,10 @@ import { Direction } from '@angular/cdk/bidi';
 import { TableExportUtil, TableElement } from '@shared';
 
 @Component({
-  selector: 'app-employee-salary',
-  templateUrl: './employee-salary.component.html',
-  styleUrls: ['./employee-salary.component.scss'],
+    selector: 'app-employee-salary',
+    templateUrl: './employee-salary.component.html',
+    styleUrls: ['./employee-salary.component.scss'],
+    standalone: false
 })
 export class EmployeeSalaryComponent
   extends UnsubscribeOnDestroyAdapter

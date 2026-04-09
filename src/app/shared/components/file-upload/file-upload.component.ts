@@ -3,16 +3,17 @@
 import { Component, ElementRef, HostListener, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 @Component({
-  selector: 'app-file-upload',
-  templateUrl: './file-upload.component.html',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: FileUploadComponent,
-      multi: true,
-    },
-  ],
-  styleUrls: ['./file-upload.component.scss'],
+    selector: 'app-file-upload',
+    templateUrl: './file-upload.component.html',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: FileUploadComponent,
+            multi: true,
+        },
+    ],
+    styleUrls: ['./file-upload.component.scss'],
+    standalone: false
 })
 export class FileUploadComponent implements ControlValueAccessor {
   onChange!: Function;

@@ -16,14 +16,15 @@ import localeEn from '@angular/common/locales/en';
 registerLocaleData(localeEn);
 
 @Component({
-  selector: 'app-datetime-picker',
-  templateUrl: './datetime-picker.component.html',
-  styleUrls: ['./datetime-picker.component.scss'],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => DatetimePickerComponent),
-    multi: true
-  }]
+    selector: 'app-datetime-picker',
+    templateUrl: './datetime-picker.component.html',
+    styleUrls: ['./datetime-picker.component.scss'],
+    providers: [{
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => DatetimePickerComponent),
+            multi: true
+        }],
+    standalone: false
 })
 export class DatetimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @Input() label = 'Date & Time';   // ← "CheckIn" o "CheckOut"

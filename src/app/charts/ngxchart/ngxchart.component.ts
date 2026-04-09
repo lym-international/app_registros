@@ -3,9 +3,10 @@ import * as shape from 'd3-shape';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
 import { LegendPosition } from '@swimlane/ngx-charts';
 @Component({
-  selector: 'app-ngxchart',
-  templateUrl: './ngxchart.component.html',
-  styleUrls: ['./ngxchart.component.scss'],
+    selector: 'app-ngxchart',
+    templateUrl: './ngxchart.component.html',
+    styleUrls: ['./ngxchart.component.scss'],
+    standalone: false
 })
 export class NgxchartComponent {
   // common options for all charts

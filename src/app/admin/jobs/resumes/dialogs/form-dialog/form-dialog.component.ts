@@ -16,9 +16,10 @@ export interface DialogData {
 }
 
 @Component({
-  selector: 'app-form-dialog:not(g)',
-  templateUrl: './form-dialog.component.html',
-  styleUrls: ['./form-dialog.component.scss'],
+    selector: 'app-form-dialog:not(g)',
+    templateUrl: './form-dialog.component.html',
+    styleUrls: ['./form-dialog.component.scss'],
+    standalone: false
 })
 export class FormDialogComponent {
   action: string;

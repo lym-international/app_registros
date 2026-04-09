@@ -10,9 +10,10 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { Task } from './task.model';
 
 @Component({
-  selector: 'app-task',
-  templateUrl: './task.component.html',
-  styleUrls: ['./task.component.scss'],
+    selector: 'app-task',
+    templateUrl: './task.component.html',
+    styleUrls: ['./task.component.scss'],
+    standalone: false
 })
 export class TaskComponent {
   mode = new UntypedFormControl('side');

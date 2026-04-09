@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { EChartsOption } from 'echarts';
 
 @Component({
-  selector: 'app-echart',
-  templateUrl: './echart.component.html',
-  styleUrls: ['./echart.component.scss'],
+    selector: 'app-echart',
+    templateUrl: './echart.component.html',
+    styleUrls: ['./echart.component.scss'],
+    standalone: false
 })
 export class EchartComponent {
   // line bar chart

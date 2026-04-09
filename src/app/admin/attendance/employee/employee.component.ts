@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
 @Component({
-  selector: 'app-employee',
-  templateUrl: './employee.component.html',
-  styleUrls: ['./employee.component.scss'],
+    selector: 'app-employee',
+    templateUrl: './employee.component.html',
+    styleUrls: ['./employee.component.scss'],
+    standalone: false
 })
 export class EmployeeComponent {
   gradient = false;

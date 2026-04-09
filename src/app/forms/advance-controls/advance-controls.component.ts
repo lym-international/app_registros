@@ -8,9 +8,10 @@ export interface User {
 }
 
 @Component({
-  selector: 'app-advance-controls',
-  templateUrl: './advance-controls.component.html',
-  styleUrls: ['./advance-controls.component.scss'],
+    selector: 'app-advance-controls',
+    templateUrl: './advance-controls.component.html',
+    styleUrls: ['./advance-controls.component.scss'],
+    standalone: false
 })
 export class AdvanceControlsComponent implements OnInit {
   hide = true;

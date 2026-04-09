@@ -22,9 +22,10 @@ import { Direction } from '@angular/cdk/bidi';
 import { TableExportUtil, TableElement } from '@shared';
 
 @Component({
-  selector: 'app-candidates',
-  templateUrl: './candidates.component.html',
-  styleUrls: ['./candidates.component.scss'],
+    selector: 'app-candidates',
+    templateUrl: './candidates.component.html',
+    styleUrls: ['./candidates.component.scss'],
+    standalone: false
 })
 export class CandidatesComponent
   extends UnsubscribeOnDestroyAdapter

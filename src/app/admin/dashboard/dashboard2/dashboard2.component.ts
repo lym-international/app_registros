@@ -36,9 +36,10 @@ export type ChartOptions = {
 };
 
 @Component({
-  selector: 'app-dashboard2',
-  templateUrl: './dashboard2.component.html',
-  styleUrls: ['./dashboard2.component.scss'],
+    selector: 'app-dashboard2',
+    templateUrl: './dashboard2.component.html',
+    styleUrls: ['./dashboard2.component.scss'],
+    standalone: false
 })
 export class Dashboard2Component implements OnInit {
   public lineChartOptions!: Partial<ChartOptions>;

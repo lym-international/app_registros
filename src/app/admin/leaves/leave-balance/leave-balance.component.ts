@@ -14,9 +14,10 @@ import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { LeaveBalance } from './leave-balance.model';
 
 @Component({
-  selector: 'app-leave-balance',
-  templateUrl: './leave-balance.component.html',
-  styleUrls: ['./leave-balance.component.scss'],
+    selector: 'app-leave-balance',
+    templateUrl: './leave-balance.component.html',
+    styleUrls: ['./leave-balance.component.scss'],
+    standalone: false
 })
 export class LeaveBalanceComponent
   extends UnsubscribeOnDestroyAdapter

@@ -61,10 +61,11 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
-  selector: 'app-allemployees',
-  templateUrl: './allemployees.component.html',
-  styleUrls: ['./allemployees.component.scss'],
-  providers: [DatePipe],
+    selector: 'app-allemployees',
+    templateUrl: './allemployees.component.html',
+    styleUrls: ['./allemployees.component.scss'],
+    providers: [DatePipe],
+    standalone: false
 })
 export class AllemployeesComponent
   extends UnsubscribeOnDestroyAdapter

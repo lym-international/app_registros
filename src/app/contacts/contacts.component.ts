@@ -23,9 +23,10 @@ import { TableExportUtil, TableElement } from '@shared';
 import { formatDate } from '@angular/common';
 
 @Component({
-  selector: 'app-contacts',
-  templateUrl: './contacts.component.html',
-  styleUrls: ['./contacts.component.scss'],
+    selector: 'app-contacts',
+    templateUrl: './contacts.component.html',
+    styleUrls: ['./contacts.component.scss'],
+    standalone: false
 })
 export class ContactsComponent
   extends UnsubscribeOnDestroyAdapter

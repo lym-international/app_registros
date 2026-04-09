@@ -6,9 +6,10 @@ interface GaugeValues {
 }
 
 @Component({
-  selector: 'app-gauge',
-  templateUrl: './gauge.component.html',
-  styleUrls: ['./gauge.component.scss'],
+    selector: 'app-gauge',
+    templateUrl: './gauge.component.html',
+    styleUrls: ['./gauge.component.scss'],
+    standalone: false
 })
 export class GaugeComponent {
   gaugeValue = 68;

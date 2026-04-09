@@ -10,9 +10,10 @@ import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { LeaveReport } from './leave-report.model';
 
 @Component({
-  selector: 'app-leave-report',
-  templateUrl: './leave-report.component.html',
-  styleUrls: ['./leave-report.component.scss'],
+    selector: 'app-leave-report',
+    templateUrl: './leave-report.component.html',
+    styleUrls: ['./leave-report.component.scss'],
+    standalone: false
 })
 export class LeaveReportComponent
   extends UnsubscribeOnDestroyAdapter

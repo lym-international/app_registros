@@ -23,9 +23,10 @@ import { TableExportUtil, TableElement } from '@shared';
 import { formatDate } from '@angular/common';
 
 @Component({
-  selector: 'app-leave-requests',
-  templateUrl: './leave-requests.component.html',
-  styleUrls: ['./leave-requests.component.scss'],
+    selector: 'app-leave-requests',
+    templateUrl: './leave-requests.component.html',
+    styleUrls: ['./leave-requests.component.scss'],
+    standalone: false
 })
 export class LeaveRequestsComponent
   extends UnsubscribeOnDestroyAdapter

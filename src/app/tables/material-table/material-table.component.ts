@@ -103,9 +103,10 @@ const ELEMENT_DATA: PeriodicElement[] = [
   },
 ];
 @Component({
-  selector: 'app-material-table',
-  templateUrl: './material-table.component.html',
-  styleUrls: ['./material-table.component.scss'],
+    selector: 'app-material-table',
+    templateUrl: './material-table.component.html',
+    styleUrls: ['./material-table.component.scss'],
+    standalone: false
 })
 export class MaterialTableComponent implements OnInit {
   displayedColumns: string[] = [

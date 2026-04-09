@@ -39,9 +39,10 @@ export type ChartOptions = {
 };
 
 @Component({
-  selector: 'app-apexchart',
-  templateUrl: './apexchart.component.html',
-  styleUrls: ['./apexchart.component.scss'],
+    selector: 'app-apexchart',
+    templateUrl: './apexchart.component.html',
+    styleUrls: ['./apexchart.component.scss'],
+    standalone: false
 })
 export class ApexchartComponent {
   @ViewChild('chart', { static: true }) chart!: ChartComponent;

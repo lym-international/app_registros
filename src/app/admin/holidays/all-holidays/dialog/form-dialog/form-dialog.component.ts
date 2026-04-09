@@ -15,9 +15,10 @@ export interface DialogData {
   holiday: AllHoliday;
 }
 @Component({
-  selector: 'app-form-dialog:not(d)',
-  templateUrl: './form-dialog.component.html',
-  styleUrls: ['./form-dialog.component.scss'],
+    selector: 'app-form-dialog:not(d)',
+    templateUrl: './form-dialog.component.html',
+    styleUrls: ['./form-dialog.component.scss'],
+    standalone: false
 })
 export class FormDialogComponent {
   action: string;

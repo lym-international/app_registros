@@ -5,9 +5,10 @@ import { ConfigService } from '@config';
 import { DOCUMENT } from '@angular/common';
 
 @Component({
-  selector: 'app-auth-layout',
-  templateUrl: './auth-layout.component.html',
-  styleUrls: [],
+    selector: 'app-auth-layout',
+    templateUrl: './auth-layout.component.html',
+    styleUrls: [],
+    standalone: false
 })
 export class AuthLayoutComponent {
   direction!: Direction;

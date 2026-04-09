@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-third1',
-  templateUrl: './third1.component.html',
-  styleUrls: ['./third1.component.scss'],
+    selector: 'app-third1',
+    templateUrl: './third1.component.html',
+    styleUrls: ['./third1.component.scss'],
+    standalone: false
 })
 export class Third1Component {
   breadscrums = [

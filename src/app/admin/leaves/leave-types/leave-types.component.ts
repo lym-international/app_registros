@@ -14,9 +14,10 @@ import { LeaveTypes } from './leave-types.model';
 import { LeaveTypesService } from './leave-types.service';
 
 @Component({
-  selector: 'app-leave-types',
-  templateUrl: './leave-types.component.html',
-  styleUrls: ['./leave-types.component.scss'],
+    selector: 'app-leave-types',
+    templateUrl: './leave-types.component.html',
+    styleUrls: ['./leave-types.component.scss'],
+    standalone: false
 })
 export class LeaveTypesComponent
   extends UnsubscribeOnDestroyAdapter

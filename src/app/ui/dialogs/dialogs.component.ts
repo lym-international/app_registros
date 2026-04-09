@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import Swal from 'sweetalert2';
 @Component({
-  selector: 'app-dialogs',
-  templateUrl: './dialogs.component.html',
-  styleUrls: ['./dialogs.component.scss'],
+    selector: 'app-dialogs',
+    templateUrl: './dialogs.component.html',
+    styleUrls: ['./dialogs.component.scss'],
+    standalone: false
 })
 export class DialogsComponent {
   constructor() {

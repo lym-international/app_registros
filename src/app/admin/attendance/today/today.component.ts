@@ -12,9 +12,10 @@ import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { Today } from './today.model';
 
 @Component({
-  selector: 'app-today',
-  templateUrl: './today.component.html',
-  styleUrls: ['./today.component.scss'],
+    selector: 'app-today',
+    templateUrl: './today.component.html',
+    styleUrls: ['./today.component.scss'],
+    standalone: false
 })
 export class TodayComponent
   extends UnsubscribeOnDestroyAdapter

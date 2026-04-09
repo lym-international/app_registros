@@ -22,9 +22,10 @@ import { Direction } from '@angular/cdk/bidi';
 import { TableExportUtil, TableElement } from '@shared';
 
 @Component({
-  selector: 'app-leads',
-  templateUrl: './leads.component.html',
-  styleUrls: ['./leads.component.scss'],
+    selector: 'app-leads',
+    templateUrl: './leads.component.html',
+    styleUrls: ['./leads.component.scss'],
+    standalone: false
 })
 export class LeadsComponent
   extends UnsubscribeOnDestroyAdapter

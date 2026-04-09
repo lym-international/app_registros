@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material/dialog";
 @Component({
-  template: `
+    template: `
     <h1 mat-dialog-title>Hello There</h1>
     <div mat-dialog-content>
       <p>This Is a Simple Dialog</p>
@@ -10,6 +10,7 @@ import { MatDialogRef } from "@angular/material/dialog";
       <button mat-button (click)="close()">Close</button>
     </div>
   `,
+    standalone: false
 })
 export class SimpleDialogComponent {
   constructor(public dialogRef: MatDialogRef<SimpleDialogComponent>) {}

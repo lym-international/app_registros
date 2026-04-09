@@ -6,9 +6,10 @@ import {
 } from '@angular/forms';
 
 @Component({
-  selector: 'app-form-validations',
-  templateUrl: './form-validations.component.html',
-  styleUrls: ['./form-validations.component.scss'],
+    selector: 'app-form-validations',
+    templateUrl: './form-validations.component.html',
+    styleUrls: ['./form-validations.component.scss'],
+    standalone: false
 })
 export class FormValidationsComponent {
   // Form 1

@@ -23,9 +23,10 @@ import { TableExportUtil, TableElement } from '@shared';
 import { formatDate } from '@angular/common';
 
 @Component({
-  selector: 'app-my-leaves',
-  templateUrl: './my-leaves.component.html',
-  styleUrls: ['./my-leaves.component.scss'],
+    selector: 'app-my-leaves',
+    templateUrl: './my-leaves.component.html',
+    styleUrls: ['./my-leaves.component.scss'],
+    standalone: false
 })
 export class MyLeavesComponent
   extends UnsubscribeOnDestroyAdapter

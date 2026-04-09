@@ -5,9 +5,10 @@ import {
   Validators,
 } from '@angular/forms';
 @Component({
-  selector: 'app-form-examples',
-  templateUrl: './form-examples.component.html',
-  styleUrls: ['./form-examples.component.scss'],
+    selector: 'app-form-examples',
+    templateUrl: './form-examples.component.html',
+    styleUrls: ['./form-examples.component.scss'],
+    standalone: false
 })
 export class FormExamplesComponent {
   // Form 1

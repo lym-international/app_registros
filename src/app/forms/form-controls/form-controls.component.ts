@@ -44,9 +44,10 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 @Component({
-  selector: 'app-form-controls',
-  templateUrl: './form-controls.component.html',
-  styleUrls: ['./form-controls.component.scss'],
+    selector: 'app-form-controls',
+    templateUrl: './form-controls.component.html',
+    styleUrls: ['./form-controls.component.scss'],
+    standalone: false
 })
 export class FormControlsComponent {
   // Form

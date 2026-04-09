@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 @Component({
-  selector: 'app-attendance-sheet',
-  templateUrl: './attendance-sheet.component.html',
-  styleUrls: ['./attendance-sheet.component.scss'],
+    selector: 'app-attendance-sheet',
+    templateUrl: './attendance-sheet.component.html',
+    styleUrls: ['./attendance-sheet.component.scss'],
+    standalone: false
 })
 export class AttendanceSheetComponent {
   attendanceForm: UntypedFormGroup;

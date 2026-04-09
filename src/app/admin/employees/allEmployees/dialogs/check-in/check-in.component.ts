@@ -21,9 +21,10 @@ export interface DialogData {
 }
 
 @Component({
-  selector: 'app-check-in',
-  templateUrl: './check-in.component.html',
-  styleUrls: ['./check-in.component.scss'],
+    selector: 'app-check-in',
+    templateUrl: './check-in.component.html',
+    styleUrls: ['./check-in.component.scss'],
+    standalone: false
 })
 export class CheckInComponent implements OnInit {
   action: string;

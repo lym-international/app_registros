@@ -16,9 +16,10 @@ import { AttendancesService } from './attendance.service';
 import { Direction } from '@angular/cdk/bidi';
 
 @Component({
-  selector: 'app-attendances',
-  templateUrl: './attendance.component.html',
-  styleUrls: ['./attendance.component.scss'],
+    selector: 'app-attendances',
+    templateUrl: './attendance.component.html',
+    styleUrls: ['./attendance.component.scss'],
+    standalone: false
 })
 export class AttendancesComponent
   extends UnsubscribeOnDestroyAdapter

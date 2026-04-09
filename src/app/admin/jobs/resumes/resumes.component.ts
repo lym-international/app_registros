@@ -22,9 +22,10 @@ import { Direction } from '@angular/cdk/bidi';
 import { TableExportUtil, TableElement } from '@shared';
 
 @Component({
-  selector: 'app-resumes',
-  templateUrl: './resumes.component.html',
-  styleUrls: ['./resumes.component.scss'],
+    selector: 'app-resumes',
+    templateUrl: './resumes.component.html',
+    styleUrls: ['./resumes.component.scss'],
+    standalone: false
 })
 export class ResumesComponent
   extends UnsubscribeOnDestroyAdapter

@@ -20,9 +20,10 @@ export interface DialogData {
 }
 
 @Component({
-  selector: 'app-check-out-admin-employees',
-  templateUrl: './check-out-admin-employees.component.html',
-  styleUrls: ['./check-out-admin-employees.component.scss']
+    selector: 'app-check-out-admin-employees',
+    templateUrl: './check-out-admin-employees.component.html',
+    styleUrls: ['./check-out-admin-employees.component.scss'],
+    standalone: false
 })
 export class CheckOutAdminEmployeesComponent implements OnInit{
   action: string;

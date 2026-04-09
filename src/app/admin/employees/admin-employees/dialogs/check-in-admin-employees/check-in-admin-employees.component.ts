@@ -12,9 +12,10 @@ export interface DialogData {
 }
 
 @Component({
-  selector: 'app-check-in-admin-employees',
-  templateUrl: './check-in-admin-employees.component.html',
-  styleUrls: ['./check-in-admin-employees.component.scss']
+    selector: 'app-check-in-admin-employees',
+    templateUrl: './check-in-admin-employees.component.html',
+    styleUrls: ['./check-in-admin-employees.component.scss'],
+    standalone: false
 })
 export class CheckInAdminEmployeesComponent implements OnInit {
   action: string;

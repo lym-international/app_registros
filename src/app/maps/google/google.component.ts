@@ -2,9 +2,10 @@ import { Component, ViewChild } from '@angular/core';
 import { MapInfoWindow, MapMarker } from '@angular/google-maps';
 
 @Component({
-  selector: 'app-google',
-  templateUrl: './google.component.html',
-  styleUrls: ['./google.component.scss'],
+    selector: 'app-google',
+    templateUrl: './google.component.html',
+    styleUrls: ['./google.component.scss'],
+    standalone: false
 })
 export class GoogleComponent {
   // bread crumb items

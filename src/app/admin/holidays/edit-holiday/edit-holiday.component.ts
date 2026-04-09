@@ -5,9 +5,10 @@ import {
   Validators,
 } from '@angular/forms';
 @Component({
-  selector: 'app-edit-holiday',
-  templateUrl: './edit-holiday.component.html',
-  styleUrls: ['./edit-holiday.component.scss'],
+    selector: 'app-edit-holiday',
+    templateUrl: './edit-holiday.component.html',
+    styleUrls: ['./edit-holiday.component.scss'],
+    standalone: false
 })
 export class EditHolidayComponent {
   holidayForm: UntypedFormGroup;

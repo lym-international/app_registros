@@ -50,7 +50,7 @@ $main-theme: mat.m2-define-light-theme((
 
                 
 /*                 [1. Common ]                   			*/
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
 /* Importing Bootstrap SCSS file. */
 @import "common/_variables";
 @import "common/_mixins";

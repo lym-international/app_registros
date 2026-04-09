@@ -22,9 +22,10 @@ import { TableExportUtil, TableElement } from '@shared';
 import { formatDate } from '@angular/common';
 
 @Component({
-  selector: 'app-tickets',
-  templateUrl: './tickets.component.html',
-  styleUrls: ['./tickets.component.scss'],
+    selector: 'app-tickets',
+    templateUrl: './tickets.component.html',
+    styleUrls: ['./tickets.component.scss'],
+    standalone: false
 })
 export class TicketsComponent
   extends UnsubscribeOnDestroyAdapter

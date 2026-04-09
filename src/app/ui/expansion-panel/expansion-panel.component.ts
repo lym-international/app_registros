@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 @Component({
-  selector: 'app-expansion-panel',
-  templateUrl: './expansion-panel.component.html',
-  styleUrls: ['./expansion-panel.component.scss'],
+    selector: 'app-expansion-panel',
+    templateUrl: './expansion-panel.component.html',
+    styleUrls: ['./expansion-panel.component.scss'],
+    standalone: false
 })
 export class ExpansionPanelComponent {
   panelOpenState = false;

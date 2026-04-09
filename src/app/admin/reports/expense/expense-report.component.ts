@@ -10,9 +10,10 @@ import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { ExpenseReport } from './expense-report.model';
 
 @Component({
-  selector: 'app-expense',
-  templateUrl: './expense-report.component.html',
-  styleUrls: ['./expense-report.component.scss'],
+    selector: 'app-expense',
+    templateUrl: './expense-report.component.html',
+    styleUrls: ['./expense-report.component.scss'],
+    standalone: false
 })
 export class ExpenseReportComponent
   extends UnsubscribeOnDestroyAdapter

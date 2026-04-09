@@ -74,10 +74,11 @@ export type ChartOptions = {
   labels: string[];
 };
 @Component({
-  selector: 'app-admin-employees',
-  templateUrl: './admin-employees.component.html',
-  styleUrls: ['./admin-employees.component.scss'],
-  providers: [DatePipe],
+    selector: 'app-admin-employees',
+    templateUrl: './admin-employees.component.html',
+    styleUrls: ['./admin-employees.component.scss'],
+    providers: [DatePipe],
+    standalone: false
 })
 export class AdminEmployeesComponent 
 extends UnsubscribeOnDestroyAdapter 

@@ -41,9 +41,10 @@ export type ChartOptions = {
 };
 
 @Component({
-  selector: 'app-dashboard-lm',
-  templateUrl: './dashboard-lm.component.html',
-  styleUrls: ['./dashboard-lm.component.scss'],
+    selector: 'app-dashboard-lm',
+    templateUrl: './dashboard-lm.component.html',
+    styleUrls: ['./dashboard-lm.component.scss'],
+    standalone: false
 })
 export class DashboardLmComponent implements OnInit {
   public lineChartOptions!: Partial<ChartOptions>;

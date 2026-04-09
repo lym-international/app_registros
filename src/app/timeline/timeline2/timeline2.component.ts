@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 @Component({
-  selector: 'app-timeline2',
-  templateUrl: './timeline2.component.html',
-  styleUrls: ['./timeline2.component.scss'],
+    selector: 'app-timeline2',
+    templateUrl: './timeline2.component.html',
+    styleUrls: ['./timeline2.component.scss'],
+    standalone: false
 })
 export class Timeline2Component {
   constructor() {

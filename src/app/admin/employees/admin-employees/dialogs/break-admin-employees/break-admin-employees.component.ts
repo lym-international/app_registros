@@ -21,9 +21,10 @@ import { Employees } from 'app/admin/employees/allEmployees/employees.model';
 
 
 @Component({
-  selector: 'app-break-admin-employees',
-  templateUrl: './break-admin-employees.component.html',
-  styleUrls: ['./break-admin-employees.component.scss']
+    selector: 'app-break-admin-employees',
+    templateUrl: './break-admin-employees.component.html',
+    styleUrls: ['./break-admin-employees.component.scss'],
+    standalone: false
 })
 export class BreakAdminEmployeesComponent implements OnInit{
   dialogTitle: string;

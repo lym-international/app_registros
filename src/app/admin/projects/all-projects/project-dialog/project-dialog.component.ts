@@ -24,8 +24,9 @@ export interface DialogData {
 }
 
 @Component({
-  selector: 'app-project-dialog',
-  templateUrl: './project-dialog.component.html',
+    selector: 'app-project-dialog',
+    templateUrl: './project-dialog.component.html',
+    standalone: false
 })
 export class ProjectDialogComponent {
   public project: Project;

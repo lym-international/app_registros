@@ -9,9 +9,10 @@ import { ProjectDialogComponent } from '../project-dialog/project-dialog.compone
 import { Direction } from '@angular/cdk/bidi';
 
 @Component({
-  selector: 'app-board',
-  templateUrl: './board.component.html',
-  styleUrls: ['./board.component.scss'],
+    selector: 'app-board',
+    templateUrl: './board.component.html',
+    styleUrls: ['./board.component.scss'],
+    standalone: false
 })
 export class BoardComponent implements OnInit {
   public lists: object;

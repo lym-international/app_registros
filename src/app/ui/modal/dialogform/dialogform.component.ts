@@ -6,9 +6,10 @@ import {
   Validators,
 } from '@angular/forms';
 @Component({
-  selector: 'app-dialogform',
-  templateUrl: './dialogform.component.html',
-  styleUrls: ['./dialogform.component.scss'],
+    selector: 'app-dialogform',
+    templateUrl: './dialogform.component.html',
+    styleUrls: ['./dialogform.component.scss'],
+    standalone: false
 })
 export class DialogformComponent implements OnInit {
   public fname = 'John';

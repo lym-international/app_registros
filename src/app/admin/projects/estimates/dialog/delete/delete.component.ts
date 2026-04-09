@@ -10,9 +10,10 @@ export interface DialogData {
 }
 
 @Component({
-  selector: 'app-delete:not(m)',
-  templateUrl: './delete.component.html',
-  styleUrls: ['./delete.component.scss'],
+    selector: 'app-delete:not(m)',
+    templateUrl: './delete.component.html',
+    styleUrls: ['./delete.component.scss'],
+    standalone: false
 })
 export class DeleteDialogComponent {
   constructor(

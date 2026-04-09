@@ -31,9 +31,10 @@ import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapt
 import { Direction } from '@angular/cdk/bidi';
 
 @Component({
-  selector: 'app-calendar',
-  templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.scss'],
+    selector: 'app-calendar',
+    templateUrl: './calendar.component.html',
+    styleUrls: ['./calendar.component.scss'],
+    standalone: false
 })
 export class CalendarComponent
   extends UnsubscribeOnDestroyAdapter

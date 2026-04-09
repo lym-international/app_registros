@@ -22,9 +22,10 @@ import { TableExportUtil, TableElement } from '@shared';
 import { formatDate } from '@angular/common';
 
 @Component({
-  selector: 'app-estimates',
-  templateUrl: './estimates.component.html',
-  styleUrls: ['./estimates.component.scss'],
+    selector: 'app-estimates',
+    templateUrl: './estimates.component.html',
+    styleUrls: ['./estimates.component.scss'],
+    standalone: false
 })
 export class EstimatesComponent
   extends UnsubscribeOnDestroyAdapter

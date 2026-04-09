@@ -25,9 +25,10 @@ export interface DialogData {
 }
 
 @Component({
-  selector: 'app-all-actions',
-  templateUrl: './all-actions.component.html',
-  styleUrls: ['./all-actions.component.scss']
+    selector: 'app-all-actions',
+    templateUrl: './all-actions.component.html',
+    styleUrls: ['./all-actions.component.scss'],
+    standalone: false
 })
 export class AllActionsComponent implements OnInit{
 

@@ -15,9 +15,10 @@ import { NgxDatable } from './ngx-datatable.model';
 // import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 // declare const M: any;
 @Component({
-  selector: 'app-ngx-datatable',
-  templateUrl: './ngx-datatable.component.html',
-  styleUrls: ['./ngx-datatable.component.scss'],
+    selector: 'app-ngx-datatable',
+    templateUrl: './ngx-datatable.component.html',
+    styleUrls: ['./ngx-datatable.component.scss'],
+    standalone: false
 })
 export class NgxDatatableComponent implements OnInit {
   @ViewChild(DatatableComponent, { static: false }) table!: DatatableComponent;

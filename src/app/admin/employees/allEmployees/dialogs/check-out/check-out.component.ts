@@ -22,9 +22,10 @@ export interface DialogData {
 }
 
 @Component({
-  selector: 'app-check-out',
-  templateUrl: './check-out.component.html',
-  styleUrls: ['./check-out.component.scss']
+    selector: 'app-check-out',
+    templateUrl: './check-out.component.html',
+    styleUrls: ['./check-out.component.scss'],
+    standalone: false
 })
 export class CheckOutComponent implements OnInit{
   action: string;

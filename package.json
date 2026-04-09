@@ -10,19 +10,19 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^18.2.14",
+    "@angular/animations": "^19.2.20",
     "@angular/cdk": "^18.2.14",
-    "@angular/common": "^18.2.14",
-    "@angular/compiler": "^18.2.14",
-    "@angular/core": "^18.2.14",
+    "@angular/common": "^19.2.20",
+    "@angular/compiler": "^19.2.20",
+    "@angular/core": "^19.2.20",
     "@angular/fire": "^18.0.1",
-    "@angular/forms": "^18.2.14",
+    "@angular/forms": "^19.2.20",
     "@angular/google-maps": "^18.2.14",
-    "@angular/localize": "^18.2.14",
+    "@angular/localize": "^19.2.20",
     "@angular/material": "^18.2.14",
-    "@angular/platform-browser": "^18.2.14",
-    "@angular/platform-browser-dynamic": "^18.2.14",
-    "@angular/router": "^18.2.14",
+    "@angular/platform-browser": "^19.2.20",
+    "@angular/platform-browser-dynamic": "^19.2.20",
+    "@angular/router": "^19.2.20",
     "@ckeditor/ckeditor5-angular": "^7.0.1",
     "@ckeditor/ckeditor5-build-classic": "^37.1.0",
     "@fullcalendar/angular": "^6.1.7",
@@ -64,17 +64,17 @@
     "sweetalert2": "^11.7.5",
     "tslib": "^2.5.0",
     "xlsx": "^0.18.5",
-    "zone.js": "~0.14.10"
+    "zone.js": "~0.15.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^18.2.21",
+    "@angular-devkit/build-angular": "^19.2.24",
     "@angular-eslint/builder": "^19.8.1",
     "@angular-eslint/eslint-plugin": "^19.8.1",
     "@angular-eslint/eslint-plugin-template": "^19.8.1",
     "@angular-eslint/schematics": "^19.8.1",
     "@angular-eslint/template-parser": "^19.8.1",
-    "@angular/cli": "~18.2.21",
-    "@angular/compiler-cli": "^18.2.14",
+    "@angular/cli": "~19.2.24",
+    "@angular/compiler-cli": "^19.2.20",
     "@types/ckeditor__ckeditor5-build-classic": "^29.0.1",
     "@types/d3": "^7.4.0",
     "@types/echarts": "^4.9.17",
@@ -90,6 +90,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
-    "typescript": "~5.4.5"
+    "typescript": "~5.8.3"
   }
 }
