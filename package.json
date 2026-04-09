@@ -51,7 +51,7 @@
     "firebase": "^10.14.1",
     "leaflet": "^1.9.4",
     "moment": "^2.29.4",
-    "ng-apexcharts": "^1.9.0",
+    "ng-apexcharts": "^2.3.0",
     "ng2-charts": "^4.1.1",
     "ngx-dropzone-wrapper": "^14.0.0",
     "ngx-echarts": "^17.2.0",
