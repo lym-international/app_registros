@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgxGaugeType } from 'ngx-gauge/gauge/gauge';
+
 
 interface GaugeValues {
   [key: number]: number;
@@ -16,9 +16,9 @@ export class GaugeComponent {
   gaugeSize = 120;
   guageThick = 5;
 
-  guageType1 = 'full' as NgxGaugeType;
-  guageType2 = 'semi' as NgxGaugeType;
-  guageType3 = 'arch' as NgxGaugeType;
+  guageType1: 'full' | 'semi' | 'arch' = 'full';
+  guageType2: 'full' | 'semi' | 'arch' = 'semi';
+  guageType3: 'full' | 'semi' | 'arch' = 'arch';
 
   dynamicGaugeDemoValue = 10.2;
 
