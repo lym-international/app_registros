@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgChartsModule } from 'ng2-charts';
+import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -29,6 +29,11 @@ import { ComponentsModule } from '../shared/components/components.module';
 import { SharedModule } from '@shared';
 import { ChatComponent } from './chat/chat.component';
 
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+
 @NgModule({
   declarations: [
     DashboardComponent,
@@ -50,7 +55,7 @@ import { ChatComponent } from './chat/chat.component';
     CommonModule,
     EmployeeRoutingModule,
     FormsModule,
-    NgChartsModule,
+    BaseChartDirective,
     ReactiveFormsModule,
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts'),
@@ -60,6 +65,10 @@ import { ChatComponent } from './chat/chat.component';
     DragDropModule,
     ComponentsModule,
     SharedModule,
+    MatFormFieldModule,
+MatInputModule,
+MatSelectModule,
+MatButtonModule,
   ],
   providers: [
     AttendancesService,

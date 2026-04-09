@@ -5,7 +5,7 @@ import { EchartComponent } from './echart/echart.component';
 import { ChartjsComponent } from './chartjs/chartjs.component';
 import { ApexchartComponent } from './apexchart/apexchart.component';
 import { NgxEchartsModule } from 'ngx-echarts';
-import { NgChartsModule } from 'ng2-charts';
+import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { NgxchartComponent } from './ngxchart/ngxchart.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -27,7 +27,7 @@ import { SharedModule } from '../shared/shared.module';
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts'),
     }),
-    NgChartsModule,
+    BaseChartDirective,
     NgxChartsModule,
     NgApexchartsModule,
     NgxGaugeModule,
