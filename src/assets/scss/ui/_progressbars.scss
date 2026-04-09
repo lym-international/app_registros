@@ -1,4 +1,4 @@
-﻿/*
+/*
  *  Document   : _progressbars.scss
  *  Author     : RedStar Template
  *  Description: This scss file for progress bars style classes
@@ -58,7 +58,7 @@
     &.progress-m {
         height: 10px;
         .mdc-linear-progress__bar-inner {
-            border-top-width: var(--mdc-linear-progress-track-height, 10px);
+            border-top-width: var(--mat-progress-bar-track-height, 10px);
         }
     }
     &.progress-round {
