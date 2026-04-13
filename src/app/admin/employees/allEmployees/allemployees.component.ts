@@ -54,7 +54,8 @@ import { GeolocationService } from 'app/_services/geolocation.service';
 import { UsersService } from 'app/_services/users.service';
 import { style } from '@angular/animations';
 import { ApprovalSignatureService } from 'app/_services/approval-signature.service';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
+//import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { Storage, ref, uploadBytes, getDownloadURL, deleteObject } from '@angular/fire/storage';
 
 // import { MapMarker } from '@angular/google-maps';
 
@@ -192,7 +193,7 @@ export class AllemployeesComponent
     private usersService: UsersService,
     private cdr: ChangeDetectorRef,
     private approvalSignatureSvc: ApprovalSignatureService,
-    private storage: AngularFireStorage,
+    private storage: Storage,
   ) {
     super();
   }
@@ -3976,14 +3977,18 @@ export class AllemployeesComponent
     console.log('📝 Nombre del archivo:', pdfFileName);
 
     // 5. SUBIR EL BLOB DIRECTAMENTE A FIREBASE STORAGE
-    const storageRef = this.storage.ref(pdfFileName);
-    const uploadTask = storageRef.put(pdfBlob, {
-      contentType: 'application/pdf'
-    });
+    //const storageRef = this.storage.ref(pdfFileName);
+    //const uploadTask = storageRef.put(pdfBlob, {
+    //  contentType: 'application/pdf'
+    //});
+
+    const storageRef = ref(this.storage, pdfFileName);
+await uploadBytes(storageRef, pdfBlob, { contentType: 'application/pdf' });
+const pdfUrl = await getDownloadURL(storageRef);
     
-    await uploadTask.snapshotChanges().toPromise();
+    //await uploadTask.snapshotChanges().toPromise();
     
-    const pdfUrl = await storageRef.getDownloadURL().toPromise();
+    //const pdfUrl = await storageRef.getDownloadURL().toPromise();
     console.log('📤 PDF subido a Firebase Storage:', pdfUrl);
 
     // 6. GENERAR LA FIRMA COMBINADA SHA-256
@@ -4196,11 +4201,16 @@ export class AllemployeesComponent
             const pdfBlob = await this.generatePdfAsBlob(formattedDate);
             this.pendingPdfBlob = pdfBlob;
 
-            const storageRef = this.storage.ref(this.pendingPdfPath);
-            const uploadTask = storageRef.put(pdfBlob, { contentType: 'application/pdf' });
-            await uploadTask.snapshotChanges().toPromise();
+// ✅ DESPUÉS:
+const storageRef = ref(this.storage, this.pendingPdfPath);
+await uploadBytes(storageRef, pdfBlob, { contentType: 'application/pdf' });
+this.pendingPdfUrl = await getDownloadURL(storageRef);
 
-            this.pendingPdfUrl = await storageRef.getDownloadURL().toPromise();
+            //const storageRef = this.storage.ref(this.pendingPdfPath);
+            //const uploadTask = storageRef.put(pdfBlob, { contentType: 'application/pdf' });
+            //await uploadTask.snapshotChanges().toPromise();
+
+           // this.pendingPdfUrl = await storageRef.getDownloadURL().toPromise();
             console.log('✅ PDF listo en Storage:', this.pendingPdfUrl);
         } catch (error) {
             console.error('❌ Error subiendo PDF:', error);
@@ -4287,8 +4297,11 @@ export class AllemployeesComponent
                 await this.pendingUploadPromise;
             }
             if (this.pendingPdfUrl) {
-                const storageRef = this.storage.ref(this.pendingPdfPath);
-                await storageRef.delete().toPromise();
+const storageRef = ref(this.storage, this.pendingPdfPath);
+await deleteObject(storageRef);
+
+               // const storageRef = this.storage.ref(this.pendingPdfPath);
+                //await storageRef.delete().toPromise();
                 console.log('🗑️ PDF eliminado de Storage por cancelación');
             }
         } catch (error) {

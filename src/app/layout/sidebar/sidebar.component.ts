@@ -17,7 +17,7 @@ import { AuthenticationService } from 'app/_services/authentication.service';
 import { Subscription } from 'rxjs';
 import { OrderDataService } from 'app/_services/orderData.service';
 import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
-import { UserRoleService } from 'app/_services/UserRole.service';
+import { UserRoleService } from 'app/_services/userRole.service';
 
 
 @Component({

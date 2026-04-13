@@ -1,13 +1,12 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import firebase from 'firebase/compat/app';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+
 import { User } from 'app/_models/user';
 import { TranslateModule } from '@ngx-translate/core';
-import { AngularFirestore, AngularFirestoreCollection,} from '@angular/fire/compat/firestore';
 import { getAuth, signInWithCustomToken } from 'firebase/auth';
 
 import { catchError } from 'rxjs/operators'; //Diego
@@ -16,9 +15,11 @@ import * as CryptoJS from 'crypto-js'; //Jairo
 
 import { MatDialog } from '@angular/material/dialog';
 import { RoleChoiceModalComponent } from 'app/admin/role-choice-modal/role-choice-modal.component';
-import { UserRoleService } from './UserRole.service';
+import { UserRoleService } from './userRole.service';
 
-
+import { Auth, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from '@angular/fire/auth';
+import { Firestore, collection, query, where, getDocs } from '@angular/fire/firestore';
+import { onAuthStateChanged } from '@angular/fire/auth';
 @Injectable({
   providedIn: 'root',
 })
@@ -47,15 +48,12 @@ export class AuthenticationService {
 
   constructor(
     private http: HttpClient,
-    public auth: AngularFireAuth,
-    private db: AngularFirestore,
-    // private db:
-    private router: Router,
-    //private messageService: MessageService,
-    private route: ActivatedRoute,
-    // private notifSvc: NotificationsService,
-    private dialog: MatDialog,
-    private userRoleService: UserRoleService
+  private auth: Auth,
+  private db: Firestore,
+  private router: Router,
+  private route: ActivatedRoute,
+  private dialog: MatDialog,
+  private userRoleService: UserRoleService
   ){
     this.returnUrl =
       this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
@@ -65,11 +63,11 @@ export class AuthenticationService {
     // this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(sessionStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
 
-    this.auth.authState.subscribe((user) => {
-      if (!user) {
-        sessionStorage.setItem('currentUser', '');
-      }
-    });
+    onAuthStateChanged(this.auth, (user) => {
+  if (!user) {
+    sessionStorage.setItem('currentUser', '');
+  }
+});
   
   }
 
@@ -127,69 +125,56 @@ export class AuthenticationService {
       }
     })
   }
- 
-  login(username: string, password: string): Promise<void> {
-    return this.auth
-      .signInWithEmailAndPassword(username, password)
-      .then((user) => {
-        console.log('Usuario autenticado con éxito!', user.user?.email);
-  
-        return this.db
-          .collection('Users', (ref) => ref.where('email', '==', username))
-          .get()
-          .toPromise()
-          .then((usersInfo) => {
-            usersInfo.docs.forEach((item: any) => {
-              const data = item.data();
-              console.log('DATA ::', data);
-              sessionStorage.setItem('currentUser', JSON.stringify(data));
-              this.currentUserSubject.next(data);
-              this.currentUserData = data; // diego 8-7 : Almacenar los datos del usuario en currentUserData
-              sessionStorage.setItem('currentUserData', JSON.stringify(data));
-              console.log("Guardando en sessionStorage");
-              this.setData(data);
-              setTimeout(() => {
-                this.isAuthenticatingSubject.next(false);
-              }, 1000);
-  
-              // this.auxCurrentUser = user;
-              // const auxDate = new Date();
-              // const date = new Date(auxDate.getTime() - (auxDate.getTimezoneOffset() * 60000));
-  
-              if (this.currentUserData.role === 'Employee') {
-                console.log('Es Empleado');
-                this.router.navigate(['/admin/employees/admin-employees']);
-              } else if (this.currentUserData.role === 'Client') {
-                console.log('Es cliente');
-                this.router.navigate(['/admin/search-order/']);
-              } else if (this.currentUserData.role === 'Executive') {
-                console.log('Executive');
-              } else if (this.currentUserData.role === 'Supervisor') {
-                console.log('Es Supervisor');
-                if(this.currentUserData.highkeyId){
-                  this.showRoleChoiceModal();
-                }else{
-                  this.router.navigate(['/admin/search-order/']);
-                }
-              } else if (this.currentUserData.role === 'Administrator') {
-                console.log('Es administrador');
-                if(this.currentUserData.highkeyId){
-                  this.showRoleChoiceModal();
-                }else{
-                  this.router.navigate(['/admin/search-order/']);
-                }
-              } else {
-                this.router.navigate(['/authentication/signin']);
-              }
-            });
-          });
-      })
-      .catch((error) => {
-        this.isAuthenticatingSubject.next(false);
-        console.error('Error en autenticación:', error);
-        throw error;
+ login(username: string, password: string): Promise<void> {
+  return signInWithEmailAndPassword(this.auth, username, password)
+    .then(async (user) => {
+      console.log('Usuario autenticado con éxito!', user.user?.email);
+
+      const usersRef = collection(this.db, 'Users');
+      const q = query(usersRef, where('email', '==', username));
+      const usersInfo = await getDocs(q);
+
+      usersInfo.docs.forEach((item: any) => {
+        const data = item.data();
+        console.log('DATA ::', data);
+        sessionStorage.setItem('currentUser', JSON.stringify(data));
+        this.currentUserSubject.next(data);
+        this.currentUserData = data;
+        sessionStorage.setItem('currentUserData', JSON.stringify(data));
+        this.setData(data);
+        setTimeout(() => {
+          this.isAuthenticatingSubject.next(false);
+        }, 1000);
+
+        if (this.currentUserData.role === 'Employee') {
+          this.router.navigate(['/admin/employees/admin-employees']);
+        } else if (this.currentUserData.role === 'Client') {
+          this.router.navigate(['/admin/search-order/']);
+        } else if (this.currentUserData.role === 'Executive') {
+          console.log('Executive');
+        } else if (this.currentUserData.role === 'Supervisor') {
+          if (this.currentUserData.highkeyId) {
+            this.showRoleChoiceModal();
+          } else {
+            this.router.navigate(['/admin/search-order/']);
+          }
+        } else if (this.currentUserData.role === 'Administrator') {
+          if (this.currentUserData.highkeyId) {
+            this.showRoleChoiceModal();
+          } else {
+            this.router.navigate(['/admin/search-order/']);
+          }
+        } else {
+          this.router.navigate(['/authentication/signin']);
+        }
       });
-  }
+    })
+    .catch((error) => {
+      this.isAuthenticatingSubject.next(false);
+      console.error('Error en autenticación:', error);
+      throw error;
+    });
+}
   
   showRoleChoiceModal_bn() {
     const dialogRef = this.dialog.open(RoleChoiceModalComponent, {
@@ -240,22 +225,18 @@ export class AuthenticationService {
   }
 
   changePassword(email: string): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      this.auth
-        .sendPasswordResetEmail(email)
-        .then((user) => {
-          console.log(
-            'OK',
-            'You can receive the instruction to reset password to ' + email
-          );
-          resolve(true);
-        })
-        .catch((error) => {
-          console.log('Warning', error.message);
-          reject(false);
-        });
-    });
-  }
+  return new Promise((resolve, reject) => {
+    sendPasswordResetEmail(this.auth, email)
+      .then(() => {
+        console.log('OK', 'You can receive the instruction to reset password to ' + email);
+        resolve(true);
+      })
+      .catch((error) => {
+        console.log('Warning', error.message);
+        reject(false);
+      });
+  });
+}
   /*
   changePassword(email: string) {
     console.log("e-mail:",email)
@@ -272,19 +253,18 @@ export class AuthenticationService {
 */
 
   logout() {
-    this.isAuthenticatingSubject.next(false);
-    this.auth.signOut().then(() => {
-      sessionStorage.removeItem('currentUser');
-      sessionStorage.removeItem('currentUserData');
-      sessionStorage.removeItem('currentOrders');
-      this.userRoleService.clearSelectedRole();
-      this.currentUserSubject.next(null);
-      this.auxCurrentUser = null;
-      this.currentUserData = null; // Restablecer currentUserData a null
-      // this.router.navigate(['pages/login']);
-      this.router.navigate(['/authentication/signin']);
-    });
-  }
+  this.isAuthenticatingSubject.next(false);
+  signOut(this.auth).then(() => {
+    sessionStorage.removeItem('currentUser');
+    sessionStorage.removeItem('currentUserData');
+    sessionStorage.removeItem('currentOrders');
+    this.userRoleService.clearSelectedRole();
+    this.currentUserSubject.next(null);
+    this.auxCurrentUser = null;
+    this.currentUserData = null;
+    this.router.navigate(['/authentication/signin']);
+  });
+}
 
    //establecer el rol seleccionado
    setSelectedRole(role: string) {

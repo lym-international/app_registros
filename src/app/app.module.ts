@@ -1,8 +1,4 @@
 import { NgModule } from '@angular/core';
-import { AngularFireModule } from '@angular/fire/compat'; //Jairo
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AngularFireStorageModule } from '@angular/fire/compat/storage';
-
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -20,59 +16,70 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-
 import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { CoreModule } from '@core';
-
 import { SharedModule } from '@shared';
 import { environment, environment_A } from '../environments/environment';
 import { CloseEventComponent } from './close-event/close-event.component';
-import { OcultarSidebarService } from './_services/ocultar-sidebar.service'; // Diego
-import { TimesheetComponent } from './timesheet/timesheet.component'; //Jairo
-import { AuthenticationService } from './_services/authentication.service'; //Jairo
+import { OcultarSidebarService } from './_services/ocultar-sidebar.service';
+import { TimesheetComponent } from './timesheet/timesheet.component';
+import { AuthenticationService } from './_services/authentication.service';
 import { GoogleMapsModule } from '@angular/google-maps';
+
+// ✅ API modular Firebase
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideStorage, getStorage } from '@angular/fire/storage';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
 }
 
-@NgModule({ declarations: [
-        AppComponent,
-        HeaderComponent,
-        PageLoaderComponent,
-        SidebarComponent,
-        RightSidebarComponent,
-        AuthLayoutComponent,
-        MainLayoutComponent,
-        CloseEventComponent,
-        TimesheetComponent,
-        
-    ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
-        AngularFireModule.initializeApp(environment_A.firebase), //Jairo
-        AngularFireStorageModule,
-        BrowserAnimationsModule,
-        AppRoutingModule,
-        NgScrollbarModule,
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: createTranslateLoader,
-                deps: [HttpClient],
-            },
-        }),
-        LoadingBarRouterModule,
-        // core & shared
-        CoreModule,
-        SharedModule,
-        GoogleMapsModule], providers: [
-        AuthenticationService, //Jairo
-        OcultarSidebarService, //Diego
-        { provide: LocationStrategy, useClass: HashLocationStrategy },
-        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-        fakeBackendProvider,
-        provideHttpClient(withInterceptorsFromDi()),
-    ] })
+@NgModule({
+  declarations: [
+    AppComponent,
+    HeaderComponent,
+    PageLoaderComponent,
+    SidebarComponent,
+    RightSidebarComponent,
+    AuthLayoutComponent,
+    MainLayoutComponent,
+    CloseEventComponent,
+    TimesheetComponent,
+  ],
+  bootstrap: [AppComponent],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    NgScrollbarModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: createTranslateLoader,
+        deps: [HttpClient],
+      },
+    }),
+    LoadingBarRouterModule,
+    CoreModule,
+    SharedModule,
+    GoogleMapsModule,
+  ],
+  providers: [
+    // ✅ Firebase modular
+    provideFirebaseApp(() => initializeApp(environment_A.firebase)),
+    provideFirestore(() => getFirestore()),
+    provideAuth(() => getAuth()),
+    provideStorage(() => getStorage()),
+    AuthenticationService,
+    OcultarSidebarService,
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    fakeBackendProvider,
+    provideHttpClient(withInterceptorsFromDi()),
+  ]
+})
 export class AppModule {}
