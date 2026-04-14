@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Today } from './today.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class TodayService extends UnsubscribeOnDestroyAdapter {
   private readonly API_URL = 'assets/data/today.json';
   isTblLoading = true;
@@ -33,3 +33,4 @@ export class TodayService extends UnsubscribeOnDestroyAdapter {
     });
   }
 }
+

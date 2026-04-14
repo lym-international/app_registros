@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ExpenseReport } from './expense-report.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ExpenseReportService extends UnsubscribeOnDestroyAdapter {
   private readonly API_URL = 'assets/data/expense-report.json';
   isTblLoading = true;
@@ -37,3 +37,4 @@ export class ExpenseReportService extends UnsubscribeOnDestroyAdapter {
       });
   }
 }
+

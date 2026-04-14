@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AllHoliday } from './all-holidays.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class HolidayService extends UnsubscribeOnDestroyAdapter {
   private readonly API_URL = 'assets/data/holidays.json';
   isTblLoading = true;
@@ -71,3 +71,4 @@ export class HolidayService extends UnsubscribeOnDestroyAdapter {
     //     });
   }
 }
+

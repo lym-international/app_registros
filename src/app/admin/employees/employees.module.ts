@@ -1,4 +1,6 @@
-import { NgModule } from '@angular/core';
+﻿import { NgModule } from '@angular/core';
+import { EmployeesService } from './allEmployees/employees.service';
+import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EmployeesRoutingModule } from './employees-routing.module';
@@ -8,7 +10,6 @@ import { DeleteDialogComponent } from './allEmployees/dialogs/delete/delete.comp
 import { FormDialogComponent } from './allEmployees/dialogs/form-dialog/form-dialog.component';
 import { EditEmployeeComponent } from './edit-employee/edit-employee.component';
 import { EmployeeProfileComponent } from './employee-profile/employee-profile.component';
-import { EmployeesService } from './allEmployees/employees.service';
 import { ComponentsModule } from '@shared/components/components.module';
 import { SharedModule } from '@shared';
 import { DatePipe } from '@angular/common';
@@ -26,7 +27,6 @@ import { BreakAdminEmployeesComponent } from './admin-employees/dialogs/break-ad
 import { AllActionsComponent } from './allEmployees/dialogs/all-actions/all-actions.component';
 import { AddExistingEmployeeComponent } from './allEmployees/dialogs/add-existing-employee/add-existing-employee.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
-import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
 import { GoogleMapsModule } from '@angular/google-maps';
 
 @NgModule({
@@ -64,3 +64,4 @@ import { GoogleMapsModule } from '@angular/google-maps';
   providers: [EmployeesService, DatePipe, SharingCloseOrderService],
 })
 export class EmployeesModule {}
+

@@ -1,4 +1,5 @@
-import { NgModule } from '@angular/core';
+﻿import { NgModule } from '@angular/core';
+import { PaymentService } from './allpayment/payment.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AddPaymentComponent } from './add-payment/add-payment.component';
@@ -6,7 +7,6 @@ import { InvoiceComponent } from './invoice/invoice.component';
 import { AllpaymentComponent } from './allpayment/allpayment.component';
 import { FormDialogComponent } from './allpayment/dialog/form-dialog/form-dialog.component';
 import { DeleteDialogComponent } from './allpayment/dialog/delete/delete.component';
-import { PaymentService } from './allpayment/payment.service';
 import { AccountsRoutingModule } from './accounts-routing.module';
 import { ComponentsModule } from '@shared/components/components.module';
 import { SharedModule } from '@shared';
@@ -30,3 +30,4 @@ import { SharedModule } from '@shared';
   providers: [PaymentService],
 })
 export class AccountsModule {}
+

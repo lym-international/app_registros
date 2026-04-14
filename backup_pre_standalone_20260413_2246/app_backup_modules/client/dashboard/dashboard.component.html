@@ -1,0 +1,383 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="'Dashboard'" [items]="['Home']" [active_item]="'Dashboard'"></app-breadcrumb>
+    </div>
+    <!-- Widgets -->
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="body">
+            <div class="row align-items-center">
+              <div class="col-md-4">
+                <img src="assets/images/pages/welcome.png" alt="" class="w-100">
+              </div>
+              <div class="col-md-8">
+                <h4 class="font-20 weight-500 mb-2">
+                  Welcome back <div class="weight-600 font-30 col-blue pt-1">Cara Stevens!</div>
+                </h4>
+                <p class="font-18 max-width-600">We would like to take this opportunity to welcome you to our practice
+                  and to thank you
+                  for choosing our company. Nam quis ligula est. Nunc sed risus non turpis tristique tempor. Ut
+                  sollicitudin faucibus magna nec gravida..</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- #END# Widgets -->
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-12">
+        <div class="card card-statistic-2">
+          <div class="clearfix">
+            <div class="card-icon-only shadow-primary float-start">
+              <img src="assets/images/pages/img1.png" alt="">
+            </div>
+            <div class="card-right">
+              <div>
+                <h5 class="float-end">Running Projects</h5>
+              </div>
+              <div class="col-green">
+                <h3 class="font-weight-bold float-end mb-0">70</h3>
+              </div>
+            </div>
+          </div>
+          <div class="card-content msl-4 mb-3">
+            <p class="m-b-0 d-flex"><i class="material-icons col-green psr-2">trending_up</i> 10% Higher Then Last Month
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-12">
+        <div class="card card-statistic-2">
+          <div class="clearfix">
+            <div class="card-icon-only shadow-primary float-start">
+              <img src="assets/images/pages/img2.png" alt="">
+            </div>
+            <div class="card-right">
+              <div>
+                <h5 class="float-end">Active Tickets</h5>
+              </div>
+              <div class="col-green">
+                <h3 class="font-weight-bold float-end mb-0">650</h3>
+              </div>
+            </div>
+          </div>
+          <div class="card-content msl-4 mb-3">
+            <p class="m-b-0 d-flex"><i class="material-icons col-orange psr-2">trending_down</i> 07% Less Then Last
+              Month
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-12">
+        <div class="card card-statistic-2">
+          <div class="clearfix">
+            <div class="card-icon-only shadow-primary float-start">
+              <img src="assets/images/pages/img3.png" alt="">
+            </div>
+            <div class="card-right">
+              <div>
+                <h5 class="float-end">Assigned Employee</h5>
+              </div>
+              <div class="col-green">
+                <h3 class="font-weight-bold float-end mb-0">885</h3>
+              </div>
+            </div>
+          </div>
+          <div class="card-content msl-4 mb-3">
+            <p class="m-b-0 d-flex"><i class="material-icons col-green psr-2">trending_up</i> 12% Higher Then Last Month
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-12">
+        <div class="card card-statistic-2">
+          <div class="clearfix">
+            <div class="card-icon-only shadow-primary float-start">
+              <img src="assets/images/pages/img4.png" alt="">
+            </div>
+            <div class="card-right">
+              <div>
+                <h5 class="float-end">Total Payments</h5>
+              </div>
+              <div class="col-green">
+                <h3 class="font-weight-bold float-end mb-0">$9,456</h3>
+              </div>
+            </div>
+          </div>
+          <div class="card-content msl-4 mb-3">
+            <p class="m-b-0 d-flex"><i class="material-icons col-orange psr-2">trending_down</i> 22% Less Then Last
+              Month
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="float-start">
+              <h6 class="text-muted">Project Hourly Work</h6>
+              <h5>My Shop App <span class="text-muted font-12">(Android)</span></h5>
+            </div>
+            <div class="mb-5">
+              <apx-chart [series]="restRateChartOptions.series!" [chart]="restRateChartOptions.chart!"
+                [xaxis]="restRateChartOptions.xaxis!" [stroke]="restRateChartOptions.stroke!"
+                [colors]="restRateChartOptions.colors!" [dataLabels]="restRateChartOptions.dataLabels!"
+                [legend]="restRateChartOptions.legend!" [markers]="restRateChartOptions.markers!"
+                [grid]="restRateChartOptions.grid!" [yaxis]="restRateChartOptions.yaxis!"
+                [tooltip]="restRateChartOptions.tooltip!" [title]="restRateChartOptions.title!"></apx-chart>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="float-start">
+              <h6 class="text-muted">Project Hourly Work</h6>
+              <h5>ERP System <span class="text-muted font-12">(Java)</span></h5>
+            </div>
+            <div class="mb-5">
+              <apx-chart [series]="performanceRateChartOptions.series!" [chart]="performanceRateChartOptions.chart!"
+                [xaxis]="performanceRateChartOptions.xaxis!" [stroke]="performanceRateChartOptions.stroke!"
+                [colors]="performanceRateChartOptions.colors!" [dataLabels]="performanceRateChartOptions.dataLabels!"
+                [legend]="performanceRateChartOptions.legend!" [markers]="performanceRateChartOptions.markers!"
+                [grid]="performanceRateChartOptions.grid!" [yaxis]="performanceRateChartOptions.yaxis!"
+                [tooltip]="performanceRateChartOptions.tooltip!" [title]="performanceRateChartOptions.title!">
+              </apx-chart>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <h2>Project Hours details</h2>
+          </div>
+          <div class="body">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="d-flex justify-content-between mt-2 text-dark mb-2">
+                  <div><span class="fw-bold">3487</span> Hours</div>
+                  <div>Expected: 10000</div>
+                </div>
+                <div class="progress traffic-bar mb-2">
+                  <div class="progress-bar bg-red" style="width: 33%"></div>
+                  <div class="progress-bar bg-blue" style="width: 25%"></div>
+                  <div class="progress-bar bg-amber" style="width: 12%"></div>
+                  <div class="progress-bar bg-purple" style="width: 10%"></div>
+                  <div class="progress-bar bg-green" style="width: 7%"></div>
+                  <div class="progress-bar bg-cyan" style="width: 13%"></div>
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <div class="search-traffic">
+                  <div class="d-flex justify-content-between mb-1 mt-2">
+                    <div class="fw-bold">Project Name</div>
+                    <div class="fw-bold">Completed</div>
+                  </div>
+                  <div class="d-flex justify-content-between traffic-source">
+                    <div><span><i class="fa fa-circle col-red msr-2"></i></span>Angular website</div>
+                    <div>33%</div>
+                  </div>
+                  <div class="d-flex justify-content-between traffic-source">
+                    <div><span><i class="fa fa-circle col-blue msr-2"></i></span>Shopping App</div>
+                    <div>25%</div>
+                  </div>
+                  <div class="d-flex justify-content-between traffic-source">
+                    <div><span><i class="fa fa-circle col-amber msr-2"></i></span>ERP system</div>
+                    <div>12%</div>
+                  </div>
+                  <div class="d-flex justify-content-between traffic-source">
+                    <div><span><i class="fa fa-circle col-purple msr-2"></i></span>React admin panel</div>
+                    <div>10%</div>
+                  </div>
+                  <div class="d-flex justify-content-between traffic-source">
+                    <div><span><i class="fa fa-circle col-green msr-2"></i></span>Api Integration</div>
+                    <div>7%</div>
+                  </div>
+                  <div class="d-flex justify-content-between traffic-source">
+                    <div><span><i class="fa fa-circle col-cyan msr-2"></i></span>Email Marketing</div>
+                    <div>13%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        <div class="card">
+          <div class="header">
+            <h2>Invoices</h2>
+          </div>
+          <div class="tableBody">
+            <div class="responsive_table">
+              <table class="table table-hover ">
+                <thead>
+                  <tr>
+                    <th>Invoice No</th>
+                    <th>Generated By</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Total </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><a [routerLink]="['/admin/accounts/invoice']"> #IN7865 </a></td>
+                    <td><img src="assets/images/user/user1.jpg" alt="" class="user_img">John Doe</td>
+                    <td>12/05/2016 </td>
+                    <td>
+                      <div class="badge badge-solid-green">Paid</div>
+                    </td>
+                    <td>
+                      $500
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><a [routerLink]="['/admin/accounts/invoice']"> #IN2301 </a></td>
+                    <td><img src="assets/images/user/user2.jpg" alt="" class="user_img">Sarah Smith</td>
+                    <td>31/03/2016 </td>
+                    <td>
+                      <div class="badge badge-solid-red">Unpaid</div>
+                    </td>
+                    <td>
+                      $372
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><a [routerLink]="['/admin/accounts/invoice']"> #IN7239 </a></td>
+                    <td><img src="assets/images/user/user3.jpg" alt="" class="user_img">Airi Satou</td>
+                    <td>14/04/2017 </td>
+                    <td>
+                      <div class="badge badge-solid-orange">Partially Paid</div>
+                    </td>
+                    <td>
+                      $1038
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><a [routerLink]="['/admin/accounts/invoice']"> #IN1482 </a></td>
+                    <td><img src="assets/images/user/user4.jpg" alt="" class="user_img">Angelica Ramos</td>
+                    <td>11/08/2017 </td>
+                    <td>
+                      <div class="badge badge-solid-green">Paid</div>
+                    </td>
+                    <td>
+                      $872
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><a [routerLink]="['/admin/accounts/invoice']"> #IN8526 </a></td>
+                    <td><img src="assets/images/user/user5.jpg" alt="" class="user_img">Ashton Cox</td>
+                    <td>15/02/2018 </td>
+                    <td>
+                      <div class="badge badge-solid-red">Unpaid</div>
+                    </td>
+                    <td>
+                      $2398
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><a [routerLink]="['/admin/accounts/invoice']"> #IN2473 </a></td>
+                    <td><img src="assets/images/user/user6.jpg" alt="" class="user_img">Cara Stevens</td>
+                    <td>28/01/2017 </td>
+                    <td>
+                      <div class="badge badge-solid-green">Paid</div>
+                    </td>
+                    <td>
+                      $834
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><a [routerLink]="['/admin/accounts/invoice']"> #IN7366 </a></td>
+                    <td><img src="assets/images/user/user7.jpg" alt="" class="user_img">Jacob Ryan</td>
+                    <td>11/03/2017 </td>
+                    <td>
+                      <div class="badge badge-solid-orange">Partially Paid</div>
+                    </td>
+                    <td>
+                      $147
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div class="card">
+          <div class="header">
+            <h2>Customer Review</h2>
+          </div>
+          <div class="body">
+            <div class="review-block">
+              <div class="row">
+                <div class="review-img">
+                  <img src="assets/images/user/user1.jpg" alt="">
+                </div>
+                <div class="col">
+                  <h6 class="m-b-0 m-t-5">Alis Smith
+                    <span class="float-end m-r-10 text-muted"> a week ago</span>
+                  </h6>
+                  <i class="material-icons">star</i>
+                  <i class="material-icons">star</i>
+                  <i class="material-icons">star</i>
+                  <i class="material-icons">star_half</i>
+                  <i class="material-icons">star_border</i>
+                  <p class="m-t-10 m-b-15 text-muted">Lorem ipsum dolor sit amet, consectetur
+                    adipiscing elit. Etiam vel rutrum ex, at
+                    ornare mi. In quis scelerisque dui, eget rhoncus orci. Fusce et sodales
+                    ipsum.</p>
+                  <a href="#!">
+                    <i class="material-icons m-r-10">thumb_up</i>
+                  </a>
+                  <a href="#!">
+                    <i class="material-icons m-r-10 col-red">thumb_down</i>
+                  </a>
+                </div>
+              </div>
+              <div class="row">
+                <div class="review-img">
+                  <img src="assets/images/user/user2.jpg" alt="">
+                </div>
+                <div class="col">
+                  <h6 class="m-b-0 m-t-5">John Dio
+                    <span class="float-end m-r-10 text-muted"> a week ago</span>
+                  </h6>
+                  <i class="material-icons">star</i>
+                  <i class="material-icons">star_half</i>
+                  <i class="material-icons">star_border</i>
+                  <i class="material-icons">star_border</i>
+                  <i class="material-icons">star_border</i>
+                  <p class="m-t-10 m-b-15 text-muted">Nam quis ligula est. Nunc sed risus non
+                    turpis tristique tempor. Ut sollicitudin
+                    faucibus magna nec gravida. Suspendisse ullamcorper justo vel porta
+                    imperdiet.</p>
+                  <a href="#!">
+                    <i class="material-icons m-r-10">thumb_up</i>
+                  </a>
+                  <a href="#!">
+                    <i class="material-icons m-r-10 col-red">thumb_down</i>
+                  </a>
+                </div>
+              </div>
+              <div class="text-center  m-b-5">
+                <a href="#!" class="b-b-primary text-primary">View all Customer Reviews</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

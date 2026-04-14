@@ -1,4 +1,8 @@
-import { NgModule } from '@angular/core';
+﻿import { NgModule } from '@angular/core';
+import { AttendancesService } from './attendance/attendance.service';
+import { MyLeavesService } from './my-leaves/my-leaves.service';
+import { MyProjectsService } from './my-projects/my-projects.service';
+import { MyTasksService } from './my-tasks/my-tasks.service';
 import { CommonModule } from '@angular/common';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -12,17 +16,13 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { FormComponent } from './attendance/form/form.component';
 import { MyTeamsComponent } from './myteam/myteam.component';
 import { SettingsComponent } from './settings/settings.component';
-import { AttendancesService } from './attendance/attendance.service';
 import { AttendancesComponent } from './attendance/attendance.component';
 import { MyLeavesComponent } from './my-leaves/my-leaves.component';
 import { FormDialogComponent } from './my-leaves/dialogs/form-dialog/form-dialog.component';
 import { DeleteDialogComponent } from './my-leaves/dialogs/delete/delete.component';
 import { FormComponent as MyProjectFormDialog } from './my-projects/form/form.component';
-import { MyLeavesService } from './my-leaves/my-leaves.service';
 import { MyProjectsComponent } from './my-projects/my-projects.component';
-import { MyProjectsService } from './my-projects/my-projects.service';
 import { MyTasksComponent } from './my-tasks/my-tasks.component';
-import { MyTasksService } from './my-tasks/my-tasks.service';
 import { FormDialogComponent as myTaskFormDialogComponent } from './my-tasks/dialogs/form-dialog/form-dialog.component';
 import { DeleteComponent as myTaskDeleteComponent } from './my-tasks/dialogs/delete/delete.component';
 import { ComponentsModule } from '../shared/components/components.module';
@@ -71,10 +71,7 @@ MatSelectModule,
 MatButtonModule,
   ],
   providers: [
-    AttendancesService,
-    MyLeavesService,
-    MyProjectsService,
-    MyTasksService,
   ],
 })
 export class EmployeeModule {}
+

@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { EmployeeSalary } from './employee-salary.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class EmployeeSalaryService extends UnsubscribeOnDestroyAdapter {
   private readonly API_URL = 'assets/data/employee-salary.json';
   isTblLoading = true;
@@ -76,3 +76,4 @@ export class EmployeeSalaryService extends UnsubscribeOnDestroyAdapter {
     //     });
   }
 }
+

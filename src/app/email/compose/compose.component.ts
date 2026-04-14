@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { ClassicEditor, Bold, Essentials, Italic, Paragraph, Undo, Heading, Link, List } from 'ckeditor5';
+import type { EditorConfig } from 'ckeditor5';
+
 @Component({
     selector: 'app-compose',
     templateUrl: './compose.component.html',
@@ -7,8 +9,10 @@ import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
     standalone: false
 })
 export class ComposeComponent {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public Editor: any = ClassicEditor;
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  public Editor = ClassicEditor;
+  public editorConfig: EditorConfig = {
+    plugins: [Bold, Essentials, Italic, Paragraph, Undo, Heading, Link, List],
+    toolbar: ['undo', 'redo', '|', 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList'],
+  };
   constructor() {}
 }

@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Leads } from './leads.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class LeadsService extends UnsubscribeOnDestroyAdapter {
   private readonly API_URL = 'assets/data/leads.json';
   isTblLoading = true;
@@ -71,3 +71,4 @@ export class LeadsService extends UnsubscribeOnDestroyAdapter {
     //     });
   }
 }
+

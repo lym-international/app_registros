@@ -1,9 +1,10 @@
-import { TruncatePipe, PluralPipe } from './all-projects/core/pipes';
+﻿import { TruncatePipe, PluralPipe } from './all-projects/core/pipes';
 import { ProjectDialogComponent } from './all-projects/project-dialog/project-dialog.component';
 import { BoardComponent } from './all-projects/board/board.component';
 import { AllprojectsComponent } from './all-projects/all-projects.component';
 
 import { NgModule } from '@angular/core';
+import { EstimatesService } from './estimates/estimates.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -17,7 +18,6 @@ import { ProjectDetailsComponent } from './project-details/project-details.compo
 import { ComponentsModule } from '@shared/components/components.module';
 import { EstimatesComponent } from './estimates/estimates.component';
 import { SharedModule } from '@shared';
-import { EstimatesService } from './estimates/estimates.service';
 
 @NgModule({
   declarations: [
@@ -46,3 +46,4 @@ import { EstimatesService } from './estimates/estimates.service';
   providers: [EstimatesService],
 })
 export class ProjectsModule {}
+

@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Payment } from './payment.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class PaymentService extends UnsubscribeOnDestroyAdapter {
   private readonly API_URL = 'assets/data/payment.json';
   isTblLoading = true;
@@ -72,3 +72,4 @@ export class PaymentService extends UnsubscribeOnDestroyAdapter {
     //     });
   }
 }
+

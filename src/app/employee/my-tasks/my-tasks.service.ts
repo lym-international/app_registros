@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { MyTasks } from './my-tasks.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MyTasksService extends UnsubscribeOnDestroyAdapter {
   private readonly API_URL = 'assets/data/my-tasks.json';
   isTblLoading = true;
@@ -72,3 +72,4 @@ export class MyTasksService extends UnsubscribeOnDestroyAdapter {
     //     });
   }
 }
+

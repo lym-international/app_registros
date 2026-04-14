@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { LeaveBalance } from './leave-balance.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class LeaveBalanceService extends UnsubscribeOnDestroyAdapter {
   private readonly API_URL = 'assets/data/leave-balance.json';
   isTblLoading = true;
@@ -37,3 +37,4 @@ export class LeaveBalanceService extends UnsubscribeOnDestroyAdapter {
       });
   }
 }
+

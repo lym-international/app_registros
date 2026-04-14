@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { Tickets } from './tickets.model';
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class TicketsService extends UnsubscribeOnDestroyAdapter {
   private readonly API_URL = 'assets/data/tickets.json';
   isTblLoading = true;
@@ -72,3 +72,4 @@ export class TicketsService extends UnsubscribeOnDestroyAdapter {
     //     });
   }
 }
+

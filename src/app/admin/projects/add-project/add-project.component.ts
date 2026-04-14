@@ -4,7 +4,9 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { ClassicEditor, Bold, Essentials, Italic, Paragraph, Undo, Heading, Link, List, Image, Table } from 'ckeditor5';
+import type { EditorConfig } from 'ckeditor5';
+
 @Component({
     selector: 'app-add-project',
     templateUrl: './add-project.component.html',
@@ -15,7 +17,11 @@ export class AddprojectsComponent {
   projectForm: UntypedFormGroup;
   hide3 = true;
   agree3 = false;
-  public Editor: any = ClassicEditor;
+  public Editor = ClassicEditor;
+  public editorConfig: EditorConfig = {
+    plugins: [Bold, Essentials, Italic, Paragraph, Undo, Heading, Link, List, Image, Table],
+    toolbar: ['undo', 'redo', '|', 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList'],
+  };
   teamList: string[] = [
     'Sarah Smith',
     'John Deo',

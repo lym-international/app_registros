@@ -1,4 +1,6 @@
-import { NgModule } from '@angular/core';
+﻿import { NgModule } from '@angular/core';
+import { AuthenticationService } from './_services/authentication.service';
+import { OcultarSidebarService } from './_services/ocultar-sidebar.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -22,12 +24,10 @@ import { CoreModule } from '@core';
 import { SharedModule } from '@shared';
 import { environment, environment_A } from '../environments/environment';
 import { CloseEventComponent } from './close-event/close-event.component';
-import { OcultarSidebarService } from './_services/ocultar-sidebar.service';
 import { TimesheetComponent } from './timesheet/timesheet.component';
-import { AuthenticationService } from './_services/authentication.service';
 import { GoogleMapsModule } from '@angular/google-maps';
 
-// ✅ API modular Firebase
+// âœ… API modular Firebase
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideAuth, getAuth } from '@angular/fire/auth';
@@ -68,13 +68,11 @@ export function createTranslateLoader(http: HttpClient) {
     GoogleMapsModule,
   ],
   providers: [
-    // ✅ Firebase modular
+    // âœ… Firebase modular
     provideFirebaseApp(() => initializeApp(environment_A.firebase)),
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
     provideStorage(() => getStorage()),
-    AuthenticationService,
-    OcultarSidebarService,
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
@@ -83,3 +81,4 @@ export function createTranslateLoader(http: HttpClient) {
   ]
 })
 export class AppModule {}
+

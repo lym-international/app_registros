@@ -1,0 +1,17 @@
+﻿import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
+@Injectable({ providedIn: 'root' })
+export class DirectionService {
+  private data = new BehaviorSubject('');
+  currentData = this.data.asObservable();
+
+  constructor() {
+    // constructor code
+  }
+
+  updateDirection(item: string) {
+    this.data.next(item);
+  }
+}
+

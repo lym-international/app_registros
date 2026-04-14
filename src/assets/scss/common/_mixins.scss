@@ -1,3 +1,4 @@
+@use 'sass:color';
 @mixin border-radius($radius) {
   -webkit-border-radius: $radius;
   -moz-border-radius: $radius;
@@ -47,7 +48,7 @@
   .nav .open > a,
   .nav .open > a:hover,
   .nav .open > a:focus {
-    background-color: transparentize($navbarcolor, $opacity);
+    background-color: color.adjust($navbarcolor, $alpha: -$opacity);
   }
 
   .nav > li > a {
@@ -68,3 +69,4 @@
     background-color: rgba(0, 0, 0, 0.08);
   }
 }
+

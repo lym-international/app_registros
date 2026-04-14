@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Employees } from './employees.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class EmployeesService extends UnsubscribeOnDestroyAdapter {
   public url: any[] = []; 
   private readonly API_URL = 'assets/data/employees.json';
@@ -89,3 +89,4 @@ export class EmployeesService extends UnsubscribeOnDestroyAdapter {
     //     });
   }
 }
+

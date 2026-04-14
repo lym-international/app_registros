@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Leaves } from './leaves.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class LeavesService extends UnsubscribeOnDestroyAdapter {
   private readonly API_URL = 'assets/data/leaves.json';
   isTblLoading = true;
@@ -71,3 +71,4 @@ export class LeavesService extends UnsubscribeOnDestroyAdapter {
     //     });
   }
 }
+

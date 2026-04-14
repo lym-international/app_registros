@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Estimates } from './estimates.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class EstimatesService extends UnsubscribeOnDestroyAdapter {
   private readonly API_URL = 'assets/data/estimates.json';
   isTblLoading = true;
@@ -74,3 +74,4 @@ export class EstimatesService extends UnsubscribeOnDestroyAdapter {
     //     });
   }
 }
+

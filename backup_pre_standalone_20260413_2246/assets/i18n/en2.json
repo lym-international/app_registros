@@ -1,0 +1,22 @@
+{
+    "MENUITEMS": {
+
+        "EMPLOYEES": {
+            "TEXT": "Employees"
+        },
+
+        "EMERGENCY-EMPLOYEE": {
+            "TEXT": "Emergency employee",
+            "LIST": {
+                "SEARCH-EMPLOYEE": "Search employee",
+                "ADD-NEW-EMPLOYEE": "Add new employee"
+            }
+        },
+        "CLOSE-EVENT": {
+            "TEXT": "Close event"
+        },
+        "TIMESHEET": {
+            "TEXT": "Time sheet"
+        }
+    }
+}
