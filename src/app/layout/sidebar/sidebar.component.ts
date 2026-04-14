@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Router, NavigationEnd, RouterLinkActive, RouterLink } from '@angular/router';
 
 import {
@@ -21,6 +21,7 @@ import { UserRoleService } from 'app/_services/userRole.service';
 import { ViewportAdapter, NgScrollbar } from 'ngx-scrollbar';
 import { NgClass } from '@angular/common';
 import { FeatherModule } from 'angular-feather';
+import { allIcons } from 'angular-feather/icons';
 import { TranslatePipe } from '@ngx-translate/core';
 
 
@@ -120,11 +121,11 @@ export class SidebarComponent implements OnInit {
       // localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
       sessionStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
     }
-    // Aquí tienes acceso a los datos del usuario en la variable dataUser
+    // AquÃ­ tienes acceso a los datos del usuario en la variable dataUser
     //console.log('Datos en storedUserData desde el sideBar: ', storedUserData);
     //console.log('Datos usuario desde el sideBar: ', this.dataUser)
     
-    //Validación del rol del usuario para la visualización de los items del sidebar
+    //ValidaciÃ³n del rol del usuario para la visualizaciÃ³n de los items del sidebar
     if(this.currentRole){
       this.sidebarItems = ROUTES.filter(
         (x) => x.role.indexOf(this.currentRole) !== -1 || x.role.indexOf('All') !== -1
@@ -153,14 +154,14 @@ export class SidebarComponent implements OnInit {
     
   }
   
-  //Este método de validación es solo para la opción Close Order del sidebar
+  //Este mÃ©todo de validaciÃ³n es solo para la opciÃ³n Close Order del sidebar
   isUserRoleValid(): boolean {
     if (this.dataUser && this.dataUser.role) {
       const userRole = this.dataUser.role;
       // Verifica si el rol del usuario es "Administrator" o "Client"
       return userRole === 'Administrator' || userRole === 'Supervisor';//|| userRole === 'Client';
     }
-    // Si no se proporciona un rol de usuario válido, oculta el botón
+    // Si no se proporciona un rol de usuario vÃ¡lido, oculta el botÃ³n
     return false;
   }
 
@@ -255,7 +256,7 @@ export class SidebarComponent implements OnInit {
 }
 
 
-//Diego: código de plantilla
+//Diego: cÃ³digo de plantilla
 /*if (this.authService.currentUserValue) {
   const userRole = this.authService.currentUserValue.role;
   this.userFullName =

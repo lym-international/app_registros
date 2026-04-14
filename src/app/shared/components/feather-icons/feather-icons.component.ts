@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+﻿import { Component, Input } from '@angular/core';
 import { FeatherModule } from 'angular-feather';
+import { allIcons } from 'angular-feather/icons';
 
 @Component({
     selector: 'app-feather-icons',
@@ -14,3 +15,4 @@ export class FeatherIconsComponent {
     // constructor
   }
 }
+

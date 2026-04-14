@@ -1,4 +1,4 @@
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+﻿import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { createTranslateLoader } from './app/app.module';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
@@ -22,18 +22,20 @@ import { CoreModule } from '@core';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { AppComponent } from './app/app.component';
 import { importProvidersFrom } from '@angular/core';
+import { FeatherModule } from 'angular-feather';
+import { allIcons } from 'angular-feather/icons';
 
 
 bootstrapApplication(AppComponent, {
     providers: [
-        importProvidersFrom(BrowserModule, AppRoutingModule, NgScrollbarModule, TranslateModule.forRoot({
+        importProvidersFrom(FeatherModule.pick(allIcons), BrowserModule, AppRoutingModule, NgScrollbarModule, TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
                 useFactory: createTranslateLoader,
                 deps: [HttpClient],
             },
         }), LoadingBarRouterModule, CoreModule, GoogleMapsModule),
-        // âœ… Firebase modular
+        // Ã¢Å“â€¦ Firebase modular
         provideFirebaseApp(() => initializeApp(environment_A.firebase)),
         provideFirestore(() => getFirestore()),
         provideAuth(() => getAuth()),
