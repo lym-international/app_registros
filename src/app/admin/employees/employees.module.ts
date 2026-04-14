@@ -11,7 +11,7 @@ import { FormDialogComponent } from './allEmployees/dialogs/form-dialog/form-dia
 import { EditEmployeeComponent } from './edit-employee/edit-employee.component';
 import { EmployeeProfileComponent } from './employee-profile/employee-profile.component';
 import { ComponentsModule } from '@shared/components/components.module';
-import { SharedModule } from '@shared';
+
 import { DatePipe } from '@angular/common';
 import { CheckInComponent } from './allEmployees/dialogs/check-in/check-in.component';
 //import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
@@ -30,7 +30,18 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 import { GoogleMapsModule } from '@angular/google-maps';
 
 @NgModule({
-  declarations: [
+    imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    EmployeesRoutingModule,
+    ComponentsModule,
+    //OwlDateTimeModule,
+    //OwlNativeDateTimeModule,
+    NgScrollbarModule,
+    GoogleMapsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     AllemployeesComponent,
     DeleteDialogComponent,
     FormDialogComponent,
@@ -45,23 +56,9 @@ import { GoogleMapsModule } from '@angular/google-maps';
     CheckOutAdminEmployeesComponent,
     BreakAdminEmployeesComponent,
     AllActionsComponent,
-    AddExistingEmployeeComponent,
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    EmployeesRoutingModule,
-    ComponentsModule,
-    SharedModule,
-    //OwlDateTimeModule,
-    //OwlNativeDateTimeModule,
-    NgScrollbarModule,
-    GoogleMapsModule,
-    MatDatepickerModule,
-    MatNativeDateModule
-  ],
-  providers: [EmployeesService, DatePipe, SharingCloseOrderService],
+    AddExistingEmployeeComponent
+],
+    providers: [EmployeesService, DatePipe, SharingCloseOrderService],
 })
 export class EmployeesModule {}
 

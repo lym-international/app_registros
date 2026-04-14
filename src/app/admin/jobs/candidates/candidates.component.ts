@@ -3,7 +3,7 @@ import { CandidatesService } from './candidates.service';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { Candidates } from './candidates.model';
 import { DataSource } from '@angular/cdk/collections';
 import {
@@ -11,7 +11,7 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
 import { BehaviorSubject, fromEvent, merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FormDialogComponent } from './dialogs/form-dialog/form-dialog.component';
@@ -20,12 +20,22 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { Direction } from '@angular/cdk/bidi';
 import { TableExportUtil, TableElement } from '@shared';
+import { BreadcrumbComponent } from '../../../shared/components/breadcrumb/breadcrumb.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatMiniFabButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { NgClass } from '@angular/common';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FeatherIconsComponent } from '../../../shared/components/feather-icons/feather-icons.component';
+import { MatRipple } from '@angular/material/core';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-candidates',
     templateUrl: './candidates.component.html',
     styleUrls: ['./candidates.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, MatTooltip, MatMiniFabButton, MatIcon, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, NgClass, MatCheckbox, MatCellDef, MatCell, MatSortHeader, MatIconButton, FeatherIconsComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatRipple, MatProgressSpinner, MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem, MatPaginator]
 })
 export class CandidatesComponent
   extends UnsubscribeOnDestroyAdapter

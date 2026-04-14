@@ -15,18 +15,10 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ComponentsModule } from '../shared/components/components.module';
-import { SharedModule } from '../shared/shared.module';
+
 
 @NgModule({
-  declarations: [
-    EditorsComponent,
-    FormExamplesComponent,
-    FormValidationsComponent,
-    WizardComponent,
-    FormControlsComponent,
-    AdvanceControlsComponent,
-  ],
-  imports: [
+    imports: [
     CommonModule,
     FormsRoutingModule,
     FormsModule,
@@ -37,19 +29,22 @@ import { SharedModule } from '../shared/shared.module';
     NgxMaskDirective,
     NgxMaskPipe,
     ComponentsModule,
-    SharedModule,
     MatDatepickerModule,
     MatNativeDateModule,
-  ],
-  providers: [provideNgxMask(),
-    //{ provide: OWL_DATE_TIME_LOCALE, useValue: {hour12Timer: true} }]
-    { provide: LOCALE_ID, useValue: 'en-US' } ]
-  /* providers: [
-    // Configura OWL_DATE_TIME_LOCALE con 'en-US' y hour12Timer en true
-    { provide: OWL_DATE_TIME_LOCALE, useValue: 'en-US' },
-    // { provide: OWL_DATE_TIME_FORMATS, useValue: {hour12Timer: true, ...} }, // Agrega esto para configurar hour12Timer
-  ], */
-
-  
+    EditorsComponent,
+    FormExamplesComponent,
+    FormValidationsComponent,
+    WizardComponent,
+    FormControlsComponent,
+    AdvanceControlsComponent,
+],
+    providers: [provideNgxMask(),
+        //{ provide: OWL_DATE_TIME_LOCALE, useValue: {hour12Timer: true} }]
+        { provide: LOCALE_ID, useValue: 'en-US' }]
+    /* providers: [
+      // Configura OWL_DATE_TIME_LOCALE con 'en-US' y hour12Timer en true
+      { provide: OWL_DATE_TIME_LOCALE, useValue: 'en-US' },
+      // { provide: OWL_DATE_TIME_FORMATS, useValue: {hour12Timer: true, ...} }, // Agrega esto para configurar hour12Timer
+    ], */
 })
 export class FormModule {}

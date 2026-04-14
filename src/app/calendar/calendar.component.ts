@@ -26,15 +26,18 @@ import {
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { INITIAL_EVENTS } from './events-util';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckboxChange, MatCheckbox } from '@angular/material/checkbox';
 import { UnsubscribeOnDestroyAdapter } from '../shared/UnsubscribeOnDestroyAdapter';
 import { Direction } from '@angular/cdk/bidi';
+import { BreadcrumbComponent } from '../shared/components/breadcrumb/breadcrumb.component';
+import { MatButton } from '@angular/material/button';
+import { FullCalendarModule } from '@fullcalendar/angular';
 
 @Component({
     selector: 'app-calendar',
     templateUrl: './calendar.component.html',
     styleUrls: ['./calendar.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, MatButton, MatCheckbox, FullCalendarModule]
 })
 export class CalendarComponent
   extends UnsubscribeOnDestroyAdapter

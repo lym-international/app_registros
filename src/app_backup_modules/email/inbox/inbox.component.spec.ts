@@ -6,8 +6,8 @@ describe("InboxComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [InboxComponent],
-      }).compileComponents();
+    declarations: [InboxComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

@@ -17,6 +17,8 @@ import {
   ApexGrid,
   ApexMarkers,
 } from 'ng-apexcharts';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { MatProgressBar } from '@angular/material/progress-bar';
 export type circleChartOptions = {
   series?: ApexNonAxisChartSeries;
   chart?: ApexChart;
@@ -90,7 +92,7 @@ export type ChartOptions = {
     selector: 'app-chart-widget',
     templateUrl: './chart-widget.component.html',
     styleUrls: ['./chart-widget.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, ChartComponent, MatProgressBar]
 })
 export class ChartWidgetComponent implements OnInit {
   public radarChartOptions: Partial<radarChartOptions>;

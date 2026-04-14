@@ -7,18 +7,17 @@ import { Dashboard2Component } from './dashboard2/dashboard2.component';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ComponentsModule } from '@shared/components/components.module';
-import { SharedModule } from './../../shared/shared.module';
+
 
 @NgModule({
-  declarations: [MainComponent, Dashboard2Component],
-  imports: [
+    imports: [
     CommonModule,
     DashboardRoutingModule,
     BaseChartDirective,
     NgApexchartsModule,
     NgScrollbarModule,
     ComponentsModule,
-    SharedModule,
-  ],
+    MainComponent, Dashboard2Component,
+],
 })
 export class DashboardModule {}

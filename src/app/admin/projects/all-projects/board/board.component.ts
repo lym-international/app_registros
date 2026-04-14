@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
@@ -7,12 +7,18 @@ import { Project, ProjectStatus } from '../core/project.model';
 import { ProjectService } from '../core/project.service';
 import { ProjectDialogComponent } from '../project-dialog/project-dialog.component';
 import { Direction } from '@angular/cdk/bidi';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatIconButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { DatePipe, KeyValuePipe } from '@angular/common';
+import { TruncatePipe, PluralPipe } from '../core/pipes';
 
 @Component({
     selector: 'app-board',
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.scss'],
-    standalone: false
+    imports: [CdkDropList, CdkDrag, MatProgressBar, MatIconButton, MatMenuTrigger, MatIcon, MatMenu, MatMenuItem, DatePipe, KeyValuePipe, TruncatePipe, PluralPipe]
 })
 export class BoardComponent implements OnInit {
   public lists: object;

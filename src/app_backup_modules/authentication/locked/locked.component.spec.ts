@@ -6,8 +6,8 @@ describe("LockedComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [LockedComponent],
-      }).compileComponents();
+    declarations: [LockedComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

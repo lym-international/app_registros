@@ -6,8 +6,8 @@ describe("ApexchartComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ApexchartComponent],
-      }).compileComponents();
+    declarations: [ApexchartComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

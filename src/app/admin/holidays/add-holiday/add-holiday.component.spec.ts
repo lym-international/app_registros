@@ -6,8 +6,8 @@ describe("AddHolidayComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [AddHolidayComponent],
-      }).compileComponents();
+    imports: [AddHolidayComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

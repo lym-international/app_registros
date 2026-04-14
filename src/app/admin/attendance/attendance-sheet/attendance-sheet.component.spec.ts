@@ -8,8 +8,8 @@ describe('AttendanceSheetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AttendanceSheetComponent ]
-    })
+    imports: [AttendanceSheetComponent]
+})
     .compileComponents();
   });
 

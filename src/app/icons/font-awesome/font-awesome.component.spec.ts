@@ -6,8 +6,8 @@ describe("FontAwesomeComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [FontAwesomeComponent],
-      }).compileComponents();
+    imports: [FontAwesomeComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

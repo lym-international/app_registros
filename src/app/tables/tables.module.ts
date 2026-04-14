@@ -7,22 +7,19 @@ import { NgxDatatableComponent } from './ngx-datatable/ngx-datatable.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { MaterialTableComponent } from './material-table/material-table.component';
 import { ComponentsModule } from '../shared/components/components.module';
-import { SharedModule } from '@shared';
+
 
 @NgModule({
-  declarations: [
-    BasicTableComponent,
-    NgxDatatableComponent,
-    MaterialTableComponent,
-  ],
-  imports: [
+    imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     TablesRoutingModule,
     NgxDatatableModule,
     ComponentsModule,
-    SharedModule,
-  ],
+    BasicTableComponent,
+    NgxDatatableComponent,
+    MaterialTableComponent,
+],
 })
 export class TablesModule {}

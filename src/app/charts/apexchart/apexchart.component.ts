@@ -17,6 +17,7 @@ import {
   ApexNonAxisChartSeries,
   ApexResponsive,
 } from 'ng-apexcharts';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
 
 export type ChartOptions = {
   series?: ApexAxisChartSeries;
@@ -42,7 +43,7 @@ export type ChartOptions = {
     selector: 'app-apexchart',
     templateUrl: './apexchart.component.html',
     styleUrls: ['./apexchart.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, ChartComponent]
 })
 export class ApexchartComponent {
   @ViewChild('chart', { static: true }) chart!: ChartComponent;

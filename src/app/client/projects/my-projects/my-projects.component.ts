@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { DataSource } from '@angular/cdk/collections';
 import {
   MatSnackBar,
@@ -19,13 +19,22 @@ import { MyProjects } from './my-projects.model';
 import { DeleteComponent } from './dialogs/delete/delete.component';
 import { Direction } from '@angular/cdk/bidi';
 import { TableExportUtil, TableElement } from '@shared';
-import { formatDate } from '@angular/common';
+import { formatDate, NgClass, DatePipe } from '@angular/common';
+import { BreadcrumbComponent } from '../../../shared/components/breadcrumb/breadcrumb.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatMiniFabButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FeatherIconsComponent } from '../../../shared/components/feather-icons/feather-icons.component';
+import { MatRipple } from '@angular/material/core';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-myprojects',
     templateUrl: './my-projects.component.html',
     styleUrls: ['./my-projects.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, MatTooltip, MatMiniFabButton, MatIcon, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, NgClass, MatCheckbox, MatCellDef, MatCell, MatSortHeader, MatIconButton, FeatherIconsComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatRipple, MatProgressSpinner, MatPaginator, DatePipe]
 })
 export class MyProjectsComponent
   extends UnsubscribeOnDestroyAdapter

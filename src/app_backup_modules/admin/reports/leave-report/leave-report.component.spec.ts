@@ -8,8 +8,8 @@ describe('LeaveReportComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LeaveReportComponent ]
-    })
+    declarations: [LeaveReportComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(LeaveReportComponent);

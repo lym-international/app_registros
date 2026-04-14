@@ -1,16 +1,13 @@
 import { Component } from '@angular/core';
-import {
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-  CdkDrag,
-} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag, CdkDropListGroup, CdkDropList, CdkDragPlaceholder, CdkDragHandle } from '@angular/cdk/drag-drop';
+import { RouterLink } from '@angular/router';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
 
 @Component({
     selector: 'app-drag-drop',
     templateUrl: './drag-drop.component.html',
     styleUrls: ['./drag-drop.component.scss'],
-    standalone: false
+    imports: [RouterLink, BreadcrumbComponent, CdkDrag, CdkDropListGroup, CdkDropList, CdkDragPlaceholder, CdkDragHandle]
 })
 export class DragDropComponent {
   todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];

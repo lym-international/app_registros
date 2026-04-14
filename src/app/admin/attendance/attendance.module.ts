@@ -8,20 +8,19 @@ import { EmployeeComponent } from './employee/employee.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { AttendanceSheetComponent } from './attendance-sheet/attendance-sheet.component';
 import { ComponentsModule } from '@shared/components/components.module';
-import { SharedModule } from '@shared';
+
 
 @NgModule({
-  declarations: [TodayComponent, EmployeeComponent, AttendanceSheetComponent],
-  imports: [
+    imports: [
     CommonModule,
     AttendanceRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     NgxChartsModule,
     ComponentsModule,
-    SharedModule,
-  ],
-  providers: [TodayService],
+    TodayComponent, EmployeeComponent, AttendanceSheetComponent,
+],
+    providers: [TodayService],
 })
 export class AttendanceModule {}
 

@@ -6,8 +6,8 @@ describe("LabelsComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [LabelsComponent],
-      }).compileComponents();
+    declarations: [LabelsComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

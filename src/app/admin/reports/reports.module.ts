@@ -6,14 +6,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { ComponentsModule } from '@shared/components/components.module';
-import { SharedModule } from '@shared';
+
 import { ReportsRoutingModule } from './reports-routing.module';
 import { LeaveReportComponent } from './leave-report/leave-report.component';
 import { ExpenseReportComponent } from './expense/expense-report.component';
 
 @NgModule({
-  declarations: [LeaveReportComponent, ExpenseReportComponent],
-  imports: [
+    imports: [
     CommonModule,
     ReportsRoutingModule,
     FormsModule,
@@ -21,9 +20,9 @@ import { ExpenseReportComponent } from './expense/expense-report.component';
     DragDropModule,
     CKEditorModule,
     ComponentsModule,
-    SharedModule,
-  ],
-  providers: [LeaveReportService, ExpenseReportService],
+    LeaveReportComponent, ExpenseReportComponent,
+],
+    providers: [LeaveReportService, ExpenseReportService],
 })
 export class ReportsModule {}
 

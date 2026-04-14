@@ -1,12 +1,8 @@
 import { Component, Inject } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  Validators,
-  UntypedFormGroup,
-} from '@angular/forms';
+import { UntypedFormBuilder, Validators, UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogContent, MatDialogClose } from '@angular/material/dialog';
 
 import {
   Project,
@@ -15,6 +11,14 @@ import {
   ProjectType,
 } from '../core/project.model';
 import { ProjectService } from '../core/project.service';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel, MatSuffix, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
 
 export interface DialogData {
   id: number;
@@ -26,7 +30,7 @@ export interface DialogData {
 @Component({
     selector: 'app-project-dialog',
     templateUrl: './project-dialog.component.html',
-    standalone: false
+    imports: [MatIconButton, MatIcon, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatSuffix, MatError, MatSelect, MatOption, MatDatepickerInput, MatDatepickerToggle, MatDatepicker, MatButton, MatDialogClose]
 })
 export class ProjectDialogComponent {
   public project: Project;

@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 export interface PeriodicElement {
   name: string;
   no: number;
@@ -106,7 +109,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
     selector: 'app-material-table',
     templateUrl: './material-table.component.html',
     styleUrls: ['./material-table.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, MatFormField, MatLabel, MatInput]
 })
 export class MaterialTableComponent implements OnInit {
   displayedColumns: string[] = [

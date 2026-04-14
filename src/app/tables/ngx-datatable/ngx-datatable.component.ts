@@ -1,24 +1,26 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DatatableComponent, SortType } from '@swimlane/ngx-datatable';
-import {
-  UntypedFormGroup,
-  UntypedFormBuilder,
-  UntypedFormControl,
-  Validators,
-} from '@angular/forms';
+import { DatatableComponent, SortType, NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatSnackBar,
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { NgxDatable } from './ngx-datatable.model';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { MatMiniFabButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel, MatSuffix, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
 // import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 // declare const M: any;
 @Component({
     selector: 'app-ngx-datatable',
     templateUrl: './ngx-datatable.component.html',
     styleUrls: ['./ngx-datatable.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, MatMiniFabButton, MatIcon, NgxDatatableModule, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatSuffix, MatError, MatSelect, MatOption, MatButton]
 })
 export class NgxDatatableComponent implements OnInit {
   @ViewChild(DatatableComponent, { static: false }) table!: DatatableComponent;

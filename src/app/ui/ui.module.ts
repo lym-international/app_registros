@@ -23,9 +23,14 @@ import { SimpleDialogComponent } from './modal/simpleDialog.component';
 import { DialogformComponent } from './modal/dialogform/dialogform.component';
 import { BottomSheetOverviewExampleSheetComponent } from './bottom-sheet/bottom-sheet.component';
 import { ComponentsModule } from '../shared/components/components.module';
-import { SharedModule } from '../shared/shared.module';
+
 @NgModule({
-  declarations: [
+    imports: [
+    CommonModule,
+    UiRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ComponentsModule,
     AlertsComponent,
     BadgeComponent,
     ButtonsComponent,
@@ -46,14 +51,6 @@ import { SharedModule } from '../shared/shared.module';
     SimpleDialogComponent,
     DialogformComponent,
     BottomSheetOverviewExampleSheetComponent,
-  ],
-  imports: [
-    CommonModule,
-    UiRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ComponentsModule,
-    SharedModule,
-  ],
+],
 })
 export class UiModule {}

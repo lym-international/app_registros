@@ -6,8 +6,8 @@ describe("MaterialTableComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [MaterialTableComponent],
-      }).compileComponents();
+    declarations: [MaterialTableComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

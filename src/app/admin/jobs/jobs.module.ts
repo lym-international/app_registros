@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ComponentsModule } from '@shared/components/components.module';
-import { SharedModule } from '@shared';
+
 
 import { JobsRoutingModule } from './jobs-routing.module';
 import { JobsListComponent } from './jobs-list/jobs-list.component';
@@ -24,7 +24,12 @@ import { DeleteDialogComponent as ShortlistDeleteComponent } from './shortlist/d
 import { FormDialogComponent as ShortlistFormDialogComponent } from './shortlist/dialogs/form-dialog/form-dialog.component';
 
 @NgModule({
-  declarations: [
+    imports: [
+    CommonModule,
+    JobsRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ComponentsModule,
     JobsListComponent,
     DeleteDialogComponent,
     FormDialogComponent,
@@ -37,17 +42,8 @@ import { FormDialogComponent as ShortlistFormDialogComponent } from './shortlist
     ShortlistComponent,
     ShortlistDeleteComponent,
     ShortlistFormDialogComponent,
-  ],
-  imports: [
-    CommonModule,
-    JobsRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ComponentsModule,
-    SharedModule,
-  ],
-  providers: [
-  ],
+],
+    providers: [],
 })
 export class JobsModule {}
 

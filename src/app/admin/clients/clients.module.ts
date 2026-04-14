@@ -9,25 +9,22 @@ import { DeleteDialogComponent } from './all-clients/dialog/delete/delete.compon
 import { ClientRoutingModule } from './clients-routing.module';
 import { AllclientComponent } from './all-clients/all-clients.component';
 import { ComponentsModule } from '@shared/components/components.module';
-import { SharedModule } from '@shared';
+
 
 @NgModule({
-  declarations: [
-    AllclientComponent,
-    FormDialogComponent,
-    DeleteDialogComponent,
-    AddClientComponent,
-    EditClientComponent,
-  ],
-  imports: [
+    imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     ClientRoutingModule,
     ComponentsModule,
-    SharedModule,
-  ],
-  providers: [ClientsService],
+    AllclientComponent,
+    FormDialogComponent,
+    DeleteDialogComponent,
+    AddClientComponent,
+    EditClientComponent,
+],
+    providers: [ClientsService],
 })
 export class ClientModule {}
 

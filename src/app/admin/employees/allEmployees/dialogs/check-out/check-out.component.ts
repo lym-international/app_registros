@@ -1,19 +1,15 @@
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent } from '@angular/material/dialog';
 import { Component, Inject, OnInit } from '@angular/core';
-import {
-  UntypedFormControl,
-  Validators,
-  UntypedFormGroup,
-  UntypedFormBuilder,
-  FormControl,
-  FormGroup,
-  ValidatorFn,
-} from '@angular/forms';
+import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormBuilder, FormControl, FormGroup, ValidatorFn, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Employees } from '../../employees.model';
 import { formatDate } from '@angular/common';
 import { CheckoutValidatorService } from 'app/_services/checkout-validator.service';
 import { ShareStartDateService } from 'app/_services/share-start-date.service';
 import { GeolocationService } from 'app/_services/geolocation.service';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { DatetimePickerComponent } from '../../../../../shared/components/datetime-picker/datetime-picker.component';
 //import { CheckOutModel } from './check-out.model';
 export interface DialogData {
   id: number;
@@ -25,7 +21,7 @@ export interface DialogData {
     selector: 'app-check-out',
     templateUrl: './check-out.component.html',
     styleUrls: ['./check-out.component.scss'],
-    standalone: false
+    imports: [MatIconButton, MatIcon, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, DatetimePickerComponent, MatButton]
 })
 export class CheckOutComponent implements OnInit{
   action: string;

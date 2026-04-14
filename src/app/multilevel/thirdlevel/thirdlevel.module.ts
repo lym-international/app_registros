@@ -6,7 +6,6 @@ import { Third1Component } from './third1/third1.component';
 import { ComponentsModule } from '@shared/components/components.module';
 
 @NgModule({
-  declarations: [Third1Component],
-  imports: [CommonModule, ThirdlevelRoutingModule, ComponentsModule],
+    imports: [CommonModule, ThirdlevelRoutingModule, ComponentsModule, Third1Component],
 })
 export class ThirdlevelModule {}

@@ -6,8 +6,8 @@ describe("EditHolidayComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [EditHolidayComponent],
-      }).compileComponents();
+    declarations: [EditHolidayComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

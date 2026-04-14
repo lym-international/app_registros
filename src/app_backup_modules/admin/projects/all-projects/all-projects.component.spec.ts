@@ -6,8 +6,8 @@ describe("ViewprojectsComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ViewprojectsComponent],
-      }).compileComponents();
+    imports: [ViewprojectsComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

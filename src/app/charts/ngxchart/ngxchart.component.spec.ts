@@ -6,8 +6,8 @@ describe("NgxchartComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [NgxchartComponent],
-      }).compileComponents();
+    imports: [NgxchartComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

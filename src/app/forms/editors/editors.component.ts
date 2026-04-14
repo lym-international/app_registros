@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { ClassicEditor, Bold, Essentials, Italic, Paragraph, Undo, Heading, Link, List } from 'ckeditor5';
 import type { EditorConfig } from 'ckeditor5';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 @Component({
     selector: 'app-editors',
     templateUrl: './editors.component.html',
     styleUrls: ['./editors.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, CKEditorModule]
 })
 export class EditorsComponent {
   public Editor = ClassicEditor;

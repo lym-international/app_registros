@@ -1,10 +1,14 @@
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent } from '@angular/material/dialog';
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
-import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import { GeolocationService } from 'app/_services/geolocation.service';
 import { ShareScheduledTimeService } from 'app/_services/share-scheduled-time.service';
 import { ShareTimeDifferenceInMinutesService } from 'app/_services/share-time-difference-in-minutes.service';
+import { MatIconButton, MatButton, MatMiniFabButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { DatetimePickerComponent } from '../../../../../shared/components/datetime-picker/datetime-picker.component';
 
 export interface DialogData {
   id: number;
@@ -15,7 +19,7 @@ export interface DialogData {
     selector: 'app-check-in-admin-employees',
     templateUrl: './check-in-admin-employees.component.html',
     styleUrls: ['./check-in-admin-employees.component.scss'],
-    standalone: false
+    imports: [MatIconButton, MatIcon, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, DatetimePickerComponent, MatButton, MatMiniFabButton]
 })
 export class CheckInAdminEmployeesComponent implements OnInit {
   action: string;

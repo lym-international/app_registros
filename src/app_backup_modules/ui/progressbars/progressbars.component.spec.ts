@@ -6,8 +6,8 @@ describe("ProgressbarsComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ProgressbarsComponent],
-      }).compileComponents();
+    declarations: [ProgressbarsComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

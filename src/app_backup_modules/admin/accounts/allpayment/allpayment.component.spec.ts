@@ -6,8 +6,8 @@ describe("AllpaymentComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [AllpaymentComponent],
-      }).compileComponents();
+    declarations: [AllpaymentComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

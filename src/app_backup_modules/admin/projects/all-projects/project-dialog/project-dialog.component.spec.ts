@@ -27,7 +27,7 @@ describe("ProjectDialogComponent", () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
+    imports: [
         NoopAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
@@ -41,20 +41,20 @@ describe("ProjectDialogComponent", () => {
         MatIconModule,
         MatSelectModule,
         MatSnackBarModule,
-      ],
-      declarations: [ProjectDialogComponent],
-      providers: [
+    ],
+    declarations: [ProjectDialogComponent],
+    providers: [
         {
-          provide: MatDialogRef,
-          useValue: {},
+            provide: MatDialogRef,
+            useValue: {},
         },
         {
-          provide: MAT_DIALOG_DATA,
-          useValue: {},
+            provide: MAT_DIALOG_DATA,
+            useValue: {},
         },
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    }).compileComponents();
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+}).compileComponents();
   }));
 
   beforeEach(() => {

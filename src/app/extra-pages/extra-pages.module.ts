@@ -8,22 +8,19 @@ import { FaqsComponent } from './faqs/faqs.component';
 import { BlankComponent } from './blank/blank.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ComponentsModule } from '../shared/components/components.module';
-import { SharedModule } from '../shared/shared.module';
+
 @NgModule({
-  declarations: [
-    ProfileComponent,
-    PricingComponent,
-    InvoiceComponent,
-    FaqsComponent,
-    BlankComponent,
-  ],
-  imports: [
+    imports: [
     CommonModule,
     ExtraPagesRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     ComponentsModule,
-    SharedModule,
-  ],
+    ProfileComponent,
+    PricingComponent,
+    InvoiceComponent,
+    FaqsComponent,
+    BlankComponent,
+],
 })
 export class ExtraPagesModule {}

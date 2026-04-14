@@ -11,10 +11,10 @@ import { CalendarComponent } from './calendar.component';
 import { FormDialogComponent as calFormComponent } from './dialogs/form-dialog/form-dialog.component';
 
 import { ComponentsModule } from '../shared/components/components.module';
-import { SharedModule } from '../shared/shared.module';
+
 
 @NgModule({
-  imports: [
+    imports: [
     CommonModule,
     FormsModule,
     CalendarRoutingModule,
@@ -24,12 +24,11 @@ import { SharedModule } from '../shared/shared.module';
     //OwlDateTimeModule,
     //OwlNativeDateTimeModule,
     ComponentsModule,
-    SharedModule,
     MatDatepickerModule,
     MatNativeDateModule,
-  ],
-  declarations: [CalendarComponent, calFormComponent],
-  providers: [CalendarService],
+    CalendarComponent, calFormComponent,
+],
+    providers: [CalendarService],
 })
 export class CalendarsModule {}
 

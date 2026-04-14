@@ -8,8 +8,8 @@ describe('LeaveBalanceComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LeaveBalanceComponent ]
-    })
+    imports: [LeaveBalanceComponent]
+})
     .compileComponents();
   });
 

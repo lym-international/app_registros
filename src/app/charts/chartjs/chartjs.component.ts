@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
     selector: 'app-chartjs',
     templateUrl: './chartjs.component.html',
     styleUrls: ['./chartjs.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, BaseChartDirective]
 })
 export class ChartjsComponent {
   constructor() {

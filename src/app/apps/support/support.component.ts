@@ -1,6 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FeatherIconsComponent } from '../../shared/components/feather-icons/feather-icons.component';
 export interface PeriodicElement {
   checked: boolean;
   imageUrl: string;
@@ -216,7 +222,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
     selector: 'app-support',
     templateUrl: './support.component.html',
     styleUrls: ['./support.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatCheckbox, FormsModule, MatIconButton, MatTooltip, FeatherIconsComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator]
 })
 export class SupportComponent implements OnInit {
   displayedColumns: string[] = [

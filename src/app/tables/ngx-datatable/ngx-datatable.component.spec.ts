@@ -6,8 +6,8 @@ describe("NgxDatatableComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [NgxDatatableComponent],
-      }).compileComponents();
+    imports: [NgxDatatableComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

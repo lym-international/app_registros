@@ -7,12 +7,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
- 
-  imports: [CommonModule, AdminRoutingModule,  MatDialogModule],
- 
-  declarations: [
-       RoleChoiceModalComponent
- 
-  ],
+    imports: [CommonModule, AdminRoutingModule, MatDialogModule, RoleChoiceModalComponent],
 })
 export class AdminModule {}

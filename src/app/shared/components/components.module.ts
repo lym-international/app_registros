@@ -56,32 +56,30 @@ const MAT_MODULES = [
 ];
 
 @NgModule({
-  declarations: [
-    FileUploadComponent,
-    BreadcrumbComponent,
-    DatetimePickerComponent,
-  ],
-  imports: [
-    CommonModule,
-    RouterModule,
-    FormsModule,
-    ReactiveFormsModule,
-    FeatherIconsModule,
-    ...MAT_MODULES,
-  ],
-  exports: [
-    CommonModule,
-    RouterModule,
-    FormsModule,
-    ReactiveFormsModule,
-    FeatherIconsModule,
-    ...MAT_MODULES,
-    FileUploadComponent,
-    BreadcrumbComponent,
-    DatetimePickerComponent,
-  ],
-  providers: [
-    { provide: LOCALE_ID, useValue: 'en-US' }
-  ]
+    imports: [
+        CommonModule,
+        RouterModule,
+        FormsModule,
+        ReactiveFormsModule,
+        FeatherIconsModule,
+        ...MAT_MODULES,
+        FileUploadComponent,
+        BreadcrumbComponent,
+        DatetimePickerComponent,
+    ],
+    exports: [
+        CommonModule,
+        RouterModule,
+        FormsModule,
+        ReactiveFormsModule,
+        FeatherIconsModule,
+        ...MAT_MODULES,
+        FileUploadComponent,
+        BreadcrumbComponent,
+        DatetimePickerComponent,
+    ],
+    providers: [
+        { provide: LOCALE_ID, useValue: 'en-US' }
+    ]
 })
 export class ComponentsModule {}

@@ -19,8 +19,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 @Component({
     selector: 'app-role-choice-modal',
     templateUrl: './role-choice-modal.component.html',
-    styleUrls: ['./role-choice-modal.component.scss'],
-    standalone: false
+    styleUrls: ['./role-choice-modal.component.scss']
 })
 export class RoleChoiceModalComponent implements OnInit {
   @Output() roleChosen = new EventEmitter<string>();

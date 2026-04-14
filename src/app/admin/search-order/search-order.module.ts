@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ComponentsModule } from '@shared/components/components.module';
-import { SharedModule } from '@shared';
+
 
 import { SearchOrderRoutingModule } from './search-order-routing.module';
 import { SearchOrderComponent } from './search-order.component';
@@ -17,19 +17,17 @@ import { OcultarSidebarService } from 'app/_services/ocultar-sidebar.service';
 
 
 @NgModule({
-  declarations: [SearchOrderComponent],
-  imports: [
+    imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     ComponentsModule,
-    SharedModule,
     SearchOrderRoutingModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-  ],
-  
-  providers: [OrderDataService, OcultarSidebarService],
+    SearchOrderComponent,
+],
+    providers: [OrderDataService, OcultarSidebarService],
 })
 export class SearchOrderModule {}

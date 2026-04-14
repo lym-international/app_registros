@@ -6,8 +6,8 @@ describe("SnackbarComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [SnackbarComponent],
-      }).compileComponents();
+    imports: [SnackbarComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

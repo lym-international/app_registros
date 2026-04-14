@@ -17,10 +17,18 @@ import { AddprojectsComponent } from './add-project/add-project.component';
 import { ProjectDetailsComponent } from './project-details/project-details.component';
 import { ComponentsModule } from '@shared/components/components.module';
 import { EstimatesComponent } from './estimates/estimates.component';
-import { SharedModule } from '@shared';
+
 
 @NgModule({
-  declarations: [
+    imports: [
+    CommonModule,
+    ProjectsRoutingModule,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    DragDropModule,
+    CKEditorModule,
+    ComponentsModule,
     AddprojectsComponent,
     AllprojectsComponent,
     BoardComponent,
@@ -31,19 +39,8 @@ import { SharedModule } from '@shared';
     EstimatesComponent,
     FormDialogComponent,
     DeleteDialogComponent,
-  ],
-  imports: [
-    CommonModule,
-    ProjectsRoutingModule,
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    DragDropModule,
-    CKEditorModule,
-    ComponentsModule,
-    SharedModule,
-  ],
-  providers: [EstimatesService],
+],
+    providers: [EstimatesService],
 })
 export class ProjectsModule {}
 

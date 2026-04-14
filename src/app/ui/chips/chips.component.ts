@@ -1,13 +1,14 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
-import {
-  MatAutocompleteSelectedEvent,
-  MatAutocomplete,
-} from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteSelectedEvent, MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/material/autocomplete';
+import { MatChipInputEvent, MatChipListbox, MatChipOption, MatChipGrid, MatChipRow, MatChipRemove, MatChipInput, MatChip, MatChipAvatar } from '@angular/material/chips';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { AsyncPipe } from '@angular/common';
 export interface ChipColor {
   name: string;
   color: string;
@@ -19,7 +20,7 @@ export interface Fruit {
     selector: 'app-chips',
     templateUrl: './chips.component.html',
     styleUrls: ['./chips.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, MatChipListbox, MatChipOption, FormsModule, MatFormField, MatLabel, MatChipGrid, MatChipRow, MatChipRemove, MatIcon, MatChipInput, MatAutocompleteTrigger, ReactiveFormsModule, MatAutocomplete, MatOption, MatChip, MatChipAvatar, AsyncPipe]
 })
 export class ChipsComponent {
   visible = true;

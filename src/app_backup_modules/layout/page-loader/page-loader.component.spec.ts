@@ -6,8 +6,8 @@ describe("PageLoaderComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [PageLoaderComponent],
-      }).compileComponents();
+    declarations: [PageLoaderComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

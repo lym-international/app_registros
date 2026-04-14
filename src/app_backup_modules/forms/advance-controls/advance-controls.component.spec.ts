@@ -6,8 +6,8 @@ describe("AdvanceControlsComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [AdvanceControlsComponent],
-      }).compileComponents();
+    declarations: [AdvanceControlsComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

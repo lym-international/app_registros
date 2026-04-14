@@ -1,18 +1,15 @@
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent } from '@angular/material/dialog';
 import { Component, ElementRef, EventEmitter, Inject, OnInit } from '@angular/core';
-import {
-  UntypedFormControl,
-  Validators,
-  UntypedFormGroup,
-  UntypedFormBuilder,
-  FormControl,
-  FormGroup,
-} from '@angular/forms';
+import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 //import { CheckInModel } from './check-in.model';
 import { formatDate } from '@angular/common';
 import { CheckoutValidatorService } from 'app/_services/checkout-validator.service';
 import { ShareStartDateService } from 'app/_services/share-start-date.service';
 import { GeolocationService } from 'app/_services/geolocation.service';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { DatetimePickerComponent } from '../../../../../shared/components/datetime-picker/datetime-picker.component';
 
 
 export interface DialogData {
@@ -24,7 +21,7 @@ export interface DialogData {
     selector: 'app-check-in',
     templateUrl: './check-in.component.html',
     styleUrls: ['./check-in.component.scss'],
-    standalone: false
+    imports: [MatIconButton, MatIcon, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, DatetimePickerComponent, MatButton]
 })
 export class CheckInComponent implements OnInit {
   action: string;

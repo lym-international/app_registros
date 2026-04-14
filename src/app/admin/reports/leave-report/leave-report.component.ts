@@ -2,18 +2,23 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { LeaveReportService } from './leave-report.service';
 import { HttpClient } from '@angular/common/http';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject, fromEvent, merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { LeaveReport } from './leave-report.model';
+import { BreadcrumbComponent } from '../../../shared/components/breadcrumb/breadcrumb.component';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { NgClass, DatePipe } from '@angular/common';
+import { MatRipple } from '@angular/material/core';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-leave-report',
     templateUrl: './leave-report.component.html',
     styleUrls: ['./leave-report.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, NgClass, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatRipple, MatProgressSpinner, MatPaginator, DatePipe]
 })
 export class LeaveReportComponent
   extends UnsubscribeOnDestroyAdapter

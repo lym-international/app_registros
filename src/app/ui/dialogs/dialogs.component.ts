@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import Swal from 'sweetalert2';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'app-dialogs',
     templateUrl: './dialogs.component.html',
     styleUrls: ['./dialogs.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, MatButton]
 })
 export class DialogsComponent {
   constructor() {

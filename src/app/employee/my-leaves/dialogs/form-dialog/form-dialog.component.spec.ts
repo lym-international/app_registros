@@ -8,8 +8,8 @@ describe('FormDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FormDialogComponent ]
-    })
+    declarations: [FormDialogComponent]
+})
     .compileComponents();
   });
 

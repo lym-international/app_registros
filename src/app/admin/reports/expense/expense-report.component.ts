@@ -2,18 +2,23 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ExpenseReportService } from './expense-report.service';
 import { HttpClient } from '@angular/common/http';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject, fromEvent, merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { ExpenseReport } from './expense-report.model';
+import { BreadcrumbComponent } from '../../../shared/components/breadcrumb/breadcrumb.component';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatRipple } from '@angular/material/core';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-expense',
     templateUrl: './expense-report.component.html',
     styleUrls: ['./expense-report.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatRipple, MatProgressSpinner, MatPaginator, DatePipe]
 })
 export class ExpenseReportComponent
   extends UnsubscribeOnDestroyAdapter

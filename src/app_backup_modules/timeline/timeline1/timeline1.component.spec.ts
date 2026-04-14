@@ -6,8 +6,8 @@ describe("Timeline1Component", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [Timeline1Component],
-      }).compileComponents();
+    declarations: [Timeline1Component],
+}).compileComponents();
     })
   );
   beforeEach(() => {

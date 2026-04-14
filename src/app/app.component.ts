@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { Event, Router, NavigationStart, NavigationEnd } from '@angular/router';
-import { AuthenticationService } from './_services/authentication.service';//Jairo
+import { Event, Router, NavigationStart, NavigationEnd, RouterOutlet } from '@angular/router';
+import { AuthenticationService } from './_services/authentication.service';
+import { PageLoaderComponent } from './layout/page-loader/page-loader.component';//Jairo
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    standalone: false
+    imports: [PageLoaderComponent, RouterOutlet]
 })
 export class AppComponent {
 

@@ -1,16 +1,7 @@
 
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent } from '@angular/material/dialog';
 import { Component, EventEmitter, Inject, OnInit, Input } from '@angular/core';
-import {
-  UntypedFormControl,
-  Validators,
-  UntypedFormGroup,
-  UntypedFormBuilder,
-  FormControl,
-  FormGroup,
-  ValidatorFn,
-  AbstractControl,
-} from '@angular/forms';
+import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormBuilder, FormControl, FormGroup, ValidatorFn, AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 //import { CheckInModel } from './check-in.model';
 
 import { formatDate } from '@angular/common';
@@ -18,6 +9,12 @@ import { formatDate } from '@angular/common';
 //import { AllActionsModel } from './all-actions.model';
 import { ShareStartDateService } from '../../../../../_services/share-start-date.service';
 import { GeolocationService } from 'app/_services/geolocation.service';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { DatetimePickerComponent } from '../../../../../shared/components/datetime-picker/datetime-picker.component';
+import { MatFormField, MatLabel, MatSuffix, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 
 export interface DialogData {
   id: number;
@@ -28,7 +25,7 @@ export interface DialogData {
     selector: 'app-all-actions',
     templateUrl: './all-actions.component.html',
     styleUrls: ['./all-actions.component.scss'],
-    standalone: false
+    imports: [MatIconButton, MatIcon, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, DatetimePickerComponent, MatFormField, MatLabel, MatInput, MatSuffix, MatError, MatButton]
 })
 export class AllActionsComponent implements OnInit{
 

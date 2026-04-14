@@ -9,25 +9,22 @@ import { FormDialogComponent } from './all-holidays/dialog/form-dialog/form-dial
 import { EditHolidayComponent } from './edit-holiday/edit-holiday.component';
 import { AddHolidayComponent } from './add-holiday/add-holiday.component';
 import { ComponentsModule } from '@shared/components/components.module';
-import { SharedModule } from '@shared';
+
 
 @NgModule({
-  declarations: [
-    AllHolidayComponent,
-    DeleteDialogComponent,
-    FormDialogComponent,
-    EditHolidayComponent,
-    AddHolidayComponent,
-  ],
-  imports: [
+    imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     HolidayRoutingModule,
     ComponentsModule,
-    SharedModule,
-  ],
-  providers: [HolidayService],
+    AllHolidayComponent,
+    DeleteDialogComponent,
+    FormDialogComponent,
+    EditHolidayComponent,
+    AddHolidayComponent,
+],
+    providers: [HolidayService],
 })
 export class HolidayModule {}
 

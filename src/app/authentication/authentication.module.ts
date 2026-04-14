@@ -9,27 +9,22 @@ import { SignupComponent } from './signup/signup.component';
 import { LockedComponent } from './locked/locked.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SharedModule } from '../shared/shared.module';
+
 //import { MatDialogModule } from '@angular/material/dialog';
 //import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
-  declarations: [
+    imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AuthenticationRoutingModule,
     Page500Component,
     Page404Component,
     SigninComponent,
     SignupComponent,
     LockedComponent,
     ForgotPasswordComponent,
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AuthenticationRoutingModule,
-    SharedModule,
-    //MatDialogModule,
-    //MatSnackBarModule,
-  ],
+],
 })
 export class AuthenticationModule {}

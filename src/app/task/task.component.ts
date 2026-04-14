@@ -1,19 +1,27 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import {
-  UntypedFormGroup,
-  UntypedFormControl,
-  UntypedFormBuilder,
-} from '@angular/forms';
-import { MatSidenav } from '@angular/material/sidenav';
+import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag, CdkDragHandle, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
+import { UntypedFormGroup, UntypedFormControl, UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
 import { Task } from './task.model';
+import { BreadcrumbComponent } from '../shared/components/breadcrumb/breadcrumb.component';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatSelect } from '@angular/material/select';
+import { MatOption } from '@angular/material/autocomplete';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { ViewportAdapter, NgScrollbar } from 'ngx-scrollbar';
+import { NgClass, DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-task',
     templateUrl: './task.component.html',
     styleUrls: ['./task.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, MatButton, MatSidenavContainer, MatSidenav, MatIconButton, MatTooltip, MatIcon, FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatLabel, MatSuffix, MatCheckbox, MatSelect, MatOption, MatDatepickerInput, MatDatepickerToggle, MatDatepicker, MatSidenavContent, ViewportAdapter, NgScrollbar, CdkDropList, CdkDrag, CdkDragHandle, CdkDragPlaceholder, NgClass, DatePipe]
 })
 export class TaskComponent {
   mode = new UntypedFormControl('side');

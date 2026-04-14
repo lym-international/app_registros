@@ -20,6 +20,11 @@ import { Position } from 'app/interfaces/position.interface';
 import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
 import { RegistrationService } from 'app/_services/registration.service';
 import { OrderService } from 'app/_services/order.service';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { ViewportAdapter, NgScrollbar } from 'ngx-scrollbar';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -44,7 +49,7 @@ export type ChartOptions = {
     selector: 'app-dashboard-lm',
     templateUrl: './dashboard-lm.component.html',
     styleUrls: ['./dashboard-lm.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, MatCard, MatCardContent, MatCardTitle, MatTooltip, MatProgressBar, ViewportAdapter, NgScrollbar]
 })
 export class DashboardLmComponent implements OnInit {
   public lineChartOptions!: Partial<ChartOptions>;

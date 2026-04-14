@@ -6,8 +6,8 @@ describe("ExpansionPanelComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ExpansionPanelComponent],
-      }).compileComponents();
+    imports: [ExpansionPanelComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

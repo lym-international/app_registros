@@ -8,24 +8,21 @@ import { TicketDetailsComponent } from './ticket-details/ticket-details.componen
 import { DeleteDialogComponent } from './tickets/dialog/delete/delete.component';
 import { FormDialogComponent } from './tickets/dialog/form-dialog/form-dialog.component';
 import { ComponentsModule } from '@shared/components/components.module';
-import { SharedModule } from '@shared';
+
 
 @NgModule({
-  declarations: [
-    TicketsComponent,
-    TicketDetailsComponent,
-    DeleteDialogComponent,
-    FormDialogComponent,
-  ],
-  imports: [
+    imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     SupportsRoutingModule,
     ComponentsModule,
-    SharedModule,
-  ],
-  providers: [TicketsService],
+    TicketsComponent,
+    TicketDetailsComponent,
+    DeleteDialogComponent,
+    FormDialogComponent,
+],
+    providers: [TicketsService],
 })
 export class SupportsModule {}
 

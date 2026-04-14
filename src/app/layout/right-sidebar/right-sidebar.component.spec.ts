@@ -6,8 +6,8 @@ describe("RightSidebarComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [RightSidebarComponent],
-      }).compileComponents();
+    imports: [RightSidebarComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

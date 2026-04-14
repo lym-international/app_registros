@@ -6,8 +6,8 @@ describe("ReadMailComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ReadMailComponent],
-      }).compileComponents();
+    declarations: [ReadMailComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

@@ -8,8 +8,8 @@ describe('CloseEventComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CloseEventComponent]
-    });
+    imports: [CloseEventComponent]
+});
     fixture = TestBed.createComponent(CloseEventComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

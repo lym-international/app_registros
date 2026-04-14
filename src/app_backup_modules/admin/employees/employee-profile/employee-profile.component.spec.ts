@@ -6,8 +6,8 @@ describe("EmployeeProfileComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [EmployeeProfileComponent],
-      }).compileComponents();
+    declarations: [EmployeeProfileComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

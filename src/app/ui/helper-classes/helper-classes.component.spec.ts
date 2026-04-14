@@ -6,8 +6,8 @@ describe("HelperClassesComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [HelperClassesComponent],
-      }).compileComponents();
+    imports: [HelperClassesComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

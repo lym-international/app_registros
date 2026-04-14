@@ -9,25 +9,22 @@ import { FormDialogComponent } from './allpayment/dialog/form-dialog/form-dialog
 import { DeleteDialogComponent } from './allpayment/dialog/delete/delete.component';
 import { AccountsRoutingModule } from './accounts-routing.module';
 import { ComponentsModule } from '@shared/components/components.module';
-import { SharedModule } from '@shared';
+
 
 @NgModule({
-  declarations: [
-    AddPaymentComponent,
-    InvoiceComponent,
-    AllpaymentComponent,
-    FormDialogComponent,
-    DeleteDialogComponent,
-  ],
-  imports: [
+    imports: [
     CommonModule,
     AccountsRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     ComponentsModule,
-    SharedModule,
-  ],
-  providers: [PaymentService],
+    AddPaymentComponent,
+    InvoiceComponent,
+    AllpaymentComponent,
+    FormDialogComponent,
+    DeleteDialogComponent,
+],
+    providers: [PaymentService],
 })
 export class AccountsModule {}
 

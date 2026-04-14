@@ -6,8 +6,8 @@ describe("CalendarComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [CalendarComponent],
-      }).compileComponents();
+    imports: [CalendarComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

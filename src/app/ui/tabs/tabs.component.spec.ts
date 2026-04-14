@@ -6,8 +6,8 @@ describe("TabsComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [TabsComponent],
-      }).compileComponents();
+    imports: [TabsComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

@@ -6,13 +6,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SecondLevelRoutingModule } from './secondlevel-routing.module';
 import { ComponentsModule } from '@shared/components/components.module';
 @NgModule({
-  declarations: [Second1Component, Second2Component],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    SecondLevelRoutingModule,
-    ComponentsModule,
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        SecondLevelRoutingModule,
+        ComponentsModule,
+        Second1Component, Second2Component,
+    ],
 })
 export class SecondLevelModule {}

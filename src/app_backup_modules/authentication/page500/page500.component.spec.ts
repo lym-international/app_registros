@@ -6,8 +6,8 @@ describe("Page500Component", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [Page500Component],
-      }).compileComponents();
+    declarations: [Page500Component],
+}).compileComponents();
     })
   );
   beforeEach(() => {

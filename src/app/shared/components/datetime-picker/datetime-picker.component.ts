@@ -12,6 +12,11 @@ import { takeUntil } from 'rxjs/operators';
 
 import { registerLocaleData } from '@angular/common';
 import localeEn from '@angular/common/locales/en';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { MatCalendar } from '@angular/material/datepicker';
+import { MatButton } from '@angular/material/button';
 
 registerLocaleData(localeEn);
 
@@ -24,7 +29,7 @@ registerLocaleData(localeEn);
             useExisting: forwardRef(() => DatetimePickerComponent),
             multi: true
         }],
-    standalone: false
+    imports: [MatFormField, MatLabel, MatInput, MatIcon, MatSuffix, MatCalendar, MatButton]
 })
 export class DatetimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @Input() label = 'Date & Time';   // ← "CheckIn" o "CheckOut"

@@ -6,8 +6,8 @@ describe("SignupComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [SignupComponent],
-      }).compileComponents();
+    imports: [SignupComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

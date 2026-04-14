@@ -1,18 +1,16 @@
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogClose } from '@angular/material/dialog';
 import { Component, Inject } from '@angular/core';
 import { EmployeesService } from '../../employees.service';
-import {
-  UntypedFormControl,
-  Validators,
-  UntypedFormGroup,
-  UntypedFormBuilder,
-  FormControl,
-  FormGroup,
-  FormBuilder
-} from '@angular/forms';
+import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormBuilder, FormControl, FormGroup, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Employees } from '../../employees.model';
-import { formatDate } from '@angular/common';
+import { formatDate, KeyValuePipe } from '@angular/common';
 import { NavigationExtras, Router } from '@angular/router';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel, MatSuffix, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { ViewportAdapter, NgScrollbar } from 'ngx-scrollbar';
 
 
 export interface DialogData {
@@ -25,7 +23,7 @@ export interface DialogData {
     selector: 'app-form-dialog:not(c)',
     templateUrl: './form-dialog.component.html',
     styleUrls: ['./form-dialog.component.scss'],
-    standalone: false
+    imports: [MatIconButton, MatIcon, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatSuffix, MatError, ViewportAdapter, NgScrollbar, MatButton, MatDialogClose, KeyValuePipe]
 })
 export class FormDialogComponent {
   action: string;

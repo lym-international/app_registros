@@ -1,14 +1,18 @@
-import { Direction } from '@angular/cdk/bidi';
+import { Direction, Dir } from '@angular/cdk/bidi';
 import { AfterViewInit, Component, Inject, Renderer2, DOCUMENT } from '@angular/core';
 
 import { ConfigService } from '@config';
 import { DirectionService, InConfiguration } from '@core';
+import { HeaderComponent } from '../../header/header.component';
+import { SidebarComponent } from '../../sidebar/sidebar.component';
+import { RightSidebarComponent } from '../../right-sidebar/right-sidebar.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
     selector: 'app-main-layout',
     templateUrl: './main-layout.component.html',
     styleUrls: [],
-    standalone: false
+    imports: [HeaderComponent, SidebarComponent, RightSidebarComponent, Dir, RouterOutlet]
 })
 export class MainLayoutComponent implements AfterViewInit {
   direction!: Direction;

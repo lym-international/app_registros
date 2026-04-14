@@ -6,8 +6,8 @@ describe("DialogsComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [DialogsComponent],
-      }).compileComponents();
+    imports: [DialogsComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

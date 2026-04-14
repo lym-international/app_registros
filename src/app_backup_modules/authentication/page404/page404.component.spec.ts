@@ -6,8 +6,8 @@ describe("Page404Component", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [Page404Component],
-      }).compileComponents();
+    declarations: [Page404Component],
+}).compileComponents();
     })
   );
   beforeEach(() => {

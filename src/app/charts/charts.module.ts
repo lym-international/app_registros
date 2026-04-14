@@ -12,27 +12,24 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { GaugeComponent } from './gauge/gauge.component';
 import { NgxGaugeModule } from 'ngx-gauge';
 import { ComponentsModule } from '../shared/components/components.module';
-import { SharedModule } from '../shared/shared.module';
+
 @NgModule({
-  declarations: [
-    EchartComponent,
-    ChartjsComponent,
-    ApexchartComponent,
-    NgxchartComponent,
-    GaugeComponent,
-  ],
-  imports: [
+    imports: [
     CommonModule,
     ChartsRoutingModule,
     NgxEchartsModule.forRoot({
-      echarts: () => import('echarts'),
+        echarts: () => import('echarts'),
     }),
     BaseChartDirective,
     NgxChartsModule,
     NgApexchartsModule,
     NgxGaugeModule,
     ComponentsModule,
-    SharedModule,
-  ],
+    EchartComponent,
+    ChartjsComponent,
+    ApexchartComponent,
+    NgxchartComponent,
+    GaugeComponent,
+],
 })
 export class ChartsModule {}

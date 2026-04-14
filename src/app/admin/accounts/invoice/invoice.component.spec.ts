@@ -6,8 +6,8 @@ describe("InvoiceComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [InvoiceComponent],
-      }).compileComponents();
+    imports: [InvoiceComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

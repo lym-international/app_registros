@@ -3,7 +3,7 @@ import { EmployeeSalaryService } from './employee-salary/employee-salary.service
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ComponentsModule } from '@shared/components/components.module';
-import { SharedModule } from '@shared';
+
 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PayrollRoutingModule } from './payroll-routing.module';
@@ -13,22 +13,19 @@ import { DeleteDialogComponent } from './employee-salary/dialogs/delete/delete.c
 import { FormDialogComponent } from './employee-salary/dialogs/form-dialog/form-dialog.component';
 
 @NgModule({
-  declarations: [
-    EmployeeSalaryComponent,
-    PayslipComponent,
-    DeleteDialogComponent,
-    FormDialogComponent,
-  ],
-  imports: [
+    imports: [
     CommonModule,
     PayrollRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     ComponentsModule,
-    SharedModule,
     MatProgressSpinnerModule,
-  ],
-  providers: [EmployeeSalaryService],
+    EmployeeSalaryComponent,
+    PayslipComponent,
+    DeleteDialogComponent,
+    FormDialogComponent,
+],
+    providers: [EmployeeSalaryService],
 })
 export class PayrollModule {}
 

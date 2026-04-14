@@ -11,7 +11,7 @@ import { EmployeesService } from './employees.service';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { Employees } from './employees.model';
 import { DataSource } from '@angular/cdk/collections';
 import {
@@ -19,7 +19,7 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import {
   BehaviorSubject,
   fromEvent,
@@ -32,7 +32,7 @@ import { FormDialogComponent } from './dialogs/form-dialog/form-dialog.component
 import { SelectionModel } from '@angular/cdk/collections';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { Direction } from '@angular/cdk/bidi';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass, NgStyle } from '@angular/common';
 import { OrderDataService } from 'app/_services/orderData.service';
 import { CheckInComponent } from './dialogs/check-in/check-in.component';
 import { CheckOutComponent } from './dialogs/check-out/check-out.component';
@@ -56,6 +56,17 @@ import { style } from '@angular/animations';
 import { ApprovalSignatureService } from 'app/_services/approval-signature.service';
 //import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Storage, ref, uploadBytes, getDownloadURL, deleteObject } from '@angular/fire/storage';
+import { BreadcrumbComponent } from '../../../shared/components/breadcrumb/breadcrumb.component';
+import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatMiniFabButton, MatIconButton, MatButton } from '@angular/material/button';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FeatherIconsComponent } from '../../../shared/components/feather-icons/feather-icons.component';
+import { MatRipple } from '@angular/material/core';
+import { GoogleMap, MapMarker } from '@angular/google-maps';
 
 // import { MapMarker } from '@angular/google-maps';
 
@@ -66,7 +77,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
     templateUrl: './allemployees.component.html',
     styleUrls: ['./allemployees.component.scss'],
     providers: [DatePipe],
-    standalone: false
+    imports: [BreadcrumbComponent, MatCard, MatCardContent, MatCardTitle, MatProgressSpinner, MatIcon, MatTooltip, MatMiniFabButton, MatMenu, MatMenuItem, MatMenuTrigger, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, NgClass, MatCheckbox, MatCellDef, MatCell, MatSortHeader, MatIconButton, FeatherIconsComponent, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatRipple, NgStyle, MatPaginator, MatButton, GoogleMap, MapMarker]
 })
 export class AllemployeesComponent
   extends UnsubscribeOnDestroyAdapter

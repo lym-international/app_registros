@@ -1,21 +1,15 @@
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent } from '@angular/material/dialog';
 import { Component, Inject, OnInit } from '@angular/core';
 //import { CalendarService } from '../../calendar.service';
-import {
-  UntypedFormControl,
-  Validators,
-  UntypedFormGroup,
-  UntypedFormBuilder,
-  AsyncValidatorFn,
-  AbstractControl,
-  ValidatorFn,
-  FormControl,
-  FormGroup,
-} from '@angular/forms';
+import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormBuilder, AsyncValidatorFn, AbstractControl, ValidatorFn, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Employees } from '../../employees.model';
 //import { formatDate } from '@angular/common';
 import { BreakModel } from './break.model';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel, MatSuffix, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 //import { Calendar } from '../../calendar.model';
 
 /*export interface DialogData {
@@ -27,7 +21,7 @@ import { MatButton } from '@angular/material/button';
     selector: 'app-break',
     templateUrl: './break.component.html',
     styleUrls: ['./break.component.scss'],
-    standalone: false
+    imports: [MatIconButton, MatIcon, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatSuffix, MatError, MatButton]
 })
 export class BreakComponent implements OnInit{ 
   dialogTitle: string;

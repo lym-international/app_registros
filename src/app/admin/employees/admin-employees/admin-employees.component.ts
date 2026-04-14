@@ -3,7 +3,7 @@ import { EmployeesService } from '../allEmployees/employees.service';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { AdminEmployees } from './admin-employees.model';
 import { DataSource } from '@angular/cdk/collections';
 import {
@@ -20,7 +20,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { Direction } from '@angular/cdk/bidi';
 import { TableExportUtil, TableElement } from '@shared';
-import { DatePipe, formatDate } from '@angular/common';
+import { DatePipe, formatDate, NgClass } from '@angular/common';
 import { OrderDataService } from 'app/_services/orderData.service';
 import { delay } from 'rxjs/operators'; //Jairo
 import { Timestamp } from 'firebase/firestore';
@@ -52,6 +52,15 @@ import { GeolocationService } from 'app/_services/geolocation.service';
 import { ShareScheduledTimeService } from 'app/_services/share-scheduled-time.service';
 import { OrderService } from 'app/_services/order.service';
 import { RegistrationService } from 'app/_services/registration.service';
+import { RouterLink } from '@angular/router';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
+import { MatMiniFabButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatRipple } from '@angular/material/core';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 // import { HeaderComponent } from '../../../layout/header/header.component';
 
 
@@ -78,7 +87,7 @@ export type ChartOptions = {
     templateUrl: './admin-employees.component.html',
     styleUrls: ['./admin-employees.component.scss'],
     providers: [DatePipe],
-    standalone: false
+    imports: [RouterLink, MatTooltip, MatCard, MatCardContent, MatCardTitle, MatMiniFabButton, MatIcon, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, NgClass, MatCheckbox, MatCellDef, MatCell, MatSortHeader, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatRipple, MatProgressSpinner]
 })
 export class AdminEmployeesComponent 
 extends UnsubscribeOnDestroyAdapter 

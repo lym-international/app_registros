@@ -1,10 +1,16 @@
 import { Component } from '@angular/core';
-import { Color, ScaleType } from '@swimlane/ngx-charts';
+import { Color, ScaleType, PieChartModule } from '@swimlane/ngx-charts';
+import { BreadcrumbComponent } from '../../../shared/components/breadcrumb/breadcrumb.component';
+import { MatTabGroup, MatTab, MatTabLabel } from '@angular/material/tabs';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FeatherIconsComponent } from '../../../shared/components/feather-icons/feather-icons.component';
 @Component({
     selector: 'app-employee',
     templateUrl: './employee.component.html',
     styleUrls: ['./employee.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, MatTabGroup, MatTab, MatTabLabel, MatIcon, MatIconButton, MatTooltip, FeatherIconsComponent, PieChartModule]
 })
 export class EmployeeComponent {
   gradient = false;

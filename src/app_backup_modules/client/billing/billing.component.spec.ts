@@ -9,8 +9,8 @@ describe("BillingComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [BillingComponent],
-      }).compileComponents();
+    declarations: [BillingComponent],
+}).compileComponents();
     })
   );
 

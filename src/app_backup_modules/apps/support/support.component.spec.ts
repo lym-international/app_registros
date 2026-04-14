@@ -6,8 +6,8 @@ describe("SupportComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [SupportComponent],
-      }).compileComponents();
+    declarations: [SupportComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, RouterLinkActive, RouterLink } from '@angular/router';
 
 import {
   Component,
@@ -18,13 +18,17 @@ import { Subscription } from 'rxjs';
 import { OrderDataService } from 'app/_services/orderData.service';
 import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
 import { UserRoleService } from 'app/_services/userRole.service';
+import { ViewportAdapter, NgScrollbar } from 'ngx-scrollbar';
+import { NgClass } from '@angular/common';
+import { FeatherModule } from 'angular-feather';
+import { TranslatePipe } from '@ngx-translate/core';
 
 
 @Component({
     selector: 'app-sidebar',
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.scss'],
-    standalone: false
+    imports: [ViewportAdapter, NgScrollbar, RouterLinkActive, RouterLink, NgClass, FeatherModule, TranslatePipe]
 })
 export class SidebarComponent implements OnInit { 
   public sidebarItems!: RouteInfo[];

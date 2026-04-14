@@ -6,8 +6,8 @@ describe("EditClientComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [EditClientComponent],
-      }).compileComponents();
+    imports: [EditClientComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

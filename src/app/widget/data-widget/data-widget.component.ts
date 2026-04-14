@@ -1,10 +1,21 @@
 import { Component } from '@angular/core';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag, CdkDragHandle, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { ViewportAdapter, NgScrollbar } from 'ngx-scrollbar';
+import { MatButton } from '@angular/material/button';
+import { MatTabGroup, MatTab, MatTabLabel } from '@angular/material/tabs';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgClass } from '@angular/common';
 @Component({
     selector: 'app-data-widget',
     templateUrl: './data-widget.component.html',
     styleUrls: ['./data-widget.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, MatProgressBar, ViewportAdapter, NgScrollbar, MatButton, MatTabGroup, MatTab, MatTabLabel, MatFormField, MatInput, CdkDropList, CdkDrag, CdkDragHandle, MatIcon, MatCheckbox, CdkDragPlaceholder, MatTooltip, NgClass]
 })
 export class DataWidgetComponent {
   constructor() {

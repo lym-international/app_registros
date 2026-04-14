@@ -1,10 +1,12 @@
 import { Component, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { FeatherIconsComponent } from '../feather-icons/feather-icons.component';
 
 @Component({
     selector: 'app-breadcrumb',
     templateUrl: './breadcrumb.component.html',
     styleUrls: ['./breadcrumb.component.scss'],
-    standalone: false
+    imports: [RouterLink, FeatherIconsComponent]
 })
 export class BreadcrumbComponent {
   @Input()

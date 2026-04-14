@@ -1,21 +1,15 @@
 
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent } from '@angular/material/dialog';
 import { Component, Inject, OnInit } from '@angular/core';
 //import { CalendarService } from '../../calendar.service';
-import {
-  UntypedFormControl,
-  Validators,
-  UntypedFormGroup,
-  UntypedFormBuilder,
-  AsyncValidatorFn,
-  AbstractControl,
-  ValidatorFn,
-  FormControl,
-  FormGroup,
-} from '@angular/forms';
-import { MatButton } from '@angular/material/button';
+import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormBuilder, AsyncValidatorFn, AbstractControl, ValidatorFn, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButton, MatIconButton, MatMiniFabButton } from '@angular/material/button';
 import { BreakAdminEmployeesModel } from './break-admin-employees.model';
 import { Employees } from 'app/admin/employees/allEmployees/employees.model';
+import { MatIcon } from '@angular/material/icon';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel, MatSuffix, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 
 
 
@@ -24,7 +18,7 @@ import { Employees } from 'app/admin/employees/allEmployees/employees.model';
     selector: 'app-break-admin-employees',
     templateUrl: './break-admin-employees.component.html',
     styleUrls: ['./break-admin-employees.component.scss'],
-    standalone: false
+    imports: [MatIconButton, MatIcon, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatSuffix, MatError, MatButton, MatMiniFabButton]
 })
 export class BreakAdminEmployeesComponent implements OnInit{
   dialogTitle: string;

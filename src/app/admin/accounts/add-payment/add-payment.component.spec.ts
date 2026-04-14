@@ -6,8 +6,8 @@ describe("AddPaymentComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [AddPaymentComponent],
-      }).compileComponents();
+    imports: [AddPaymentComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

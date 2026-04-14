@@ -8,8 +8,8 @@ describe("AttendancesComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [AttendancesComponent],
-      }).compileComponents();
+    declarations: [AttendancesComponent],
+}).compileComponents();
     })
   );
 

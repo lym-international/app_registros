@@ -9,8 +9,8 @@ describe("Second2Component", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [Second2Component],
-      }).compileComponents();
+    declarations: [Second2Component],
+}).compileComponents();
     })
   );
 

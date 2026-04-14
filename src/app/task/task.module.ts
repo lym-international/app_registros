@@ -6,10 +6,10 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 import { TaskRoutingModule } from './task-routing.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ComponentsModule } from '../shared/components/components.module';
-import { SharedModule } from '../shared/shared.module';
+
 
 @NgModule({
-  imports: [
+    imports: [
     CommonModule,
     FormsModule,
     NgScrollbarModule,
@@ -18,8 +18,7 @@ import { SharedModule } from '../shared/shared.module';
     ReactiveFormsModule,
     DragDropModule,
     ComponentsModule,
-    SharedModule,
-  ],
-  declarations: [TaskComponent],
+    TaskComponent,
+],
 })
 export class TaskModule {}

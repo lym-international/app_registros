@@ -6,8 +6,8 @@ describe("Dashboard2Component", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [Dashboard2Component],
-      }).compileComponents();
+    declarations: [Dashboard2Component],
+}).compileComponents();
     })
   );
   beforeEach(() => {

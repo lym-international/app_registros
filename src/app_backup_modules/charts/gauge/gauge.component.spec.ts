@@ -6,8 +6,8 @@ describe("GaugeComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [GaugeComponent],
-      }).compileComponents();
+    declarations: [GaugeComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

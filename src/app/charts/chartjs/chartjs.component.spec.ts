@@ -6,8 +6,8 @@ describe("ChartjsComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ChartjsComponent],
-      }).compileComponents();
+    imports: [ChartjsComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

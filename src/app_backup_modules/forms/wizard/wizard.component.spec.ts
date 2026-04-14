@@ -6,8 +6,8 @@ describe("WizardComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [WizardComponent],
-      }).compileComponents();
+    declarations: [WizardComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

@@ -11,7 +11,7 @@ import { BillingComponent } from './billing/billing.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ComponentsModule } from '../shared/components/components.module';
 import { ChatComponent } from './chat/chat.component';
-import { SharedModule } from '../shared/shared.module';
+
 // âœ… AGREGAR
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -20,22 +20,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    DashboardComponent,
-    BillingComponent,
-    SettingsComponent,
-    ChatComponent,
-  ],
-  imports: [
-  CommonModule,
-  BaseChartDirective,
-  NgxEchartsModule.forRoot({ echarts: () => import('echarts') }),
-  NgScrollbarModule,
-  ClientRoutingModule,
-  NgApexchartsModule,
-  ComponentsModule,   // â† esto trae TODO
-],
-  providers: [MyProjectsService],
+    imports: [
+        CommonModule,
+        BaseChartDirective,
+        NgxEchartsModule.forRoot({ echarts: () => import('echarts') }),
+        NgScrollbarModule,
+        ClientRoutingModule,
+        NgApexchartsModule,
+        ComponentsModule,
+        DashboardComponent,
+        BillingComponent,
+        SettingsComponent,
+        ChatComponent,
+    ],
+    providers: [MyProjectsService],
 })
 export class ClientModule {}
 

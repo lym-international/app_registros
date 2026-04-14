@@ -1,14 +1,19 @@
 import { Component } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup,
-  FormGroupDirective,
-  NgForm,
-  Validators,
-} from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, FormGroupDirective, NgForm, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { ThemePalette } from '@angular/material/core';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { MatFormField, MatLabel, MatSuffix, MatError, MatHint } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatSelect, MatSelectTrigger } from '@angular/material/select';
+import { MatOption, MatOptgroup } from '@angular/material/autocomplete';
+import { MatIcon } from '@angular/material/icon';
+import { FileUploadComponent } from '../../shared/components/file-upload/file-upload.component';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker, MatDatepickerToggleIcon } from '@angular/material/datepicker';
+import { MatButton } from '@angular/material/button';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
 interface Food {
   value: string;
   viewValue: string;
@@ -47,7 +52,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
     selector: 'app-form-controls',
     templateUrl: './form-controls.component.html',
     styleUrls: ['./form-controls.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, MatFormField, MatLabel, MatInput, MatSelect, MatOption, FormsModule, ReactiveFormsModule, MatIcon, FileUploadComponent, MatCheckbox, MatRadioGroup, MatRadioButton, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatButton, MatDatepickerToggleIcon, MatError, MatHint, MatOptgroup, MatSelectTrigger, MatSlideToggle]
 })
 export class FormControlsComponent {
   // Form

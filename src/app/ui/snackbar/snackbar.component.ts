@@ -4,11 +4,13 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'app-snackbar',
     templateUrl: './snackbar.component.html',
     styleUrls: ['./snackbar.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, MatButton]
 })
 export class SnackbarComponent {
   constructor(private snackBar: MatSnackBar) {}

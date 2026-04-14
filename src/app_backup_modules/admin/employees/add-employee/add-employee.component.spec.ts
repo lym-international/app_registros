@@ -6,8 +6,8 @@ describe("AddEmployeeComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [AddEmployeeComponent],
-      }).compileComponents();
+    declarations: [AddEmployeeComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

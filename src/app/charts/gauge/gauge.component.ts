@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { NgxGaugeModule } from 'ngx-gauge';
+import { MatButton } from '@angular/material/button';
 
 
 interface GaugeValues {
@@ -9,7 +12,7 @@ interface GaugeValues {
     selector: 'app-gauge',
     templateUrl: './gauge.component.html',
     styleUrls: ['./gauge.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, NgxGaugeModule, MatButton]
 })
 export class GaugeComponent {
   gaugeValue = 68;

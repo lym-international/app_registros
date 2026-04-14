@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { EChartsOption } from 'echarts';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { NgxEchartsDirective } from 'ngx-echarts';
 
 @Component({
     selector: 'app-echart',
     templateUrl: './echart.component.html',
     styleUrls: ['./echart.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, NgxEchartsDirective]
 })
 export class EchartComponent {
   // line bar chart

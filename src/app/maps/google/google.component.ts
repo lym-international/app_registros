@@ -1,11 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { MapInfoWindow, MapMarker } from '@angular/google-maps';
+import { MapInfoWindow, MapMarker, GoogleMap, MapPolyline, MapTrafficLayer } from '@angular/google-maps';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
 
 @Component({
     selector: 'app-google',
     templateUrl: './google.component.html',
     styleUrls: ['./google.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, GoogleMap, MapMarker, MapInfoWindow, MapPolyline, MapTrafficLayer]
 })
 export class GoogleComponent {
   // bread crumb items

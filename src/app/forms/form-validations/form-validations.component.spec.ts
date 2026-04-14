@@ -6,8 +6,8 @@ describe("FormValidationsComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [FormValidationsComponent],
-      }).compileComponents();
+    imports: [FormValidationsComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

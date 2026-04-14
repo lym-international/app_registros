@@ -1,6 +1,8 @@
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import { Component, Inject } from '@angular/core';
 import { LeadsService } from '../../leads.service';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatButton } from '@angular/material/button';
 
 export interface DialogData {
   id: number;
@@ -13,7 +15,7 @@ export interface DialogData {
     selector: 'app-delete:not(j)',
     templateUrl: './delete.component.html',
     styleUrls: ['./delete.component.scss'],
-    standalone: false
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatDialogActions, MatButton, MatDialogClose]
 })
 export class DeleteDialogComponent {
   constructor(

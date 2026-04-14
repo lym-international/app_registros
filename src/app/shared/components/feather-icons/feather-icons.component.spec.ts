@@ -8,8 +8,8 @@ describe('FeatherIconsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FeatherIconsComponent ]
-    })
+    imports: [FeatherIconsComponent]
+})
     .compileComponents();
   });
 

@@ -13,16 +13,10 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ComponentsModule } from '../shared/components/components.module';
-import { SharedModule } from '@shared';
+
 
 @NgModule({
-  declarations: [
-    ChatComponent,
-    DragDropComponent,
-    ContactGridComponent,
-    SupportComponent,
-  ],
-  imports: [
+    imports: [
     CommonModule,
     AppsRoutingModule,
     NgScrollbarModule,
@@ -32,9 +26,12 @@ import { SharedModule } from '@shared';
     //OwlDateTimeModule,
     //OwlNativeDateTimeModule,
     ComponentsModule,
-    SharedModule,
     MatDatepickerModule,
     MatNativeDateModule,
-  ],
+    ChatComponent,
+    DragDropComponent,
+    ContactGridComponent,
+    SupportComponent,
+],
 })
 export class AppsModule {}

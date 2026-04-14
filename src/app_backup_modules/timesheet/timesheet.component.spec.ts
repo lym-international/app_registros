@@ -8,8 +8,8 @@ describe('TimesheetComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TimesheetComponent]
-    });
+    declarations: [TimesheetComponent]
+});
     fixture = TestBed.createComponent(TimesheetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

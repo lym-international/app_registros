@@ -7,12 +7,12 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { ComponentsModule } from '../shared/components/components.module';
 
 @NgModule({
-  declarations: [GoogleComponent],
-  imports: [
-    CommonModule,
-    MapsRoutingModule,
-    ComponentsModule,
-    GoogleMapsModule,
-  ],
+    imports: [
+        CommonModule,
+        MapsRoutingModule,
+        ComponentsModule,
+        GoogleMapsModule,
+        GoogleComponent,
+    ],
 })
 export class MapsModule {}

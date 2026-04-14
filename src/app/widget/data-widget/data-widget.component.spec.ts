@@ -6,8 +6,8 @@ describe("DataWidgetComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [DataWidgetComponent],
-      }).compileComponents();
+    imports: [DataWidgetComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

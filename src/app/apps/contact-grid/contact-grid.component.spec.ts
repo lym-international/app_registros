@@ -6,8 +6,8 @@ describe("ContactGridComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ContactGridComponent],
-      }).compileComponents();
+    imports: [ContactGridComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

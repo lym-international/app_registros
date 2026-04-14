@@ -9,12 +9,11 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { BaseChartDirective } from 'ng2-charts';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ComponentsModule } from '../shared/components/components.module';
-import { SharedModule } from '../shared/shared.module';
+
 import { MaterialModule } from '../shared/material.module';
 
 @NgModule({
-  declarations: [ChartWidgetComponent, DataWidgetComponent],
-  imports: [
+    imports: [
     CommonModule,
     FormsModule,
     WidgetRoutingModule,
@@ -23,8 +22,8 @@ import { MaterialModule } from '../shared/material.module';
     DragDropModule,
     BaseChartDirective,
     ComponentsModule,
-    SharedModule,
     MaterialModule,
-  ],
+    ChartWidgetComponent, DataWidgetComponent,
+],
 })
 export class WidgetModule {}

@@ -6,8 +6,8 @@ describe("ListGroupComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ListGroupComponent],
-      }).compileComponents();
+    declarations: [ListGroupComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

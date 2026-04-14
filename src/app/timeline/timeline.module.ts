@@ -5,7 +5,6 @@ import { Timeline1Component } from "./timeline1/timeline1.component";
 import { Timeline2Component } from "./timeline2/timeline2.component";
 import { ComponentsModule } from "../shared/components/components.module";
 @NgModule({
-  declarations: [Timeline1Component, Timeline2Component],
-  imports: [CommonModule, TimelineRoutingModule, ComponentsModule],
+    imports: [CommonModule, TimelineRoutingModule, ComponentsModule, Timeline1Component, Timeline2Component],
 })
 export class TimelineModule {}

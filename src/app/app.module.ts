@@ -21,7 +21,7 @@ import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromD
 import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { CoreModule } from '@core';
-import { SharedModule } from '@shared';
+
 import { environment, environment_A } from '../environments/environment';
 import { CloseEventComponent } from './close-event/close-event.component';
 import { TimesheetComponent } from './timesheet/timesheet.component';
@@ -37,48 +37,5 @@ export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
 }
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    HeaderComponent,
-    PageLoaderComponent,
-    SidebarComponent,
-    RightSidebarComponent,
-    AuthLayoutComponent,
-    MainLayoutComponent,
-    CloseEventComponent,
-    TimesheetComponent,
-  ],
-  bootstrap: [AppComponent],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    NgScrollbarModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: createTranslateLoader,
-        deps: [HttpClient],
-      },
-    }),
-    LoadingBarRouterModule,
-    CoreModule,
-    SharedModule,
-    GoogleMapsModule,
-  ],
-  providers: [
-    // âœ… Firebase modular
-    provideFirebaseApp(() => initializeApp(environment_A.firebase)),
-    provideFirestore(() => getFirestore()),
-    provideAuth(() => getAuth()),
-    provideStorage(() => getStorage()),
-    { provide: LocationStrategy, useClass: HashLocationStrategy },
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    fakeBackendProvider,
-    provideHttpClient(withInterceptorsFromDi()),
-  ]
-})
-export class AppModule {}
+
 

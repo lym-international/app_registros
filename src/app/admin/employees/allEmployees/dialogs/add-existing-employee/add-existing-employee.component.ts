@@ -1,4 +1,4 @@
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogClose } from '@angular/material/dialog';
 import {
   Component,
   Inject,
@@ -7,19 +7,15 @@ import {
   HostListener,
 } from '@angular/core';
 import { EmployeesService } from '../../employees.service';
-import {
-  UntypedFormControl,
-  Validators,
-  UntypedFormGroup,
-  UntypedFormBuilder,
-  FormControl,
-  FormGroup,
-  FormBuilder,
-} from '@angular/forms';
+import { UntypedFormControl, Validators, UntypedFormGroup, UntypedFormBuilder, FormControl, FormGroup, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Employees } from '../../employees.model';
-import { formatDate } from '@angular/common';
+import { formatDate, KeyValuePipe } from '@angular/common';
 import { NavigationExtras, Router } from '@angular/router';
 import { UsersService } from 'app/_services/users.service';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { ViewportAdapter, NgScrollbar } from 'ngx-scrollbar';
 
 export interface DialogData {
   id: number;
@@ -31,7 +27,7 @@ export interface DialogData {
     selector: 'app-add-existing-employee',
     templateUrl: './add-existing-employee.component.html',
     styleUrls: ['./add-existing-employee.component.scss'],
-    standalone: false
+    imports: [MatIconButton, MatIcon, MatButton, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, ViewportAdapter, NgScrollbar, MatDialogClose, KeyValuePipe]
 })
 export class AddExistingEmployeeComponent {
   action: string;

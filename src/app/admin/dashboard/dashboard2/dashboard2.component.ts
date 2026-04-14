@@ -1,20 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  ApexAxisChartSeries,
-  ApexChart,
-  ApexXAxis,
-  ApexDataLabels,
-  ApexStroke,
-  ApexMarkers,
-  ApexYAxis,
-  ApexGrid,
-  ApexTitleSubtitle,
-  ApexTooltip,
-  ApexLegend,
-  ApexFill,
-  ApexResponsive,
-  ApexNonAxisChartSeries,
-} from 'ng-apexcharts';
+import { ApexAxisChartSeries, ApexChart, ApexXAxis, ApexDataLabels, ApexStroke, ApexMarkers, ApexYAxis, ApexGrid, ApexTitleSubtitle, ApexTooltip, ApexLegend, ApexFill, ApexResponsive, ApexNonAxisChartSeries, ChartComponent } from 'ng-apexcharts';
+import { BreadcrumbComponent } from '../../../shared/components/breadcrumb/breadcrumb.component';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { ViewportAdapter, NgScrollbar } from 'ngx-scrollbar';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -39,7 +30,7 @@ export type ChartOptions = {
     selector: 'app-dashboard2',
     templateUrl: './dashboard2.component.html',
     styleUrls: ['./dashboard2.component.scss'],
-    standalone: false
+    imports: [BreadcrumbComponent, MatProgressBar, ChartComponent, MatIconButton, MatMenuTrigger, MatIcon, MatMenu, MatMenuItem, ViewportAdapter, NgScrollbar, MatButton]
 })
 export class Dashboard2Component implements OnInit {
   public lineChartOptions!: Partial<ChartOptions>;
