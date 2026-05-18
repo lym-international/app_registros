@@ -150,7 +150,8 @@
                     </div>
                     <div class="body overflow-auto">
                         <div class="responsive_table">
-                            <table mat-table [dataSource]="dataSource" matSort class="mat-cell">
+                           <table mat-table [dataSource]="dataSource || []" matSort class="mat-cell">
+
                                 <!--#table-->
                                 <!-- Checkbox Column -->
                                 <ng-container matColumnDef="select">

@@ -601,6 +601,7 @@ implements OnInit
             dateCheckout: "-",
             dateCheckoutRounded: "-",
             updateUser: this.dataUser.email,
+            updateUserRole: this.authenticationService.getUpdateActorRole(),
             status: 'reseted',
             hours: 0,
             break: 0,
@@ -738,6 +739,7 @@ implements OnInit
             },
             realInTime: result.actualTime,
             updateUser: this.dataUser.email,
+            updateUserRole: this.authenticationService.getUpdateActorRole(),
           };
         }
         return employee;
@@ -884,6 +886,7 @@ implements OnInit
               longitudeOut: coordinates?.longitude,
             },        
             updateUser: this.dataUser.email,
+            updateUserRole: this.authenticationService.getUpdateActorRole(),
             status: 'Checked Out',
             hours: roundedHours.toFixed(2),
           };
@@ -1032,6 +1035,7 @@ if (checkinDate.getTime() > dateStart.getTime()){
           return {
             ...employee,
             updateUser: this.dataUser.email,
+            updateUserRole: this.authenticationService.getUpdateActorRole(),
             break: result.break,
             hours: updatedHours.toFixed(2),
           };

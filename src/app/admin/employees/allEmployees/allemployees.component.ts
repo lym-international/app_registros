@@ -763,6 +763,7 @@ export class AllemployeesComponent
         dateCheckout: '-',
         dateCheckoutRounded: '-',
         updateUser: this.dataUser.email,
+        updateUserRole: this.authenticationService.getUpdateActorRole(),
         hours: 0,
         break: 0,
         in: 'No Data',
@@ -799,6 +800,7 @@ export class AllemployeesComponent
       dateCheckout: '-',
       realCheckin: '-',
       updateUser: this.dataUser.email,
+      updateUserRole: this.authenticationService.getUpdateActorRole(),
       hours: 0,
       break: 0,
       totalHours: 0,
@@ -976,6 +978,7 @@ export class AllemployeesComponent
           },
           hours: updatedHours.toFixed(2),
           updateUser: this.dataUser.email,
+          updateUserRole: this.authenticationService.getUpdateActorRole(),
         };
       }
       return employee;
@@ -1101,6 +1104,7 @@ export class AllemployeesComponent
           },
           hours: Number(updatedHours).toFixed(2),
           updateUser: this.dataUser.email,
+          updateUserRole: this.authenticationService.getUpdateActorRole(),
         };
       }
       return employee;
@@ -1171,6 +1175,7 @@ export class AllemployeesComponent
             longitude: coordinates?.longitude,
           },
           updateUser: this.dataUser.email,
+          updateUserRole: this.authenticationService.getUpdateActorRole(),
         };
       }
 
@@ -1289,6 +1294,7 @@ export class AllemployeesComponent
             longitudeOut: coordinates?.longitude,
           },
           updateUser: this.dataUser.email,
+          updateUserRole: this.authenticationService.getUpdateActorRole(),
           status: 'Checked Out',
           hours: roundedHours.toFixed(2),
           // break: 0,
@@ -1326,6 +1332,7 @@ export class AllemployeesComponent
           ...employee,
           empExactHours: !employee.empExactHours,
           updateUser: this.dataUser.email,
+          updateUserRole: this.authenticationService.getUpdateActorRole(),
         };
       }
 
@@ -1410,6 +1417,7 @@ export class AllemployeesComponent
         return {
           ...employee,
           updateUser: this.dataUser.email,
+          updateUserRole: this.authenticationService.getUpdateActorRole(),
           break: result.break,
           hours: this.updatedHours,
         };
@@ -1500,6 +1508,7 @@ export class AllemployeesComponent
         return {
           ...employee,
           updateUser: this.dataUser.email,
+          updateUserRole: this.authenticationService.getUpdateActorRole(),
           break: result.break,
           hours: updatedHours,
         };
@@ -1598,6 +1607,7 @@ export class AllemployeesComponent
             break: '0', // 👈 Eliminar el break
             hours: Number(newHours).toFixed(2), // 👈 Actualizar horas
             updateUser: this.dataUser.email,
+            updateUserRole: this.authenticationService.getUpdateActorRole(),
           };
         } else {
           console.log(`Empleado ${employee.employee.data.firstname} no tiene checkin/checkout completo`);

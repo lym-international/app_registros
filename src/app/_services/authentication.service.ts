@@ -148,6 +148,9 @@ export class AuthenticationService {
               sessionStorage.setItem('currentUserData', JSON.stringify(data));
               console.log("Guardando en sessionStorage");
               this.setData(data);
+              // Evita que un rol de sesión anterior (p. ej. Employee) se mezcle con la cuenta actual
+              this.userRoleService.clearSelectedRole();
+              this.selectedRole = null;
               setTimeout(() => {
                 this.isAuthenticatingSubject.next(false);
               }, 1000);
@@ -158,17 +161,21 @@ export class AuthenticationService {
   
               if (this.currentUserData.role === 'Employee') {
                 console.log('Es Empleado');
+                this.setSelectedRole('Employee');
                 this.router.navigate(['/admin/employees/admin-employees']);
               } else if (this.currentUserData.role === 'Client') {
                 console.log('Es cliente');
+                this.setSelectedRole('Client');
                 this.router.navigate(['/admin/search-order/']);
               } else if (this.currentUserData.role === 'Executive') {
                 console.log('Executive');
+                this.setSelectedRole('Executive');
               } else if (this.currentUserData.role === 'Supervisor') {
                 console.log('Es Supervisor');
                 if(this.currentUserData.highkeyId){
                   this.showRoleChoiceModal();
                 }else{
+                  this.setSelectedRole('Supervisor');
                   this.router.navigate(['/admin/search-order/']);
                 }
               } else if (this.currentUserData.role === 'Administrator') {
@@ -176,6 +183,7 @@ export class AuthenticationService {
                 if(this.currentUserData.highkeyId){
                   this.showRoleChoiceModal();
                 }else{
+                  this.setSelectedRole('Administrator');
                   this.router.navigate(['/admin/search-order/']);
                 }
               } else {
@@ -278,6 +286,7 @@ export class AuthenticationService {
       sessionStorage.removeItem('currentUserData');
       sessionStorage.removeItem('currentOrders');
       this.userRoleService.clearSelectedRole();
+      this.selectedRole = null;
       this.currentUserSubject.next(null);
       this.auxCurrentUser = null;
       this.currentUserData = null; // Restablecer currentUserData a null
@@ -286,17 +295,45 @@ export class AuthenticationService {
     });
   }
 
-   //establecer el rol seleccionado
-   setSelectedRole(role: string) {
+  /** Persiste el rol con el que actúa el usuario (modal de login o mismo rol de la cuenta). */
+  setSelectedRole(role: string) {
     this.selectedRole = role;
-    console.log('Selected role set to:', role); // Para depuración
-    if(role === 'Employee'){
-      this.userRoleService.setSelectedRole('Employee');
-    }
+    this.userRoleService.setSelectedRole(role);
+    console.log('Selected role set to:', role);
   }
 
-  // obtener el rol seleccionado
+  /** Rol usado en UI (p. ej. search-order); prioriza el rol elegido en sesión. */
   getSelectedRole(): string | null {
-    return this.selectedRole;
+    const fromSvc = this.userRoleService.getSelectedRole();
+    if (fromSvc) {
+      return fromSvc;
+    }
+    return this.selectedRole ?? this.currentUserData?.role ?? null;
+  }
+
+  /**
+   * Rol efectivo para auditoría (check-in/out, break, etc.):
+   * primero el rol elegido al iniciar sesión, si no el rol del documento de usuario.
+   */
+  getUpdateActorRole(): string {
+    const session = (this.userRoleService.getSelectedRole() || '').trim();
+    if (session) {
+      return session;
+    }
+    if (this.currentUserData?.role) {
+      return String(this.currentUserData.role).trim();
+    }
+    try {
+      const raw = sessionStorage.getItem('currentUserData');
+      if (raw) {
+        const u = JSON.parse(raw);
+        if (u?.role) {
+          return String(u.role).trim();
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+    return '';
   }
 }

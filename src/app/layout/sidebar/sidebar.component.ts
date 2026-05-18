@@ -6,6 +6,7 @@ import {
   Inject,
   ElementRef,
   OnInit,
+  OnDestroy,
   Renderer2,
   HostListener,
 } from '@angular/core';
@@ -24,7 +25,7 @@ import { UserRoleService } from 'app/_services/UserRole.service';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent implements OnInit { 
+export class SidebarComponent implements OnInit, OnDestroy {
   public sidebarItems!: RouteInfo[];
   public innerHeight?: number;
   public bodyTag!: HTMLElement;
@@ -45,6 +46,8 @@ export class SidebarComponent implements OnInit {
 
   currentRole= '';
   isEmployee = false;
+
+  private roleChangeSub?: Subscription;
   
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -91,6 +94,39 @@ export class SidebarComponent implements OnInit {
     }
   }
 
+  /**
+   * Admin/Supervisor pueden tener un rol de sesión (modal al login).
+   * Cualquier otro usuario o sesión vacía usa siempre el rol de la cuenta en Firestore.
+   */
+  private resolveSidebarRole(): string {
+    const session = (this.userRoleService.getSelectedRole() || '').trim();
+    const account = this.dataUser?.role || '';
+
+    if (account === 'Administrator' || account === 'Supervisor') {
+      if (
+        session === 'Employee' ||
+        session === 'Administrator' ||
+        session === 'Supervisor'
+      ) {
+        return session;
+      }
+      return account;
+    }
+    return account || session;
+  }
+
+  private refreshSidebarRoutes(): void {
+    if (!this.dataUser) {
+      return;
+    }
+    this.currentRole = this.resolveSidebarRole();
+    this.sidebarItems = ROUTES.filter(
+      (x) =>
+        x.role.indexOf(this.currentRole) !== -1 ||
+        x.role.indexOf('All') !== -1,
+    );
+  }
+
   ngOnInit() {
     this.sharingCloseOrderService.getOrderIdObservable().subscribe(orderId => {
       console.log('OrderId recibido:', orderId);
@@ -98,40 +134,19 @@ export class SidebarComponent implements OnInit {
      
     });
     
-    this.dataUser = this.authenticationService.getData();
-    
-    // const storedUserData = localStorage.getItem('currentUserData');
     const storedUserData = sessionStorage.getItem('currentUserData');
-    this.currentRole = this.userRoleService.getSelectedRole();
-   
-    
     if (storedUserData) {
       this.dataUser = JSON.parse(storedUserData);
     } else {
-      // Si no se encuentran los datos en el localStorage, obtenerlos del servicio
       this.dataUser = this.authenticationService.getData();
-      // Almacenar los datos en el localStorage
-      // localStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
       sessionStorage.setItem('currentUserData', JSON.stringify(this.dataUser));
     }
-    // Aquí tienes acceso a los datos del usuario en la variable dataUser
-    //console.log('Datos en storedUserData desde el sideBar: ', storedUserData);
-    //console.log('Datos usuario desde el sideBar: ', this.dataUser)
-    
-    //Validación del rol del usuario para la visualización de los items del sidebar
-    if(this.currentRole){
-      this.sidebarItems = ROUTES.filter(
-        (x) => x.role.indexOf(this.currentRole) !== -1 || x.role.indexOf('All') !== -1
-      );
-    }else{
-      if (this.dataUser) {
-        const userRole = this.dataUser.role;
-        this.sidebarItems = ROUTES.filter(
-          (x) => x.role.indexOf(userRole) !== -1 || x.role.indexOf('All') !== -1
-        );
-        //console.log('SIDEBAR ITEMS: ', this.sidebarItems)
-      }
-    }
+
+    this.refreshSidebarRoutes();
+
+    this.roleChangeSub = this.userRoleService.selectedRole$.subscribe(() => {
+      this.refreshSidebarRoutes();
+    });
     
     this.initLeftSidebar();
     this.bodyTag = this.document.body;
@@ -145,6 +160,10 @@ export class SidebarComponent implements OnInit {
     //console.log('this.orderId:', this.orderId)
     //console.log('this.dataUser.email: ',this.dataUser.email)
     
+  }
+
+  ngOnDestroy(): void {
+    this.roleChangeSub?.unsubscribe();
   }
   
   //Este método de validación es solo para la opción Close Order del sidebar
