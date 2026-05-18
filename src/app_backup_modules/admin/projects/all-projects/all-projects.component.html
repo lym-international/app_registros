@@ -1,0 +1,29 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="'All Projects'" [items]="['Projects']" [active_item]="'All Projects'"></app-breadcrumb>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="body">
+            <div class="wrapper">
+              <nav class="nav-main project-add-btn">
+                <div class="actions">
+                  <button id="addProject" matTooltip="Create a project" matTooltipPosition="left"
+                    aria-label="Create a project" (click)="boardComponent.newProjectDialog()">
+                    <mat-icon class="col-white">add</mat-icon>
+                  </button>
+                </div>
+              </nav>
+              <main class="main">
+                <app-board></app-board>
+              </main>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

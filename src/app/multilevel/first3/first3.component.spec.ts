@@ -9,8 +9,8 @@ describe("First3Component", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [First3Component],
-      }).compileComponents();
+    imports: [First3Component],
+}).compileComponents();
     })
   );
 

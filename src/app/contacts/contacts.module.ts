@@ -1,24 +1,24 @@
-import { NgModule } from '@angular/core';
+﻿import { NgModule } from '@angular/core';
+import { ContactsService } from './contacts.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdvanceTableRoutingModule } from './contacts-routing.module';
 import { ContactsComponent } from './contacts.component';
 import { FormComponent as contactForm } from './form/form.component';
 import { DeleteComponent } from './delete/delete.component';
-import { ContactsService } from './contacts.service';
 import { ComponentsModule } from '../shared/components/components.module';
-import { SharedModule } from '../shared/shared.module';
+
 
 @NgModule({
-  declarations: [ContactsComponent, contactForm, DeleteComponent],
-  imports: [
+    imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     AdvanceTableRoutingModule,
     ComponentsModule,
-    SharedModule,
-  ],
-  providers: [ContactsService],
+    ContactsComponent, contactForm, DeleteComponent,
+],
+    providers: [ContactsService],
 })
 export class ContactsModule {}
+

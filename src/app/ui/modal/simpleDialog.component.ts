@@ -1,7 +1,9 @@
 import { Component } from "@angular/core";
-import { MatDialogRef } from "@angular/material/dialog";
+import { MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from "@angular/material/dialog";
+import { CdkScrollable } from "@angular/cdk/scrolling";
+import { MatButton } from "@angular/material/button";
 @Component({
-  template: `
+    template: `
     <h1 mat-dialog-title>Hello There</h1>
     <div mat-dialog-content>
       <p>This Is a Simple Dialog</p>
@@ -10,6 +12,7 @@ import { MatDialogRef } from "@angular/material/dialog";
       <button mat-button (click)="close()">Close</button>
     </div>
   `,
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatDialogActions, MatButton]
 })
 export class SimpleDialogComponent {
   constructor(public dialogRef: MatDialogRef<SimpleDialogComponent>) {}

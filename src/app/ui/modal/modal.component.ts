@@ -11,6 +11,8 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { MatButton } from '@angular/material/button';
 
 // import { NgbModal, ModalDismissReasons } from "@ng-bootstrap/ng-bootstrap";
 export interface DialogData {
@@ -18,9 +20,10 @@ export interface DialogData {
   name: string;
 }
 @Component({
-  selector: 'app-modal',
-  templateUrl: './modal.component.html',
-  styleUrls: ['./modal.component.scss'],
+    selector: 'app-modal',
+    templateUrl: './modal.component.html',
+    styleUrls: ['./modal.component.scss'],
+    imports: [BreadcrumbComponent, MatButton]
 })
 export class ModalComponent implements OnInit {
   closeResult = '';

@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class DirectionService {
   private data = new BehaviorSubject('');
   currentData = this.data.asObservable();
@@ -14,3 +14,4 @@ export class DirectionService {
     this.data.next(item);
   }
 }
+

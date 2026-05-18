@@ -6,8 +6,8 @@ describe("BlankComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [BlankComponent],
-      }).compileComponents();
+    imports: [BlankComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

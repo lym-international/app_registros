@@ -1,4 +1,6 @@
-import { NgModule } from '@angular/core';
+﻿import { NgModule } from '@angular/core';
+import { EmployeesService } from './allEmployees/employees.service';
+import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EmployeesRoutingModule } from './employees-routing.module';
@@ -8,12 +10,14 @@ import { DeleteDialogComponent } from './allEmployees/dialogs/delete/delete.comp
 import { FormDialogComponent } from './allEmployees/dialogs/form-dialog/form-dialog.component';
 import { EditEmployeeComponent } from './edit-employee/edit-employee.component';
 import { EmployeeProfileComponent } from './employee-profile/employee-profile.component';
-import { EmployeesService } from './allEmployees/employees.service';
 import { ComponentsModule } from '@shared/components/components.module';
-import { SharedModule } from '@shared';
+
 import { DatePipe } from '@angular/common';
 import { CheckInComponent } from './allEmployees/dialogs/check-in/check-in.component';
-import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+//import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+
 import { CheckOutComponent } from './allEmployees/dialogs/check-out/check-out.component';
 import { BreakComponent } from './allEmployees/dialogs/break/break.component';
 import { AdminEmployeesComponent } from './admin-employees/admin-employees.component';
@@ -23,11 +27,21 @@ import { BreakAdminEmployeesComponent } from './admin-employees/dialogs/break-ad
 import { AllActionsComponent } from './allEmployees/dialogs/all-actions/all-actions.component';
 import { AddExistingEmployeeComponent } from './allEmployees/dialogs/add-existing-employee/add-existing-employee.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
-import { SharingCloseOrderService } from 'app/_services/sharing-close-order.service';
 import { GoogleMapsModule } from '@angular/google-maps';
 
 @NgModule({
-  declarations: [
+    imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    EmployeesRoutingModule,
+    ComponentsModule,
+    //OwlDateTimeModule,
+    //OwlNativeDateTimeModule,
+    NgScrollbarModule,
+    GoogleMapsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     AllemployeesComponent,
     DeleteDialogComponent,
     FormDialogComponent,
@@ -42,20 +56,9 @@ import { GoogleMapsModule } from '@angular/google-maps';
     CheckOutAdminEmployeesComponent,
     BreakAdminEmployeesComponent,
     AllActionsComponent,
-    AddExistingEmployeeComponent,
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    EmployeesRoutingModule,
-    ComponentsModule,
-    SharedModule,
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
-    NgScrollbarModule,
-    GoogleMapsModule
-  ],
-  providers: [EmployeesService, DatePipe, SharingCloseOrderService],
+    AddExistingEmployeeComponent
+],
+    providers: [EmployeesService, DatePipe, SharingCloseOrderService],
 })
 export class EmployeesModule {}
+

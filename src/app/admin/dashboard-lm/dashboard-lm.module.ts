@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ComponentsModule } from '@shared/components/components.module';
-import { SharedModule } from '@shared';
+
 
 import { DashboardLmRoutingModule } from './dashboard-lm-routing.module';
 import { DashboardLmComponent } from './dashboard-lm.component';
@@ -18,21 +18,19 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 
 
 @NgModule({
-  declarations: [DashboardLmComponent],
-  imports: [
+    imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     ComponentsModule,
-    SharedModule,
     DashboardLmRoutingModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
     NgApexchartsModule,
-    NgScrollbarModule
-  ],
-  
-  providers: [OrderDataService],
+    NgScrollbarModule,
+    DashboardLmComponent
+],
+    providers: [OrderDataService],
 })
 export class DashboardLmModule {}

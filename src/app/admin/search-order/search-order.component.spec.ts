@@ -8,8 +8,8 @@ describe('SearchOrderComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SearchOrderComponent]
-    });
+    imports: [SearchOrderComponent]
+});
     fixture = TestBed.createComponent(SearchOrderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

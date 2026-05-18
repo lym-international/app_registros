@@ -1,0 +1,161 @@
+[{
+    "id": "001",
+    "jobType": "Full Time",
+    "status": "Open",
+    "date": "2022-02-10T14:22:18Z",
+    "department": "Java",
+    "vacancies": "6",
+    "title": "Java Developer 2+ Yeaers of experience",
+    "role": "Android Developer"
+  },
+  {
+    "id": "002",
+    "jobType": "Part Time",
+    "status": "Cancelled",
+    "date": "2022-02-12T14:22:18Z",
+    "department": "Designing",
+    "vacancies": "4",
+    "title": "Android Developer 4+ Yeaers of experience",
+    "role": "Java Developer"
+  },
+  {
+    "id": "003",
+    "jobType": "Internship",
+    "status": "Open",
+    "date": "2022-03-18T14:22:18Z",
+    "department": "Marketing",
+    "vacancies": "7",
+    "title": "Web Designer Fresher",
+    "role": "IOS Developer"
+  },
+  {
+    "id": "004",
+    "jobType": "Other",
+    "status": "Closed",
+    "date": "2022-03-05T14:22:18Z",
+    "department": "Java",
+    "vacancies": "9",
+    "title": "Tester with 1+ years of experience",
+    "role": "Android Developer"
+  },
+  {
+    "id": "005",
+    "jobType": "Full Time",
+    "status": "Closed",
+    "date": "2022-02-27T14:22:18Z",
+    "department": "Accounting",
+    "vacancies": "6",
+    "title": "PHP Developer Fresher",
+    "role": "Web Designer"
+  },
+  {
+    "id": "006",
+    "jobType": "Full Time",
+    "status": "Open",
+    "date": "2022-04-17T14:22:18Z",
+    "department": "Developing",
+    "vacancies": "4",
+    "title": "IOS Developer with 2+ years of experience",
+    "role": "Tester"
+  },
+  {
+    "id": "007",
+    "jobType": "Full Time",
+    "status": "Cancelled",
+    "date": "2022-01-11T14:22:18Z",
+    "department": "Tesing",
+    "vacancies": "7",
+    "title": "Angular developer fresher",
+    "role": "Web Designer"
+  },
+  {
+    "id": "008",
+    "jobType": "Part Time",
+    "status": "Closed",
+    "date": "2022-02-07T14:22:18Z",
+    "department": "Tesing",
+    "vacancies": "10",
+    "title": "Android Developer Fresher",
+    "role": "Android Developer"
+  },
+  {
+    "id": "009",
+    "jobType": "Part Time",
+    "status": "Open",
+    "date": "2022-03-21T14:22:18Z",
+    "department": "Java",
+    "vacancies": "6",
+    "title": "Java Developer 7+ Yeaers of experience",
+    "role": "Web Designer"
+  },
+  {
+    "id": "010",
+    "jobType": "Part Time",
+    "status": "Closed",
+    "date": "2022-02-26T14:22:18Z",
+    "department": "Designing",
+    "vacancies": "1",
+    "title": "Java Team Leader",
+    "role": "Tester"
+  },
+  {
+    "id": "011",
+    "jobType": "Other",
+    "status": "Cancelled",
+    "date": "2022-05-02T14:22:18Z",
+    "department": "Marketing",
+    "vacancies": "12",
+    "title": "Fullstack Developer with 2+ years of experience",
+    "role": "Tester"
+  },
+  {
+    "id": "012",
+    "jobType": "Full Time",
+    "status": "Closed",
+    "date": "2022-05-03T14:22:18Z",
+    "department": "Java",
+    "vacancies": "7",
+    "title": "IOS Developer",
+    "role": "Web Designer"
+  },
+  {
+    "id": "013",
+    "jobType": "Part Time",
+    "status": "Open",
+    "date": "2022-04-25T14:22:18Z",
+    "department": "Java",
+    "vacancies": "1",
+    "title": "Graphics Designer Fresher",
+    "role": "Java Developer"
+  },
+  {
+    "id": "014",
+    "jobType": "Internship",
+    "status": "Closed",
+    "date": "2022-03-22T14:22:18Z",
+    "department": "Accounting",
+    "vacancies": "4",
+    "title": "Android Developer 4+ Yeaers of experience",
+    "role": "IOS Developer"
+  },
+  {
+    "id": "015",
+    "jobType": "Other",
+    "status": "Open",
+    "date": "2022-04-15T14:22:18Z",
+    "department": "Tesing",
+    "vacancies": "9",
+    "title": "PHP Developer With 3+ Years Of Experience",
+    "role": "Web Designer"
+  },
+  {
+    "id": "016",
+    "jobType": "Full Time",
+    "status": "Closed",
+    "date": "2022-02-25T14:22:18Z",
+    "department": "Marketing",
+    "vacancies": "2",
+    "title": "VueJs Developer Fresher",
+    "role": "Web Designer"
+  }
+]

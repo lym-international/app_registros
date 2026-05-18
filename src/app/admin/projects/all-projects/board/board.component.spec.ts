@@ -27,7 +27,7 @@ describe("BoardComponent", () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
+    imports: [
         NoopAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
@@ -43,10 +43,10 @@ describe("BoardComponent", () => {
         MatTooltipModule,
         MatSelectModule,
         MatSnackBarModule,
-      ],
-      declarations: [BoardComponent, TruncatePipe, PluralPipe],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    }).compileComponents();
+        BoardComponent, TruncatePipe, PluralPipe,
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+}).compileComponents();
   }));
 
   beforeEach(() => {

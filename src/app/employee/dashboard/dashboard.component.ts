@@ -37,9 +37,10 @@ export type chartOptions = {
 };
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.scss'],
+    standalone: false
 })
 export class DashboardComponent implements OnInit {
   @ViewChild('chart')
@@ -270,8 +271,12 @@ export class DashboardComponent implements OnInit {
           inverseColors: false,
           opacityFrom: 1,
           opacityTo: 1,
-          stops: [0, 50, 65, 91],
-        },
+          colorStops: [
+            { offset: 0, color: '#6777EF', opacity: 1 },
+            { offset: 50, color: '#6777EF', opacity: 1 },
+            { offset: 100, color: '#6777EF', opacity: 1 }
+          ]
+        } as any,
       },
       stroke: {
         dashArray: 4,

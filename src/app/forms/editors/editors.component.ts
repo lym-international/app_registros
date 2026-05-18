@@ -1,13 +1,20 @@
 import { Component } from '@angular/core';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { ClassicEditor, Bold, Essentials, Italic, Paragraph, Undo, Heading, Link, List } from 'ckeditor5';
+import type { EditorConfig } from 'ckeditor5';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+
 @Component({
-  selector: 'app-editors',
-  templateUrl: './editors.component.html',
-  styleUrls: ['./editors.component.scss'],
+    selector: 'app-editors',
+    templateUrl: './editors.component.html',
+    styleUrls: ['./editors.component.scss'],
+    imports: [BreadcrumbComponent, CKEditorModule]
 })
 export class EditorsComponent {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public Editor: any = ClassicEditor;
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  public Editor = ClassicEditor;
+  public editorConfig: EditorConfig = {
+    plugins: [Bold, Essentials, Italic, Paragraph, Undo, Heading, Link, List],
+    toolbar: ['undo', 'redo', '|', 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList'],
+  };
   constructor() {}
 }

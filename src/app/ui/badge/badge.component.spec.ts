@@ -6,8 +6,8 @@ describe("BadgeComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [BadgeComponent],
-      }).compileComponents();
+    imports: [BadgeComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

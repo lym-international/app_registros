@@ -6,8 +6,8 @@ describe("DialogformComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [DialogformComponent],
-      }).compileComponents();
+    imports: [DialogformComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

@@ -8,8 +8,8 @@ describe('ShortlistComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ShortlistComponent ]
-    })
+    imports: [ShortlistComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(ShortlistComponent);

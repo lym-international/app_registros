@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+
 import {
   Component,
   Inject,
@@ -7,6 +7,7 @@ import {
   Renderer2,
   Output,
   EventEmitter,
+  DOCUMENT
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfigService } from '@config';
@@ -15,6 +16,10 @@ import { LanguageService, InConfiguration, AuthService } from '@core';
 import { AuthenticationService } from 'app/_services/authentication.service';
 import { FontAwesomeComponent } from 'app/icons/font-awesome/font-awesome.component';
 import { OrderDataService } from 'app/_services/orderData.service';
+import { NgClass } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { FeatherIconsComponent } from '../../shared/components/feather-icons/feather-icons.component';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 
 
 interface Notifications {
@@ -26,9 +31,10 @@ interface Notifications {
 }
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss'],
+    imports: [NgClass, MatButton, FeatherIconsComponent, MatMenuTrigger, MatMenu, MatMenuItem]
 })
 export class HeaderComponent
   extends UnsubscribeOnDestroyAdapter

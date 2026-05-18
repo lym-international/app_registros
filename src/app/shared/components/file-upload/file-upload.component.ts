@@ -2,17 +2,19 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Component, ElementRef, HostListener, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 @Component({
-  selector: 'app-file-upload',
-  templateUrl: './file-upload.component.html',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: FileUploadComponent,
-      multi: true,
-    },
-  ],
-  styleUrls: ['./file-upload.component.scss'],
+    selector: 'app-file-upload',
+    templateUrl: './file-upload.component.html',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: FileUploadComponent,
+            multi: true,
+        },
+    ],
+    styleUrls: ['./file-upload.component.scss'],
+    imports: [MatButton]
 })
 export class FileUploadComponent implements ControlValueAccessor {
   onChange!: Function;

@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { MyProjects } from './my-projects.model';
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MyProjectsService extends UnsubscribeOnDestroyAdapter {
   private readonly API_URL = 'assets/data/my-projects-client.json';
   isTblLoading = true;
@@ -73,3 +73,4 @@ export class MyProjectsService extends UnsubscribeOnDestroyAdapter {
     //     });
   }
 }
+

@@ -1,8 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-  name: 'truncate'
-})
+@Pipe({ name: 'truncate' })
 export class TruncatePipe implements PipeTransform {
 
   // text truncation pipe
@@ -15,9 +13,7 @@ export class TruncatePipe implements PipeTransform {
 
 }
 
-@Pipe({
-  name: 'pluralize'
-})
+@Pipe({ name: 'pluralize' })
 export class PluralPipe implements PipeTransform {
 
   // https://typeofweb.com/odmiana-rzeczownikow-przy-liczebnikach-jezyku-polskim/

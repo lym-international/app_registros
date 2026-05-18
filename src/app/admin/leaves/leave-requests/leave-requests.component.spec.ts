@@ -8,8 +8,8 @@ describe('LeaveRequestsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LeaveRequestsComponent ]
-    })
+    imports: [LeaveRequestsComponent]
+})
     .compileComponents();
   });
 

@@ -7,23 +7,20 @@ import { ProjectDetailsComponent } from './project-details/project-details.compo
 import { DeleteComponent } from './my-projects/dialogs/delete/delete.component';
 import { FormDialogComponent } from './my-projects/dialogs/form-dialog/form-dialog.component';
 import { ComponentsModule } from '@shared/components/components.module';
-import { SharedModule } from '@shared';
+
 
 @NgModule({
-  declarations: [
-    MyProjectsComponent,
-    ProjectDetailsComponent,
-    DeleteComponent,
-    FormDialogComponent,
-  ],
-  imports: [
+    imports: [
     CommonModule,
     ProjectsRoutingModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     ComponentsModule,
-    SharedModule,
-  ],
+    MyProjectsComponent,
+    ProjectDetailsComponent,
+    DeleteComponent,
+    FormDialogComponent,
+],
 })
 export class ProjectsModule {}

@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Resumes } from './resumes.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ResumesService extends UnsubscribeOnDestroyAdapter {
   private readonly API_URL = 'assets/data/resumes.json';
   isTblLoading = true;
@@ -72,3 +72,4 @@ export class ResumesService extends UnsubscribeOnDestroyAdapter {
     //     });
   }
 }
+

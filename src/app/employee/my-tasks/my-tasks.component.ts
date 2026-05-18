@@ -22,9 +22,10 @@ import { TableExportUtil, TableElement } from '@shared';
 import { formatDate } from '@angular/common';
 
 @Component({
-  selector: 'app-my-tasks',
-  templateUrl: './my-tasks.component.html',
-  styleUrls: ['./my-tasks.component.scss'],
+    selector: 'app-my-tasks',
+    templateUrl: './my-tasks.component.html',
+    styleUrls: ['./my-tasks.component.scss'],
+    standalone: false
 })
 export class MyTasksComponent
   extends UnsubscribeOnDestroyAdapter

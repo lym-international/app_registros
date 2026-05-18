@@ -6,8 +6,8 @@ describe("ChatComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ChatComponent],
-      }).compileComponents();
+    declarations: [ChatComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

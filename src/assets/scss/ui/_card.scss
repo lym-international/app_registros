@@ -1,4 +1,4 @@
-﻿/*
+/*
  *  Document   : _card.scss
  *  Author     : RedStar Template
  *  Description: This scss file for card style classes
@@ -170,7 +170,7 @@
   &.card-statistic-1 .card-header h4,
   &.card-statistic-2 .card-header h4 {
     line-height: 1.2;
-    color: color(muted);
+    color: #6c757d;
   }
 
   &.card-statistic-1 .card-body,
@@ -182,7 +182,7 @@
   &.card-statistic-2 .card-body {
     font-size: 26px;
     font-weight: 700;
-    color: color(fontdark);
+    color: #2c2c2c;
     padding-bottom: 0;
   }
 

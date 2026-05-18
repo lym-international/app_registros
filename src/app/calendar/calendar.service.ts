@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Calendar } from './calendar.model';
 import { Observable } from 'rxjs';
@@ -6,7 +6,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class CalendarService {
   private readonly API_URL = 'assets/data/calendar.json';
   httpOptions = {
@@ -49,3 +49,4 @@ export class CalendarService {
     return throwError(errorMessage);
   }
 }
+

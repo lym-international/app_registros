@@ -9,31 +9,29 @@ import { ContactGridComponent } from './contact-grid/contact-grid.component';
 import { SupportComponent } from './support/support.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
-import {
-  OwlDateTimeModule,
-  OwlNativeDateTimeModule,
-} from '@danielmoncada/angular-datetime-picker';
+//import {  OwlDateTimeModule,  OwlNativeDateTimeModule,} from '@danielmoncada/angular-datetime-picker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { ComponentsModule } from '../shared/components/components.module';
-import { SharedModule } from '@shared';
+
 
 @NgModule({
-  declarations: [
-    ChatComponent,
-    DragDropComponent,
-    ContactGridComponent,
-    SupportComponent,
-  ],
-  imports: [
+    imports: [
     CommonModule,
     AppsRoutingModule,
     NgScrollbarModule,
     DragDropModule,
     FormsModule,
     ReactiveFormsModule,
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
+    //OwlDateTimeModule,
+    //OwlNativeDateTimeModule,
     ComponentsModule,
-    SharedModule,
-  ],
+    MatDatepickerModule,
+    MatNativeDateModule,
+    ChatComponent,
+    DragDropComponent,
+    ContactGridComponent,
+    SupportComponent,
+],
 })
 export class AppsModule {}

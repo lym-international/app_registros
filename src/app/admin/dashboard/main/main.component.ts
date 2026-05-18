@@ -1,21 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
-import {
-  ApexAxisChartSeries,
-  ApexChart,
-  ApexXAxis,
-  ApexDataLabels,
-  ApexTooltip,
-  ApexYAxis,
-  ApexPlotOptions,
-  ApexStroke,
-  ApexLegend,
-  ApexFill,
-  ApexMarkers,
-  ApexGrid,
-  ApexTitleSubtitle,
-  ApexResponsive,
-} from 'ng-apexcharts';
+import { ApexAxisChartSeries, ApexChart, ApexXAxis, ApexDataLabels, ApexTooltip, ApexYAxis, ApexPlotOptions, ApexStroke, ApexLegend, ApexFill, ApexMarkers, ApexGrid, ApexTitleSubtitle, ApexResponsive, ChartComponent } from 'ng-apexcharts';
+import { BreadcrumbComponent } from '../../../shared/components/breadcrumb/breadcrumb.component';
+import { MatIconButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { BaseChartDirective } from 'ng2-charts';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FeatherIconsComponent } from '../../../shared/components/feather-icons/feather-icons.component';
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -36,9 +30,10 @@ export type ChartOptions = {
 };
 
 @Component({
-  selector: 'app-main',
-  templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss'],
+    selector: 'app-main',
+    templateUrl: './main.component.html',
+    styleUrls: ['./main.component.scss'],
+    imports: [BreadcrumbComponent, MatIconButton, MatMenuTrigger, MatIcon, MatMenu, MatMenuItem, ChartComponent, RouterLink, MatProgressBar, BaseChartDirective, MatTooltip, FeatherIconsComponent]
 })
 export class MainComponent implements OnInit {
   public areaChartOptions!: Partial<ChartOptions>;
@@ -525,8 +520,14 @@ export class MainComponent implements OnInit {
           type: 'vertical',
           opacityFrom: 0.85,
           opacityTo: 0.55,
-          stops: [0, 100, 100, 100],
-        },
+
+          colorStops: [
+            { offset: 0, color: '#6777EF', opacity: 1 }, // Cambia el color por el de tu gráfico
+            { offset: 100, color: '#6777EF', opacity: 1 },
+            { offset: 100, color: '#6777EF', opacity: 1 },
+            { offset: 100, color: '#6777EF', opacity: 1 }
+          ] as any,
+        }
       },
       labels: [
         '01/01/2003',

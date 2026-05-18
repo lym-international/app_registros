@@ -1,0 +1,282 @@
+﻿import { Injectable } from '@angular/core';
+
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import firebase from 'firebase/compat/app';
+
+import { User } from 'app/_models/user';
+import { TranslateModule } from '@ngx-translate/core';
+import { getAuth, signInWithCustomToken } from 'firebase/auth';
+
+import { catchError } from 'rxjs/operators'; //Diego
+import { throwError } from 'rxjs'; //Diego
+import * as CryptoJS from 'crypto-js'; //Jairo
+
+import { MatDialog } from '@angular/material/dialog';
+import { RoleChoiceModalComponent } from 'app/admin/role-choice-modal/role-choice-modal.component';
+import { UserRoleService } from './userRole.service';
+
+import { Auth, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from '@angular/fire/auth';
+import { Firestore, collection, query, where, getDocs } from '@angular/fire/firestore';
+import { onAuthStateChanged } from '@angular/fire/auth';
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthenticationService {
+  private currentUserSubject: BehaviorSubject<User>;
+  public currentUser: Observable<User>;
+  public auxCurrentUser = null;
+  // public userinfo:User;
+  public userinfo: User = new User();
+  public returnUrl: string;
+  // fb: firebase.app.App;
+  // fb: firebase.app.App | null = null;
+  loading = false;
+  // user$: Observable<any>;
+  user$: Observable<any> = new Observable<any>();
+  messageService: any; //Diego
+  private data: any;
+  public currentUserData: any; // Nueva variable para almacenar los datos del usuario
+  //private authentication: Auth;
+  private secretKey = 'jairo@adminl&m';
+  private selectedRole: string | null = null;
+  
+  private isAuthenticatingSubject = new BehaviorSubject<boolean>(false);
+  public isAuthenticating$ = this.isAuthenticatingSubject.asObservable();
+  
+
+  constructor(
+    private http: HttpClient,
+  private auth: Auth,
+  private db: Firestore,
+  private router: Router,
+  private route: ActivatedRoute,
+  private dialog: MatDialog,
+  private userRoleService: UserRoleService
+  ){
+    this.returnUrl =
+      this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
+    this.currentUserSubject = new BehaviorSubject<User>(
+      JSON.parse(sessionStorage.getItem('currentUser') || 'null')
+    );
+    // this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(sessionStorage.getItem('currentUser')));
+    this.currentUser = this.currentUserSubject.asObservable();
+
+    onAuthStateChanged(this.auth, (user) => {
+  if (!user) {
+    sessionStorage.setItem('currentUser', '');
+  }
+});
+  
+  }
+
+  decryptData(encryptedData: string): string {
+    try {
+      const decryptedData = CryptoJS.AES.decrypt(
+        encryptedData,
+        this.secretKey
+      ).toString(CryptoJS.enc.Utf8);
+      return decryptedData;
+    } catch (error) {
+      console.error('Error :', error);
+      return null;
+    }
+  }
+
+  private extractOriginalString(alteredString: string): string {
+    const parts = alteredString.split('_');
+    if (parts.length >= 3) {
+      return parts[1];
+    } else {
+      return alteredString;
+    }
+  }
+  initialize() {
+    this.route.queryParams.subscribe((params) => {
+      const token = params['token'];
+      if (token) {
+        this.isAuthenticatingSubject.next(true);
+        // console.log("token", token);
+        // const tk = token.replace(/["']/g, '');
+        // console.log("cirpted", tk);
+        
+        const receivedToken = token.replace(/-/g, '+').replace(/_/g, '/');
+        const decryptedToken = this.decryptData(receivedToken);
+        sessionStorage.setItem('accessToken', token);
+        // const decryptedToken = this.decryptData(tk);
+        if (decryptedToken) {
+          try {
+            const userData = JSON.parse(decryptedToken);
+            const username = userData.username;
+            const password = userData.pass;
+            const pass = this.extractOriginalString(password);
+           
+            sessionStorage.removeItem('currentOrders');
+            this.login(username, pass);
+            
+          } catch (error) {
+            console.error('Error al analizar la cadena desencriptada:', error);
+          }
+        } else {
+          this.isAuthenticatingSubject.next(false);
+          console.error('La cadena desencriptada es nula o vacía.');
+        }
+      }
+    })
+  }
+ login(username: string, password: string): Promise<void> {
+  return signInWithEmailAndPassword(this.auth, username, password)
+    .then(async (user) => {
+      console.log('Usuario autenticado con éxito!', user.user?.email);
+
+      const usersRef = collection(this.db, 'Users');
+      const q = query(usersRef, where('email', '==', username));
+      const usersInfo = await getDocs(q);
+
+      usersInfo.docs.forEach((item: any) => {
+        const data = item.data();
+        console.log('DATA ::', data);
+        sessionStorage.setItem('currentUser', JSON.stringify(data));
+        this.currentUserSubject.next(data);
+        this.currentUserData = data;
+        sessionStorage.setItem('currentUserData', JSON.stringify(data));
+        this.setData(data);
+        setTimeout(() => {
+          this.isAuthenticatingSubject.next(false);
+        }, 1000);
+
+        if (this.currentUserData.role === 'Employee') {
+          this.router.navigate(['/admin/employees/admin-employees']);
+        } else if (this.currentUserData.role === 'Client') {
+          this.router.navigate(['/admin/search-order/']);
+        } else if (this.currentUserData.role === 'Executive') {
+          console.log('Executive');
+        } else if (this.currentUserData.role === 'Supervisor') {
+          if (this.currentUserData.highkeyId) {
+            this.showRoleChoiceModal();
+          } else {
+            this.router.navigate(['/admin/search-order/']);
+          }
+        } else if (this.currentUserData.role === 'Administrator') {
+          if (this.currentUserData.highkeyId) {
+            this.showRoleChoiceModal();
+          } else {
+            this.router.navigate(['/admin/search-order/']);
+          }
+        } else {
+          this.router.navigate(['/authentication/signin']);
+        }
+      });
+    })
+    .catch((error) => {
+      this.isAuthenticatingSubject.next(false);
+      console.error('Error en autenticación:', error);
+      throw error;
+    });
+}
+  
+  showRoleChoiceModal_bn() {
+    const dialogRef = this.dialog.open(RoleChoiceModalComponent, {
+      width: '400px',
+      disableClose: true
+    });
+  
+    // Suscríbete al evento roleChosen
+    dialogRef.componentInstance.roleChosen.subscribe((role: string) => {
+      // console.log('Role chosen:', role); // Verifica que esto se imprima
+      this.setSelectedRole(role); 
+      if (role === 'Administrator') {
+        this.router.navigate(['/admin/search-order/']);
+      } else if (role === 'Employee') {
+        this.router.navigate(['/admin/employees/admin-employees']);
+      }
+      dialogRef.close(); // Cierra el modal después de la redirección
+    });
+  }
+  showRoleChoiceModal() {
+    const dialogRef = this.dialog.open(RoleChoiceModalComponent, {
+      width: '400px',
+      disableClose: true,
+      data: { role: this.currentUserData.role } // Envía el rol actual al modal
+    });
+  
+    // Suscríbete al evento roleChosen
+    dialogRef.componentInstance.roleChosen.subscribe((role: string) => {
+      this.setSelectedRole(role); 
+      if (role === 'Administrator') {
+        this.router.navigate(['/admin/search-order/']);
+      } else if (role === 'Supervisor') {
+        this.router.navigate(['/admin/search-order/']);
+      } else if (role === 'Employee') {
+        this.router.navigate(['/admin/employees/admin-employees']);
+      }
+      dialogRef.close();
+    });
+  }
+  
+  setData(data: any) {
+    this.data = data;
+  }
+
+  getData() {
+    //return this.data;
+    return this.currentUserData;
+  }
+
+  changePassword(email: string): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    sendPasswordResetEmail(this.auth, email)
+      .then(() => {
+        console.log('OK', 'You can receive the instruction to reset password to ' + email);
+        resolve(true);
+      })
+      .catch((error) => {
+        console.log('Warning', error.message);
+        reject(false);
+      });
+  });
+}
+  /*
+  changePassword(email: string) {
+    console.log("e-mail:",email)
+    this.auth.sendPasswordResetEmail(email).then((user) => {
+      console.log('OK', 'You can recieve the instruction to reset password to ' + email)
+      // this.messageService.messageSuccess('OK', 'You can recieve the instruction to reset password to ' + email );
+        return true;
+      }).catch((error) => {
+        console.log("Warning",error.message)
+        // this.messageService.messageWarning("Warning",error.message);
+    })
+    return false;
+}
+*/
+
+  logout() {
+  this.isAuthenticatingSubject.next(false);
+  signOut(this.auth).then(() => {
+    sessionStorage.removeItem('currentUser');
+    sessionStorage.removeItem('currentUserData');
+    sessionStorage.removeItem('currentOrders');
+    this.userRoleService.clearSelectedRole();
+    this.currentUserSubject.next(null);
+    this.auxCurrentUser = null;
+    this.currentUserData = null;
+    this.router.navigate(['/authentication/signin']);
+  });
+}
+
+   //establecer el rol seleccionado
+   setSelectedRole(role: string) {
+    this.selectedRole = role;
+    console.log('Selected role set to:', role); // Para depuración
+    if(role === 'Employee'){
+      this.userRoleService.setSelectedRole('Employee');
+    }
+  }
+
+  // obtener el rol seleccionado
+  getSelectedRole(): string | null {
+    return this.selectedRole;
+  }
+}

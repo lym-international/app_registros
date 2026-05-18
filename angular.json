@@ -15,11 +15,12 @@
             "prefix": "app",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular/build:application",
                     "options": {
-                        "outputPath": "dist/main",
+                        "outputPath": {
+                            "base": "dist/main"
+                        },
                         "index": "src/index.html",
-                        "main": "src/main.ts",
                         "polyfills": [
                             "zone.js"
                         ],
@@ -35,19 +36,28 @@
                             "contra/emitter",
                             "crossvent",
                             "apexcharts",
+                            "apexcharts/core",
+                            "apexcharts/client",
+                            "apexcharts/ssr",
                             "clone-deep",
-                            "xlsx",
                             "fast-deep-equal",
-                            "@ckeditor/ckeditor5-build-classic",
                             "sweetalert2",
                             "rfdc",
-                            "bezier-easing"
+                            "bezier-easing",
+                            "pdfmake/build/pdfmake",
+                            "pdfmake/build/vfs_fonts",
+                            "crypto-js",
+                            "exceljs",
+                            "fuzzysort",
+                            "color-convert",
+                            "color-name"
                         ],
                         "assets": [
                             "src/favicon.ico",
                             "src/assets"
                         ],
                         "styles": [
+                            "node_modules/ckeditor5/dist/ckeditor5.css",
                             "@angular/material/prebuilt-themes/indigo-pink.css",
                             "./node_modules/bootstrap/dist/css/bootstrap.min.css",
                             "./node_modules/@swimlane/ngx-datatable/index.css",
@@ -59,62 +69,71 @@
                             "src/app/app.component.scss"
                         ],
                         "scripts": [
-                            "./node_modules/moment/min/moment.min.js",
                             "./node_modules/apexcharts/dist/apexcharts.min.js"
-                        ]
+                        ],
+                        "browser": "src/main.ts",
+                        "stylePreprocessorOptions": {
+                            "sass": {
+                                "silenceDeprecations": [
+                                    "import",
+                                    "global-builtin",
+                                    "color-functions"
+                                ]
+                            }
+                        }
                     },
                     "configurations": {
                         "production": {
-                            "budgets": [{
+                            "budgets": [
+                                {
                                     "type": "initial",
-                                    "maximumWarning": "4mb",
-                                    "maximumError": "6mb"
+                                    "maximumWarning": "5mb",
+                                    "maximumError": "8mb"
                                 },
                                 {
                                     "type": "anyComponentStyle",
-                                    "maximumWarning": "2kb",
-                                    "maximumError": "4kb"
+                                    "maximumWarning": "6kb",
+                                    "maximumError": "10kb"
                                 }
                             ],
-
                             "outputHashing": "all"
                         },
                         "development": {
-                            "buildOptimizer": false,
                             "optimization": false,
-                            "vendorChunk": true,
                             "extractLicenses": false,
                             "sourceMap": true,
                             "namedChunks": true,
-                            "fileReplacements": [{
-                                "replace": "src/environments/environment.ts",
-                                "with": "src/environments/environment.development.ts"
-                            }]
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.development.ts"
+                                }
+                            ]
                         }
                     },
                     "defaultConfiguration": "production"
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "configurations": {
                         "production": {
-                            "browserTarget": "main:build:production"
+                            "buildTarget": "main:build:production"
                         },
                         "development": {
-                            "browserTarget": "main:build:development",
-                            "proxyConfig": "proxy.conf.json"  
+                            "proxyConfig": "proxy.conf.json",
+                            "buildTarget": "main:build:development"
                         }
                     },
                     "defaultConfiguration": "development"
                 },
                 "extract-i18n": {
-                    "builder": "@angular-devkit/build-angular:extract-i18n",
+                    "builder": "@angular/build:extract-i18n",
                     "options": {
-                        "browserTarget": "main:build"
+                        "buildTarget": "main:build"
                     }
                 },
                 "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
+                    "builder": "@angular/build:karma",
                     "options": {
                         "polyfills": [
                             "zone.js",
@@ -127,8 +146,8 @@
                             "src/assets"
                         ],
                         "styles": [
-                          "@angular/material/prebuilt-themes/indigo-pink.css",
-                          "src/styles.scss"
+                            "@angular/material/prebuilt-themes/indigo-pink.css",
+                            "src/styles.scss"
                         ],
                         "scripts": []
                     }
@@ -150,5 +169,31 @@
             "@angular-eslint/schematics"
         ],
         "analytics": false
+    },
+    "schematics": {
+        "@schematics/angular:component": {
+            "type": "component"
+        },
+        "@schematics/angular:directive": {
+            "type": "directive"
+        },
+        "@schematics/angular:service": {
+            "type": "service"
+        },
+        "@schematics/angular:guard": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:interceptor": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:module": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:pipe": {
+            "typeSeparator": "."
+        },
+        "@schematics/angular:resolver": {
+            "typeSeparator": "."
+        }
     }
 }

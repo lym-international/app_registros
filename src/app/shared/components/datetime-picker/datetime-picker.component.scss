@@ -1,0 +1,209 @@
+.dtp-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.dtp-field {
+  width: 100%;
+  ::ng-deep {
+    .mat-mdc-form-field-subscript-wrapper { display: none; }
+    .mat-mdc-input-element { cursor: pointer !important; }
+  }
+}
+
+.dtp-icon {
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.dtp-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+}
+
+// Panel — mismo tamaño que la imagen 2 referencia
+.dtp-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow:
+    0 5px 5px -3px rgba(0,0,0,.2),
+    0 8px 10px 1px rgba(0,0,0,.14),
+    0 3px 14px 2px rgba(0,0,0,.12);
+  width: 310px;   // ← más compacto
+  overflow: hidden;
+}
+
+// Calendario compacto — replica imagen 2
+::ng-deep .dtp-panel {
+
+  .mat-calendar {
+    width: 100% !important;
+    height: auto !important;
+    font-size: 13px !important;
+  }
+
+  .mat-calendar-header {
+    padding: 4px 4px 0 !important;
+  }
+
+  // Botón "Apr 2026 ▾"
+  .mat-calendar-period-button {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+  }
+
+  .mat-calendar-content {
+    padding: 0 8px 4px !important;
+  }
+
+  // Celdas más pequeñas
+  .mat-calendar-body-cell {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .mat-calendar-body-cell-content {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 12px !important;
+    line-height: 28px !important;
+  }
+
+  // Días de la semana (Sun Mon...)
+  .mat-calendar-table-header th {
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    color: rgba(0,0,0,0.54) !important;
+    padding-bottom: 4px !important;
+  }
+
+  // Día seleccionado — color igual a imagen 2
+  .mat-calendar-body-selected {
+    background-color: #3f51b5 !important;
+    color: #fff !important;
+  }
+
+  // Día de hoy — solo círculo outline
+  .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+    border-color: rgba(0,0,0,0.38) !important;
+  }
+
+  // Días del mes anterior/siguiente — gris
+  .mat-calendar-body-label {
+    opacity: 0 !important;
+    padding: 0 !important;
+    font-size: 0 !important;
+  }
+}
+
+.dtp-divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+// Fila hora — compacta y elegante como imagen 2
+.dtp-time-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 16px 10px;
+  background: #fafafa;
+}
+
+.dtp-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 0, 0, 0.54);
+    border-radius: 50%;
+    transition: background 0.15s;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.08);
+      color: rgba(0, 0, 0, 0.87);
+    }
+  }
+}
+
+// Inputs de hora — réplica exacta imagen 2
+.dtp-time-val {
+  font-size: 20px;      // ← reducido
+  font-weight: 400;
+  width: 44px;          // ← más estrecho
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.28);
+  border-radius: 4px;
+  padding: 4px 6px;
+  line-height: 1.3;
+  background: #fff;
+}
+
+// Dos puntos centrales estilo OWL
+.dtp-colon {
+  font-size: 6px;
+  line-height: 1.8;
+  color: rgba(0, 0, 0, 0.7);
+  text-align: center;
+  align-self: center;
+  letter-spacing: 2px;
+}
+
+// Botón AM/PM — elegante, igual imagen 2
+.dtp-ampm {
+  height: 40px;         // ← más bajo
+  min-width: 52px;
+  border: 1px solid rgba(0, 0, 0, 0.28);
+  border-radius: 4px;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.87);
+  letter-spacing: 0.3px;
+  transition: background 0.2s;
+  align-self: center;
+
+  &:hover { background: rgba(0, 0, 0, 0.05); }
+  &:active { background: rgba(0, 0, 0, 0.10); }
+}
+
+// Cancel / Set — exacto a imagen 2
+.dtp-actions {
+  display: flex;
+  justify-content: space-between;  // ← Cancel izq, Set der
+  padding: 6px 16px 10px;
+
+  button {
+    font-size: 14px;
+    font-weight: 400;
+    color: #3f51b5;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+}

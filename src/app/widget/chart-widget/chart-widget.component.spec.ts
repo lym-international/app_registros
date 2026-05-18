@@ -9,8 +9,8 @@ describe("ChartWidgetComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ChartWidgetComponent],
-      }).compileComponents();
+    imports: [ChartWidgetComponent],
+}).compileComponents();
     })
   );
 

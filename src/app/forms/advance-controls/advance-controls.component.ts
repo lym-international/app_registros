@@ -1,16 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { MatFormField, MatLabel, MatPrefix, MatHint, MatError, MatSuffix } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatInput } from '@angular/material/input';
+import { NgxMaskDirective } from 'ngx-mask';
+import { MatAutocompleteTrigger, MatAutocomplete, MatOption } from '@angular/material/autocomplete';
+import { MatSelect } from '@angular/material/select';
+import { MatIconButton } from '@angular/material/button';
+import { AsyncPipe } from '@angular/common';
 
 export interface User {
   name: string;
 }
 
 @Component({
-  selector: 'app-advance-controls',
-  templateUrl: './advance-controls.component.html',
-  styleUrls: ['./advance-controls.component.scss'],
+    selector: 'app-advance-controls',
+    templateUrl: './advance-controls.component.html',
+    styleUrls: ['./advance-controls.component.scss'],
+    imports: [BreadcrumbComponent, MatFormField, MatLabel, MatPrefix, MatIcon, MatInput, NgxMaskDirective, FormsModule, MatAutocompleteTrigger, ReactiveFormsModule, MatAutocomplete, MatOption, MatHint, MatSelect, MatError, MatIconButton, MatSuffix, AsyncPipe]
 })
 export class AdvanceControlsComponent implements OnInit {
   hide = true;

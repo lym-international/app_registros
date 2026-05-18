@@ -6,8 +6,8 @@ describe("DragDropComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [DragDropComponent],
-      }).compileComponents();
+    imports: [DragDropComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

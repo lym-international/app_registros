@@ -6,8 +6,8 @@ describe("GoogleComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [GoogleComponent],
-      }).compileComponents();
+    imports: [GoogleComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

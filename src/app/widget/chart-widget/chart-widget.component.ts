@@ -17,6 +17,8 @@ import {
   ApexGrid,
   ApexMarkers,
 } from 'ng-apexcharts';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { MatProgressBar } from '@angular/material/progress-bar';
 export type circleChartOptions = {
   series?: ApexNonAxisChartSeries;
   chart?: ApexChart;
@@ -87,9 +89,10 @@ export type ChartOptions = {
   title: ApexTitleSubtitle;
 };
 @Component({
-  selector: 'app-chart-widget',
-  templateUrl: './chart-widget.component.html',
-  styleUrls: ['./chart-widget.component.scss'],
+    selector: 'app-chart-widget',
+    templateUrl: './chart-widget.component.html',
+    styleUrls: ['./chart-widget.component.scss'],
+    imports: [BreadcrumbComponent, ChartComponent, MatProgressBar]
 })
 export class ChartWidgetComponent implements OnInit {
   public radarChartOptions: Partial<radarChartOptions>;
@@ -320,8 +323,11 @@ export class ChartWidgetComponent implements OnInit {
           type: 'horizontal',
           opacityFrom: 1,
           opacityTo: 1,
-          stops: [0, 100, 100, 100],
-        },
+          colorStops: [
+            { offset: 0, color: '#FFA41B', opacity: 1 },
+            { offset: 100, color: '#35fdd8', opacity: 1 }
+          ]
+        } as any,
       },
       grid: {
         show: true,

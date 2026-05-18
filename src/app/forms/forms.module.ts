@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsRoutingModule } from './forms-routing.module';
 import { EditorsComponent } from './editors/editors.component';
@@ -11,44 +11,40 @@ import { AdvanceControlsComponent } from './advance-controls/advance-controls.co
 
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
-import {
-  OwlDateTimeModule,
-  OwlNativeDateTimeModule,
-  OWL_DATE_TIME_LOCALE,
-} from '@danielmoncada/angular-datetime-picker';
+//import {  OwlDateTimeModule,  OwlNativeDateTimeModule,  OWL_DATE_TIME_LOCALE,} from '@danielmoncada/angular-datetime-picker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { ComponentsModule } from '../shared/components/components.module';
-import { SharedModule } from '../shared/shared.module';
+
 
 @NgModule({
-  declarations: [
+    imports: [
+    CommonModule,
+    FormsRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CKEditorModule,
+    //OwlDateTimeModule,
+    //OwlNativeDateTimeModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
+    ComponentsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     EditorsComponent,
     FormExamplesComponent,
     FormValidationsComponent,
     WizardComponent,
     FormControlsComponent,
     AdvanceControlsComponent,
-  ],
-  imports: [
-    CommonModule,
-    FormsRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CKEditorModule,
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
-    NgxMaskDirective,
-    NgxMaskPipe,
-    ComponentsModule,
-    SharedModule,
-  ],
-  providers: [provideNgxMask(),
-    { provide: OWL_DATE_TIME_LOCALE, useValue: {hour12Timer: true} }]
-  /* providers: [
-    // Configura OWL_DATE_TIME_LOCALE con 'en-US' y hour12Timer en true
-    { provide: OWL_DATE_TIME_LOCALE, useValue: 'en-US' },
-    // { provide: OWL_DATE_TIME_FORMATS, useValue: {hour12Timer: true, ...} }, // Agrega esto para configurar hour12Timer
-  ], */
-
-  
+],
+    providers: [provideNgxMask(),
+        //{ provide: OWL_DATE_TIME_LOCALE, useValue: {hour12Timer: true} }]
+        { provide: LOCALE_ID, useValue: 'en-US' }]
+    /* providers: [
+      // Configura OWL_DATE_TIME_LOCALE con 'en-US' y hour12Timer en true
+      { provide: OWL_DATE_TIME_LOCALE, useValue: 'en-US' },
+      // { provide: OWL_DATE_TIME_FORMATS, useValue: {hour12Timer: true, ...} }, // Agrega esto para configurar hour12Timer
+    ], */
 })
 export class FormModule {}

@@ -9,8 +9,8 @@ describe("SettingsComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [SettingsComponent],
-      }).compileComponents();
+    declarations: [SettingsComponent],
+}).compileComponents();
     })
   );
 

@@ -8,7 +8,6 @@ import { First3Component } from './first3/first3.component';
 import { ComponentsModule } from '../shared/components/components.module';
 
 @NgModule({
-  declarations: [First1Component, First2Component, First3Component],
-  imports: [CommonModule, MultilevelRoutingModule, ComponentsModule],
+    imports: [CommonModule, MultilevelRoutingModule, ComponentsModule, First1Component, First2Component, First3Component],
 })
 export class MultilevelModule {}

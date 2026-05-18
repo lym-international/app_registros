@@ -6,8 +6,8 @@ describe("ChipsComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ChipsComponent],
-      }).compileComponents();
+    imports: [ChipsComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

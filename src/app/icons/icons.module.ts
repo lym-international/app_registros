@@ -5,7 +5,6 @@ import { MaterialComponent } from "./material/material.component";
 import { FontAwesomeComponent } from "./font-awesome/font-awesome.component";
 import { ComponentsModule } from "../shared/components/components.module";
 @NgModule({
-  declarations: [MaterialComponent, FontAwesomeComponent],
-  imports: [CommonModule, IconsRoutingModule, ComponentsModule],
+    imports: [CommonModule, IconsRoutingModule, ComponentsModule, MaterialComponent, FontAwesomeComponent],
 })
 export class IconsModule {}

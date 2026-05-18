@@ -6,8 +6,8 @@ describe("SidebarComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [SidebarComponent],
-      }).compileComponents();
+    imports: [SidebarComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {

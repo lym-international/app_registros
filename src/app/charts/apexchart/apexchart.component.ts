@@ -17,6 +17,7 @@ import {
   ApexNonAxisChartSeries,
   ApexResponsive,
 } from 'ng-apexcharts';
+import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
 
 export type ChartOptions = {
   series?: ApexAxisChartSeries;
@@ -39,9 +40,10 @@ export type ChartOptions = {
 };
 
 @Component({
-  selector: 'app-apexchart',
-  templateUrl: './apexchart.component.html',
-  styleUrls: ['./apexchart.component.scss'],
+    selector: 'app-apexchart',
+    templateUrl: './apexchart.component.html',
+    styleUrls: ['./apexchart.component.scss'],
+    imports: [BreadcrumbComponent, ChartComponent]
 })
 export class ApexchartComponent {
   @ViewChild('chart', { static: true }) chart!: ChartComponent;
@@ -218,8 +220,12 @@ export class ApexchartComponent {
           inverseColors: true,
           opacityFrom: 1,
           opacityTo: 1,
-          stops: [50, 0, 100, 100],
-        },
+          colorStops: [
+          { offset: 0, color: '#D8E3F0', opacity: 1 },
+          { offset: 50, color: '#BED1E6', opacity: 1 },
+          { offset: 100, color: '#BED1E6', opacity: 1 }
+        ]
+      } as any,
       },
       yaxis: {
         axisBorder: {
@@ -416,8 +422,12 @@ export class ApexchartComponent {
           type: 'horizontal',
           opacityFrom: 1,
           opacityTo: 1,
-          stops: [0, 100, 100, 100],
-        },
+          colorStops: [
+            { offset: 0, color: '#D8E3F0', opacity: 1 },
+            { offset: 50, color: '#BED1E6', opacity: 1 },
+            { offset: 100, color: '#BED1E6', opacity: 1 }
+          ]
+        } as any,
       },
       markers: {
         size: 4,

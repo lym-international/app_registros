@@ -6,8 +6,8 @@ describe("BasicTableComponent", () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [BasicTableComponent],
-      }).compileComponents();
+    imports: [BasicTableComponent],
+}).compileComponents();
     })
   );
   beforeEach(() => {
